@@ -39,6 +39,7 @@ public abstract class ContainerFastNetworkCrafter extends ContainerFastBench imp
     if (player.world.isRemote != world.isRemote) throw new RuntimeException("Player and World remoteness are not the same!");
     this.world = world;
     this.player = player;
+    this.useNormalTransfer = true;
   }
 
   @Override

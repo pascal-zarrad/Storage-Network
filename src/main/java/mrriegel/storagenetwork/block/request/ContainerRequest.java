@@ -1,5 +1,8 @@
 package mrriegel.storagenetwork.block.request;
 
+import java.util.ArrayList;
+import java.util.List;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.InventoryCraftingNetwork;
@@ -13,9 +16,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ContainerRequest extends ContainerNetworkBase {
 
@@ -71,6 +71,7 @@ public class ContainerRequest extends ContainerNetworkBase {
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
     if (tileMaster == null) {
+      StorageNetwork.info("Container closing, master tile not found");
       return false;
     }
 

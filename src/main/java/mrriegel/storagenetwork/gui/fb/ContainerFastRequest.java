@@ -1,6 +1,7 @@
 package mrriegel.storagenetwork.gui.fb;
 
 import java.util.ArrayList;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.TileRequest;
@@ -58,6 +59,7 @@ public class ContainerFastRequest extends ContainerFastNetworkCrafter {
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
     if (tileMaster == null) {
+      StorageNetwork.info("Container closing, master tile not found");
       return false;
     }
     if (!getTileRequest().getWorld().isRemote && (forceSync || getTileRequest().getWorld().getTotalWorldTime() % 40 == 0)) {
