@@ -60,7 +60,7 @@ public class ContainerCableIO extends ContainerCable {
     if (slot != null && slot.getHasStack()) {
       ItemStack stackInSlot = slot.getStack();
       if (stackInSlot.getItem() instanceof ItemUpgrade) {
-        if (0 < slotIndex && slotIndex <= 35) {
+        if (0 <= slotIndex && slotIndex <= 35) {
           //FROM inventory to upgrade slots
           if (!this.mergeItemStack(stackInSlot, 36, 40, true)) {
             return ItemStack.EMPTY;
