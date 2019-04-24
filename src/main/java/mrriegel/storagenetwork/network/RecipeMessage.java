@@ -1,5 +1,9 @@
 package mrriegel.storagenetwork.network;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import io.netty.buffer.ByteBuf;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
@@ -20,11 +24,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, IMessage> {
 
@@ -64,6 +63,11 @@ public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, I
     buf.writeInt(this.index);
   }
 
+  /**
+   * This entire thing is a gross mess.
+   * 
+   * TODO rewrite.
+   */
   @Override
   public IMessage onMessage(final RecipeMessage message, final MessageContext ctx) {
     EntityPlayerMP player = ctx.getServerHandler().player;
@@ -80,6 +84,7 @@ public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, I
         if (master == null) {
           return;
         }
+        ClearRecipeMessage.clearContainerRecipe(player, false);
         InventoryCrafting craftMatrix = ctr.getCraftMatrix();
         String[] oreDictKeys;// = oreDictKey.split(",");
         for (int slot = 0; slot < 9; slot++) {
