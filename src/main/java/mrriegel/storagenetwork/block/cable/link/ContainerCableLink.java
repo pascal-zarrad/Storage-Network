@@ -1,13 +1,14 @@
 package mrriegel.storagenetwork.block.cable.link;
 
+import javax.annotation.Nullable;
 import mrriegel.storagenetwork.api.capability.IConnectableLink;
 import mrriegel.storagenetwork.block.cable.ContainerCable;
 import mrriegel.storagenetwork.block.cable.TileCable;
 import mrriegel.storagenetwork.capabilities.CapabilityConnectableLink;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-
-import javax.annotation.Nullable;
+import net.minecraft.item.ItemStack;
 
 public class ContainerCableLink extends ContainerCable {
   @Nullable
@@ -29,5 +30,8 @@ public class ContainerCableLink extends ContainerCable {
 
   }
 
-
+  @Override
+  public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
+    return ItemStack.EMPTY;
+  }
 }

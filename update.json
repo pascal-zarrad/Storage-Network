@@ -7,8 +7,8 @@
     "1.12-recommended": "1.0.15",
     "1.12.1-latest": "1.0.15",
     "1.12.1-recommended": "1.1.1",
-    "1.12.2-latest": "1.8.0",
-    "1.12.2-recommended": "1.8.0"
+    "1.12.2-latest": "1.7.4",
+    "1.12.2-recommended": "1.7.4"
   },
   "1.11.2":{
 	"1.0.0":"First Release"
@@ -73,6 +73,6 @@
   	,"1.7.1":"Tooltip fix"
   	,"1.7.2":"Fixed Processing Controller GUI not opening.  "
   	,"1.7.3":"When you rotate a link cable, it correctly updates the link and the connected items.  Fixed a crash that can sometimes happen upgrading a new world from 1.5.x"
-  	,"1.8.0":"Compatible with FastWorkBench 1.7.0 (still optional).  "
+  	,"1.7.4":"Compatible with FastWorkBench 1.7.0 (still optional).  Fixed a divide by zero error that could happen with cable upgrades.  Fixed crash and issues when shift-clicking upgrades into cables.   "
   }
 }

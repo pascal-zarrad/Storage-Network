@@ -249,8 +249,12 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
 
   @Override
   public boolean runNow(DimPos connectablePos, INetworkMaster master) {
-    int speedRatio = upgrades.getUpgradesOfType(EnumUpgradeType.SPEED) + 1;
-    boolean cooldownOk = (connectablePos.getWorld().getTotalWorldTime() % (30 / speedRatio) == 0);
+    int speed = Math.max(upgrades.getUpgradesOfType(EnumUpgradeType.SPEED) + 1, 1);
+    int speedRatio = (30 / speed);
+    if (speedRatio <= 1) {
+      speedRatio = 1;
+    }
+    boolean cooldownOk = (connectablePos.getWorld().getTotalWorldTime() % speedRatio == 0);
     boolean operationLimitOk = doesPassOperationFilterLimit(master);
 
     return cooldownOk && operationLimitOk;
