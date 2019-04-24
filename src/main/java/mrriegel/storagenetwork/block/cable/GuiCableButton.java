@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.block.cable;
 
+import java.util.function.Consumer;
 import org.lwjgl.opengl.GL11;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.network.CableDataMessage.CableMessageType;
@@ -8,8 +9,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-
-import java.util.function.Consumer;
 
 public class GuiCableButton extends GuiButton {
 

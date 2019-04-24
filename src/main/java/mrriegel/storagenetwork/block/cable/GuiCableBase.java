@@ -60,10 +60,10 @@ public abstract class GuiCableBase extends GuiContainer {
       // First clear out all filters
 
       stackHandler.clear();
-      StorageNetwork.log("import btn pressed in guicablebase ");
+
       importSlotsButtonPressed();
 
-      StorageNetwork.log("CableDataMessage " + button.id);
+
       PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(button.id));
     }
 
@@ -147,6 +147,17 @@ public abstract class GuiCableBase extends GuiContainer {
         continue;
       }
 
+      if (wheelUp)
+        itemSlot.getStack().grow(1);
+      else
+        itemSlot.getStack().shrink(1);
+      if (itemSlot.getStack().getCount() >= 64) {
+        itemSlot.getStack().setCount(64);
+      }
+      //and save changes OFC
+      FilterItemStackHandler stackHandler = getFilterHandler();
+      PacketRegistry.INSTANCE.sendToServer(new CableFilterMessage(i, itemSlot.getStack(), stackHandler.ores, stackHandler.meta, stackHandler.nbt));
+      //for anyone to override
       mouseWheelOverSlot(i, wheelUp);
 
       return;

@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.block.cable.link;
 
+import java.io.IOException;
 import com.google.common.collect.Lists;
 import mrriegel.storagenetwork.block.cable.GuiCable;
 import mrriegel.storagenetwork.block.cable.GuiCableButton;
@@ -10,8 +11,6 @@ import mrriegel.storagenetwork.util.inventory.FilterItemStackHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-
-import java.io.IOException;
 
 public class GuiCableLink extends GuiCable {
   protected GuiCableButton btnInputOutputStorage;
@@ -102,6 +101,7 @@ public class GuiCableLink extends GuiCable {
 
     for (ItemSlotNetwork s : itemSlotsGhost) {
       s.drawSlot(mouseX, mouseY);
+
     }
   }
 

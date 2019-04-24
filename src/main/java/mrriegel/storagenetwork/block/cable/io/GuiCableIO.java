@@ -4,7 +4,6 @@ import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 import com.google.common.collect.Lists;
-import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.data.EnumUpgradeType;
 import mrriegel.storagenetwork.block.cable.GuiCable;
 import mrriegel.storagenetwork.block.cable.GuiCableButton;
@@ -39,7 +38,6 @@ public class GuiCableIO extends GuiCable {
   public void importSlotsButtonPressed() {
     super.importSlotsButtonPressed();
 
-    StorageNetwork.log("cableIO importSlotsButtonPressed");
     int targetSlot = 0;
     for(ItemStack filterSuggestion : containerCableIO.autoIO.getStacksForFilter()) {
       // Ignore stacks that are already filtered
@@ -49,7 +47,7 @@ public class GuiCableIO extends GuiCable {
 
       containerCableIO.autoIO.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
       targetSlot++;
-      StorageNetwork.log("guicableIO " + targetSlot + "_" + filterSuggestion.getDisplayName());
+
       if(targetSlot >= containerCableIO.autoIO.filters.getSlots()) {
         break;
       }
@@ -110,7 +108,7 @@ public class GuiCableIO extends GuiCable {
       return;
     }
 
-    if(containerCableIO.autoIO.upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) >= 1) {
+    if (hasOperationUpgrade(EnumUpgradeType.OPERATION)) {
       btnOperationToggle.enabled = true;
       btnOperationToggle.visible = true;
       this.mc.getTextureManager().bindTexture(texture);
@@ -142,15 +140,16 @@ public class GuiCableIO extends GuiCable {
         int index = col + (cols * row);
         ItemStack stack = containerCableIO.autoIO.filters.getStackInSlot(index);
 
-        //boolean numShow = tile instanceof TileCable ? tile.getUpgradesOfType(ItemUpgrade.STOCK) > 0 : false;
+
         int x = 8 + col * SLOT_SIZE;
         int y = 26 + row * SLOT_SIZE;
 
-        itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, false));
+        itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));
       }
     }
 
     for (ItemSlotNetwork s : itemSlotsGhost) {
+      s.setShowNumbers(hasOperationUpgrade(EnumUpgradeType.STOCK));
       s.drawSlot(mouseX, mouseY);
     }
 
@@ -165,7 +164,7 @@ public class GuiCableIO extends GuiCable {
     }
 
 
-    if (containerCableIO.autoIO.upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) >= 1) {
+    if (hasOperationUpgrade(EnumUpgradeType.OPERATION)) {
       operationItemSlot.drawTooltip(mouseX, mouseY);
 
       if (btnOperationToggle.isMouseOver()) {
@@ -178,6 +177,10 @@ public class GuiCableIO extends GuiCable {
     }
 
 
+  }
+
+  private boolean hasOperationUpgrade(EnumUpgradeType u) {
+    return containerCableIO.autoIO.upgrades.getUpgradesOfType(u) > 0;
   }
 
   @Override
@@ -227,10 +230,10 @@ public class GuiCableIO extends GuiCable {
     if (!this.checkHotbarKeys(keyCode)) {
       Keyboard.enableRepeatEvents(true);
       String s = "";
-      if (containerCableIO.autoIO.upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) >= 1) {
+      if (hasOperationUpgrade(EnumUpgradeType.OPERATION)) {
         s = fieldOperationLimit.getText();
       }
-      if ((containerCableIO.autoIO.upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) >= 1) && this.fieldOperationLimit.textboxKeyTyped(typedChar, keyCode)) {
+      if (hasOperationUpgrade(EnumUpgradeType.OPERATION) && this.fieldOperationLimit.textboxKeyTyped(typedChar, keyCode)) {
         if (!StringUtils.isNumeric(fieldOperationLimit.getText()) && !fieldOperationLimit.getText().isEmpty()) fieldOperationLimit.setText(s);
         int num = 0;
         try {

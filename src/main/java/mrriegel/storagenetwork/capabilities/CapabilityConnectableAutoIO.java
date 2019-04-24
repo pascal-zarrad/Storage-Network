@@ -286,4 +286,14 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
       instance.deserializeNBT((NBTTagCompound) nbt);
     }
   }
+
+  @Override
+  public boolean isStockMode() {
+    return upgrades.getUpgradesOfType(EnumUpgradeType.STOCK) > 0;
+  }
+
+  @Override
+  public EnumFacing facingInventory() {
+    return inventoryFace;
+  }
 }

@@ -23,6 +23,7 @@ import mrriegel.storagenetwork.block.control.ProcessWrapper;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.config.ConfigHandler;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
+import mrriegel.storagenetwork.util.UtilInventory;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +35,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileMaster extends TileEntity implements ITickable, INetworkMaster {
@@ -170,9 +173,9 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         }
         set.add(realConnectablePos);
         addConnectables(realConnectablePos, set);
-          tileHere.markDirty();
-          chunk.setModified(true);
-        }
+        tileHere.markDirty();
+        chunk.setModified(true);
+      }
     }
   }
 
@@ -190,7 +193,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     if (world.isRemote) {
       return;
     }
-
     shouldRefresh = true;
   }
 
@@ -322,7 +324,24 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       for (IItemStackMatcher matcher : storage.getAutoExportList()) {
-        ItemStack requestedStack = this.request(matcher, storage.getTransferRate(), true);
+        boolean stockMode = storage.isStockMode();
+        int amtToRequest = storage.getTransferRate();
+        if (stockMode) {
+          try {
+            TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+            //request with false to see how many even exist in there.  
+            int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
+            if (stillNeeds == 0) {
+              continue;
+            }
+            amtToRequest = Math.min(stillNeeds, amtToRequest);
+          }
+          catch (Throwable e) {
+            StorageNetwork.log("error thrown " + e.getMessage());
+          }
+        }
+        ItemStack requestedStack = this.request(matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
           continue;
         }
@@ -422,7 +441,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       return new HashSet<IConnectable>();
     }
     Set<IConnectable> result = new HashSet<>();
-    for(DimPos pos : positions) {
+    for (DimPos pos : positions) {
       if (!pos.isLoaded()) {
         continue;
       }
@@ -549,23 +568,8 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     if (connectables == null) {
       connectables = new HashSet<DimPos>();
     }
-
     return new HashSet<>(connectables);
   }
-  //
-  //  private void setConnectablesEmpty() {
-  //    StorageNetwork.log("SetConnectables: EMPTY ");
-  //    if (connectables == null) {
-  //      connectables = new HashSet<DimPos>();
-  //      return;
-  //    }
-  //    Iterator<DimPos> iter = connectables.iterator();
-  //    while (iter.hasNext()) {
-  //      if (iter != null && iter.next() != null) {
-  //        iter.remove(); 
-  //      }
-  //    }
-  //  }
 
   @Override
   public void clearCache() {

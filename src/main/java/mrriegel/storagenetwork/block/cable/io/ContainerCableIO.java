@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerCableIO extends ContainerCable {
+
   public static final int UPGRADE_COUNT = 4;
 
   @Nullable
@@ -39,7 +40,7 @@ public class ContainerCableIO extends ContainerCable {
 
         @Override
         public int getSlotStackLimit() {
-          return 8;
+          return 1;
         }
 
         @Override
