@@ -3,7 +3,6 @@ package mrriegel.storagenetwork.item.remote;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
-import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.InventoryCraftingNetwork;
@@ -73,11 +72,8 @@ public class ContainerRemote extends ContainerNetworkBase {
   @Override
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
-    if (tileMaster == null) {
-      StorageNetwork.info("Container closing, master tile not found");
-      return false;
-    }
-    if (!playerIn.world.isRemote && playerIn.world.getTotalWorldTime() % 40 == 0) {
+    if (tileMaster != null &&
+        !playerIn.world.isRemote && playerIn.world.getTotalWorldTime() % 40 == 0) {
       List<ItemStack> list = tileMaster.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (EntityPlayerMP) playerIn);
     }

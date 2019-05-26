@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.math.BlockPos;
 
 public class ContainerCable extends Container {
   public TileCable tile;
@@ -27,7 +28,9 @@ public class ContainerCable extends Container {
 
   @Override
   public boolean canInteractWith(EntityPlayer playerIn) {
-    return playerIn.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) <= 64.0D;
+    BlockPos pos = tile.getPos();
+    return playerIn.getDistanceSq(
+        pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
   }
 
 }
