@@ -182,33 +182,42 @@ public class BlockCable extends AbstractBlockConnectable {
   }
 
   @Override
-  public void addCollisionBoxToList(IBlockState state, World world, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
-    addCollisionBoxToList(pos, entityBox, collidingBoxes, AABB_NONE);
-    state = state.getActualState(world, pos);
-    UnlistedPropertyBlockNeighbors.BlockNeighbors neighbors = getBlockNeighbors(world, pos);
+  public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
+    TileEntity tileHere = worldIn.getTileEntity(pos);
+    if (!(tileHere instanceof TileCable)) {
+      return;
+    }
+    float f = 0.3125F;
+    float f1 = 0.6875F;
+    float f2 = 0.3125F;
+    float f3 = 0.6875F;
+    float f4 = 0.3125F;
+    float f5 = 0.6875F;
+    addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
+    UnlistedPropertyBlockNeighbors.BlockNeighbors neighbors = getBlockNeighbors(worldIn, pos);
     if (neighbors.north() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      addCollisionBoxToList(pos, entityBox, collidingBoxes,
-          AABB_SIDES.get(EnumFacing.NORTH).offset(pos));
+      f2 = 0f;
+      addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
     }
     if (neighbors.south() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      addCollisionBoxToList(pos, entityBox, collidingBoxes,
-          AABB_SIDES.get(EnumFacing.SOUTH).offset(pos));
+      f3 = 1f;
+      addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
     }
     if (neighbors.west() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      addCollisionBoxToList(pos, entityBox, collidingBoxes,
-          AABB_SIDES.get(EnumFacing.WEST).offset(pos));
+      f = 0f;
+      addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
     }
     if (neighbors.east() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      addCollisionBoxToList(pos, entityBox, collidingBoxes,
-          AABB_SIDES.get(EnumFacing.EAST).offset(pos));
+      f1 = 1f;
+      addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
     }
     if (neighbors.down() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      addCollisionBoxToList(pos, entityBox, collidingBoxes,
-          AABB_SIDES.get(EnumFacing.DOWN).offset(pos));
+      f4 = 0f;
+      addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
     }
     if (neighbors.up() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      addCollisionBoxToList(pos, entityBox, collidingBoxes,
-          AABB_SIDES.get(EnumFacing.UP).offset(pos));
+      f5 = 1f;
+      addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
     }
   }
 
