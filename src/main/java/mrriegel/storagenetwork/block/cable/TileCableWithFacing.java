@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileCableWithFacing extends TileCable {
+
   @Nullable
   EnumFacing direction = null;
 
@@ -32,36 +33,30 @@ public class TileCableWithFacing extends TileCable {
   }
 
   protected boolean isValidLinkNeighbor(EnumFacing facing) {
-    if(facing == null) {
+    if (facing == null) {
       return false;
     }
-
     TileEntity neighbor = world.getTileEntity(pos.offset(facing));
-    if(neighbor != null && neighbor.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
+    if (neighbor != null && neighbor.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
       return true;
     }
-
     return false;
   }
 
   public void findNewDirection() {
-    if(isValidLinkNeighbor(direction)) {
+    if (isValidLinkNeighbor(direction)) {
       return;
     }
-
-    for(EnumFacing facing : EnumFacing.values()) {
-      if(isValidLinkNeighbor(facing)) {
+    for (EnumFacing facing : EnumFacing.values()) {
+      if (isValidLinkNeighbor(facing)) {
         setDirection(facing);
         return;
       }
     }
-
     setDirection(null);
   }
 
-
   public void rotate() {
-
     EnumFacing previous = direction;
     List<EnumFacing> targetFaces = Arrays.asList(EnumFacing.values());
     Collections.shuffle(targetFaces);
@@ -74,7 +69,9 @@ public class TileCableWithFacing extends TileCable {
         this.markDirty();
         if (previous != direction) {
           TileMaster master = getTileMaster();
-          master.refreshNetwork();
+          if (master != null) {
+            master.refreshNetwork();
+          }
         }
         return;
       }
@@ -91,20 +88,19 @@ public class TileCableWithFacing extends TileCable {
   @Override
   public void readFromNBT(NBTTagCompound compound) {
     super.readFromNBT(compound);
-
-    if(compound.hasKey("direction")) {
+    if (compound.hasKey("direction")) {
       this.direction = EnumFacing.getFront(compound.getInteger("direction"));
-    } else {
+    }
+    else {
       this.direction = null;
     }
   }
 
   @Override
   public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-    if(direction != null) {
+    if (direction != null) {
       compound.setInteger("direction", this.direction.ordinal());
     }
     return super.writeToNBT(compound);
   }
-
 }
