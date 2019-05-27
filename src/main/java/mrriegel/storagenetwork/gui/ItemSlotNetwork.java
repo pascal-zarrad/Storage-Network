@@ -48,12 +48,10 @@ public class ItemSlotNetwork {
       String amount;
       //cant sneak in gui
       //default to short form, show full amount if sneak 
-
       if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
         amount = size + "";
       else
         amount = UtilInventory.formatLargeNumber(size);
-
       if (isShowNumbers()) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(.5f, .5f, .5f);

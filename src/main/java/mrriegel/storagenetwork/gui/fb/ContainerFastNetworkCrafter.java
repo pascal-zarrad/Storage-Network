@@ -102,7 +102,6 @@ public abstract class ContainerFastNetworkCrafter extends ContainerFastBench imp
         slot.putStack(stack);
         detectAndSendChanges();
         List<ItemStack> list = tileMaster.getStacks();
-
         PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (EntityPlayerMP) player);
         if (stack.isEmpty()) return ItemStack.EMPTY;
         slot.onTake(player, slotStack);

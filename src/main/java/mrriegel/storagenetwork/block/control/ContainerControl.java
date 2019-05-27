@@ -51,7 +51,6 @@ public class ContainerControl extends Container implements IStorageContainer {
     return master;
   }
 
-
   @Override
   public boolean isRequest() {
     return true;

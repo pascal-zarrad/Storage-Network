@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 public class GuiRemote extends GuiContainerStorageInventory {
 
   ContainerRemote container;
+
   public GuiRemote(ContainerRemote container) {
     super(container);
     this.container = container;
@@ -46,7 +47,6 @@ public class GuiRemote extends GuiContainerStorageInventory {
       return EnumSortType.valueOf(NBTHelper.getString(remote, "sort"));
     return null;
   }
-
 
   @Override
   public void setSort(EnumSortType s) {

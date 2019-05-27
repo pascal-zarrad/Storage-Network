@@ -32,7 +32,6 @@ public class ContainerFastRequest extends ContainerFastNetworkCrafter {
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(player, craftMatrix, craftResult, 0, 101, 128);
     DimPos masterPos = tile.getMaster();
     TileMaster masterTile = masterPos.getTileEntity(TileMaster.class);
-
     slotCraftOutput.setTileMaster(masterTile);
     this.addSlotToContainer(slotCraftOutput);
     bindGrid();

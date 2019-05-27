@@ -95,7 +95,6 @@ public class GuiCableLink extends GuiCable {
     }
   }
 
-
   @Override
   protected void drawTooltips(int mouseX, int mouseY) {
     super.drawTooltips(mouseX, mouseY);

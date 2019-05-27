@@ -17,24 +17,19 @@ import net.minecraftforge.items.SlotItemHandler;
 public class ContainerCableIO extends ContainerCable {
 
   public static final int UPGRADE_COUNT = 4;
-
   @Nullable
   public CapabilityConnectableAutoIO autoIO;
 
   public ContainerCableIO(TileCable tile, InventoryPlayer playerInv) {
     super(tile, playerInv);
-
-    if(!tile.hasCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null)) {
+    if (!tile.hasCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null)) {
       return;
     }
-
     IConnectableItemAutoIO rawAutoIO = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
-    if(!(rawAutoIO instanceof CapabilityConnectableAutoIO)) {
+    if (!(rawAutoIO instanceof CapabilityConnectableAutoIO)) {
       return;
     }
-
-    this.autoIO = (CapabilityConnectableAutoIO)rawAutoIO;
-
+    this.autoIO = (CapabilityConnectableAutoIO) rawAutoIO;
     for (int ii = 0; ii < UPGRADE_COUNT; ii++) {
       this.addSlotToContainer(new SlotItemHandler(autoIO.upgrades, ii, 98 + ii * sq, 6) {
 
@@ -51,10 +46,8 @@ public class ContainerCableIO extends ContainerCable {
     }
   }
 
-
   @Override
   public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex) {
-
     Slot slot = this.inventorySlots.get(slotIndex);
     //in range [4,39] means its coming FROM inventory
     // [0,3] is the filter list

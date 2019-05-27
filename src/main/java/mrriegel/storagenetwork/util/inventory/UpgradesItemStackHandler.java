@@ -6,6 +6,7 @@ import mrriegel.storagenetwork.block.cable.io.ContainerCableIO;
 import net.minecraft.item.ItemStack;
 
 public class UpgradesItemStackHandler extends ItemStackHandlerEx {
+
   public UpgradesItemStackHandler() {
     super(ContainerCableIO.UPGRADE_COUNT);
   }
@@ -18,10 +19,9 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
   public int getUpgradesOfType(EnumUpgradeType upgradeType) {
     int res = 0;
     for (ItemStack stack : getStacks()) {
-      if(stack.getItemDamage() != upgradeType.getId()) {
+      if (stack.getItemDamage() != upgradeType.getId()) {
         continue;
       }
-
       res += Math.max(stack.getCount(), 0);
     }
     return res;

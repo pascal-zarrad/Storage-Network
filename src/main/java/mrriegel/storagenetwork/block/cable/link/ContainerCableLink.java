@@ -11,23 +11,20 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
 public class ContainerCableLink extends ContainerCable {
+
   @Nullable
   public CapabilityConnectableLink link;
 
   public ContainerCableLink(TileCable tile, InventoryPlayer playerInv) {
     super(tile, playerInv);
-
-    if(!tile.hasCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null)) {
+    if (!tile.hasCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null)) {
       return;
     }
-
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null);
-    if(!(rawLink instanceof CapabilityConnectableLink)) {
+    if (!(rawLink instanceof CapabilityConnectableLink)) {
       return;
     }
-
     this.link = (CapabilityConnectableLink) rawLink;
-
   }
 
   @Override

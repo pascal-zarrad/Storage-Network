@@ -26,14 +26,12 @@ public class ContainerRequest extends ContainerNetworkBase {
     this.setTileRequest(tile);
     this.playerInv = playerInv;
     result = new InventoryCraftResult();
-
     TileMaster tileMaster = this.getTileMaster();
     if (tileMaster != null) {
       SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, result, 0, 101, 128);
       slotCraftOutput.setTileMaster(tileMaster);
       this.addSlotToContainer(slotCraftOutput);
     }
-
     bindGrid();
     bindPlayerInvo(playerInv);
     bindHotbar();
@@ -70,14 +68,12 @@ public class ContainerRequest extends ContainerNetworkBase {
   @Override
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
-
     TileRequest table = getTileRequest();
     if (tileMaster != null &&
         !table.getWorld().isRemote && table.getWorld().getTotalWorldTime() % 40 == 0) {
       List<ItemStack> list = tileMaster.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (EntityPlayerMP) playerIn);
     }
-
     BlockPos pos = table.getPos();
     return playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
   }
@@ -89,10 +85,9 @@ public class ContainerRequest extends ContainerNetworkBase {
 
   @Override
   public TileMaster getTileMaster() {
-    if(getTileRequest() == null || getTileRequest().getMaster() == null) {
+    if (getTileRequest() == null || getTileRequest().getMaster() == null) {
       return null;
     }
-
     return getTileRequest().getMaster().getTileEntity(TileMaster.class);
   }
 

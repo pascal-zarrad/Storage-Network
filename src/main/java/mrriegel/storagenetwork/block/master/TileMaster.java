@@ -56,7 +56,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     if (getConnectablePositions() == null) {
       refreshNetwork();
     }
-
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       for (ItemStack stack : storage.getStoredStacks()) {
         if (stack.isEmpty()) {
@@ -134,7 +133,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (chunk == null || !chunk.isLoaded()) {
         continue;
       }
-
       // Prevent having multiple masters on a network and break all others.
       TileMaster maybeMasterTile = lookPos.getTileEntity(TileMaster.class);
       if (maybeMasterTile != null && !lookPos.equals(this.world, this.pos)) {
@@ -370,7 +368,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (simExtract.isEmpty()) {
         continue;
       }
-
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
       usedMatcher = new ItemStackMatcher(simExtract, true, false, true);
       alreadyTransferred += simExtract.getCount();
@@ -402,7 +399,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
-
       result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null));
     }
     return result;

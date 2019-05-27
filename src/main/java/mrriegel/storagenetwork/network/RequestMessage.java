@@ -1,5 +1,7 @@
 package mrriegel.storagenetwork.network;
 
+import java.util.ArrayList;
+import java.util.List;
 import io.netty.buffer.ByteBuf;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
@@ -14,9 +16,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RequestMessage implements IMessage, IMessageHandler<RequestMessage, IMessage> {
 

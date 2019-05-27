@@ -22,10 +22,8 @@ public class CommonProxy {
     return null;
   }
 
-
   public void preInit(FMLPreInitializationEvent event) {
     StorageNetworkCapabilities.initCapabilities();
-
     ConfigHandler.refreshConfig(event.getSuggestedConfigurationFile());
     JeiSettings.setJeiLoaded(Loader.isModLoaded("jei"));
     PacketRegistry.init();
