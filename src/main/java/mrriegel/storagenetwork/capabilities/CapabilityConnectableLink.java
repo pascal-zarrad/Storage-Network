@@ -1,10 +1,15 @@
 package mrriegel.storagenetwork.capabilities;
 
-import mrriegel.storagenetwork.api.data.EnumStorageDirection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.capability.IConnectableLink;
-import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.api.data.DimPos;
+import mrriegel.storagenetwork.api.data.EnumStorageDirection;
+import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.util.inventory.FilterItemStackHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -17,12 +22,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 // TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
 public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<NBTTagCompound> {
@@ -140,7 +139,8 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     ItemStack firstMatchedStack = ItemStack.EMPTY;
     int remaining = size;
     for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-      ItemStack stack = itemHandler.getStackInSlot(slot);
+      //force simulate: allow them to not let me see the stack, also dont extract since it might steal/dupe
+      ItemStack stack = itemHandler.extractItem(slot, 1, true);//itemHandler.getStackInSlot(slot);
       if (stack == null || stack.isEmpty()) {
         continue;
       }
