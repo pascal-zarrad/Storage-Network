@@ -36,6 +36,9 @@ public class TileCableWithFacing extends TileCable {
     if (facing == null) {
       return false;
     }
+    if (!TileMaster.isTargetAllowed(world.getBlockState(pos.offset(facing)))) {
+      return false;
+    }
     TileEntity neighbor = world.getTileEntity(pos.offset(facing));
     if (neighbor != null && neighbor.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite())) {
       return true;

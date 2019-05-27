@@ -147,15 +147,11 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (chunk == null || !chunk.isLoaded()) {
         continue;
       }
-      if (!isTargetAllowed(lookPos)) {
-        continue;
-      }
+
       // Prevent having multiple masters on a network and break all others.
       TileMaster maybeMasterTile = lookPos.getTileEntity(TileMaster.class);
       if (maybeMasterTile != null && !lookPos.equals(this.world, this.pos)) {
-        lookPos.getBlockState().getBlock().dropBlockAsItem(lookPos.getWorld(), lookPos.getBlockPos(), lookPos.getBlockState(), 0);
-        lookPos.getWorld().setBlockToAir(lookPos.getBlockPos());
-        lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
+        nukeAndDrop(lookPos);
         continue;
       }
       TileEntity tileHere = lookPos.getTileEntity(TileEntity.class);
@@ -179,10 +175,17 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     }
   }
 
-  public static boolean isTargetAllowed(DimPos dimPos) {
-    String blockId = dimPos.getBlockState().getBlock().getRegistryName().toString();
+  private void nukeAndDrop(DimPos lookPos) {
+    lookPos.getBlockState().getBlock().dropBlockAsItem(lookPos.getWorld(), lookPos.getBlockPos(), lookPos.getBlockState(), 0);
+    lookPos.getWorld().setBlockToAir(lookPos.getBlockPos());
+    lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
+  }
+
+  public static boolean isTargetAllowed(IBlockState iBlockState) {
+    String blockId = iBlockState.getBlock().getRegistryName().toString();
     for (String s : blacklist) {
-      if (s != null && s.equals(blockId)) {
+      if (blockId.equals(s)) {
+        StorageNetwork.info(iBlockState + " Connection blocked by config ");
         return false;
       }
     }
@@ -453,6 +456,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
+
       result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null));
     }
     return result;
@@ -460,16 +464,16 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
 
   private Set<IConnectableLink> getConnectableStorage() {
     Set<IConnectableLink> result = new HashSet<>();
-    for (final DimPos pos : getConnectablePositions()) {
-      if (!pos.isLoaded()) {
+    for (final DimPos dimpos : getConnectablePositions()) {
+      if (!dimpos.isLoaded()) {
         continue;
       }
-      TileEntity tileEntity = pos.getTileEntity(TileEntity.class);
+      TileEntity tileEntity = dimpos.getTileEntity(TileEntity.class);
       if (tileEntity == null) {
         continue;
       }
       if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
+        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + dimpos);
         continue;
       }
       if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null)) {
