@@ -47,13 +47,6 @@ public class GuiRemote extends GuiContainerStorageInventory {
     return null;
   }
 
-  //  public @Nonnull ItemStack getItemRemote() {
-  //    //    ItemStack remote = mc.player.inventory.getCurrentItem();
-  //    //    if (remote.getItem() instanceof ItemRemote == false) { 
-  //      return ItemStack.EMPTY;
-  //    //    }
-  //    //    return remote;
-  //  }
 
   @Override
   public void setSort(EnumSortType s) {
