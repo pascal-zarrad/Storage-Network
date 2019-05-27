@@ -56,26 +56,13 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     if (getConnectablePositions() == null) {
       refreshNetwork();
     }
-    //<<<<<<< HEAD 
-    //    List<TileCable> invs = getSortedStorageCables();
-    //    for (TileCable tileConnected : invs) {
-    //      IItemHandler inv = tileConnected.getInventory();
-    //      ItemStack stack;
-    //      for (int i = 0; i < inv.getSlots(); i++) {
-    //        if (inv.extractItem(i, 1, true).isEmpty()) {
-    //          continue;
-    //        }
-    //        stack = inv.getStackInSlot(i);
-    //        if (!stack.isEmpty() && tileConnected.canTransfer(stack, EnumFilterDirection.BOTH))
-    //          addToList(stacks, stack.copy(), stack.getCount());
-    //=======
+
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       for (ItemStack stack : storage.getStoredStacks()) {
         if (stack.isEmpty()) {
           continue;
         }
         addOrMergeIntoList(stacks, stack.copy());
-        //>>>>>>> api160alpha
       }
     }
     return stacks;
@@ -383,53 +370,12 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (simExtract.isEmpty()) {
         continue;
       }
-      //<<<<<<< HEAD
-      //    }
-      //    //  StorageNetwork.benchmark( "after r connectables");
-      //    ItemStack res = ItemStack.EMPTY;
-      //    int result = 0;
-      //    for (AbstractFilterTile t : invs) {
-      //      IItemHandler inv = t.getInventory();
-      //      for (int i = 0; i < inv.getSlots(); i++) {
-      //        ItemStack stackCurrent = inv.getStackInSlot(i);
-      //        if (stackCurrent == null || stackCurrent.isEmpty()) {
-      //          continue;
-      //        }
-      //        if (res != null && !res.isEmpty() && !ItemHandlerHelper.canItemStacksStack(stackCurrent, res)) {
-      //          continue;
-      //        }
-      //        if (!fil.match(stackCurrent)) {
-      //          continue;
-      //        }
-      //        if (!t.canTransfer(stackCurrent, EnumFilterDirection.OUT)) {
-      //          continue;
-      //        }
-      //        int miss = size - result;
-      //        int extractedCount = Math.min(inv.getStackInSlot(i).getCount(), miss);
-      //        ItemStack extracted = inv.extractItem(i, extractedCount, simulate);
-      //        if (extracted.isEmpty()) {
-      //          continue;// dont return, look for it somewhere else 
-      //        }
-      //
-      //        //the other KEY fix for https://github.com/PrinceOfAmber/Storage-Network/issues/19, where it 
-      //        //voided stuff when you took all from storage drawer: extracted can have a >0 stacksize, but still be air,
-      //        //so the getCount overrides the 16, and gives zero instead, so i di my own override of, if empty then it got all so use source
-      //        result += Math.min(extracted.isEmpty() ? stackCurrent.getCount() : extracted.getCount(), miss);
-      //        res = stackCurrent.copy();
-      //        if (res.isEmpty()) { //workaround for storage drawer and chest thing
-      //          res = extracted.copy();
-      //          res.setCount(result);
-      //        }
-      //        if (result == size) {
-      //          return ItemHandlerHelper.copyStackWithSize(res, size);
-      //        }
-      //=======
+
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
       usedMatcher = new ItemStackMatcher(simExtract, true, false, true);
       alreadyTransferred += simExtract.getCount();
       if (alreadyTransferred >= size) {
         break;
-        //>>>>>>> api160alpha 
       }
     }
     if (alreadyTransferred <= 0) {
