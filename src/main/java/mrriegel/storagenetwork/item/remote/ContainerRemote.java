@@ -37,10 +37,10 @@ public class ContainerRemote extends ContainerNetworkBase {
     if (!isSimple) {
       //no grid on simple
       matrix = new InventoryCraftingNetwork(this, storage);
-      bindGrid();
       SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, result, 0, 101, 128);
       slotCraftOutput.setTileMaster(this.getTileMaster());
       this.addSlotToContainer(slotCraftOutput);
+      bindGrid();
     }
     bindPlayerInvo(playerInv);
     bindHotbar();
