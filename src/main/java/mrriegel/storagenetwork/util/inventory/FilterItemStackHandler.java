@@ -12,7 +12,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
 
   public static final int FILTER_SIZE = 18;
   public boolean ores = false;
-  public boolean meta = false;
+  public boolean meta = true;
   public boolean nbt = false;
   public boolean isWhitelist = true;
 
