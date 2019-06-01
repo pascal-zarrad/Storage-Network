@@ -3,10 +3,12 @@ package mrriegel.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import io.netty.buffer.ByteBuf;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import mrriegel.storagenetwork.gui.IStorageContainer;
 import mrriegel.storagenetwork.registry.PacketRegistry;
+import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IThreadListener;
@@ -19,14 +21,19 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RequestMessage implements IMessage, IMessageHandler<RequestMessage, IMessage> {
 
-  private int id = 0;
+  private int mouseButton = 0;
   private ItemStack stack = ItemStack.EMPTY;
   private boolean shift, ctrl;
+
+  @Override
+  public String toString() {
+    return "RequestMessage [mouseButton=" + mouseButton + ", shift=" + shift + ", ctrl=" + ctrl + ", stack=" + stack.toString() + "]";
+  }
 
   public RequestMessage() {}
 
   public RequestMessage(int id, ItemStack stack, boolean shift, boolean ctrl) {
-    this.id = id;
+    this.mouseButton = id;
     this.stack = stack;
     this.shift = shift;
     this.ctrl = ctrl;
@@ -48,11 +55,22 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
       }
       int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, true, false, true));
       // int in = tile.getAmount(new ItemStackMatcher(message.stack, true, false, true));
+      StorageNetwork.log(message.toString());
       ItemStack stack;
-      int sizeRequested = Math.max(
-          message.id == 0 ? message.stack.getMaxStackSize()
-              : message.ctrl ? 1 : Math.min(message.stack.getMaxStackSize() / 2, in / 2),
-          1);
+      boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
+      boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;
+      int sizeRequested = 0;
+      if (message.ctrl) {
+        sizeRequested = 1;
+      }
+      else if (isLeftClick) {
+        sizeRequested = message.stack.getMaxStackSize();
+      }
+      else if (isRightClick) {
+        sizeRequested = Math.min(message.stack.getMaxStackSize() / 2, in / 2);
+      }
+      StorageNetwork.log("sizeRequested=" + sizeRequested);
+      sizeRequested = Math.max(sizeRequested, 1);
       stack = tileMaster.request(
           new ItemStackMatcher(message.stack, true, false, true),
           sizeRequested, false);
@@ -81,7 +99,7 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
 
   @Override
   public void fromBytes(ByteBuf buf) {
-    this.id = buf.readInt();
+    this.mouseButton = buf.readInt();
     this.stack = ByteBufUtils.readItemStack(buf);
     this.stack.setCount(buf.readInt());
     this.shift = buf.readBoolean();
@@ -90,7 +108,7 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
 
   @Override
   public void toBytes(ByteBuf buf) {
-    buf.writeInt(this.id);
+    buf.writeInt(this.mouseButton);
     ItemStack toWrite = stack.copy();
     toWrite.setCount(1);
     ByteBufUtils.writeItemStack(buf, toWrite);
