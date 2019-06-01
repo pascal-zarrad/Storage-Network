@@ -370,7 +370,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
-
       usedMatcher = new ItemStackMatcher(simExtract, true, false, true);
       alreadyTransferred += simExtract.getCount();
       if (alreadyTransferred >= size) {

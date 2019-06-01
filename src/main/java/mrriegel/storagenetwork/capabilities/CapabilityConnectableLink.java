@@ -143,7 +143,6 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
         }
       }
       int toExtract = Math.min(stack.getCount(), remaining);
-
       ItemStack extractedStack = itemHandler.extractItem(slot, toExtract, simulate);
       remaining -= extractedStack.getCount();
       if (remaining <= 0) {

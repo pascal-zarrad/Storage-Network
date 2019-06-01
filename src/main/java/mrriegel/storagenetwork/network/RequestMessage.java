@@ -54,7 +54,6 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
       }
       int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, true, false, true));
       // int in = tile.getAmount(new ItemStackMatcher(message.stack, true, false, true));
-
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
       boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;

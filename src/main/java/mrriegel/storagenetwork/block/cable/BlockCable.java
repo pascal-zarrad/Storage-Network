@@ -184,7 +184,6 @@ public class BlockCable extends AbstractBlockConnectable {
     if (!(tileHere instanceof TileCable)) {
       return;
     }
-
     float f = 0.3125F;
     float f1 = 0.6875F;
     float f2 = 0.3125F;
@@ -192,9 +191,7 @@ public class BlockCable extends AbstractBlockConnectable {
     float f4 = 0.3125F;
     float f5 = 0.6875F;
     addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
-
     UnlistedPropertyBlockNeighbors.BlockNeighbors neighbors = getBlockNeighbors(worldIn, pos);
-
     if (neighbors.north() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
       f2 = 0f;
       addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
@@ -227,7 +224,6 @@ public class BlockCable extends AbstractBlockConnectable {
     if (tileHere == null || !(tileHere instanceof TileCable)) {
       return FULL_BLOCK_AABB;
     }
-
     UnlistedPropertyBlockNeighbors.BlockNeighbors neighbors = getBlockNeighbors(world, pos);
     float x1 = 0.37F;
     float x2 = 0.63F;
@@ -255,7 +251,6 @@ public class BlockCable extends AbstractBlockConnectable {
     }
     return new AxisAlignedBB(x1, z1, y1, x2, z2, y2);
   }
-
 
   @Override
   public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {

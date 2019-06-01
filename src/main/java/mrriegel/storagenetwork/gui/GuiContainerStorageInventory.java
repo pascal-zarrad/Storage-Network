@@ -408,7 +408,6 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   @Override
   public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-
     searchBar.setFocused(false);
     int rectX = 63, rectY = 110;
     if (inSearchbar(mouseX, mouseY)) {
