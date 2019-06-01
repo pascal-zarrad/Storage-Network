@@ -1,10 +1,7 @@
 package mrriegel.storagenetwork.block.cable;
 
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nullable;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import mrriegel.storagenetwork.CreativeTab;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
@@ -187,6 +184,7 @@ public class BlockCable extends AbstractBlockConnectable {
     if (!(tileHere instanceof TileCable)) {
       return;
     }
+
     float f = 0.3125F;
     float f1 = 0.6875F;
     float f2 = 0.3125F;
@@ -194,7 +192,9 @@ public class BlockCable extends AbstractBlockConnectable {
     float f4 = 0.3125F;
     float f5 = 0.6875F;
     addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
+
     UnlistedPropertyBlockNeighbors.BlockNeighbors neighbors = getBlockNeighbors(worldIn, pos);
+
     if (neighbors.north() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
       f2 = 0f;
       addCollisionBoxToList(pos, entityBox, collidingBoxes, new AxisAlignedBB(f, f4, f2, f1, f5, f3));
@@ -221,45 +221,41 @@ public class BlockCable extends AbstractBlockConnectable {
     }
   }
 
-  private static final double SML = 0.37D;
-  private static final double LRG = 1.0D - SML;
-  public static final AxisAlignedBB AABB_NONE = new AxisAlignedBB(SML, SML, SML, LRG, LRG, LRG);
-  public static final Map<EnumFacing, AxisAlignedBB> AABB_SIDES = Maps.newEnumMap(
-      new ImmutableMap.Builder<EnumFacing, AxisAlignedBB>()
-          .put(EnumFacing.DOWN, new AxisAlignedBB(SML, 0.0D, SML, LRG, SML, LRG))
-          .put(EnumFacing.UP, new AxisAlignedBB(SML, LRG, SML, LRG, 1.0D, LRG))
-          .put(EnumFacing.NORTH, new AxisAlignedBB(SML, SML, 0.0D, LRG, LRG, SML))
-          .put(EnumFacing.SOUTH, new AxisAlignedBB(SML, SML, LRG, LRG, LRG, 1.0D))
-          .put(EnumFacing.WEST, new AxisAlignedBB(0.0D, SML, SML, SML, LRG, LRG))
-          .put(EnumFacing.EAST, new AxisAlignedBB(LRG, SML, SML, 1.0D, LRG, LRG))
-          .build());
-
   @Override
-  @SideOnly(Side.CLIENT)
-  public AxisAlignedBB getSelectedBoundingBox(IBlockState state, World world, BlockPos pos) {
-    AxisAlignedBB box = AABB_NONE.offset(pos);
-    state = state.getActualState(world, pos);
+  public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess world, BlockPos pos) {
+    TileEntity tileHere = world.getTileEntity(pos);
+    if (tileHere == null || !(tileHere instanceof TileCable)) {
+      return FULL_BLOCK_AABB;
+    }
+
     UnlistedPropertyBlockNeighbors.BlockNeighbors neighbors = getBlockNeighbors(world, pos);
+    float x1 = 0.37F;
+    float x2 = 0.63F;
+    float y1 = 0.37F;
+    float y2 = 0.63F;
+    float z1 = 0.37F;
+    float z2 = 0.63F;
     if (neighbors.north() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      box = box.union(AABB_SIDES.get(EnumFacing.NORTH).offset(pos));
+      y1 = 0f;
     }
     if (neighbors.south() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      box = box.union(AABB_SIDES.get(EnumFacing.SOUTH).offset(pos));
+      y2 = 1f;
     }
     if (neighbors.west() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      box = box.union(AABB_SIDES.get(EnumFacing.WEST).offset(pos));
+      x1 = 0f;
     }
     if (neighbors.east() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      box = box.union(AABB_SIDES.get(EnumFacing.EAST).offset(pos));
+      x2 = 1f;
     }
     if (neighbors.down() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      box = box.union(AABB_SIDES.get(EnumFacing.DOWN).offset(pos));
+      z1 = 0f;
     }
     if (neighbors.up() != UnlistedPropertyBlockNeighbors.EnumNeighborType.NONE) {
-      box = box.union(AABB_SIDES.get(EnumFacing.UP).offset(pos));
+      z2 = 1f;
     }
-    return box;
+    return new AxisAlignedBB(x1, z1, y1, x2, z2, y2);
   }
+
 
   @Override
   public void addInformation(ItemStack stack, World playerIn, List<String> tooltip, ITooltipFlag advanced) {
