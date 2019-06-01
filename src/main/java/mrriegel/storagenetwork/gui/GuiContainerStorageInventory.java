@@ -408,7 +408,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   @Override
   public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    StorageNetwork.log("clk" + mouseButton);
+
     searchBar.setFocused(false);
     int rectX = 63, rectY = 110;
     if (inSearchbar(mouseX, mouseY)) {
@@ -424,9 +424,11 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     else {
       ItemStack stackCarriedByMouse = mc.player.inventory.getItemStack();
       if (!stackUnderMouse.isEmpty()
-          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
+          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT
+              || mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK)
           && stackCarriedByMouse.isEmpty() && canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, isShiftKeyDown(), isCtrlKeyDown()));
+        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, isShiftKeyDown(),
+            mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK));
         lastClick = System.currentTimeMillis();
       }
       else if (!stackCarriedByMouse.isEmpty() && inField(mouseX, mouseY) && canClick()) {

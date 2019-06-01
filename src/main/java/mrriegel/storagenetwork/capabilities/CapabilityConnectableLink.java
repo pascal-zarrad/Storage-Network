@@ -122,7 +122,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     int remaining = size;
     for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
       //force simulate: allow them to not let me see the stack, also dont extract since it might steal/dupe
-      ItemStack stack = itemHandler.extractItem(slot, 1, true);//itemHandler.getStackInSlot(slot);
+      ItemStack stack = itemHandler.extractItem(slot, remaining, true);//itemHandler.getStackInSlot(slot);
       if (stack == null || stack.isEmpty()) {
         continue;
       }
@@ -143,6 +143,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
         }
       }
       int toExtract = Math.min(stack.getCount(), remaining);
+
       ItemStack extractedStack = itemHandler.extractItem(slot, toExtract, simulate);
       remaining -= extractedStack.getCount();
       if (remaining <= 0) {

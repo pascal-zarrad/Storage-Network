@@ -136,7 +136,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
     if (inventoryFace == null) {
       return Collections.emptyList();
     }
-    StorageNetwork.log("getStacksForFilter    " + inventoryFace);
+
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
     IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());

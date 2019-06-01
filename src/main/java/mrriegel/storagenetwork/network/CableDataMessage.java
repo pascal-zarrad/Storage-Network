@@ -125,7 +125,6 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
                 continue;
               }
             }
-            StorageNetwork.log("Send new refresh client msg");
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.filters.getStacks()), player);
             con.tile.markDirty();
           break;
@@ -133,7 +132,6 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
       }
 
       private void updateCableIO(EntityPlayerMP player, CableMessageType type) {
-        StorageNetwork.log("updateCableIO " + type);
         ContainerCableIO con = (ContainerCableIO) player.openContainer;
         if (con == null || con.autoIO == null) {
           return;

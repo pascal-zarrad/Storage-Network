@@ -3,7 +3,6 @@ package mrriegel.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import mrriegel.storagenetwork.gui.IStorageContainer;
@@ -55,7 +54,7 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
       }
       int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, true, false, true));
       // int in = tile.getAmount(new ItemStackMatcher(message.stack, true, false, true));
-      StorageNetwork.log(message.toString());
+
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
       boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;
@@ -69,7 +68,6 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
       else if (isRightClick) {
         sizeRequested = Math.min(message.stack.getMaxStackSize() / 2, in / 2);
       }
-      StorageNetwork.log("sizeRequested=" + sizeRequested);
       sizeRequested = Math.max(sizeRequested, 1);
       stack = tileMaster.request(
           new ItemStackMatcher(message.stack, true, false, true),

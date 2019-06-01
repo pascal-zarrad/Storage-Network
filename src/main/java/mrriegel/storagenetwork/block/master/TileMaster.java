@@ -365,15 +365,12 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     int alreadyTransferred = 0;
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       int req = size - alreadyTransferred;
-      StorageNetwork.log("req=" + req);
       ItemStack simExtract = storage.extractStack(usedMatcher, req, simulate);
       if (simExtract.isEmpty()) {
-        StorageNetwork.log("BREAK  alreadyTransferred=" + alreadyTransferred);
         continue;
       }
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
 
-      StorageNetwork.log("simExtract=" + simExtract.getCount());
       usedMatcher = new ItemStackMatcher(simExtract, true, false, true);
       alreadyTransferred += simExtract.getCount();
       if (alreadyTransferred >= size) {
