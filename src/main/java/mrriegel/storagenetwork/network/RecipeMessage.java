@@ -133,7 +133,12 @@ public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, I
             ItemStackMatcher itemStackMatcher = new ItemStackMatcher(stackCurrent);
             itemStackMatcher.setNbt(true);
             itemStackMatcher.setOre(isOreDict);//important: set this for correct matching
-            //   StorageNetwork.log("CALL exctractItem   " + stackCurrent + " isOreDict " + isOreDict);
+            if (stackCurrent.getMaxDamage() > 0) {
+              //its a tool or something with a durability cap so IGNORE metadata 
+              itemStackMatcher.setMeta(false);
+            }
+            //            StorageNetwork.log("CALL exctractItem   " + stackCurrent + " isOreDict " + isOreDict + " DAMAGE " + stackCurrent.getItemDamage()
+            //                + " !!HASMAXDAMG" + stackCurrent.getMaxDamage());
             ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, true);
             /*********** First try and use the players inventory **/
             //              int slot = j ;//- 1;
