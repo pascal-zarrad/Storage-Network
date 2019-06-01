@@ -25,7 +25,9 @@ public class ChunkBasedFixer implements IFixableData {
   private void moveValue(NBTTagCompound sourceTag, NBTTagCompound targetTag, String key) {
     try {
       //one of these might be null, and if it is then there is no value ot move
-      targetTag.setTag(key, sourceTag.getTag(key));
+      if (sourceTag.getTag(key) != null) {
+        targetTag.setTag(key, sourceTag.getTag(key));
+      }
       sourceTag.removeTag(key);
     }
     catch (Throwable e) {
@@ -39,7 +41,9 @@ public class ChunkBasedFixer implements IFixableData {
   }
 
   private void moveValue(NBTTagCompound sourceTag, NBTTagCompound targetTag, String sourceKey, String targetKey) {
-    targetTag.setTag(targetKey, sourceTag.getTag(sourceKey));
+    if (sourceTag.getTag(sourceKey) != null) {
+      targetTag.setTag(targetKey, sourceTag.getTag(sourceKey));
+    }
     sourceTag.removeTag(sourceKey);
   }
 
