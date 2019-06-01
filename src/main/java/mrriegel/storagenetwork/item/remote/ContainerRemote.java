@@ -59,14 +59,15 @@ public class ContainerRemote extends ContainerNetworkBase {
   @Override
   @SideOnly(Side.CLIENT)
   public void setAll(List<ItemStack> listIn) {
-    //    super.setAll(p_190896_1_);
-    if (matrix != null)
+    if (matrix != null) {
       matrix.skipEvents = true;
+    }
     for (int i = 0; i < listIn.size(); ++i) {
       this.getSlot(i).putStack(listIn.get(i));
     }
-    if (matrix != null)
+    if (matrix != null) {
       matrix.skipEvents = false;
+    }
   }
 
   @Override

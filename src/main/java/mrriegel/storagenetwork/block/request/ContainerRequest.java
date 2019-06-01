@@ -26,12 +26,9 @@ public class ContainerRequest extends ContainerNetworkBase {
     this.setTileRequest(tile);
     this.playerInv = playerInv;
     result = new InventoryCraftResult();
-    TileMaster tileMaster = this.getTileMaster();
-    if (tileMaster != null) {
-      SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, result, 0, 101, 128);
-      slotCraftOutput.setTileMaster(tileMaster);
-      this.addSlotToContainer(slotCraftOutput);
-    }
+    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, result, 0, 101, 128);
+    slotCraftOutput.setTileMaster(this.getTileMaster());
+    this.addSlotToContainer(slotCraftOutput);
     bindGrid();
     bindPlayerInvo(playerInv);
     bindHotbar();
