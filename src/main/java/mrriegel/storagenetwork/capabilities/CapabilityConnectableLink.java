@@ -106,7 +106,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
     // If this storage is configured to only export from the network, do not
     // extract from the storage, but abort immediately.
-    if (filterDirection == EnumStorageDirection.OUT) {
+    if (filterDirection == EnumStorageDirection.IN) {
       return ItemStack.EMPTY;
     }
     if (inventoryFace == null) {
