@@ -376,6 +376,9 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   @Override
   public void actionPerformed(GuiButton button) throws IOException {
     super.actionPerformed(button);
+    if (button == null) {
+      return;
+    }
     boolean doSort = true;
     if (button.id == directionBtn.id) {
       setDownwards(!getDownwards());
