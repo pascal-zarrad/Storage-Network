@@ -1,29 +1,24 @@
 package mrriegel.storagenetwork.block.cable;
+import net.minecraft.util.Direction;
 
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.common.property.IUnlistedProperty;
 
-public class UnlistedPropertyBlockNeighbors implements IUnlistedProperty<UnlistedPropertyBlockNeighbors.BlockNeighbors> {
+public class UnlistedPropertyBlockNeighbors {// implements IUnlistedProperty<UnlistedPropertyBlockNeighbors.BlockNeighbors> {
 
-  @Override
-  public String getName() {
+  public static String getName() {
     return "hillNeighbors";
   }
 
-  @Override
-  public boolean isValid(BlockNeighbors value) {
+  public static boolean isValid(BlockNeighbors value) {
     return true;
   }
 
-  @Override
-  public Class<BlockNeighbors> getType() {
+  public static Class<BlockNeighbors> getType() {
     return BlockNeighbors.class;
   }
 
-  @Override
-  public String valueToString(BlockNeighbors value) {
+  public static String valueToString(BlockNeighbors value) {
     return value.toString();
   }
 
@@ -33,13 +28,13 @@ public class UnlistedPropertyBlockNeighbors implements IUnlistedProperty<Unliste
 
   public static class BlockNeighbors {
 
-    public Map<EnumFacing, EnumNeighborType> neighborTypes = new HashMap<>();
+    Map<Direction, EnumNeighborType> neighborTypes = new HashMap<>();
 
-    public void setNeighborType(EnumFacing facing, EnumNeighborType type) {
+    void setNeighborType(Direction facing, EnumNeighborType type) {
       neighborTypes.put(facing, type);
     }
 
-    private static String getFacingShortName(EnumFacing facing) {
+    private static String getFacingShortName(Direction facing) {
       return facing.getName().substring(0, 1).toLowerCase();
     }
 
@@ -56,7 +51,7 @@ public class UnlistedPropertyBlockNeighbors implements IUnlistedProperty<Unliste
     @Override
     public String toString() {
       StringBuilder builder = new StringBuilder("NeighborTypes[");
-      for (Map.Entry<EnumFacing, EnumNeighborType> entry : neighborTypes.entrySet()) {
+      for (Map.Entry<Direction, EnumNeighborType> entry : neighborTypes.entrySet()) {
         if (entry.getValue() == EnumNeighborType.NONE) {
           continue;
         }
@@ -71,7 +66,7 @@ public class UnlistedPropertyBlockNeighbors implements IUnlistedProperty<Unliste
       return builder.toString();
     }
 
-    public boolean requiresCube() {
+    boolean requiresCube() {
       // Only Y-Axis -> no cube
       boolean hasNorth = north() != EnumNeighborType.NONE;
       boolean hasSouth = south() != EnumNeighborType.NONE;
@@ -86,27 +81,27 @@ public class UnlistedPropertyBlockNeighbors implements IUnlistedProperty<Unliste
     }
 
     public EnumNeighborType north() {
-      return neighborTypes.getOrDefault(EnumFacing.NORTH, EnumNeighborType.NONE);
+      return neighborTypes.getOrDefault(Direction.NORTH, EnumNeighborType.NONE);
     }
 
     public EnumNeighborType east() {
-      return neighborTypes.getOrDefault(EnumFacing.EAST, EnumNeighborType.NONE);
+      return neighborTypes.getOrDefault(Direction.EAST, EnumNeighborType.NONE);
     }
 
     public EnumNeighborType south() {
-      return neighborTypes.getOrDefault(EnumFacing.SOUTH, EnumNeighborType.NONE);
+      return neighborTypes.getOrDefault(Direction.SOUTH, EnumNeighborType.NONE);
     }
 
     public EnumNeighborType west() {
-      return neighborTypes.getOrDefault(EnumFacing.WEST, EnumNeighborType.NONE);
+      return neighborTypes.getOrDefault(Direction.WEST, EnumNeighborType.NONE);
     }
 
     public EnumNeighborType up() {
-      return neighborTypes.getOrDefault(EnumFacing.UP, EnumNeighborType.NONE);
+      return neighborTypes.getOrDefault(Direction.UP, EnumNeighborType.NONE);
     }
 
     public EnumNeighborType down() {
-      return neighborTypes.getOrDefault(EnumFacing.DOWN, EnumNeighborType.NONE);
+      return neighborTypes.getOrDefault(Direction.DOWN, EnumNeighborType.NONE);
     }
   }
 }

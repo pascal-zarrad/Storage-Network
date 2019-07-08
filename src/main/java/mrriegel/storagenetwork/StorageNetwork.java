@@ -2,6 +2,7 @@ package mrriegel.storagenetwork;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.TileRequest;
 import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.setup.ClientProxy;
@@ -9,11 +10,14 @@ import mrriegel.storagenetwork.setup.IProxy;
 import mrriegel.storagenetwork.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -33,7 +37,7 @@ public class StorageNetwork {
   public static final Logger LOGGER = LogManager.getLogger();
   //  private static final PluginRegistry pluginRegistry = new PluginRegistry();
   public static StorageNetworkHelpers helpers = new StorageNetworkHelpers();
-  public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {
     // Register the setup method for modloading
@@ -79,6 +83,14 @@ public class StorageNetwork {
 
       event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, ModBlocks.master).build(null).setRegistryName("master"));
       event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, ModBlocks.request).build(null).setRegistryName("request"));
+    }
+
+    @SubscribeEvent
+    public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
+      event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        return new ContainerRequest(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+      }).setRegistryName("request"));
     }
   }
 

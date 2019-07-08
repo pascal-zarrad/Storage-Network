@@ -1,55 +1,59 @@
 package mrriegel.storagenetwork.block.request;
-
-import java.util.ArrayList;
-import java.util.List;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.InventoryCraftingNetwork;
 import mrriegel.storagenetwork.network.StackRefreshClientMessage;
+import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContainerRequest extends ContainerNetworkBase {
 
-  private TileRequest tileRequest;
+  private final TileRequest tileRequest;
 
-  public ContainerRequest(final TileRequest tile, final InventoryPlayer playerInv) {
-    matrix = new InventoryCraftingNetwork(this, tile.matrix);
-    this.setTileRequest(tile);
+  public ContainerRequest(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+    super(ModBlocks.requestcontainer, windowId);
+    tileRequest = (TileRequest) world.getTileEntity(pos);
+    matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
     this.playerInv = playerInv;
-    result = new InventoryCraftResult();
-    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, result, 0, 101, 128);
-    slotCraftOutput.setTileMaster(this.getTileMaster());
-    this.addSlotToContainer(slotCraftOutput);
+    //    result = new CraftingResultSlot();
+    //        public SlotCraftingNetwork(PlayerEntity player,
+    //        CraftingInventory craftingInventory, IInventory inventoryIn,
+    //    int slotIndex, int xPosition, int yPosition) {
+    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, playerInv, 0, 101, 128);
+    slotCraftOutput.setTileMaster(getTileMaster());
+    addSlot(slotCraftOutput);
     bindGrid();
     bindPlayerInvo(playerInv);
     bindHotbar();
-    this.onCraftMatrixChanged(this.matrix);
+    onCraftMatrixChanged(matrix);
   }
 
   @Override
   public void bindHotbar() {
     //player hotbar
     for (int i = 0; i < 9; ++i) {
-      this.addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 232));
+      addSlot(new Slot(playerInv, i, 8 + i * 18, 232));
     }
   }
 
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
-    if (this.recipeLocked) {
+    if (recipeLocked) {
       //StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
-    findMatchingRecipe(matrix);
+    ContainerNetworkBase.findMatchingRecipe(matrix);
   }
 
   @Override
@@ -63,13 +67,13 @@ public class ContainerRequest extends ContainerNetworkBase {
   }
 
   @Override
-  public boolean canInteractWith(EntityPlayer playerIn) {
-    TileMaster tileMaster = this.getTileMaster();
+  public boolean canInteractWith(PlayerEntity playerIn) {
+    TileMaster tileMaster = getTileMaster();
     TileRequest table = getTileRequest();
     if (tileMaster != null &&
-        !table.getWorld().isRemote && table.getWorld().getTotalWorldTime() % 40 == 0) {
+        !table.getWorld().isRemote && table.getWorld().getGameTime() % 40 == 0) {
       List<ItemStack> list = tileMaster.getStacks();
-      PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (EntityPlayerMP) playerIn);
+      PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (PlayerEntityMP) playerIn);
     }
     BlockPos pos = table.getPos();
     return playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
@@ -77,7 +81,7 @@ public class ContainerRequest extends ContainerNetworkBase {
 
   @Override
   public boolean canMergeSlot(ItemStack stack, Slot slot) {
-    return slot.inventory != this.result && super.canMergeSlot(stack, slot);
+    return slot.inventory != result && super.canMergeSlot(stack, slot);
   }
 
   @Override
@@ -88,16 +92,11 @@ public class ContainerRequest extends ContainerNetworkBase {
     return getTileRequest().getMaster().getTileEntity(TileMaster.class);
   }
 
-  public TileRequest getTileRequest() {
+  TileRequest getTileRequest() {
     return tileRequest;
   }
 
-  public void setTileRequest(TileRequest tileRequest) {
-    this.tileRequest = tileRequest;
-  }
-
-  @Override
-  public boolean isRequest() {
+  public static boolean isRequest() {
     return true;
   }
 }

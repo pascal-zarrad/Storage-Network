@@ -1,12 +1,14 @@
 package mrriegel.storagenetwork.gui;
+import com.mojang.blaze3d.platform.GlStateManager;
+import mrriegel.storagenetwork.util.UtilInventory;
+import net.java.games.input.Keyboard;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
+import org.lwjgl.glfw.GLFW;
 
 import javax.annotation.Nonnull;
-import org.lwjgl.input.Keyboard;
-import mrriegel.storagenetwork.util.UtilInventory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 
 /**
  * used as the MAIN grid in the network item display
@@ -18,22 +20,24 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemSlotNetwork {
 
-  private int x, y, size, guiLeft, guiTop;
+  private final int x;
+  private final int y;
+  private final int size;
+  private final int guiLeft;
+  private final int guiTop;
   private boolean showNumbers;
-  private Minecraft mc;
-  private IPublicGuiContainer parent;
+  private final Container parent;
   private ItemStack stack;
 
-  public ItemSlotNetwork(IPublicGuiContainer parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
+  public ItemSlotNetwork(Container parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
     this.x = x;
     this.y = y;
     this.size = size;
     this.guiLeft = guiLeft;
     this.guiTop = guiTop;
-    this.setShowNumbers(number);
+    setShowNumbers(number);
     this.parent = parent;
-    mc = Minecraft.getMinecraft();
-    this.setStack(stack);
+    setStack(stack);
   }
 
   public boolean isMouseOverSlot(int mouseX, int mouseY) {
@@ -44,14 +48,16 @@ public class ItemSlotNetwork {
     GlStateManager.pushMatrix();
     if (!getStack().isEmpty()) {
       RenderHelper.enableGUIStandardItemLighting();
-      mc.getRenderItem().renderItemAndEffectIntoGUI(getStack(), x, y);
+      Minecraft.getInstance().getRenderItem().renderItemAndEffectIntoGUI(getStack(), x, y);
       String amount;
       //cant sneak in gui
-      //default to short form, show full amount if sneak 
-      if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))
+      //default to short form, show full amount if sneak
+      if (GLFW.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
         amount = size + "";
-      else
+      }
+      else {
         amount = UtilInventory.formatLargeNumber(size);
+      }
       if (isShowNumbers()) {
         GlStateManager.pushMatrix();
         GlStateManager.scale(.5f, .5f, .5f);
@@ -59,7 +65,7 @@ public class ItemSlotNetwork {
         GlStateManager.popMatrix();
       }
     }
-    if (this.isMouseOverSlot(mx, my)) {
+    if (isMouseOverSlot(mx, my)) {
       GlStateManager.disableLighting();
       GlStateManager.disableDepth();
       int j1 = x;
@@ -74,7 +80,7 @@ public class ItemSlotNetwork {
   }
 
   public void drawTooltip(int mx, int my) {
-    if (this.isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
+    if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
       parent.renderToolTipP(getStack(), mx, my);
     }
   }
@@ -87,7 +93,7 @@ public class ItemSlotNetwork {
     this.stack = stack;
   }
 
-  public boolean isShowNumbers() {
+  private boolean isShowNumbers() {
     return showNumbers;
   }
 

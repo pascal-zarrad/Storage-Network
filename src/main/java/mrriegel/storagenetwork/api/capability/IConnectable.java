@@ -1,7 +1,6 @@
 package mrriegel.storagenetwork.api.capability;
 
 import mrriegel.storagenetwork.api.data.DimPos;
-import mrriegel.storagenetwork.api.network.INetworkMaster;
 
 /**
  * All blocks that can connect to the storage-network need to expose this capability. Because of the way the storage-networking is built up, each connectable needs to expose its own position and

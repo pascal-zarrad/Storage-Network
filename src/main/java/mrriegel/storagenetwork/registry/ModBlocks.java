@@ -5,7 +5,9 @@ import mrriegel.storagenetwork.block.cable.link.BlockCableLink;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
+import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.TileRequest;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
@@ -28,6 +30,8 @@ public class ModBlocks {
   public static BlockRequest request;
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static TileEntityType<TileRequest> requesttile;
+  @ObjectHolder(StorageNetwork.MODID + ":request")
+  public static ContainerType<ContainerRequest> requestcontainer;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static BlockCable kabel;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")

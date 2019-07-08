@@ -1,6 +1,7 @@
 package mrriegel.storagenetwork.block;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.data.DimPos;
+import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.capabilities.CapabilityConnectable;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
@@ -82,7 +83,7 @@ public class TileConnectable extends TileEntity {
   public void onChunkUnload() {
     if (ConfigHandler.reloadNetworkWhenUnloadChunk && connectable != null && connectable.getMasterPos() != null) {
       try {
-        TileMaster maybeMaster = StorageNetwork.helpers.getTileMasterForConnectable(connectable);
+        TileMaster maybeMaster = StorageNetworkHelpers.getTileMasterForConnectable(connectable);
         if (maybeMaster != null) {
           maybeMaster.refreshNetwork();
         }

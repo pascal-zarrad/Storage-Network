@@ -2,6 +2,7 @@ package mrriegel.storagenetwork.block;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.data.DimPos;
+import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.util.UtilTileEntity;
@@ -69,7 +70,7 @@ public abstract class AbstractBlockConnectable extends BaseBlock {
       return;
     }
     if (myselfConnect.getMasterPos() != null) {
-      TileMaster tileMaster = StorageNetwork.helpers.getTileMasterForConnectable(myselfConnect);
+      TileMaster tileMaster = StorageNetworkHelpers.getTileMasterForConnectable(myselfConnect);
       myselfConnect.setMasterPos(null);
       worldIn.markChunkDirty(myselfTile.getPos(), myselfTile);
       try {

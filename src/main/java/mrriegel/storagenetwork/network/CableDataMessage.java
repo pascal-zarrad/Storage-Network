@@ -3,6 +3,7 @@ package mrriegel.storagenetwork.network;
 import io.netty.buffer.ByteBuf;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.network.INetworkMaster;
+import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.cable.io.ContainerCableIO;
 import mrriegel.storagenetwork.block.cable.link.ContainerCableLink;
 import mrriegel.storagenetwork.block.cable.processing.ContainerCableProcessing;
@@ -88,7 +89,7 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
         if (con == null || con.link == null) {
           return;
         }
-        INetworkMaster master = StorageNetwork.helpers.getTileMasterForConnectable(con.link.connectable);
+        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.link.connectable);
         switch (type) {
           case TOGGLE_WAY:
             con.link.filterDirection = con.link.filterDirection.next();
@@ -136,7 +137,7 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
         if (con == null || con.autoIO == null) {
           return;
         }
-        INetworkMaster master = StorageNetwork.helpers.getTileMasterForConnectable(con.autoIO.connectable);
+        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         switch (type) {
           case TOGGLE_MODE:
             con.autoIO.operationMustBeSmaller = !con.autoIO.operationMustBeSmaller;
