@@ -7,21 +7,25 @@ import mrriegel.storagenetwork.block.BaseBlock;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
@@ -39,17 +43,8 @@ public class BlockMaster extends BaseBlock {
     super(Material.IRON, "master");
   }
 
-  public static TileEntity createNewTileEntity(World worldIn, int meta) {
-    return new TileMaster();
-  }
-
   @Override
-  public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-    //onBlockPlacedBy(worldIn, pos, state, null, null);
-  }
-
-  @Override
-  public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
     super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     DimPos masterPos = null;
     if (worldIn.isRemote) {
@@ -59,8 +54,8 @@ public class BlockMaster extends BaseBlock {
     IConnectable connect = null;
     for (BlockPos p : UtilTileEntity.getSides(pos)) {
       tileHere = worldIn.getTileEntity(p);
-      if (tileHere != null && tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        connect = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
+      if (tileHere != null) {
+        connect = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
         if (connect != null && connect.getMasterPos() != null && connect.getMasterPos().equals(worldIn, pos)) {
           masterPos = connect.getMasterPos();
           break;
@@ -70,7 +65,7 @@ public class BlockMaster extends BaseBlock {
     if (masterPos != null) {
       // we found an existing master on the network, cannot add a new one. so break this one
       //    TileMaster tileMaster = (TileMaster) worldIn.getTileEntity(masterPos);
-      worldIn.setBlockToAir(pos);
+      worldIn.setBlockState(pos, Blocks.AIR.getDefaultState());
       Block.spawnAsEntity(worldIn, pos, ItemHandlerHelper.copyStackWithSize(stack, 1));
       //      ((TileMaster) worldIn.getTileEntity(masterPos)).refreshNetwork();
     }
@@ -82,12 +77,12 @@ public class BlockMaster extends BaseBlock {
     }
   }
 
-  @Override
-  public EnumBlockRenderType getRenderType(IBlockState state) {
-    return EnumBlockRenderType.MODEL;
-  }
-
-  public static boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+  //
+  //  @Override
+  //  public BlockRenderType getRenderType(BlockState state) {
+  //    return BlockRenderType.MODEL;
+  //  }
+  public static boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, Direction side, BlockRayTraceResult hit) {
     if (worldIn.isRemote) {
       return true;
     }
@@ -95,14 +90,15 @@ public class BlockMaster extends BaseBlock {
     if (!(tileHere instanceof TileMaster)) {
       return false;
     }
+    //    float hitX, float hitY, float hitZ;
     TileMaster tileMaster = (TileMaster) tileHere;
-    playerIn.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMaster.emptySlots()));
-    playerIn.sendMessage(new TextComponentString(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMaster.getConnectablePositions().size()));
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMaster.emptySlots()));
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMaster.getConnectablePositions().size()));
     Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMaster.getConnectablePositions().iterator();
     while (iter.hasNext()) {
       DimPos p = iter.next();
-      String block = p.getBlockState().getBlock().getLocalizedName();
+      String block = p.getBlockState().getBlock().getRegistryName().toString();
       mapNamesToCount.put(block, mapNamesToCount.get(block) != null ? (mapNamesToCount.get(block) + 1) : 1);
     }
     List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
@@ -117,14 +113,19 @@ public class BlockMaster extends BaseBlock {
       }
     });
     for (Entry<String, Integer> e : listDisplayStrings) {
-      playerIn.sendMessage(new TextComponentString(TextFormatting.AQUA + "    " + e.getKey() + ": " + e.getValue()));
+      playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getKey() + ": " + e.getValue()));
     }
     return false;
   }
 
   @Override
-  public void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
+  @OnlyIn(Dist.CLIENT)
+  public void addInformation(ItemStack stack, @Nullable IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);
-    tooltip.add(I18n.format("tooltip.storagenetwork.master"));
+    tooltip.add(new TranslationTextComponent("tooltip.storagenetwork.master"));
+  }
+
+  @Nullable @Override public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    return new TileMaster();
   }
 }

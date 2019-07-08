@@ -1,16 +1,15 @@
 package mrriegel.storagenetwork.block;
-
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.util.UtilTileEntity;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 /**
@@ -24,40 +23,40 @@ public abstract class AbstractBlockConnectable extends BaseBlock {
   }
 
   @Override
-  public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+  public void onNeighborChange(BlockState state, IWorldReader worldIn, BlockPos pos, BlockPos fromPos) {
     try {
       TileEntity tile = worldIn.getTileEntity(pos);
-      if (tile != null && tile.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        IConnectable conUnitNeedsMaster = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
+      if (tile != null) {
+        IConnectable conUnitNeedsMaster = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
         //the new thing needs to find the master of the network. so either my neighbor knows who the master is,
         //or my neighbor IS the master
         TileEntity tileLoop = null;
         for (BlockPos p : UtilTileEntity.getSides(pos)) {
           tileLoop = worldIn.getTileEntity(p);
-          if (tileLoop != null && tileLoop.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-            IConnectable conUnit = tileLoop.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
+          if (tileLoop != null) {
+            IConnectable conUnit = tileLoop.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
             if (conUnit.getMasterPos() != null) {
               conUnitNeedsMaster.setMasterPos(conUnit.getMasterPos());
             }
           }
           else if (tileLoop instanceof TileMaster) {
-            conUnitNeedsMaster.setMasterPos(new DimPos(worldIn, p));
+            conUnitNeedsMaster.setMasterPos(new DimPos((World) worldIn, p));
           }
         }
       }
-      setConnections(worldIn, pos, state, true);
+      setConnections((World) worldIn, pos, state, true);
     }
     catch (Exception e) {
-      StorageNetwork.instance.logger.error("StorageNetwork: exception thrown while updating neighbours:", e);
+      StorageNetwork.LOGGER.error("StorageNetwork: exception thrown while updating neighbours:", e);
     }
   }
 
-  public void setConnections(World worldIn, BlockPos pos, IBlockState state, boolean refresh) {
+  private static void setConnections(World worldIn, BlockPos pos, BlockState state, boolean refresh) {
     TileEntity myselfTile = worldIn.getTileEntity(pos);
-    if (myselfTile == null || !myselfTile.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
+    if (myselfTile == null) {
       return;
     }
-    IConnectable myselfConnect = myselfTile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
+    IConnectable myselfConnect = myselfTile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     if (myselfConnect.getMasterPos() == null) {
       for (BlockPos p : UtilTileEntity.getSides(pos)) {
         if (worldIn.getTileEntity(p) instanceof TileMaster) {
@@ -82,8 +81,11 @@ public abstract class AbstractBlockConnectable extends BaseBlock {
           ///seems like i can delete this superhack but im not sure, it never executes
           for (DimPos p : tileMaster.getConnectablePositions()) {
             TileEntity tileCurrent = p.getTileEntity(TileEntity.class);
-            if (p.isLoaded() && tileCurrent != null && tileCurrent.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-              tileCurrent.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).setMasterPos(null);
+            if (p.isLoaded() && tileCurrent != null) {
+              IConnectable cap = tileCurrent.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
+              if (cap != null) {
+                cap.setMasterPos(null);
+              }
               p.getWorld().markChunkDirty(p.getBlockPos(), tileCurrent);
             }
           }
@@ -96,16 +98,16 @@ public abstract class AbstractBlockConnectable extends BaseBlock {
     worldIn.markChunkDirty(myselfTile.getPos(), myselfTile);
   }
 
-  private void setAllMastersNull(World world, BlockPos pos, IConnectable myself) {
+  private static void setAllMastersNull(World world, BlockPos pos, IConnectable myself) {
     // myself = worldIn.getTileEntity(pos);
     myself.setMasterPos(null);
     for (BlockPos posBeside : UtilTileEntity.getSides(pos)) {
-      if (!world.getChunkFromBlockCoords(posBeside).isLoaded()) {
-        continue;
-      }
+      //      if (!world.getChunk(posBeside).isLoaded()) {
+      //        continue;
+      //      }// is loaded gone?
       TileEntity nhbr = world.getTileEntity(posBeside);
-      if (nhbr != null && nhbr.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {//
-        IConnectable nbrConn = nhbr.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
+      if (nhbr != null) {//
+        IConnectable nbrConn = nhbr.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
         if (nbrConn.getMasterPos() != null) {
           nbrConn.setMasterPos(null);
           world.markChunkDirty(posBeside, world.getTileEntity(posBeside));
