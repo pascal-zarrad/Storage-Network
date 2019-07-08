@@ -1,13 +1,13 @@
 package mrriegel.storagenetwork.api.capability;
-
-import java.util.Collections;
-import java.util.List;
 import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.api.network.INetworkMaster;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks master. You could quite as well just expose {@link IConnectable} and do the
@@ -65,7 +65,7 @@ public interface IConnectableItemAutoIO {
    */
   boolean isStockMode();
 
-  EnumFacing facingInventory();
+  Direction facingInventory();
 
   /**
    * Storages with a higher priority (== lower number) are processed first. You probably want to add a way to configure the priority of your storage.

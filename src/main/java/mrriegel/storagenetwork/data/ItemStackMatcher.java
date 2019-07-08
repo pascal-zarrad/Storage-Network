@@ -1,19 +1,19 @@
 package mrriegel.storagenetwork.data;
+import mrriegel.storagenetwork.api.data.IItemStackMatcher;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
-import mrriegel.storagenetwork.api.data.IItemStackMatcher;
-import mrriegel.storagenetwork.util.UtilTileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemStackMatcher implements IItemStackMatcher {
 
-  ItemStack stack;
-  boolean meta, ore, nbt;
+  private ItemStack stack;
+  private boolean meta, ore, nbt;
 
   public ItemStackMatcher(ItemStack stack) {
-    this(stack, stack != null ? stack.getItemDamage() != OreDictionary.WILDCARD_VALUE : true, false, false);
+    //so glad meta is ded
+    // stack != null ? stack.getItemDamage() != OreDictionary.WILDCARD_VALUE : true
+    this(stack, false, false, false);
   }
 
   public ItemStackMatcher(ItemStack stack, boolean meta, boolean ore, boolean nbt) {
@@ -25,21 +25,21 @@ public class ItemStackMatcher implements IItemStackMatcher {
 
   private ItemStackMatcher() {}
 
-  public void readFromNBT(NBTTagCompound compound) {
-    NBTTagCompound c = compound.getCompoundTag("stack");
-    stack = new ItemStack(c);
+  public void readFromNBT(CompoundNBT compound) {
+    CompoundNBT c = (CompoundNBT) compound.get("stack");
+    stack = ItemStack.read(c);
     meta = compound.getBoolean("meta");
     ore = compound.getBoolean("ore");
     nbt = compound.getBoolean("nbt");
   }
 
-  public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-    NBTTagCompound c = new NBTTagCompound();
-    stack.writeToNBT(c);
-    compound.setTag("stack", c);
-    compound.setBoolean("meta", meta);
-    compound.setBoolean("ore", ore);
-    compound.setBoolean("nbt", nbt);
+  public CompoundNBT writeToNBT(CompoundNBT compound) {
+    CompoundNBT c = new CompoundNBT();
+    stack.write(c);
+    compound.put("stack", c);
+    compound.putBoolean("meta", meta);
+    compound.putBoolean("ore", ore);
+    compound.putBoolean("nbt", nbt);
     return c;
   }
 
@@ -48,7 +48,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     return "ItemStackMatcher [stack=" + stack + ", meta=" + meta + ", ore=" + ore + ", nbt=" + nbt + "]";
   }
 
-  public ItemStack getStack() {
+  @Override public ItemStack getStack() {
     return stack;
   }
 
@@ -80,7 +80,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     this.nbt = nbt;
   }
 
-  public static ItemStackMatcher loadFilterItemFromNBT(NBTTagCompound nbt) {
+  public static ItemStackMatcher loadFilterItemFromNBT(CompoundNBT nbt) {
     ItemStackMatcher fil = new ItemStackMatcher();
     fil.readFromNBT(nbt);
     return fil.getStack() != null && fil.getStack().getItem() != null ? fil : null;
@@ -88,14 +88,20 @@ public class ItemStackMatcher implements IItemStackMatcher {
 
   @Override
   public boolean match(@Nonnull ItemStack stackIn) {
-    if (stackIn.isEmpty())
+    if (stackIn.isEmpty()) {
       return false;
-    if (ore && UtilTileEntity.equalOreDict(stackIn, stack))
-      return true;
-    if (nbt && !ItemStack.areItemStackTagsEqual(stack, stackIn))
+    }
+    // TODO: TAGS
+    //    if (ore && UtilTileEntity.equalOreDict(stackIn, stack)) {
+    //      return true;
+    //    }
+    if (nbt && !ItemStack.areItemStackTagsEqual(stack, stackIn)) {
       return false;
-    if (meta && stackIn.getItemDamage() != stack.getItemDamage())
-      return false;
+    }
+    //meta ded
+    //    if (meta && stackIn.getItemDamage() != stack.getItemDamage()) {
+    //      return false;
+    //    }
     return stackIn.getItem() == stack.getItem();
   }
 }

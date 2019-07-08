@@ -1,36 +1,35 @@
 package mrriegel.storagenetwork.api.data;
-
-import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import io.netty.buffer.ByteBuf;
 import mrriegel.storagenetwork.StorageNetwork;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraft.world.chunk.IChunk;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class DimPos implements INBTSerializable<NBTTagCompound> {
+import javax.annotation.Nullable;
 
-  public int dimension;
+public class DimPos implements INBTSerializable<CompoundNBT> {
+
+  private int dimension;
   private BlockPos pos = new BlockPos(0, 0, 0);
   private World world;
 
   public DimPos() {}
 
-  public DimPos(NBTTagCompound tag) {
-    this.deserializeNBT(tag);
+  public DimPos(CompoundNBT tag) {
+    deserializeNBT(tag);
   }
 
   public DimPos(ByteBuf buf) {
-    this.dimension = buf.readInt();
-    this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+    dimension = buf.readInt();
+    pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
   }
 
   public DimPos(int dimension, BlockPos pos) {
@@ -40,23 +39,24 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
 
   public DimPos(World world, BlockPos pos) {
     this.world = world;
-    this.dimension = world == null ? 0 : world.provider.getDimension();
+    dimension = 0;
+    //    dimension = world == null ? 0 : world.provider.getDimension();
     this.pos = pos;
   }
 
   @Nullable
   public World getWorld() {
-    if (world != null) {
+    //    if (world != null) {
       return world;
-    }
-    return DimensionManager.getWorld(this.dimension);
+    //    }
+    //    return DimensionManager.getWorld(dimension);
   }
 
   public BlockPos getBlockPos() {
     return pos;
   }
 
-  public IBlockState getBlockState() {
+  public BlockState getBlockState() {
     return getWorld().getBlockState(getBlockPos());
   }
 
@@ -77,7 +77,7 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
   }
 
   @Nullable
-  public <V> V getCapability(Capability<V> capability, EnumFacing side) {
+  public <V> V getCapability(Capability<V> capability, Direction side) {
     World world = getWorld();
     if (world == null || getBlockPos() == null) {
       return null;
@@ -86,10 +86,10 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
     if (tileEntity == null) {
       return null;
     }
-    if (!tileEntity.hasCapability(capability, side)) {
-      return null;
-    }
-    return tileEntity.getCapability(capability, side);
+    //    if (!tileEntity.hasCapability(capability, side)) {
+    //      return null;
+    //    }
+    return tileEntity.getCapability(capability, side).orElse(null);
   }
 
   public boolean isLoaded() {
@@ -100,13 +100,20 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
   }
 
   public boolean equals(World world, BlockPos pos) {
-    return this.dimension == world.provider.getDimension() && pos.equals(this.pos);
+    //    world.dimension
+    //    return dimension == world.provider.getDimension() &&
+    //
+    return pos.equals(this.pos);
   }
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     DimPos dimPos = (DimPos) o;
     return dimension == dimPos.dimension &&
         Objects.equal(pos, dimPos.pos);
@@ -126,37 +133,37 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
   }
 
   public void writeToByteBuf(ByteBuf buf) {
-    buf.writeInt(this.dimension);
-    buf.writeInt(this.pos.getX());
-    buf.writeInt(this.pos.getY());
-    buf.writeInt(this.pos.getZ());
+    buf.writeInt(dimension);
+    buf.writeInt(pos.getX());
+    buf.writeInt(pos.getY());
+    buf.writeInt(pos.getZ());
   }
 
   @Override
-  public NBTTagCompound serializeNBT() {
+  public CompoundNBT serializeNBT() {
     if (pos == null) {
       pos = new BlockPos(0, 0, 0);
     }
-    NBTTagCompound result = NBTUtil.createPosTag(this.pos);
-    result.setInteger("Dim", this.dimension);
+    CompoundNBT result = NBTUtil.writeBlockPos(pos);
+    //    result.setInteger("Dim", dimension);
     return result;
   }
 
   @Override
-  public void deserializeNBT(NBTTagCompound nbt) {
-    this.pos = NBTUtil.getPosFromTag(nbt);
-    this.dimension = nbt.getInteger("Dim");
+  public void deserializeNBT(CompoundNBT nbt) {
+    pos = NBTUtil.readBlockPos(nbt);
+    //    dimension = nbt.getInteger("Dim");
   }
 
-  public DimPos offset(EnumFacing direction) {
+  public DimPos offset(Direction direction) {
     if (pos == null || direction == null) {
-      StorageNetwork.log("Error: null offset in DimPos " + direction);
+      StorageNetwork.LOGGER.info("Error: null offset in DimPos " + direction);
       return null;
     }
-    return new DimPos(this.dimension, this.pos.offset(direction));
+    return new DimPos(dimension, pos.offset(direction));
   }
 
-  public Chunk getChunk() {
-    return getWorld().getChunkFromBlockCoords(this.pos);
+  public IChunk getChunk() {
+    return getWorld().getChunk(pos);
   }
 }

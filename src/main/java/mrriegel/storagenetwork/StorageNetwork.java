@@ -1,105 +1,91 @@
 package mrriegel.storagenetwork;
-
-import org.apache.logging.log4j.Logger;
-import mrriegel.storagenetwork.apiimpl.AnnotatedInstanceUtil;
 import mrriegel.storagenetwork.apiimpl.PluginRegistry;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
-import mrriegel.storagenetwork.config.ConfigHandler;
-import mrriegel.storagenetwork.datafixes.FixManager;
-import mrriegel.storagenetwork.proxy.CommonProxy;
-import mrriegel.storagenetwork.registry.RegistryEvents;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
+import mrriegel.storagenetwork.setup.ClientProxy;
+import mrriegel.storagenetwork.setup.IProxy;
+import mrriegel.storagenetwork.setup.ServerProxy;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLFingerprintViolationEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-@Mod(modid = StorageNetwork.MODID, name = StorageNetwork.MODNAME, certificateFingerprint = "@FINGERPRINT@", version = StorageNetwork.VERSION, updateJSON = "https://raw.githubusercontent.com/Lothrazar/Storage-Network/master/update.json")
+@Mod(StorageNetwork.MODID)
+//, name = StorageNetwork.MODNAME, certificateFingerprint = "@FINGERPRINT@", version = StorageNetwork.VERSION, updateJSON = "https://raw.githubusercontent.com/Lothrazar/Storage-Network/master/update.json")
 public class StorageNetwork {
 
-  public Logger logger;
   public static final String MODID = "storagenetwork";
-  public static final String MODNAME = "Simple Storage Network";
-  public static final String VERSION = "@VERSION@";
-  @Instance(StorageNetwork.MODID)
-  public static StorageNetwork instance;
-  @SidedProxy(clientSide = "mrriegel.storagenetwork.proxy.ClientProxy", serverSide = "mrriegel.storagenetwork.proxy.CommonProxy")
-  public static CommonProxy proxy;
-  public static final PluginRegistry pluginRegistry = new PluginRegistry();
+  public static final Logger LOGGER = LogManager.getLogger();
+  private static final PluginRegistry pluginRegistry = new PluginRegistry();
   public static StorageNetworkHelpers helpers = new StorageNetworkHelpers();
-  @SuppressWarnings("unused")
-  private static FixManager fixManager;
+  public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
-  @EventHandler
-  public void preInit(FMLPreInitializationEvent event) {
-    logger = event.getModLog();
-    fixManager = new FixManager();
+  public StorageNetwork() {
+    // Register the setup method for modloading
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
+    //only for server starting
     // Load all the plugins by instantiating all annotated instances of IStorageNetworkPlugin
-    AnnotatedInstanceUtil.asmDataTable = event.getAsmData();
+    // AnnotatedInstanceUtil.asmDataTable = event.getAsmData();
     pluginRegistry.loadStorageNetworkPlugins();
-    proxy.preInit(event);
+
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new RegistryEvents());
   }
 
-  @EventHandler
-  public void init(FMLInitializationEvent event) {
-    proxy.init(event);
+  private static void setup(FMLCommonSetupEvent event) {
+    // some preinit code
+    LOGGER.info("HELLO FROM PREINIT");
   }
 
-  @EventHandler
-  public void postInit(FMLPostInitializationEvent event) {
-    // Notify each plugin that they can now use the IStorageNetworkHelpers instance
-    pluginRegistry.forEach(iStorageNetworkPlugin -> iStorageNetworkPlugin.helpersReady(helpers));
-    proxy.postInit(event);
+  @SubscribeEvent
+  public static void onServerStarting(FMLServerStartingEvent event) {
+    // do something when the server starts
+    LOGGER.info("HELLO from server starting");
   }
 
-  @EventHandler
-  public void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+  // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
+  // Event bus for receiving Registry Events)
+  @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class RegistryEvents {
+
+    @SubscribeEvent
+    public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
+      //      event.getRegistry().register(new BlockMaster());
+    }
+  }
+
+  @SubscribeEvent
+  public static void onFingerprintViolation(FMLFingerprintViolationEvent event) {
     // https://tutorials.darkhax.net/tutorials/jar_signing/
     String source = (event.getSource() == null) ? "" : event.getSource().getName() + " ";
     String msg = "Storage Network: Invalid fingerprint detected! The file " + source + "may have been tampered with. This version will NOT be supported by the author!";
-    if (logger == null) {
-      System.out.println(msg);
+    System.out.println(msg);
+  }
+
+  public static void chatMessage(PlayerEntity player, String message) {
+    if (player.world.isRemote) {
+      player.sendMessage(new TranslationTextComponent((message)));
     }
-    else {
-      logger.error(msg);
+  }
+
+  public static void statusMessage(PlayerEntity player, String message) {
+    if (player.world.isRemote) {
+      player.sendStatusMessage(new TranslationTextComponent((message)), true);
     }
   }
 
-  public static void chatMessage(EntityPlayer player, String message) {
-    if (player.world.isRemote)
-      player.sendMessage(new TextComponentString(lang(message)));
-  }
-
-  public static void statusMessage(EntityPlayer player, String message) {
-    if (player.world.isRemote)
-      player.sendStatusMessage(new TextComponentString(lang(message)), true);
-  }
-
-  @SuppressWarnings("deprecation")
   public static String lang(String message) {
-    return net.minecraft.util.text.translation.I18n.translateToLocal(message);
-  }
-
-  public static void log(String s) {
-    if (ConfigHandler.logEverything) {
-      instance.logger.info(s);
-    }
-  }
-
-  public static void info(String s) {
-    instance.logger.info(s);
-  }
-
-  public static void error(String s) {
-    instance.logger.error(s);
+    TranslationTextComponent t = new TranslationTextComponent(message);
+    return t.getFormattedText();
   }
 
 }

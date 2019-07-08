@@ -1,49 +1,47 @@
 package mrriegel.storagenetwork.capabilities;
-
-import javax.annotation.Nullable;
 import mrriegel.storagenetwork.api.capability.DefaultConnectable;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.data.DimPos;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class CapabilityConnectable extends DefaultConnectable implements INBTSerializable<NBTTagCompound> {
+import javax.annotation.Nullable;
+
+public class CapabilityConnectable extends DefaultConnectable implements INBTSerializable<CompoundNBT> {
 
   @Override
-  public NBTTagCompound serializeNBT() {
-    NBTTagCompound result = new NBTTagCompound();
+  public CompoundNBT serializeNBT() {
+    CompoundNBT result = new CompoundNBT();
     if (getMasterPos() == null) {
       return result;
     }
-    result.setTag("master", getMasterPos().serializeNBT());
-    result.setTag("self", getPos().serializeNBT());
+    result.put("master", getMasterPos().serializeNBT());
+    result.put("self", getPos().serializeNBT());
     return result;
   }
 
   @Override
-  public void deserializeNBT(NBTTagCompound nbt) {
-    this.setMasterPos(new DimPos(nbt.getCompoundTag("master")));
-    if (nbt.hasKey("self")) {
-      this.setPos(new DimPos(nbt.getCompoundTag("self")));
+  public void deserializeNBT(CompoundNBT nbt) {
+    setMasterPos(new DimPos(nbt.getCompound("master")));
+    if (nbt.contains("self")) {
+      setPos(new DimPos(nbt.getCompound("self")));
     }
   }
 
   public static class Storage implements Capability.IStorage<IConnectable> {
 
-    @Nullable
-    @Override
-    public NBTBase writeNBT(Capability<IConnectable> capability, IConnectable rawInstance, EnumFacing side) {
-      CapabilityConnectable instance = (CapabilityConnectable) rawInstance;
-      return instance.serializeNBT();
+    @Nullable @Override
+    public INBT writeNBT(Capability<IConnectable> capability, IConnectable instance, Direction side) {
+      CapabilityConnectable i = (CapabilityConnectable) instance;
+      return i.serializeNBT();
     }
 
-    @Override
-    public void readNBT(Capability<IConnectable> capability, IConnectable rawInstance, EnumFacing side, NBTBase nbt) {
-      CapabilityConnectable instance = (CapabilityConnectable) rawInstance;
-      instance.deserializeNBT((NBTTagCompound) nbt);
+    @Override public void readNBT(Capability<IConnectable> capability, IConnectable instance, Direction side, INBT nbt) {
+      CapabilityConnectable i = (CapabilityConnectable) instance;
+      i.deserializeNBT((CompoundNBT) nbt);
     }
   }
 }

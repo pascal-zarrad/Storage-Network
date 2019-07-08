@@ -1,12 +1,12 @@
 package mrriegel.storagenetwork.util.inventory;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 
@@ -47,7 +47,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
 
   public void clear() {
     for (int slot = 0; slot < getSlots(); slot++) {
-      this.setStackInSlot(slot, ItemStack.EMPTY);
+      setStackInSlot(slot, ItemStack.EMPTY);
     }
   }
 
@@ -65,24 +65,24 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   @Override
-  public void deserializeNBT(NBTTagCompound nbt) {
+  public void deserializeNBT(CompoundNBT nbt) {
     super.deserializeNBT(nbt);
-    NBTTagCompound rulesTag = nbt.getCompoundTag("rules");
-    this.ores = rulesTag.getBoolean("ores");
-    this.meta = rulesTag.getBoolean("meta");
+    CompoundNBT rulesTag = nbt.getCompound("rules");
+    ores = rulesTag.getBoolean("ores");
+    meta = rulesTag.getBoolean("meta");
     this.nbt = rulesTag.getBoolean("nbt");
-    this.isWhitelist = rulesTag.getBoolean("whitelist");
+    isWhitelist = rulesTag.getBoolean("whitelist");
   }
 
   @Override
-  public NBTTagCompound serializeNBT() {
-    NBTTagCompound result = super.serializeNBT();
-    NBTTagCompound rulesTag = new NBTTagCompound();
-    rulesTag.setBoolean("ores", ores);
-    rulesTag.setBoolean("meta", meta);
-    rulesTag.setBoolean("nbt", nbt);
-    rulesTag.setBoolean("whitelist", isWhitelist);
-    result.setTag("rules", rulesTag);
+  public CompoundNBT serializeNBT() {
+    CompoundNBT result = super.serializeNBT();
+    CompoundNBT rulesTag = new CompoundNBT();
+    rulesTag.putBoolean("ores", ores);
+    rulesTag.putBoolean("meta", meta);
+    rulesTag.putBoolean("nbt", nbt);
+    rulesTag.putBoolean("whitelist", isWhitelist);
+    result.put("rules", rulesTag);
     return result;
   }
 }

@@ -1,10 +1,4 @@
 package mrriegel.storagenetwork.capabilities;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.capability.IConnectableItemAutoIO;
@@ -17,10 +11,10 @@ import mrriegel.storagenetwork.data.ItemStackMatcher;
 import mrriegel.storagenetwork.util.inventory.FilterItemStackHandler;
 import mrriegel.storagenetwork.util.inventory.UpgradesItemStackHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -28,7 +22,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompound>, IConnectableItemAutoIO {
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+
+public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT>, IConnectableItemAutoIO {
 
   public IConnectable connectable;
   public EnumStorageDirection direction;
@@ -38,15 +38,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
   public int operationLimit = 0;
   public boolean operationMustBeSmaller = true;
   public int priority = 0;
-  protected EnumFacing inventoryFace;
+  private Direction inventoryFace;
 
-  public CapabilityConnectableAutoIO(EnumStorageDirection direction) {
-    this.connectable = new CapabilityConnectable();
+  CapabilityConnectableAutoIO(EnumStorageDirection direction) {
+    connectable = new CapabilityConnectable();
     this.direction = direction;
   }
 
   public CapabilityConnectableAutoIO(TileEntity tile, EnumStorageDirection direction) {
-    this.connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
+    connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     this.direction = direction;
     // Set some defaults
     if (direction == EnumStorageDirection.OUT) {
@@ -54,47 +54,47 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
     }
   }
 
-  public void setInventoryFace(EnumFacing inventoryFace) {
+  public void setInventoryFace(Direction inventoryFace) {
     this.inventoryFace = inventoryFace;
   }
 
   @Override
-  public NBTTagCompound serializeNBT() {
-    NBTTagCompound result = new NBTTagCompound();
-    NBTTagCompound upgrades = this.upgrades.serializeNBT();
-    result.setTag("upgrades", upgrades);
-    NBTTagCompound filters = this.filters.serializeNBT();
-    result.setTag("filters", filters);
-    NBTTagCompound operation = new NBTTagCompound();
-    operation.setTag("stack", operationStack.serializeNBT());
-    operation.setBoolean("mustBeSmaller", operationMustBeSmaller);
-    operation.setInteger("limit", operationLimit);
-    result.setTag("operation", operation);
-    result.setInteger("prio", priority);
+  public CompoundNBT serializeNBT() {
+    CompoundNBT result = new CompoundNBT();
+    CompoundNBT upgrades = this.upgrades.serializeNBT();
+    result.put("upgrades", upgrades);
+    CompoundNBT filters = this.filters.serializeNBT();
+    result.put("filters", filters);
+    CompoundNBT operation = new CompoundNBT();
+    operation.put("stack", operationStack.serializeNBT());
+    operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
+    operation.putInt("limit", operationLimit);
+    result.put("operation", operation);
+    result.putInt("prio", priority);
     if (inventoryFace != null) {
-      result.setString("inventoryFace", inventoryFace.toString());
+      result.putString("inventoryFace", inventoryFace.toString());
     }
     return result;
   }
 
   @Override
-  public void deserializeNBT(NBTTagCompound nbt) {
-    NBTTagCompound upgrades = nbt.getCompoundTag("upgrades");
+  public void deserializeNBT(CompoundNBT nbt) {
+    CompoundNBT upgrades = (CompoundNBT) nbt.get("upgrades");
     this.upgrades.deserializeNBT(upgrades);
-    NBTTagCompound filters = nbt.getCompoundTag("filters");
+    CompoundNBT filters = (CompoundNBT) nbt.get("filters");
     this.filters.deserializeNBT(filters);
-    NBTTagCompound operation = nbt.getCompoundTag("operation");
-    this.operationLimit = operation.getInteger("limit");
-    this.operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
-    if (operation.hasKey("stack", Constants.NBT.TAG_COMPOUND)) {
-      this.operationStack = new ItemStack(operation.getCompoundTag("stack"));
+    CompoundNBT operation = (CompoundNBT) nbt.get("operation");
+    operationLimit = operation.getInt("limit");
+    operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
+    if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
+      operationStack = ItemStack.read((CompoundNBT) operation.get("stack"));
     }
     else {
-      this.operationStack = ItemStack.EMPTY;
+      operationStack = ItemStack.EMPTY;
     }
-    this.priority = nbt.getInteger("prio");
-    if (nbt.hasKey("inventoryFace")) {
-      this.inventoryFace = EnumFacing.byName(nbt.getString("inventoryFace"));
+    priority = nbt.getInt("prio");
+    if (nbt.contains("inventoryFace")) {
+      inventoryFace = Direction.byName(nbt.getString("inventoryFace"));
     }
   }
 
@@ -140,7 +140,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
     // Test whether the connected block has the IItemHandler capability
     IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
     if (itemHandler == null) {
-      StorageNetwork.error("getStacksForFilter    null itemhandler connection ");
+      StorageNetwork.LOGGER.error("getStacksForFilter    null itemhandler connection ");
       return Collections.emptyList();
     }
     // If it does, iterate its stacks, filter them and add them to the result list
@@ -150,13 +150,13 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
       if (stack == null || stack.isEmpty()) {
         continue;
       }
-      StorageNetwork.log(slot + "getStacksForFilter    " + stack
+      StorageNetwork.LOGGER.info(slot + "getStacksForFilter    " + stack
           + filters.exactStackAlreadyInList(stack));
-      if (this.filters.exactStackAlreadyInList(stack)) {
+      if (filters.exactStackAlreadyInList(stack)) {
         continue;
       }
       result.add(stack.copy());
-      StorageNetwork.log("getStacksForFilter   size up   " + result.size());
+      StorageNetwork.LOGGER.info("getStacksForFilter   size up   " + result.size());
       // We can abort after we've found FILTER_SIZE stacks; we don't have more filter slots anyway
       if (result.size() >= FilterItemStackHandler.FILTER_SIZE) {
         return result;
@@ -187,7 +187,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
         continue;
       }
       // Ignore stacks that are filtered
-      if (this.filters.isStackFiltered(stack)) {
+      if (filters.isStackFiltered(stack)) {
         continue;
       }
       int extractSize = Math.min(size, stack.getCount());
@@ -220,7 +220,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
     if (speedRatio <= 1) {
       speedRatio = 1;
     }
-    boolean cooldownOk = (connectablePos.getWorld().getTotalWorldTime() % speedRatio == 0);
+    boolean cooldownOk = (connectablePos.getWorld().getGameTime() % speedRatio == 0);
     boolean operationLimitOk = doesPassOperationFilterLimit(master);
     return cooldownOk && operationLimitOk;
   }
@@ -240,17 +240,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
 
   public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
 
-    @Nullable
-    @Override
-    public NBTBase writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, EnumFacing side) {
+    @Override @Nullable
+    public INBT writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
       return instance.serializeNBT();
     }
 
-    @Override
-    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, EnumFacing side, NBTBase nbt) {
+    @Override public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, INBT nbt) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-      instance.deserializeNBT((NBTTagCompound) nbt);
+      instance.deserializeNBT((CompoundNBT) nbt);
     }
   }
 
@@ -260,7 +258,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
   }
 
   @Override
-  public EnumFacing facingInventory() {
+  public Direction facingInventory() {
     return inventoryFace;
   }
 }

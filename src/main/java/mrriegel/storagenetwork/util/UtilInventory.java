@@ -1,13 +1,12 @@
 package mrriegel.storagenetwork.util;
-
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -16,24 +15,31 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 public class UtilInventory {
 
-  public static boolean hasItemHandler(IBlockAccess world, BlockPos pos, EnumFacing facing) {
+  public static boolean hasItemHandler(World world, BlockPos pos, Direction facing) {
     return getItemHandler(world.getTileEntity(pos), facing) != null;
   }
 
-  public static boolean doOverlap(final String text, final String name) {
+  public static boolean doOverlap(String text, String name) {
     return text.toLowerCase().contains(name.toLowerCase())
         || name.toLowerCase().contains(text.toLowerCase());
   }
 
-  public static IItemHandler getItemHandler(TileEntity tile, EnumFacing side) {
-    if (tile == null)
+  public static IItemHandler getItemHandler(TileEntity tile, Direction side) {
+    if (tile == null) {
       return null;
-    if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side))
-      return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
-    if (tile instanceof ISidedInventory)
+    }
+    //    if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
+    IItemHandler cap = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).orElse(null);
+    //    }
+    if (cap != null) {
+      return null;
+    }
+    if (tile instanceof ISidedInventory) {
       return new SidedInvWrapper((ISidedInventory) tile, side);
-    if (tile instanceof IInventory)
+    }
+    if (tile instanceof IInventory) {
       return new InvWrapper((IInventory) tile);
+    }
     return null;
   }
 
@@ -76,8 +82,9 @@ public class UtilInventory {
       }
     }
     //do you have all 4? or do you need 2 still
-    if (found >= minimumCount)
+    if (found >= minimumCount) {
       return 0;
+    }
     return minimumCount - found;
   }
 
@@ -88,8 +95,9 @@ public class UtilInventory {
     int amount = 0;
     for (int i = 0; i < inv.getSlots(); i++) {
       ItemStack slot = inv.getStackInSlot(i);
-      if (fil.match(slot))
+      if (fil.match(slot)) {
         amount += slot.getCount();
+      }
     }
     return amount;
   }
@@ -105,10 +113,12 @@ public class UtilInventory {
         ItemStack ex = inv.extractItem(i, 1, simulate);
         if (!ex.isEmpty()) {
           extracted++;
-          if (extracted == num)
+          if (extracted == num) {
             return ItemHandlerHelper.copyStackWithSize(slot, num);
-          else
+          }
+          else {
             i--;
+          }
         }
       }
     }
