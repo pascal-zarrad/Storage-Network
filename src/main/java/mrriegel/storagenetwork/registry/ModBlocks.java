@@ -3,9 +3,11 @@ import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.cable.BlockCable;
 import mrriegel.storagenetwork.block.cable.link.BlockCableLink;
 import mrriegel.storagenetwork.block.master.BlockMaster;
+import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class ModBlocks {
@@ -17,7 +19,8 @@ public class ModBlocks {
       return new ItemStack(ModBlocks.master);
     }
   };
-
+  @ObjectHolder("mytutorial:firstblock")
+  public static TileEntityType<TileMaster> mastertile;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMaster master;//network center
   @ObjectHolder(StorageNetwork.MODID + ":request")

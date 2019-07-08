@@ -10,10 +10,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
@@ -23,16 +25,15 @@ import javax.annotation.Nullable;
  */
 public class TileConnectable extends TileEntity {
 
-  // TODO: This is only required for backwards compatibility! Remove in 1.13
-  private World worldCreate;
   private final CapabilityConnectable connectable;
 
-  public TileConnectable() {
+  public TileConnectable(TileEntityType<?> tileEntityTypeIn) {
+    super(tileEntityTypeIn);
     connectable = new CapabilityConnectable();
   }
 
   private DimPos getDimPos() {
-    return new DimPos(world == null ? worldCreate : world, pos);
+    return new DimPos(world, pos);
   }
 
   @Override
@@ -42,30 +43,23 @@ public class TileConnectable extends TileEntity {
   }
 
   @Override
-  protected void setWorldCreate(World worldIn) {
-    super.setWorldCreate(worldIn);
-    worldCreate = worldIn;
-  }
-
-  @Override
-  public void readFromNBT(CompoundNBT compound) {
-    super.readFromNBT(compound);
-    if (compound.hasKey("connectable")) {
-      connectable.deserializeNBT(compound.getCompoundTag("connectable"));
+  public void read(CompoundNBT compound) {
+    super.read(compound);
+    if (compound.contains("connectable")) {
+      connectable.deserializeNBT((CompoundNBT) compound.get("connectable"));
     }
   }
 
   @Override
-  public CompoundNBT writeToNBT(CompoundNBT compound) {
-    CompoundNBT result = super.writeToNBT(compound);
-    result.setTag("connectable", connectable.serializeNBT());
+  public CompoundNBT write(CompoundNBT compound) {
+    CompoundNBT result = super.write(compound);
+    result.put("connectable", connectable.serializeNBT());
     return result;
   }
-
-  @Override
-  public CompoundNBT getUpdateTag() {
-    return writeToNBT(new CompoundNBT());
-  }
+  //  @Override
+  //  public CompoundNBT getUpdateTag() {
+  //    return writeToNBT(new CompoundNBT());
+  //  }
 
   public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
     return oldState.getBlock() != newSate.getBlock();
@@ -74,16 +68,17 @@ public class TileConnectable extends TileEntity {
   @Override
   public SUpdateTileEntityPacket getUpdatePacket() {
     CompoundNBT syncData = new CompoundNBT();
-    writeToNBT(syncData);
+    write(syncData);
     return new SUpdateTileEntityPacket(pos, 1, syncData);
   }
 
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    readFromNBT(pkt.getNbtCompound());
+    read(pkt.getNbtCompound());
   }
 
-  @Override
+  //@Override
+  //TODO: UNUSED?
   public void onChunkUnload() {
     if (ConfigHandler.reloadNetworkWhenUnloadChunk && connectable != null && connectable.getMasterPos() != null) {
       try {
@@ -107,9 +102,10 @@ public class TileConnectable extends TileEntity {
 
   @Nullable
   @Override
-  public <T> T getCapability(Capability<T> capability, @Nullable Direction facing) {
+  public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_CAPABILITY) {
-      return (T) connectable;
+      LazyOptional<CapabilityConnectable> cap = LazyOptional.of(() -> connectable);
+      return (LazyOptional<T>) cap;
     }
     return super.getCapability(capability, facing);
   }

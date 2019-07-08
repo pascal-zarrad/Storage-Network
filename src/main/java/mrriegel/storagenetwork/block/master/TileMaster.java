@@ -14,11 +14,13 @@ import mrriegel.storagenetwork.block.control.ProcessWrapper;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.config.ConfigHandler;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
+import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.util.UtilInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -49,6 +51,9 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
     return new DimPos(world, pos);
   }
 
+  public TileMaster() {
+    super(ModBlocks.mastertile);
+  }
   @Override
   public List<ItemStack> getStacks() {
     List<ItemStack> stacks = Lists.newArrayList();
@@ -104,7 +109,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
 
   @Override
   public CompoundNBT getUpdateTag() {
-    return writeToNBT(new CompoundNBT());
+    return write(new CompoundNBT());
   }
 
   /**
@@ -443,19 +448,19 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
       }
       DimPos inventoryPos = pos.offset(cableProcess.getDirection());
       if (inventoryPos == null) {
-        StorageNetwork.log("Error: processor null at  " + pos + "," + cableProcess.getDirection());
+        StorageNetwork.LOGGER.info("Error: processor null at  " + pos + "," + cableProcess.getDirection());
         continue;
       }
       BlockState blockState = inventoryPos.getBlockState();
-      String name = blockState.getBlock().getLocalizedName();
+      String name = blockState.getBlock().getRegistryName().toString();
       try {
         ItemStack pickBlock = blockState.getBlock().getPickBlock(blockState, null, inventoryPos.getWorld(), inventoryPos.getBlockPos(), null);
         if (pickBlock.isEmpty() == false) {
-          name = pickBlock.getDisplayName();
+          name = pickBlock.getDisplayName().toString();
         }
       }
       catch (Exception e) {
-        StorageNetwork.instance.logger.error("Error with display name ", e);
+        StorageNetwork.LOGGER.error("Error with display name ", e);
       }
       ProcessRequestModel proc = cableProcess.getProcessModel();
       //if list of models then wrapper would not need to change at all
@@ -472,20 +477,20 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
   }
 
   @Override
-  public void update() {
+  public void tick() {//was .update(
     if (world == null || world.isRemote) {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getTotalWorldTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
+    if (getConnectablePositions() == null || (world.getGameTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
         // addInventorys();
-        world.getChunkFromBlockCoords(pos).setModified(true);//.setChunkModified();
+        world.getChunk(pos).setModified(true);//.setChunkModified();
       }
       catch (Throwable e) {
-        StorageNetwork.instance.logger.error("Refresh network error ", e);
+        StorageNetwork.LOGGER.error("Refresh network error ", e);
       }
     }
     updateImports();
@@ -494,15 +499,15 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
   }
 
   @Override
-  public SPacketUpdateTileEntity getUpdatePacket() {
+  public SUpdateTileEntityPacket getUpdatePacket() {
     CompoundNBT syncData = new CompoundNBT();
-    writeToNBT(syncData);
-    return new SPacketUpdateTileEntity(pos, 1, syncData);
+    write(syncData);
+    return new SUpdateTileEntityPacket(pos, 1, syncData);
   }
 
   @Override
-  public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-    readFromNBT(pkt.getNbtCompound());
+  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    read(pkt.getNbtCompound());
   }
 
   public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {

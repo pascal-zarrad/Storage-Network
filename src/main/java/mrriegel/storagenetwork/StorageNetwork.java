@@ -1,6 +1,7 @@
 package mrriegel.storagenetwork;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.master.BlockMaster;
+import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.setup.ClientProxy;
 import mrriegel.storagenetwork.setup.IProxy;
@@ -9,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -69,6 +71,11 @@ public class StorageNetwork {
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
       Item.Properties properties = new Item.Properties().group(ModBlocks.itemGroup);
       event.getRegistry().register(new BlockItem(ModBlocks.master, properties).setRegistryName("master"));
+    }
+
+    @SubscribeEvent
+    public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
+      event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, ModBlocks.master).build(null).setRegistryName("master"));
     }
   }
 
