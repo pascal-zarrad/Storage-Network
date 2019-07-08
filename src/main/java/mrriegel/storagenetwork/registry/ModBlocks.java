@@ -4,9 +4,19 @@ import mrriegel.storagenetwork.block.cable.BlockCable;
 import mrriegel.storagenetwork.block.cable.link.BlockCableLink;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.registries.ObjectHolder;
 
 public class ModBlocks {
+
+  public static ItemGroup itemGroup = new ItemGroup(StorageNetwork.MODID) {
+
+    @Override
+    public ItemStack createIcon() {
+      return new ItemStack(ModBlocks.master);
+    }
+  };
 
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMaster master;//network center

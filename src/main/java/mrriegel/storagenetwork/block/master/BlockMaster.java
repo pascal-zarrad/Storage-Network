@@ -1,15 +1,5 @@
 package mrriegel.storagenetwork.block.master;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
-import mrriegel.storagenetwork.CreativeTab;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.data.DimPos;
@@ -34,16 +24,22 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class BlockMaster extends BaseBlock {
 
-  public BlockMaster(String registryName) {
-    super(Material.IRON, registryName);
-    this.setHardness(3.0F);
-    this.setCreativeTab(CreativeTab.tab);
+  public BlockMaster() {
+    super(Material.IRON, "master");
   }
 
-  @Override
-  public TileEntity createNewTileEntity(World worldIn, int meta) {
+  public static TileEntity createNewTileEntity(World worldIn, int meta) {
     return new TileMaster();
   }
 
@@ -91,8 +87,7 @@ public class BlockMaster extends BaseBlock {
     return EnumBlockRenderType.MODEL;
   }
 
-  @Override
-  public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+  public static boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
     if (worldIn.isRemote) {
       return true;
     }
@@ -103,10 +98,10 @@ public class BlockMaster extends BaseBlock {
     TileMaster tileMaster = (TileMaster) tileHere;
     playerIn.sendMessage(new TextComponentString(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMaster.emptySlots()));
     playerIn.sendMessage(new TextComponentString(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMaster.getConnectablePositions().size()));
-    Map<String, Integer> mapNamesToCount = new HashMap<String, Integer>();
+    Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMaster.getConnectablePositions().iterator();
     while (iter.hasNext()) {
-      final DimPos p = iter.next();
+      DimPos p = iter.next();
       String block = p.getBlockState().getBlock().getLocalizedName();
       mapNamesToCount.put(block, mapNamesToCount.get(block) != null ? (mapNamesToCount.get(block) + 1) : 1);
     }

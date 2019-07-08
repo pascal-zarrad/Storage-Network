@@ -1,11 +1,14 @@
 package mrriegel.storagenetwork;
-import mrriegel.storagenetwork.apiimpl.PluginRegistry;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
+import mrriegel.storagenetwork.block.master.BlockMaster;
+import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.setup.ClientProxy;
 import mrriegel.storagenetwork.setup.IProxy;
 import mrriegel.storagenetwork.setup.ServerProxy;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,7 +28,7 @@ public class StorageNetwork {
 
   public static final String MODID = "storagenetwork";
   public static final Logger LOGGER = LogManager.getLogger();
-  private static final PluginRegistry pluginRegistry = new PluginRegistry();
+  //  private static final PluginRegistry pluginRegistry = new PluginRegistry();
   public static StorageNetworkHelpers helpers = new StorageNetworkHelpers();
   public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
@@ -35,7 +38,7 @@ public class StorageNetwork {
     //only for server starting
     // Load all the plugins by instantiating all annotated instances of IStorageNetworkPlugin
     // AnnotatedInstanceUtil.asmDataTable = event.getAsmData();
-    pluginRegistry.loadStorageNetworkPlugins();
+    //    pluginRegistry.loadStorageNetworkPlugins();
 
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new RegistryEvents());
@@ -59,7 +62,13 @@ public class StorageNetwork {
 
     @SubscribeEvent
     public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
-      //      event.getRegistry().register(new BlockMaster());
+      event.getRegistry().register(new BlockMaster());
+    }
+
+    @SubscribeEvent
+    public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
+      Item.Properties properties = new Item.Properties().group(ModBlocks.itemGroup);
+      event.getRegistry().register(new BlockItem(ModBlocks.master, properties).setRegistryName("master"));
     }
   }
 
