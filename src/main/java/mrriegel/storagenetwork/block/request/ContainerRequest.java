@@ -2,9 +2,7 @@ package mrriegel.storagenetwork.block.request;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.InventoryCraftingNetwork;
-import mrriegel.storagenetwork.network.StackRefreshClientMessage;
 import mrriegel.storagenetwork.registry.ModBlocks;
-import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ContainerRequest extends ContainerNetworkBase {
@@ -73,7 +70,8 @@ public class ContainerRequest extends ContainerNetworkBase {
     if (tileMaster != null &&
         !table.getWorld().isRemote && table.getWorld().getGameTime() % 40 == 0) {
       List<ItemStack> list = tileMaster.getStacks();
-      PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (PlayerEntityMP) playerIn);
+      // TODO: packets
+      //   PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (PlayerEntityMP) playerIn);
     }
     BlockPos pos = table.getPos();
     return playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;

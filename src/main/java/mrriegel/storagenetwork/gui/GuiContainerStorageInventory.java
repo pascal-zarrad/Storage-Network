@@ -1,12 +1,4 @@
 package mrriegel.storagenetwork.gui;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -33,6 +25,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.oredict.OreDictionary;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Base class for Request table inventory and Remote inventory
@@ -44,13 +44,13 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   protected ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
-  protected int page = 1, maxPage = 1;
-  public List<ItemStack> stacks, craftableStacks;
-  protected ItemStack stackUnderMouse = ItemStack.EMPTY;
-  protected GuiTextField searchBar;
-  protected GuiStorageButton directionBtn, sortBtn, jeiBtn, clearTextBtn;
-  protected List<ItemSlotNetwork> slots;
-  protected long lastClick;
+  private int page = 1, maxPage = 1;
+  private List<ItemStack> stacks, craftableStacks;
+  private ItemStack stackUnderMouse = ItemStack.EMPTY;
+  private GuiTextField searchBar;
+  private GuiStorageButton directionBtn, sortBtn, jeiBtn, clearTextBtn;
+  private List<ItemSlotNetwork> slots;
+  private long lastClick;
   private boolean forceFocus;
   protected boolean isSimple;
 
@@ -58,13 +58,13 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     super(container);
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
-    this.stacks = Lists.newArrayList();
-    this.craftableStacks = Lists.newArrayList();
+    stacks = Lists.newArrayList();
+    craftableStacks = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
     lastClick = System.currentTimeMillis();
   }
 
-  protected boolean canClick() {
+  private boolean canClick() {
     return System.currentTimeMillis() > lastClick + 100L;
   }
 
@@ -75,7 +75,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
 
   @Override
   public void setCraftableStacks(List<ItemStack> stacks) {
-    this.craftableStacks = stacks;
+    craftableStacks = stacks;
   }
 
   @Override
@@ -99,15 +99,15 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     }
     if (!isSimple) {
       directionBtn = new GuiStorageButton(0, guiLeft + 7, searchBar.y - 3, "");
-      this.addButton(directionBtn);
+      addButton(directionBtn);
       sortBtn = new GuiStorageButton(1, guiLeft + 21, searchBar.y - 3, "");
-      this.addButton(sortBtn);
+      addButton(sortBtn);
       jeiBtn = new GuiStorageButton(4, guiLeft + 35, searchBar.y - 3, "");
       if (JeiSettings.isJeiLoaded()) {
-        this.addButton(jeiBtn);
+        addButton(jeiBtn);
       }
       clearTextBtn = new GuiStorageButton(5, guiLeft + 64, searchBar.y - 3, "X");
-      this.addButton(clearTextBtn);
+      addButton(clearTextBtn);
     }
   }
 
@@ -115,7 +115,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     return isSimple ? 8 : 4;
   }
 
-  private int getColumns() {
+  private static int getColumns() {
     return 9;
   }
 
@@ -131,7 +131,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
 
   protected abstract int getDim();
 
-  protected boolean inField(int mouseX, int mouseY) {
+  private boolean inField(int mouseX, int mouseY) {
     int h = 90;
     if (isSimple) {
       h += 60;
@@ -139,7 +139,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + h);
   }
 
-  protected boolean inSearchbar(int mouseX, int mouseY) {
+  private boolean inSearchbar(int mouseX, int mouseY) {
     return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.width, fontRenderer.FONT_HEIGHT + 6, mouseX, mouseY);
   }
 
@@ -203,10 +203,10 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    if (this.isScreenValid() == false) {
+    if (isScreenValid() == false) {
       return;
     }
-    this.drawDefaultBackground();//dim the background as normal
+    drawDefaultBackground();//dim the background as normal
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
@@ -221,7 +221,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     this.mc.getTextureManager().bindTexture(texture);
     int xCenter = (this.width - this.xSize) / 2;
     int yCenter = (this.height - this.ySize) / 2;
-    this.drawTexturedModalRect(xCenter, yCenter, 0, 0, this.xSize, this.ySize);
+    drawTexturedModalRect(xCenter, yCenter, 0, 0, this.xSize, this.ySize);
   }
 
   private List<ItemStack> applySearchTextToSlots() {
@@ -241,7 +241,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
       slot.drawSlot(mouseX, mouseY);
-      if (slot.isMouseOverSlot(mouseX, mouseY)) {
+      if (ItemSlotNetwork.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
         //        break;
       }
@@ -286,7 +286,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   private void sortStackWrappers(List<ItemStack> stacksToDisplay) {
     Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
 
-      int mul = getDownwards() ? -1 : 1;
+      final int mul = getDownwards() ? -1 : 1;
 
       @Override
       public int compare(ItemStack o2, ItemStack o1) {
@@ -307,7 +307,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     super.drawScreen(mouseX, mouseY, partialTicks);
     super.renderHoveredToolTip(mouseX, mouseY);
-    if (this.isScreenValid() == false) {
+    if (isScreenValid() == false) {
       mc.player.closeScreen();
       return;
     }
@@ -322,20 +322,20 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    if (this.isScreenValid() == false) {
+    if (isScreenValid() == false) {
       return;
     }
     if (forceFocus) {
-      this.searchBar.setFocused(true);
-      if (this.searchBar.isFocused()) {
-        this.forceFocus = false;
+      searchBar.setFocused(true);
+      if (searchBar.isFocused()) {
+        forceFocus = false;
       }
     }
   }
 
   private void drawTooltips(int mouseX, int mouseY) {
     for (ItemSlotNetwork s : slots) {
-      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
+      if (s != null && ItemSlotNetwork.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
       }
     }
@@ -390,11 +390,11 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
       doSort = false;
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     }
-    else if (button.id == this.clearTextBtn.id) {
+    else if (button.id == clearTextBtn.id) {
       doSort = false;
       clearSearch();
       //      this.fieldOperationLimit.setFocused(true);//doesnt work..somethings overriding it?
-      this.forceFocus = true;//we have to force it to go next-tick
+      forceFocus = true;//we have to force it to go next-tick
     }
     if (doSort) {
       PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
@@ -412,7 +412,8 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
     super.mouseClicked(mouseX, mouseY, mouseButton);
     searchBar.setFocused(false);
-    int rectX = 63, rectY = 110;
+    int rectX = 63;
+    int rectY = 110;
     if (inSearchbar(mouseX, mouseY)) {
       searchBar.setFocused(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
@@ -442,17 +443,17 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
 
   @Override
   public void keyTyped(char typedChar, int keyCode) throws IOException {
-    if (!this.checkHotbarKeys(keyCode)) {
+    if (!checkHotbarKeys(keyCode)) {
       Keyboard.enableRepeatEvents(true);
-      if (searchBar.isFocused() && this.searchBar.textboxKeyTyped(typedChar, keyCode)) {
+      if (searchBar.isFocused() && searchBar.textboxKeyTyped(typedChar, keyCode)) {
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
         }
       }
-      else if (this.stackUnderMouse.isEmpty() == false) {
+      else if (stackUnderMouse.isEmpty() == false) {
         try {
-          JeiHooks.testJeiKeybind(keyCode, this.stackUnderMouse);
+          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
         }
         catch (Throwable e) {
           //its ok JEI not installed for maybe an addon mod is ok 
@@ -490,7 +491,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
 
   public class GuiStorageButton extends GuiButton {
 
-    public GuiStorageButton(int id, int x, int y, String str) {
+    GuiStorageButton(int id, int x, int y, String str) {
       super(id, x, y, 14, 14, str);
     }
 
@@ -505,21 +506,21 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
         mc.getTextureManager().bindTexture(texture);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
-        int k = this.getHoverState(this.hovered);
+        int k = getHoverState(this.hovered);
         GlStateManager.enableBlend();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.blendFunc(770, 771);
-        this.drawTexturedModalRect(this.x, this.y, 162 + 14 * k, 0, width, height);
+        drawTexturedModalRect(this.x, this.y, 162 + 14 * k, 0, width, height);
         if (id == directionBtn.id) {
-          this.drawTexturedModalRect(this.x + 4, this.y + 3, WIDTH + (getDownwards() ? 6 : 0), 14, 6, 8);
+          drawTexturedModalRect(this.x + 4, this.y + 3, GuiContainerStorageInventory.WIDTH + (getDownwards() ? 6 : 0), 14, 6, 8);
         }
         if (id == sortBtn.id) {
-          this.drawTexturedModalRect(this.x + 4, this.y + 3, 188 + (getSort() == EnumSortType.AMOUNT ? 6 : getSort() == EnumSortType.MOD ? 12 : 0), 14, 6, 8);
+          drawTexturedModalRect(this.x + 4, this.y + 3, 188 + (getSort() == EnumSortType.AMOUNT ? 6 : getSort() == EnumSortType.MOD ? 12 : 0), 14, 6, 8);
         }
         if (id == jeiBtn.id) {
-          this.drawTexturedModalRect(this.x + 4, this.y + 3, WIDTH + (JeiSettings.isJeiSearchSynced() ? 0 : 6), 22, 6, 8);
+          drawTexturedModalRect(this.x + 4, this.y + 3, GuiContainerStorageInventory.WIDTH + (JeiSettings.isJeiSearchSynced() ? 0 : 6), 22, 6, 8);
         }
-        this.mouseDragged(mc, x, y);
+        mouseDragged(mc, x, y);
         int l = 14737632;
         if (packedFGColour != 0) {
           l = packedFGColour;
@@ -530,7 +531,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
         else if (this.hovered) {
           l = 16777120;
         }
-        this.drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, l);
+        drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, l);
       }
     }
   }

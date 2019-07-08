@@ -1,10 +1,4 @@
 package mrriegel.storagenetwork.capabilities;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.api.capability.IConnectableLink;
 import mrriegel.storagenetwork.api.data.DimPos;
@@ -12,10 +6,10 @@ import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.util.inventory.FilterItemStackHandler;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -23,26 +17,32 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-// TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
-public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<NBTTagCompound> {
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 
-  public IConnectable connectable;
+// TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
+public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<CompoundNBT> {
+
+  private final IConnectable connectable;
   private boolean operationMustBeSmaller = true;
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;
-  public FilterItemStackHandler filters = new FilterItemStackHandler();
-  public EnumStorageDirection filterDirection = EnumStorageDirection.BOTH;
-  protected EnumFacing inventoryFace;
-  public int priority;
+  private final FilterItemStackHandler filters = new FilterItemStackHandler();
+  private EnumStorageDirection filterDirection = EnumStorageDirection.BOTH;
+  private Direction inventoryFace;
+  private int priority;
 
-  public CapabilityConnectableLink() {
-    this.connectable = new CapabilityConnectable();
-    this.filters.setIsWhitelist(false);
+  CapabilityConnectableLink() {
+    connectable = new CapabilityConnectable();
+    filters.setIsWhitelist(false);
   }
 
   public CapabilityConnectableLink(TileEntity tile) {
-    this.connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
-    this.filters.setIsWhitelist(false);
+    connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
+    filters.setIsWhitelist(false);
   }
 
   @Override
@@ -68,7 +68,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       if (stack == null || stack.isEmpty()) {
         continue;
       }
-      if (this.filters.isStackFiltered(stack)) {
+      if (filters.isStackFiltered(stack)) {
         continue;
       }
       result.add(stack.copy());
@@ -127,7 +127,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
         continue;
       }
       // Ignore stacks that are filtered
-      if (this.filters.isStackFiltered(stack)) {
+      if (filters.isStackFiltered(stack)) {
         continue;
       }
       // If its not even the item type we're looking for -> continue
@@ -188,50 +188,50 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     return filterDirection;
   }
 
-  public void setInventoryFace(EnumFacing inventoryFace) {
+  public void setInventoryFace(Direction inventoryFace) {
     this.inventoryFace = inventoryFace;
   }
 
   @Override
-  public NBTTagCompound serializeNBT() {
-    NBTTagCompound result = new NBTTagCompound();
-    NBTTagCompound filters = this.filters.serializeNBT();
-    result.setTag("filters", filters);
-    result.setInteger("prio", priority);
+  public CompoundNBT serializeNBT() {
+    CompoundNBT result = new CompoundNBT();
+    CompoundNBT filters = this.filters.serializeNBT();
+    result.put("filters", filters);
+    result.putInt("prio", priority);
     if (inventoryFace != null) {
-      result.setString("inventoryFace", inventoryFace.toString());
+      result.putString("inventoryFace", inventoryFace.toString());
     }
-    result.setString("way", filterDirection.toString());
-    NBTTagCompound operation = new NBTTagCompound();
-    operation.setTag("stack", operationStack.serializeNBT());
-    operation.setBoolean("mustBeSmaller", operationMustBeSmaller);
-    operation.setInteger("limit", operationLimit);
-    result.setTag("operation", operation);
+    result.putString("way", filterDirection.toString());
+    CompoundNBT operation = new CompoundNBT();
+    operation.put("stack", operationStack.serializeNBT());
+    operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
+    operation.putInt("limit", operationLimit);
+    result.put("operation", operation);
     return result;
   }
 
   @Override
-  public void deserializeNBT(NBTTagCompound nbt) {
-    NBTTagCompound filters = nbt.getCompoundTag("filters");
+  public void deserializeNBT(CompoundNBT nbt) {
+    CompoundNBT filters = nbt.getCompound("filters");
     this.filters.deserializeNBT(filters);
-    this.priority = nbt.getInteger("prio");
-    if (nbt.hasKey("inventoryFace")) {
-      this.inventoryFace = EnumFacing.byName(nbt.getString("inventoryFace"));
+    priority = nbt.getInt("prio");
+    if (nbt.contains("inventoryFace")) {
+      inventoryFace = Direction.byName(nbt.getString("inventoryFace"));
     }
     try {
-      this.filterDirection = EnumStorageDirection.valueOf(nbt.getString("way"));
+      filterDirection = EnumStorageDirection.valueOf(nbt.getString("way"));
     }
     catch (Exception e) {
-      this.filterDirection = EnumStorageDirection.BOTH;
+      filterDirection = EnumStorageDirection.BOTH;
     }
-    NBTTagCompound operation = nbt.getCompoundTag("operation");
-    this.operationLimit = operation.getInteger("limit");
-    this.operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
-    if (operation.hasKey("stack", Constants.NBT.TAG_COMPOUND)) {
-      this.operationStack = new ItemStack(operation.getCompoundTag("stack"));
+    CompoundNBT operation = nbt.getCompound("operation");
+    operationLimit = operation.getInt("limit");
+    operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
+    if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
+      operationStack = ItemStack.read(operation.getCompound("stack"));
     }
     else {
-      this.operationStack = ItemStack.EMPTY;
+      operationStack = ItemStack.EMPTY;
     }
   }
 
@@ -247,15 +247,14 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
 
     @Nullable
     @Override
-    public NBTBase writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, EnumFacing side) {
+    public INBT writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
       CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
       return instance.serializeNBT();
     }
 
-    @Override
-    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, EnumFacing side, NBTBase nbt) {
+    @Override public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, INBT nbt) {
       CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-      instance.deserializeNBT((NBTTagCompound) nbt);
+      instance.deserializeNBT((CompoundNBT) nbt);
     }
   }
 }
