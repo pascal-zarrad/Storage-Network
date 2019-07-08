@@ -1,7 +1,10 @@
 package mrriegel.storagenetwork.block.request;
 import mrriegel.storagenetwork.block.TileConnectable;
 import mrriegel.storagenetwork.data.EnumSortType;
+import mrriegel.storagenetwork.registry.ModBlocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.HashMap;
@@ -13,37 +16,40 @@ public class TileRequest extends TileConnectable {
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;
 
+  public TileRequest() {
+    super(ModBlocks.requesttile);
+  }
+
   @Override
-  public void readFromNBT(NBTTagCompound compound) {
-    super.readFromNBT(compound);
+  public void read(CompoundNBT compound) {
+    super.read(compound);
     setDownwards(compound.getBoolean("dir"));
     setSort(EnumSortType.valueOf(compound.getString("sort")));
-    NBTTagList invList = compound.getTagList("matrix", Constants.NBT.TAG_COMPOUND);
+    ListNBT invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
     matrix = new HashMap<>();
-    for (int i = 0; i < invList.tagCount(); i++) {
-      NBTTagCompound stackTag = invList.getCompoundTagAt(i);
+    for (int i = 0; i < invList.size(); i++) {
+      CompoundNBT stackTag = invList.getCompound(i);
       int slot = stackTag.getByte("Slot");
-      ItemStack s = new ItemStack(stackTag);
+      ItemStack s = ItemStack.read(stackTag);
       matrix.put(slot, s);
     }
   }
 
   @Override
-  public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-    super.writeToNBT(compound);
-    compound.setBoolean("dir", isDownwards());
-    compound.setString("sort", getSort().toString());
-    NBTTagList invList = new NBTTagList();
-    invList = new NBTTagList();
+  public CompoundNBT write(CompoundNBT compound) {
+    super.write(compound);
+    compound.putBoolean("dir", isDownwards());
+    compound.putString("sort", getSort().toString());
+    ListNBT invList = new ListNBT();
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
-        NBTTagCompound stackTag = new NBTTagCompound();
-        stackTag.setByte("Slot", (byte) i);
-        matrix.get(i).writeToNBT(stackTag);
-        invList.appendTag(stackTag);
+        CompoundNBT stackTag = new CompoundNBT();
+        stackTag.putByte("Slot", (byte) i);
+        matrix.get(i).write(stackTag);
+        invList.add(stackTag);
       }
     }
-    compound.setTag("matrix", invList);
+    compound.put("matrix", invList);
     return compound;
   }
 

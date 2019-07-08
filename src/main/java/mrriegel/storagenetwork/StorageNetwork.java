@@ -2,6 +2,7 @@ package mrriegel.storagenetwork;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.block.request.TileRequest;
 import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.setup.ClientProxy;
 import mrriegel.storagenetwork.setup.IProxy;
@@ -75,7 +76,9 @@ public class StorageNetwork {
 
     @SubscribeEvent
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
+
       event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, ModBlocks.master).build(null).setRegistryName("master"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, ModBlocks.request).build(null).setRegistryName("request"));
     }
   }
 
