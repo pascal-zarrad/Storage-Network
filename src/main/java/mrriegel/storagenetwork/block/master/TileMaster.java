@@ -8,9 +8,7 @@ import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.api.network.INetworkMaster;
-import mrriegel.storagenetwork.block.cable.processing.ProcessRequestModel;
 import mrriegel.storagenetwork.block.cable.processing.TileCableProcess;
-import mrriegel.storagenetwork.block.control.ProcessWrapper;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.config.ConfigHandler;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
@@ -31,7 +29,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -435,42 +432,41 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
     }
     return result;
   }
-
-  public List<ProcessWrapper> getProcessors() {
-    List<ProcessWrapper> result = new ArrayList<>();
-    for (DimPos pos : getConnectablePositions()) {
-      if (!pos.isLoaded()) {
-        continue;
-      }
-      TileCableProcess cableProcess = pos.getTileEntity(TileCableProcess.class);
-      if (cableProcess == null) {
-        continue;
-      }
-      DimPos inventoryPos = pos.offset(cableProcess.getDirection());
-      if (inventoryPos == null) {
-        StorageNetwork.LOGGER.info("Error: processor null at  " + pos + "," + cableProcess.getDirection());
-        continue;
-      }
-      BlockState blockState = inventoryPos.getBlockState();
-      String name = blockState.getBlock().getRegistryName().toString();
-      try {
-        ItemStack pickBlock = blockState.getBlock().getPickBlock(blockState, null, inventoryPos.getWorld(), inventoryPos.getBlockPos(), null);
-        if (pickBlock.isEmpty() == false) {
-          name = pickBlock.getDisplayName().toString();
-        }
-      }
-      catch (Exception e) {
-        StorageNetwork.LOGGER.error("Error with display name ", e);
-      }
-      ProcessRequestModel proc = cableProcess.getProcessModel();
-      //if list of models then wrapper would not need to change at all
-      ProcessWrapper processor = new ProcessWrapper(new DimPos(cableProcess.getWorld(), cableProcess.getPos()), cableProcess.getFirstRecipeOut(), proc.getCount(), name, proc.isAlwaysActive());
-      processor.ingredients = cableProcess.getProcessIngredients();
-      processor.blockId = blockState.getBlock().getRegistryName();
-      result.add(processor);
-    }
-    return result;
-  }
+  //  public List<ProcessWrapper> getProcessors() {
+  //    List<ProcessWrapper> result = new ArrayList<>();
+  //    for (DimPos pos : getConnectablePositions()) {
+  //      if (!pos.isLoaded()) {
+  //        continue;
+  //      }
+  //      TileCableProcess cableProcess = pos.getTileEntity(TileCableProcess.class);
+  //      if (cableProcess == null) {
+  //        continue;
+  //      }
+  //      DimPos inventoryPos = pos.offset(cableProcess.getDirection());
+  //      if (inventoryPos == null) {
+  //        StorageNetwork.LOGGER.info("Error: processor null at  " + pos + "," + cableProcess.getDirection());
+  //        continue;
+  //      }
+  //      BlockState blockState = inventoryPos.getBlockState();
+  //      String name = blockState.getBlock().getRegistryName().toString();
+  //      try {
+  //        ItemStack pickBlock = blockState.getBlock().getPickBlock(blockState, null, inventoryPos.getWorld(), inventoryPos.getBlockPos(), null);
+  //        if (pickBlock.isEmpty() == false) {
+  //          name = pickBlock.getDisplayName().toString();
+  //        }
+  //      }
+  //      catch (Exception e) {
+  //        StorageNetwork.LOGGER.error("Error with display name ", e);
+  //      }
+  //      ProcessRequestModel proc = cableProcess.getProcessModel();
+  //      //if list of models then wrapper would not need to change at all
+  //      ProcessWrapper processor = new ProcessWrapper(new DimPos(cableProcess.getWorld(), cableProcess.getPos()), cableProcess.getFirstRecipeOut(), proc.getCount(), name, proc.isAlwaysActive());
+  //      processor.ingredients = cableProcess.getProcessIngredients();
+  //      processor.blockId = blockState.getBlock().getRegistryName();
+  //      result.add(processor);
+  //    }
+  //    return result;
+  //  }
 
   private List<IConnectableLink> getSortedConnectableStorage() {
     return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());

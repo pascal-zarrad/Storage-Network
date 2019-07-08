@@ -125,7 +125,8 @@ public class BlockMaster extends BaseBlock {
     tooltip.add(new TranslationTextComponent("tooltip.storagenetwork.master"));
   }
 
-  @Nullable @Override public TileEntity createNewTileEntity(IBlockReader worldIn) {
+  @Nullable @Override
+  public TileEntity createNewTileEntity(IBlockReader worldIn) {
     return new TileMaster();
   }
 }
