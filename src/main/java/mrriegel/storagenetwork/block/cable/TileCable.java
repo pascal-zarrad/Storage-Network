@@ -1,7 +1,7 @@
 package mrriegel.storagenetwork.block.cable;
 
 import mrriegel.storagenetwork.block.TileConnectable;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
 
 /**
@@ -15,12 +15,12 @@ public class TileCable extends TileConnectable {
   }
 
   @Override
-  public void readFromNBT(NBTTagCompound compound) {
+  public void readFromNBT(CompoundNBT compound) {
     super.readFromNBT(compound);
   }
 
   @Override
-  public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+  public CompoundNBT writeToNBT(CompoundNBT compound) {
     super.writeToNBT(compound);
     return compound;
   }

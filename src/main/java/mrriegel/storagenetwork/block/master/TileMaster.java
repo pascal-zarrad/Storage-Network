@@ -1,13 +1,4 @@
 package mrriegel.storagenetwork.block.master;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
@@ -24,29 +15,37 @@ import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.config.ConfigHandler;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import mrriegel.storagenetwork.util.UtilInventory;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ITickable;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunk;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class TileMaster extends TileEntity implements ITickable, INetworkMaster {
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class TileMaster extends TileEntity implements ITickableTileEntity, INetworkMaster {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
   public static String[] blacklist;
   private boolean shouldRefresh = true;
 
-  public DimPos getDimPos() {
+  private DimPos getDimPos() {
     return new DimPos(world, pos);
   }
 
@@ -67,7 +66,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     return stacks;
   }
 
-  private void addOrMergeIntoList(List<ItemStack> list, ItemStack stackToAdd) {
+  private static void addOrMergeIntoList(List<ItemStack> list, ItemStack stackToAdd) {
     boolean added = false;
     for (ItemStack stack : list) {
       if (ItemHandlerHelper.canItemStacksStack(stackToAdd, stack)) {
@@ -81,7 +80,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     }
   }
 
-  public int emptySlots() {
+  int emptySlots() {
     int countEmpty = 0;
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       countEmpty += storage.getEmptySlots();
@@ -104,8 +103,8 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   }
 
   @Override
-  public NBTTagCompound getUpdateTag() {
-    return writeToNBT(new NBTTagCompound());
+  public CompoundNBT getUpdateTag() {
+    return writeToNBT(new CompoundNBT());
   }
 
   /**
@@ -113,29 +112,29 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
    *
    * @param sourcePos
    */
-  private Set<DimPos> getConnectables(final DimPos sourcePos) {
+  private Set<DimPos> getConnectables(DimPos sourcePos) {
     HashSet<DimPos> result = new HashSet<>();
     addConnectables(sourcePos, result);
     return result;
   }
 
-  private void addConnectables(final DimPos sourcePos, Set<DimPos> set) {
+  private void addConnectables(DimPos sourcePos, Set<DimPos> set) {
     if (sourcePos == null || sourcePos.getWorld() == null || !sourcePos.isLoaded()) {
       return;
     }
     // Look in all directions
-    for (EnumFacing direction : EnumFacing.values()) {
+    for (Direction direction : Direction.values()) {
       DimPos lookPos = sourcePos.offset(direction);
       if (!lookPos.isLoaded()) {
         continue;
       }
-      Chunk chunk = lookPos.getChunk();
-      if (chunk == null || !chunk.isLoaded()) {
+      IChunk chunk = lookPos.getChunk();
+      if (chunk == null) {// || !chunk.isLoaded()) {
         continue;
       }
       // Prevent having multiple masters on a network and break all others.
       TileMaster maybeMasterTile = lookPos.getTileEntity(TileMaster.class);
-      if (maybeMasterTile != null && !lookPos.equals(this.world, this.pos)) {
+      if (maybeMasterTile != null && !lookPos.equals(world, pos)) {
         nukeAndDrop(lookPos);
         continue;
       }
@@ -143,9 +142,10 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (tileHere == null) {
         continue;
       }
-      boolean isConnectable = tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
-      if (isConnectable) {
-        IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
+      //      boolean isConnectable = tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
+      IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
+      if (capabilityConnectable != null) {
+        //        IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
         capabilityConnectable.setMasterPos(getDimPos());
         DimPos realConnectablePos = capabilityConnectable.getPos();
         boolean beenHereBefore = set.contains(realConnectablePos);
@@ -160,17 +160,18 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     }
   }
 
-  private void nukeAndDrop(DimPos lookPos) {
-    lookPos.getBlockState().getBlock().dropBlockAsItem(lookPos.getWorld(), lookPos.getBlockPos(), lookPos.getBlockState(), 0);
-    lookPos.getWorld().setBlockToAir(lookPos.getBlockPos());
+  private static void nukeAndDrop(DimPos lookPos) {
+    //    lookPos.getBlockState().drop
+    //    lookPos.getBlockState().getBlock().dropBlockAsItem(lookPos.getWorld(), lookPos.getBlockPos(), lookPos.getBlockState(), 0);
+    lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
     lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
   }
 
-  public static boolean isTargetAllowed(IBlockState iBlockState) {
-    String blockId = iBlockState.getBlock().getRegistryName().toString();
+  public static boolean isTargetAllowed(BlockState BlockState) {
+    String blockId = BlockState.getBlock().getRegistryName().toString();
     for (String s : blacklist) {
       if (blockId.equals(s)) {
-        StorageNetwork.info(iBlockState + " Connection blocked by config ");
+        StorageNetwork.LOGGER.info(BlockState + " Connection blocked by config ");
         return false;
       }
     }
@@ -185,11 +186,11 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   }
 
   private boolean hasCachedSlot(ItemStack stack) {
-    return this.importCache.containsKey(getStackKey(stack));
+    return importCache.containsKey(getStackKey(stack));
   }
 
   private DimPos getCachedSlot(ItemStack stack) {
-    return this.importCache.get(getStackKey(stack));
+    return importCache.get(getStackKey(stack));
   }
 
   @Override
@@ -206,7 +207,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       IConnectableLink storage = cachedStoragePos.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null);
       if (storage == null) {
         // The block at the cached position is not even an IConnectableLink anymore
-        this.importCache.remove(key);
+        importCache.remove(key);
       }
       else {
         // But if it is, we test whether it can still import that particular stack and do so if it does.
@@ -215,7 +216,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
           stack = storage.insertStack(stack, simulate);
         }
         else {
-          this.importCache.remove(key);
+          importCache.remove(key);
         }
       }
     }
@@ -240,8 +241,8 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     return stack.getCount();
   }
 
-  private String getStackKey(ItemStack stackInCopy) {
-    return stackInCopy.getItem().getRegistryName().toString() + "/" + stackInCopy.getItemDamage();
+  private static String getStackKey(ItemStack stackInCopy) {
+    return stackInCopy.getItem().getRegistryName().toString();// + "/" + stackInCopy.getItemDamage();
   }
 
   /**
@@ -268,7 +269,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       // Then try to insert the stack into this masters network and store the number of remaining items in the stack
-      int countUnmoved = this.insertStack(stack.copy(), true);
+      int countUnmoved = insertStack(stack.copy(), true);
       // Calculate how many items in the stack actually got moved
       int countMoved = stack.getCount() - countUnmoved;
       if (countMoved <= 0) {
@@ -277,14 +278,14 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       // Alright, simulation says we're good, let's do it!
       // First extract from the storage
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      connectable.getPos().getChunk().markDirty();
+      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markDirty();
       // Then insert into our network
-      this.insertStack(actuallyExtracted.copy(), false);
+      insertStack(actuallyExtracted.copy(), false);
     }
   }
 
   private void updateProcess() {
-    for (final IConnectable connectable : getConnectables()) {
+    for (IConnectable connectable : getConnectables()) {
       TileCableProcess cableProcess = connectable.getPos().getTileEntity(TileCableProcess.class);
       if (cableProcess == null) {
         continue;
@@ -317,7 +318,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         if (stockMode) {
           try {
             TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
-            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
             //request with false to see how many even exist in there.  
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
             if (stillNeeds == 0) {
@@ -326,10 +327,10 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
-            StorageNetwork.log("error thrown " + e.getMessage());
+            StorageNetwork.LOGGER.info("error thrown " + e.getMessage());
           }
         }
-        ItemStack requestedStack = this.request(matcher, amtToRequest, true);
+        ItemStack requestedStack = request(matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
           continue;
         }
@@ -345,7 +346,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
           targetStack.setCount(movedItems);
         }
         // Alright, some items got moved in the simulation. Let's do it for real this time.
-        ItemStack realExtractedStack = this.request(new ItemStackMatcher(requestedStack, true, false, true), targetStack.getCount(), false);
+        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, true, false, true), targetStack.getCount(), false);
         if (realExtractedStack.isEmpty()) {
           continue;
         }
@@ -356,7 +357,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   }
 
   @Override
-  public ItemStack request(IItemStackMatcher matcher, final int size, boolean simulate) {
+  public ItemStack request(IItemStackMatcher matcher, int size, boolean simulate) {
     if (size == 0 || matcher == null) {
       return ItemStack.EMPTY;
     }
@@ -385,7 +386,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   private Set<IConnectable> getConnectables() {
     Set<DimPos> positions = getConnectablePositions();
     if (positions == null) {
-      return new HashSet<IConnectable>();
+      return new HashSet<>();
     }
     Set<IConnectable> result = new HashSet<>();
     for (DimPos pos : positions) {
@@ -396,18 +397,19 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (tileEntity == null) {
         continue;
       }
-      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
+      IConnectable cap = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
+      if (cap == null) {
+        StorageNetwork.LOGGER.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
-      result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null));
+      result.add(cap);
     }
     return result;
   }
 
   private Set<IConnectableLink> getConnectableStorage() {
     Set<IConnectableLink> result = new HashSet<>();
-    for (final DimPos dimpos : getConnectablePositions()) {
+    for (DimPos dimpos : getConnectablePositions()) {
       if (!dimpos.isLoaded()) {
         continue;
       }
@@ -415,14 +417,16 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (tileEntity == null) {
         continue;
       }
-      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + dimpos);
+      //      IConnectable cap = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
+      //      if (cap == null) {
+      //        StorageNetwork.LOGGER.error("Somehow stored a dimpos that is not connectable... Skipping " + dimpos);
+      //        continue;
+      //      }
+      IConnectableLink capConnect = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
+      if (capConnect == null) {
         continue;
       }
-      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null)) {
-        continue;
-      }
-      result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null));
+      result.add(capConnect);
     }
     return result;
   }
@@ -442,7 +446,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         StorageNetwork.log("Error: processor null at  " + pos + "," + cableProcess.getDirection());
         continue;
       }
-      IBlockState blockState = inventoryPos.getBlockState();
+      BlockState blockState = inventoryPos.getBlockState();
       String name = blockState.getBlock().getLocalizedName();
       try {
         ItemStack pickBlock = blockState.getBlock().getPickBlock(blockState, null, inventoryPos.getWorld(), inventoryPos.getBlockPos(), null);
@@ -475,8 +479,8 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     //refresh time in config, default 200 ticks aka 10 seconds
     if (getConnectablePositions() == null || (world.getTotalWorldTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
       try {
-        this.connectables = getConnectables(getDimPos());
-        this.shouldRefresh = false;
+        connectables = getConnectables(getDimPos());
+        shouldRefresh = false;
         // addInventorys();
         world.getChunkFromBlockCoords(pos).setModified(true);//.setChunkModified();
       }
@@ -491,9 +495,9 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
 
   @Override
   public SPacketUpdateTileEntity getUpdatePacket() {
-    NBTTagCompound syncData = new NBTTagCompound();
-    this.writeToNBT(syncData);
-    return new SPacketUpdateTileEntity(this.pos, 1, syncData);
+    CompoundNBT syncData = new CompoundNBT();
+    writeToNBT(syncData);
+    return new SPacketUpdateTileEntity(pos, 1, syncData);
   }
 
   @Override
@@ -501,8 +505,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     readFromNBT(pkt.getNbtCompound());
   }
 
-  @Override
-  public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+  public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
     return oldState.getBlock() != newSate.getBlock();
   }
 
@@ -513,7 +516,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
    */
   public Set<DimPos> getConnectablePositions() {
     if (connectables == null) {
-      connectables = new HashSet<DimPos>();
+      connectables = new HashSet<>();
     }
     return new HashSet<>(connectables);
   }
