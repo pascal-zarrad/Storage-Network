@@ -1,16 +1,13 @@
 package mrriegel.storagenetwork.network;
-
-import java.util.List;
-import com.google.common.collect.Lists;
-import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.block.cable.GuiCableBase;
-import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IThreadListener;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.ServerWorld;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Refresh the current screen with large data set of stacks.
@@ -18,50 +15,46 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * Used by Containers displaying network inventory as well as most other packets that perform small actions
  *
  */
-public class RefreshFilterClientMessage implements IMessage, IMessageHandler<RefreshFilterClientMessage, IMessage> {
+public class RefreshFilterClientMessage {
 
   private int size;
   private List<ItemStack> stacks;
 
-  public RefreshFilterClientMessage() {}
+  private RefreshFilterClientMessage() {}
 
   public RefreshFilterClientMessage(List<ItemStack> stacks) {
     super();
     this.stacks = stacks;
-    this.size = stacks.size();
+    size = stacks.size();
   }
 
-  @Override
-  public IMessage onMessage(final RefreshFilterClientMessage message, final MessageContext ctx) {
-    IThreadListener mainThread = Minecraft.getMinecraft();
-    mainThread.addScheduledTask(new Runnable() {
-
-      @Override
-      public void run() {
-        if (Minecraft.getMinecraft().currentScreen instanceof GuiCableBase) {
-          GuiCableBase gui = (GuiCableBase) Minecraft.getMinecraft().currentScreen;
-          gui.setFilterItems(message.stacks);
-        }
-      }
+  public static void handle(RefreshFilterClientMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      ServerWorld world = player.getServerWorld();
+      //        if (Minecraft.getMinecraft().currentScreen instanceof GuiCableBase) {
+      //          GuiCableBase gui = (GuiCableBase) Minecraft.getMinecraft().currentScreen;
+      //          gui.setFilterItems(message.stacks);
+      //        }
     });
-    return null;
   }
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    this.size = buf.readInt();
-    stacks = Lists.newArrayList();
-    for (int i = 0; i < size; i++) {
-      ItemStack stack = new ItemStack(ByteBufUtils.readTag(buf));
-      stacks.add(stack);
+  public static RefreshFilterClientMessage decode(PacketBuffer buf) {
+    RefreshFilterClientMessage message = new RefreshFilterClientMessage();
+    message.size = buf.readInt();
+    message.stacks = new ArrayList<>();
+    for (int i = 0; i < message.size; i++) {
+      ItemStack stack = ItemStack.read(buf.readCompoundTag());
+      stack.setCount(buf.readInt());
+      message.stacks.add(stack);
     }
+    return message;
   }
 
-  @Override
-  public void toBytes(ByteBuf buf) {
-    buf.writeInt(this.size);
-    for (ItemStack stack : stacks) {
-      ByteBufUtils.writeTag(buf, stack.serializeNBT());
+  public static void encode(RefreshFilterClientMessage msg, PacketBuffer buf) {
+    buf.writeInt(msg.size);
+    for (ItemStack stack : msg.stacks) {
+      buf.writeCompoundTag(stack.serializeNBT());
     }
   }
 }

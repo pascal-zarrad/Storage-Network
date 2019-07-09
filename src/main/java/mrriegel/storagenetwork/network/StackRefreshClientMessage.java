@@ -63,13 +63,11 @@ public class StackRefreshClientMessage {
     List stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
       ItemStack stack = ItemStack.read(buf.readCompoundTag());
-      stack.setCount(buf.readInt());
       stacks.add(stack);
     }
     List craftableStacks = Lists.newArrayList();
     for (int i = 0; i < csize; i++) {
       ItemStack stack = ItemStack.read(buf.readCompoundTag());
-      stack.setCount(buf.readInt());
       craftableStacks.add(stack);
     }
     return new StackRefreshClientMessage(stacks, craftableStacks);
