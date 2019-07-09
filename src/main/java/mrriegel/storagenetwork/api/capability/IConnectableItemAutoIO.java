@@ -2,7 +2,7 @@ package mrriegel.storagenetwork.api.capability;
 import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
-import mrriegel.storagenetwork.api.network.INetworkMaster;
+import mrriegel.storagenetwork.block.master.TileMaster;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 
@@ -91,7 +91,7 @@ public interface IConnectableItemAutoIO {
    *
    * @return Whether or not this IConnectableLink should be processed this tick.
    */
-  boolean runNow(DimPos connectablePos, INetworkMaster master);
+  boolean runNow(DimPos connectablePos, TileMaster master);
 
   /**
    * If this block is used with an ioDirection of OUT and has its getSupportedTransferDirection set to OUT, then this list will be consolidated by the master and available items in the network

@@ -6,7 +6,7 @@ import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.EnumUpgradeType;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
-import mrriegel.storagenetwork.api.network.INetworkMaster;
+import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import mrriegel.storagenetwork.util.inventory.FilterItemStackHandler;
 import mrriegel.storagenetwork.util.inventory.UpgradesItemStackHandler;
@@ -30,14 +30,14 @@ import java.util.concurrent.Callable;
 
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT>, IConnectableItemAutoIO {
 
-  public IConnectable connectable;
+  private final IConnectable connectable;
   public EnumStorageDirection direction;
-  public UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
-  public FilterItemStackHandler filters = new FilterItemStackHandler();
-  public ItemStack operationStack = ItemStack.EMPTY;
-  public int operationLimit = 0;
-  public boolean operationMustBeSmaller = true;
-  public int priority = 0;
+  private final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
+  private final FilterItemStackHandler filters = new FilterItemStackHandler();
+  private ItemStack operationStack = ItemStack.EMPTY;
+  private int operationLimit = 0;
+  private boolean operationMustBeSmaller = true;
+  private int priority = 0;
   private Direction inventoryFace;
 
   CapabilityConnectableAutoIO(EnumStorageDirection direction) {
@@ -196,7 +196,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return ItemStack.EMPTY;
   }
 
-  private boolean doesPassOperationFilterLimit(INetworkMaster master) {
+  private boolean doesPassOperationFilterLimit(TileMaster master) {
     if (upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) < 1) {
       return true;
     }
@@ -204,17 +204,17 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
       return true;
     }
     // TODO: Investigate whether the operation limiter should consider the filter toggles
-    ItemStack availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.meta, filters.ores, filters.nbt));
+    int availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.meta, filters.ores, filters.nbt));
     if (operationMustBeSmaller) {
-      return operationLimit >= availableStack.getCount();
+      return operationLimit >= availableStack;
     }
     else {
-      return operationLimit < availableStack.getCount();
+      return operationLimit < availableStack;
     }
   }
 
   @Override
-  public boolean runNow(DimPos connectablePos, INetworkMaster master) {
+  public boolean runNow(DimPos connectablePos, TileMaster master) {
     int speed = Math.max(upgrades.getUpgradesOfType(EnumUpgradeType.SPEED) + 1, 1);
     int speedRatio = (30 / speed);
     if (speedRatio <= 1) {

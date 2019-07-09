@@ -7,8 +7,6 @@ import mrriegel.storagenetwork.api.capability.IConnectableLink;
 import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
-import mrriegel.storagenetwork.api.network.INetworkMaster;
-import mrriegel.storagenetwork.block.cable.processing.TileCableProcess;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.config.ConfigHandler;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
@@ -37,11 +35,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TileMaster extends TileEntity implements ITickableTileEntity, INetworkMaster {
+public class TileMaster extends TileEntity implements ITickableTileEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
-  public static String[] blacklist;
+  private static String[] blacklist;
   private boolean shouldRefresh = true;
 
   private DimPos getDimPos() {
@@ -51,7 +49,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
   public TileMaster() {
     super(ModBlocks.mastertile);
   }
-  @Override
+
   public List<ItemStack> getStacks() {
     List<ItemStack> stacks = Lists.newArrayList();
     if (getConnectablePositions() == null) {
@@ -195,7 +193,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
     return importCache.get(getStackKey(stack));
   }
 
-  @Override
   public int insertStack(ItemStack rawStack, boolean simulate) {
     if (rawStack.isEmpty()) {
       return 0;
@@ -287,13 +284,13 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
   }
 
   private void updateProcess() {
-    for (IConnectable connectable : getConnectables()) {
-      TileCableProcess cableProcess = connectable.getPos().getTileEntity(TileCableProcess.class);
-      if (cableProcess == null) {
-        continue;
-      }
-      cableProcess.run();
-    }
+    //    for (IConnectable connectable : getConnectables()) {
+    //      TileCableProcess cableProcess = connectable.getPos().getTileEntity(TileCableProcess.class);
+    //      if (cableProcess == null) {
+    //        continue;
+    //      }
+    //      cableProcess.run();
+    //    }
   }
 
   /**
@@ -358,7 +355,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
     }
   }
 
-  @Override
   public ItemStack request(IItemStackMatcher matcher, int size, boolean simulate) {
     if (size == 0 || matcher == null) {
       return ItemStack.EMPTY;
@@ -522,7 +518,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity, INetw
     return new HashSet<>(connectables);
   }
 
-  @Override
   public void clearCache() {
     importCache = new HashMap<>();
   }
