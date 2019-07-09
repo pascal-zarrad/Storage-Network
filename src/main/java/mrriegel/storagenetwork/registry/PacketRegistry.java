@@ -24,7 +24,7 @@ public class PacketRegistry {
 
   private static final String PROTOCOL_VERSION = Integer.toString(1);
   //  public static final SimpleNetworkWrapper INSTANCE = new SimpleNetworkWrapper(StorageNetwork.MODID);
-  private static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
+  public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
       .named(new ResourceLocation(StorageNetwork.MODID, "main_channel"))
       .clientAcceptedVersions(PROTOCOL_VERSION::equals)
       .serverAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -38,12 +38,12 @@ public class PacketRegistry {
     int id = 0;
     INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
     INSTANCE.registerMessage(id++, StackRefreshClientMessage.class, StackRefreshClientMessage::encode, StackRefreshClientMessage::decode, StackRefreshClientMessage::handle);
+    INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
     INSTANCE.registerMessage(RequestMessage.class, RequestMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(ClearRecipeMessage.class, ClearRecipeMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(SortMessage.class, SortMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(RecipeMessage.class, RecipeMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(CableLimitMessage.class, CableLimitMessage.class, id++, Dist.DEDICATED_SERVER);
-    INSTANCE.registerMessage(InsertMessage.class, InsertMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(StackResponseClientMessage.class, StackResponseClientMessage.class, id++, Dist.CLIENT);
     INSTANCE.registerMessage(CableFilterMessage.class, CableFilterMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(CableRefreshClientMessage.class, CableRefreshClientMessage.class, id++, Dist.CLIENT);
