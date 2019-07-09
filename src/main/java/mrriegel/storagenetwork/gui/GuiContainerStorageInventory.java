@@ -12,6 +12,7 @@ import mrriegel.storagenetwork.network.RequestMessage;
 import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -124,7 +125,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   public abstract BlockPos getPos();
 
-  protected abstract int getDim();
+  private static int getDim() {
+    return 0;//TODO
+  }
 
   private boolean inField(int mouseX, int mouseY) {
     int h = 90;
@@ -158,7 +161,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   //    super.renderToolTip(stack, x, y);
   //  }
 
-  protected abstract boolean isScreenValid();
+  public abstract boolean isScreenValid();
 
   private boolean doesStackMatchSearch(ItemStack stack) {
     String searchText = searchBar.getText();
@@ -425,7 +428,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
           && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT
               || mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK)
           && stackCarriedByMouse.isEmpty() && canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, hasShiftDown(),
+        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, Screen.hasShiftDown(),
             mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK));
         lastClick = System.currentTimeMillis();
       }
@@ -450,7 +453,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       }
       else if (stackUnderMouse.isEmpty() == false) {
         try {
-          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
+          //          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
         }
         catch (Throwable e) {
           //its ok JEI not installed for maybe an addon mod is ok
