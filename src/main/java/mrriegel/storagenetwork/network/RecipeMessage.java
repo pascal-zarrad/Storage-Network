@@ -1,31 +1,28 @@
 package mrriegel.storagenetwork.network;
+import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.data.ItemStackMatcher;
+import mrriegel.storagenetwork.gui.ContainerNetworkBase;
+import mrriegel.storagenetwork.registry.PacketRegistry;
+import mrriegel.storagenetwork.util.UtilInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.ServerWorld;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.block.master.TileMaster;
-import mrriegel.storagenetwork.data.ItemStackMatcher;
-import mrriegel.storagenetwork.gui.IStorageContainer;
-import mrriegel.storagenetwork.registry.PacketRegistry;
-import mrriegel.storagenetwork.util.UtilInventory;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.IThreadListener;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-import net.minecraftforge.oredict.OreDictionary;
+import java.util.function.Supplier;
 
-public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, IMessage> {
+public class RecipeMessage {
 
   /** @formatter:off
    * Sample data structure can have list of items for each slot (example: ore dictionary)
@@ -42,87 +39,78 @@ public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, I
    *  }
    * @formatter:on
    */
-  private NBTTagCompound nbt;
+  private CompoundNBT nbt;
   private int index = 0;
 
-  public RecipeMessage() {}
+  private RecipeMessage() {}
 
-  public RecipeMessage(NBTTagCompound nbt) {
+  public RecipeMessage(CompoundNBT nbt) {
     this.nbt = nbt;
   }
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    this.nbt = ByteBufUtils.readTag(buf);
-    this.index = buf.readInt();
+  public static RecipeMessage decode(PacketBuffer buf) {
+    RecipeMessage message = new RecipeMessage();
+    message.index = buf.readInt();
+    message.nbt = buf.readCompoundTag();
+    return message;
   }
 
-  @Override
-  public void toBytes(ByteBuf buf) {
-    ByteBufUtils.writeTag(buf, nbt);
-    buf.writeInt(this.index);
+  public static void encode(RecipeMessage msg, PacketBuffer buf) {
+    buf.writeInt(msg.index);
+    buf.writeCompoundTag(msg.nbt);
   }
 
-  /**
-   * This entire thing is a gross mess.
-   * 
-   * TODO rewrite.
-   */
-  @Override
-  public IMessage onMessage(final RecipeMessage message, final MessageContext ctx) {
-    EntityPlayerMP player = ctx.getServerHandler().player;
-    IThreadListener mainThread = (WorldServer) player.world;
-    mainThread.addScheduledTask(new Runnable() {
-
-      @Override
-      public void run() {
-        if (player.openContainer instanceof IStorageContainer == false) {
+  public static void handle(RecipeMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      ServerWorld world = player.getServerWorld();
+      if (player.openContainer instanceof ContainerNetworkBase == false) {
           return;
         }
-        IStorageContainer ctr = (IStorageContainer) player.openContainer;
-        TileMaster master = ctr.getTileMaster();
-        if (master == null) {
-          return;
-        }
-        ClearRecipeMessage.clearContainerRecipe(player, false);
-        InventoryCrafting craftMatrix = ctr.getCraftMatrix();
-        String[] oreDictKeys;// = oreDictKey.split(",");
-        for (int slot = 0; slot < 9; slot++) {
-          Map<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();
+      ContainerNetworkBase ctr = (ContainerNetworkBase) player.openContainer;
+      TileMaster master = ctr.getTileMaster();
+      if (master == null) {
+        return;
+      }
+      ClearRecipeMessage.clearContainerRecipe(player, false);
+      CraftingInventory craftMatrix = ctr.getCraftMatrix();
+      //        String[] oreDictKeys;// = oreDictKey.split(",");
+      for (int slot = 0; slot < 9; slot++) {
+        Map<Integer, ItemStack> map = new HashMap<>();
           //if its a string, then ore dict is allowed
           /*********
            * parse nbt of the slot, whether its ore dict, itemstack, ore empty
            **********/
           boolean isOreDict;
-          if (message.nbt.hasKey("s" + slot, Constants.NBT.TAG_STRING)) {
-            //i am 80% sure this ore string branch never hits anymore
-            //JEI recipe transfer sends list of items only
-            isOreDict = true;
-            /*************
-             * NEW: each item stack could be in MULTIPLE ore dicts. such as betterthanmods multiblocks
-             **/
-            oreDictKeys = message.nbt.getString("s" + slot).split(",");
-            List<ItemStack> l = new ArrayList<ItemStack>();
-            for (String oreKey : oreDictKeys) {
-              l.addAll(OreDictionary.getOres(oreKey));
-            }
-            //              List<ItemStack> l = OreDictionary.getOres(oreKey);
-            for (int i = 0; i < l.size(); i++) {
-              map.put(i, l.get(i));
-            }
-            //  StorageNetwork.log(message.nbt.getString("s" + slot) + " ore dict keyS found  " + l);
-          }
-          else { // is not string, so just simple item stacks
+        //        if (message.nbt.contains("s" + slot, Constants.NBT.TAG_STRING)) {
+        //          //i am 80% sure this ore string branch never hits anymore
+        //          //JEI recipe transfer sends list of items only
+        //          isOreDict = true;
+        //          /*************
+        //           * NEW: each item stack could be in MULTIPLE ore dicts. such as betterthanmods multiblocks
+        //           **/
+        //          //            oreDictKeys = message.nbt.getString("s" + slot).split(",");
+        //          //            List<ItemStack> l = new ArrayList<>();
+        //          //            for (String oreKey : oreDictKeys) {
+        //          //              l.addAll(OreDictionary.getOres(oreKey));
+        //          //            }
+        //          //              List<ItemStack> l = OreDictionary.getOres(oreKey);
+        //          //            for (int i = 0; i < l.size(); i++) {
+        //          //              map.put(i, l.get(i));
+        //          //            }
+        //          //  StorageNetwork.log(message.nbt.getString("s" + slot) + " ore dict keyS found  " + l);
+        //        }
+        //        else { // is not string, so just simple item stacks
             isOreDict = false;
-            NBTTagList invList = message.nbt.getTagList("s" + slot, Constants.NBT.TAG_COMPOUND);
-            for (int i = 0; i < invList.tagCount(); i++) {
-              NBTTagCompound stackTag = invList.getCompoundTagAt(i);
-              ItemStack s = new ItemStack(stackTag);
+        ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < invList.size(); i++) {
+          CompoundNBT stackTag = invList.getCompound(i);
+          ItemStack s = ItemStack.read(stackTag);
               map.put(i, s);
             }
             //              StorageNetwork.log(slot + "  slot has potential [ore] matches  " + map.keySet().size());
             //   StorageNetwork.log(slot + "  slot has potential [ore] matches  " + map.values());
-          }
+        //        }
           /********* end parse nbt of this current slot ******/
           /********** now start trying to fill in recipe **/
           for (int i = 0; i < map.size(); i++) {
@@ -156,13 +144,13 @@ public class RecipeMessage implements IMessage, IMessageHandler<RecipeMessage, I
             }
           }
           /************** finished recipe population **/
-        }
+        //        }
         //now make sure client sync happens.
         ctr.slotChanged();
         List<ItemStack> list = master.getStacks();
-        PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), player);
+        PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
+            player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       }//end run
     });
-    return null;
   }
 }

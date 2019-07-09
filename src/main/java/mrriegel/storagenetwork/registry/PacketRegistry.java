@@ -39,8 +39,8 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
     INSTANCE.registerMessage(id++, RequestMessage.class, RequestMessage::encode, RequestMessage::decode, RequestMessage::handle);
     INSTANCE.registerMessage(id++, ClearRecipeMessage.class, ClearRecipeMessage::encode, ClearRecipeMessage::decode, ClearRecipeMessage::handle);
-    INSTANCE.registerMessage(SortMessage.class, SortMessage.class, id++, Dist.DEDICATED_SERVER);
-    INSTANCE.registerMessage(RecipeMessage.class, RecipeMessage.class, id++, Dist.DEDICATED_SERVER);
+    INSTANCE.registerMessage(id++, SortMessage.class, SortMessage::encode, SortMessage::decode, SortMessage::handle);
+    INSTANCE.registerMessage(id++, RecipeMessage.class, RecipeMessage::encode, RecipeMessage::decode, RecipeMessage::handle);
     INSTANCE.registerMessage(CableLimitMessage.class, CableLimitMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(StackResponseClientMessage.class, StackResponseClientMessage.class, id++, Dist.CLIENT);
     INSTANCE.registerMessage(CableFilterMessage.class, CableFilterMessage.class, id++, Dist.DEDICATED_SERVER);

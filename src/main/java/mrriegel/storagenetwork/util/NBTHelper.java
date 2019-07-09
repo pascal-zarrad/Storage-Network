@@ -64,6 +64,7 @@ public class NBTHelper {
       stack.getTag().putString(keyName, keyValue);
     }
   }
+
   //  // boolean
   //  public static boolean getBoolean(ItemStack stack, String keyName) {
   //    initNBTTagCompound(stack);
@@ -73,10 +74,10 @@ public class NBTHelper {
   //    return stack.getTagCompound().getBoolean(keyName);
   //  }
   //
-  //  public static void setBoolean(ItemStack stack, String keyName, boolean keyValue) {
-  //    initNBTTagCompound(stack);
-  //    stack.getTagCompound().setBoolean(keyName, keyValue);
-  //  }
+  public static void setBoolean(ItemStack stack, String keyName, boolean keyValue) {
+    initNBTTagCompound(stack);
+    stack.getTag().putBoolean(keyName, keyValue);
+  }
   //
   //  // byte
   //  public static byte getByte(ItemStack stack, String keyName) {

@@ -1,28 +1,25 @@
 package mrriegel.storagenetwork.network;
-
-import io.netty.buffer.ByteBuf;
 import mrriegel.storagenetwork.block.request.TileRequest;
 import mrriegel.storagenetwork.data.EnumSortType;
-import mrriegel.storagenetwork.gui.IStorageContainer;
+import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.util.NBTHelper;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IThreadListener;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.world.ServerWorld;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class SortMessage implements IMessage, IMessageHandler<SortMessage, IMessage> {
+import java.util.function.Supplier;
+
+public class SortMessage {
 
   private BlockPos pos;
   private boolean direction;
   private EnumSortType sort;
 
-  public SortMessage() {}
+  private SortMessage() {}
 
   public SortMessage(BlockPos pos, boolean direction, EnumSortType sort) {
     this.pos = pos;
@@ -30,16 +27,12 @@ public class SortMessage implements IMessage, IMessageHandler<SortMessage, IMess
     this.sort = sort;
   }
 
-  @Override
-  public IMessage onMessage(final SortMessage message, final MessageContext ctx) {
-    EntityPlayerMP player = ctx.getServerHandler().player;
-    IThreadListener mainThread = (WorldServer) player.world;
-    mainThread.addScheduledTask(new Runnable() {
-
-      @Override
-      public void run() {
-        if (player.openContainer instanceof IStorageContainer) {
-          if (((IStorageContainer) player.openContainer).isRequest()) {
+  public static void handle(SortMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      ServerWorld world = player.getServerWorld();
+      if (player.openContainer instanceof ContainerNetworkBase) {
+        //          if (((ContainerNetworkBase) player.openContainer).isRequest()) {
             TileEntity tileEntity = player.world.getTileEntity(message.pos);
             if (tileEntity instanceof TileRequest) {
               TileRequest tile = (TileRequest) tileEntity;
@@ -54,23 +47,39 @@ public class SortMessage implements IMessage, IMessageHandler<SortMessage, IMess
             NBTHelper.setString(stackPlayerHeld, "sort", message.sort.toString());
             return;
           }
-        }
-      }
+      //      }
     });
-    return null;
+    //    return null;
   }
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    this.pos = BlockPos.fromLong(buf.readLong());
-    this.direction = buf.readBoolean();
-    this.sort = EnumSortType.valueOf(ByteBufUtils.readUTF8String(buf));
+  public static SortMessage decode(PacketBuffer buf) {
+    SortMessage message = new SortMessage();
+    message.pos = buf.readBlockPos();
+    message.direction = buf.readBoolean();
+    int sort = buf.readInt();
+    message.sort = EnumSortType.values()[sort];
+    return message;
   }
 
-  @Override
-  public void toBytes(ByteBuf buf) {
-    buf.writeLong(this.pos.toLong());
-    buf.writeBoolean(this.direction);
-    ByteBufUtils.writeUTF8String(buf, this.sort.toString());
+  public static void encode(SortMessage msg, PacketBuffer buf) {
+    buf.writeBlockPos(msg.pos);
+    buf.writeBoolean(msg.direction);
+    buf.writeInt(msg.sort.ordinal());
+    //    ByteBufUtils.writeItemStack(buf, stack);
+    //    buf.writeCompoundTag(msg.stack.serializeNBT());
+    //    buf.writeInt(msg.mouseButton);
   }
+  //  @Override
+  //  public void fromBytes(ByteBuf buf) {
+  //    pos = BlockPos.fromLong(buf.readLong());
+  //    direction = buf.readBoolean();
+  //    sort = EnumSortType.valueOf(ByteBufUtils.readUTF8String(buf));
+  //  }
+  //
+  //  @Override
+  //  public void toBytes(ByteBuf buf) {
+  //    buf.writeLong(pos.toLong());
+  //    buf.writeBoolean(direction);
+  //    ByteBufUtils.writeUTF8String(buf, sort.toString());
+  //  }
 }
