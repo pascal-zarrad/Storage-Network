@@ -1,7 +1,5 @@
 package mrriegel.storagenetwork.registry;
-
 import mrriegel.storagenetwork.StorageNetwork;
-import mrriegel.storagenetwork.network.CableControlMessage;
 import mrriegel.storagenetwork.network.CableDataMessage;
 import mrriegel.storagenetwork.network.CableFilterMessage;
 import mrriegel.storagenetwork.network.CableLimitMessage;
@@ -39,7 +37,7 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
     INSTANCE.registerMessage(id++, StackRefreshClientMessage.class, StackRefreshClientMessage::encode, StackRefreshClientMessage::decode, StackRefreshClientMessage::handle);
     INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
-    INSTANCE.registerMessage(RequestMessage.class, RequestMessage.class, id++, Dist.DEDICATED_SERVER);
+    INSTANCE.registerMessage(id++, RequestMessage.class, RequestMessage::encode, RequestMessage::decode, RequestMessage::handle);
     INSTANCE.registerMessage(ClearRecipeMessage.class, ClearRecipeMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(SortMessage.class, SortMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(RecipeMessage.class, RecipeMessage.class, id++, Dist.DEDICATED_SERVER);
@@ -48,7 +46,7 @@ public class PacketRegistry {
     INSTANCE.registerMessage(CableFilterMessage.class, CableFilterMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(CableRefreshClientMessage.class, CableRefreshClientMessage.class, id++, Dist.CLIENT);
     INSTANCE.registerMessage(RequestCableMessage.class, RequestCableMessage.class, id++, Dist.DEDICATED_SERVER);
-    INSTANCE.registerMessage(CableControlMessage.class, CableControlMessage.class, id++, Dist.DEDICATED_SERVER);
+    //    INSTANCE.registerMessage(CableControlMessage.class, CableControlMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(RefreshFilterClientMessage.class, RefreshFilterClientMessage.class, id++, Dist.CLIENT);
   }
 }

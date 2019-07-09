@@ -1,24 +1,22 @@
 package mrriegel.storagenetwork.network;
+import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.data.ItemStackMatcher;
+import mrriegel.storagenetwork.gui.ContainerNetworkBase;
+import mrriegel.storagenetwork.registry.PacketRegistry;
+import mrriegel.storagenetwork.util.UtilTileEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.ServerWorld;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.block.master.TileMaster;
-import mrriegel.storagenetwork.data.ItemStackMatcher;
-import mrriegel.storagenetwork.gui.IStorageContainer;
-import mrriegel.storagenetwork.registry.PacketRegistry;
-import mrriegel.storagenetwork.util.UtilTileEntity;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IThreadListener;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.items.ItemHandlerHelper;
+import java.util.function.Supplier;
 
-public class RequestMessage implements IMessage, IMessageHandler<RequestMessage, IMessage> {
+public class RequestMessage {
 
   private int mouseButton = 0;
   private ItemStack stack = ItemStack.EMPTY;
@@ -32,20 +30,19 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
   public RequestMessage() {}
 
   public RequestMessage(int id, ItemStack stack, boolean shift, boolean ctrl) {
-    this.mouseButton = id;
+    mouseButton = id;
     this.stack = stack;
     this.shift = shift;
     this.ctrl = ctrl;
   }
 
-  @Override
-  public IMessage onMessage(final RequestMessage message, final MessageContext ctx) {
-    EntityPlayerMP player = ctx.getServerHandler().player;
-    IThreadListener mainThread = (WorldServer) player.world;
-    mainThread.addScheduledTask(() -> {
+  public static void handle(RequestMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      ServerWorld world = player.getServerWorld();
       TileMaster tileMaster = null;
-      if (player.openContainer instanceof IStorageContainer) {
-        IStorageContainer ctr = (IStorageContainer) player.openContainer;
+      if (player.openContainer instanceof ContainerNetworkBase) {
+        ContainerNetworkBase ctr = (ContainerNetworkBase) player.openContainer;
         tileMaster = ctr.getTileMaster();
       }
       if (tileMaster == null) {
@@ -84,33 +81,32 @@ public class RequestMessage implements IMessage, IMessageHandler<RequestMessage,
         else {
           //when player TAKES an item, go here
           player.inventory.setItemStack(stack);
-          PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(stack), player);
+          PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(stack),
+              player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
         }
       }
       List<ItemStack> list = tileMaster.getStacks();
-      PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), player);
+      PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
+          player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       player.openContainer.detectAndSendChanges();
     });
-    return null;
   }
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    this.mouseButton = buf.readInt();
-    this.stack = ByteBufUtils.readItemStack(buf);
-    this.stack.setCount(buf.readInt());
-    this.shift = buf.readBoolean();
-    this.ctrl = buf.readBoolean();
+  public static RequestMessage decode(PacketBuffer buf) {
+    RequestMessage msg = new RequestMessage();
+    msg.mouseButton = buf.readInt();
+    msg.stack = ItemStack.read(buf.readCompoundTag());
+    //    msg.stack.setCount(buf.readInt());
+    msg.shift = buf.readBoolean();
+    msg.ctrl = buf.readBoolean();
+    return msg;
   }
 
-  @Override
-  public void toBytes(ByteBuf buf) {
-    buf.writeInt(this.mouseButton);
-    ItemStack toWrite = stack.copy();
-    toWrite.setCount(1);
-    ByteBufUtils.writeItemStack(buf, toWrite);
-    buf.writeInt(stack.getCount());
-    buf.writeBoolean(this.shift);
-    buf.writeBoolean(this.ctrl);
+  public static void encode(RequestMessage msg, PacketBuffer buf) {
+    buf.writeInt(msg.mouseButton);
+    //    ByteBufUtils.writeItemStack(buf, stack);
+    buf.writeCompoundTag(msg.stack.serializeNBT());
+    buf.writeBoolean(msg.shift);
+    buf.writeBoolean(msg.ctrl);
   }
 }
