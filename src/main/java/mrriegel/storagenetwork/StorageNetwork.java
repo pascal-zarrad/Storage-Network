@@ -37,7 +37,7 @@ public class StorageNetwork {
   public static final Logger LOGGER = LogManager.getLogger();
   //  private static final PluginRegistry pluginRegistry = new PluginRegistry();
   public static StorageNetworkHelpers helpers = new StorageNetworkHelpers();
-  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+  public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {
     // Register the setup method for modloading

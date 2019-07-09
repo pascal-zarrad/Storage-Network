@@ -37,7 +37,7 @@ public class PacketRegistry {
     //https://gist.github.com/williewillus/353c872bcf1a6ace9921189f6100d09a
     int id = 0;
     INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
-    INSTANCE.registerMessage(StackRefreshClientMessage.class, StackRefreshClientMessage.class, id++, Dist.CLIENT);
+    INSTANCE.registerMessage(id++, StackRefreshClientMessage.class, StackRefreshClientMessage::encode, StackRefreshClientMessage::decode, StackRefreshClientMessage::handle);
     INSTANCE.registerMessage(RequestMessage.class, RequestMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(ClearRecipeMessage.class, ClearRecipeMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(SortMessage.class, SortMessage.class, id++, Dist.DEDICATED_SERVER);

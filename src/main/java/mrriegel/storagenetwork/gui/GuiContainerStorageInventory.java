@@ -39,11 +39,11 @@ import java.util.List;
  *
  *
  */
-public abstract class GuiContainerStorageInventory extends GuiContainer implements IPublicGuiContainer, IStorageInventory {
+public abstract class GuiContainerStorageInventory extends GuiContainer {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
-  protected ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
+  private ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private int page = 1, maxPage = 1;
   private List<ItemStack> stacks, craftableStacks;
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
@@ -52,7 +52,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
   private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
-  protected boolean isSimple;
+  private boolean isSimple;
 
   public GuiContainerStorageInventory(ContainerNetworkBase container) {
     super(container);

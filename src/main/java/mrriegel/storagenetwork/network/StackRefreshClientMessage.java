@@ -1,15 +1,14 @@
 package mrriegel.storagenetwork.network;
 import com.google.common.collect.Lists;
-import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.gui.IStorageInventory;
+import mrriegel.storagenetwork.gui.GuiContainerStorageInventory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IThreadListener;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Refresh the current screen with large data set of stacks.
@@ -17,12 +16,12 @@ import java.util.List;
  * Used by Containers displaying network inventory as well as most other packets that perform small actions
  *
  */
-public class StackRefreshClientMessage implements IMessage, IMessageHandler<StackRefreshClientMessage, IMessage> {
+public class StackRefreshClientMessage {
 
-  private int size, csize;
-  private List<ItemStack> stacks, craftableStacks;
-
-  public StackRefreshClientMessage() {}
+  private final int size;
+  private final int csize;
+  private final List<ItemStack> stacks;
+  private final List<ItemStack> craftableStacks;
 
   StackRefreshClientMessage(List<ItemStack> stacks, List<ItemStack> craftableStacks) {
     super();
@@ -32,51 +31,47 @@ public class StackRefreshClientMessage implements IMessage, IMessageHandler<Stac
     csize = craftableStacks.size();
   }
 
-  public static IMessage onMessage(StackRefreshClientMessage message, MessageContext ctx) {
-    IThreadListener mainThread = Minecraft.getMinecraft();
-    mainThread.addScheduledTask(new Runnable() {
-
-      @Override
-      public void run() {
-        if (Minecraft.getMinecraft().currentScreen instanceof IStorageInventory) {
-          IStorageInventory gui = (IStorageInventory) Minecraft.getMinecraft().currentScreen;
+  public static void handle(StackRefreshClientMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      Minecraft mc = Minecraft.getInstance();//StorageNetwork.proxy.getMinecraft();
+      // TODO: IStorageInventory API
+      if (mc.currentScreen instanceof GuiContainerStorageInventory) {
+        GuiContainerStorageInventory gui = (GuiContainerStorageInventory) mc.currentScreen;
           gui.setStacks(message.stacks);
           gui.setCraftableStacks(message.craftableStacks);
         }
-      }
     });
-    return null;
   }
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    size = buf.readInt();
-    csize = buf.readInt();
-    stacks = Lists.newArrayList();
+  public static void encode(StackRefreshClientMessage msg, PacketBuffer buf) {
+    buf.writeInt(msg.size);
+    buf.writeInt(msg.csize);
+    for (ItemStack stack : msg.stacks) {
+      buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeInt(stack.getCount());
+    }
+    for (ItemStack stack : msg.craftableStacks) {
+      buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeInt(stack.getCount());
+    }
+  }
+
+  public static StackRefreshClientMessage decode(PacketBuffer buf) {
+    int size = buf.readInt();
+    int csize = buf.readInt();
+    List stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
-      ItemStack stack = new ItemStack(ByteBufUtils.readTag(buf));
+      ItemStack stack = ItemStack.read(buf.readCompoundTag());
       stack.setCount(buf.readInt());
       stacks.add(stack);
     }
-    craftableStacks = Lists.newArrayList();
+    List craftableStacks = Lists.newArrayList();
     for (int i = 0; i < csize; i++) {
-      ItemStack stack = new ItemStack(ByteBufUtils.readTag(buf));
+      ItemStack stack = ItemStack.read(buf.readCompoundTag());
       stack.setCount(buf.readInt());
       craftableStacks.add(stack);
     }
-  }
-
-  @Override
-  public void toBytes(ByteBuf buf) {
-    buf.writeInt(size);
-    buf.writeInt(csize);
-    for (ItemStack stack : stacks) {
-      ByteBufUtils.writeTag(buf, stack.serializeNBT());
-      buf.writeInt(stack.getCount());
-    }
-    for (ItemStack stack : craftableStacks) {
-      ByteBufUtils.writeTag(buf, stack.serializeNBT());
-      buf.writeInt(stack.getCount());
-    }
+    return new StackRefreshClientMessage(stacks, craftableStacks);
   }
 }
