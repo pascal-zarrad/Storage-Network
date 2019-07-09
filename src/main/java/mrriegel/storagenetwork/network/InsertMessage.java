@@ -76,7 +76,6 @@ public class InsertMessage {
 
   public static void encode(InsertMessage msg, PacketBuffer buf) {
     buf.writeInt(msg.dim);
-    //    ByteBufUtils.writeItemStack(buf, stack);
     buf.writeCompoundTag(msg.stack.serializeNBT());
     buf.writeInt(msg.mouseButton);
   }
