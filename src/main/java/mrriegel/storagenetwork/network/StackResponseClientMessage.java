@@ -1,50 +1,45 @@
 package mrriegel.storagenetwork.network;
-
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IThreadListener;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.ServerWorld;
+import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Used by InsertMessage and RequestMessage as a response back to the client
  * 
  *
  */
-public class StackResponseClientMessage implements IMessage, IMessageHandler<StackResponseClientMessage, IMessage> {
+public class StackResponseClientMessage {
 
   private ItemStack stack;
 
-  public StackResponseClientMessage() {}
+  private StackResponseClientMessage() {}
 
-  public StackResponseClientMessage(ItemStack a) {
-    this.stack = a;
+  StackResponseClientMessage(ItemStack a) {
+    stack = a;
   }
 
-  @Override
-  public IMessage onMessage(final StackResponseClientMessage message, final MessageContext ctx) {
-    //when player TAKES an item, go here... (maybe other cases too)
-    IThreadListener mainThread = Minecraft.getMinecraft();
-    mainThread.addScheduledTask(new Runnable() {
-
-      @Override
-      public void run() {
-        Minecraft.getMinecraft().player.inventory.setItemStack(message.stack);
-      }
+  public static void handle(StackResponseClientMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      ServerWorld world = player.getServerWorld();
+      Minecraft.getInstance().player.inventory.setItemStack(message.stack);
+      //      }
     });
-    return null;
+    //    return null;
   }
 
-  @Override
-  public void fromBytes(ByteBuf buf) {
-    this.stack = ByteBufUtils.readItemStack(buf);
+  public static StackResponseClientMessage decode(PacketBuffer buf) {
+    StackResponseClientMessage message = new StackResponseClientMessage();
+    message.stack = ItemStack.read(buf.readCompoundTag());
+    return message;
   }
 
-  @Override
-  public void toBytes(ByteBuf buf) {
-    ByteBufUtils.writeItemStack(buf, this.stack);
+  public static void encode(StackResponseClientMessage msg, PacketBuffer buf) {
+    buf.writeCompoundTag(msg.stack.serializeNBT());
   }
 }
