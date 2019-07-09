@@ -1,38 +1,36 @@
 package mrriegel.storagenetwork.network;
+import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.gui.ContainerNetworkBase;
+import mrriegel.storagenetwork.registry.PacketRegistry;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.ServerWorld;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.block.master.TileMaster;
-import mrriegel.storagenetwork.gui.IStorageContainer;
-import mrriegel.storagenetwork.registry.PacketRegistry;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IThreadListener;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.items.ItemHandlerHelper;
+import java.util.function.Supplier;
 
-public class ClearRecipeMessage implements IMessage, IMessageHandler<ClearRecipeMessage, IMessage> {
+public class ClearRecipeMessage {
 
-  @Override
-  public IMessage onMessage(final ClearRecipeMessage message, final MessageContext ctx) {
-    EntityPlayerMP player = ctx.getServerHandler().player;
-    IThreadListener mainThread = (WorldServer) player.world;
-    mainThread.addScheduledTask(new Runnable() {
-
-      @Override
-      public void run() {
+  public static void handle(ClearRecipeMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      ServerWorld world = player.getServerWorld();
         ClearRecipeMessage.clearContainerRecipe(player, true);
-      }
     });
-    return null;
   }
 
+  public static ClearRecipeMessage decode(PacketBuffer buf) {
+    return new ClearRecipeMessage();
+  }
+
+  public static void encode(ClearRecipeMessage msg, PacketBuffer buf) {
+  }
   /**
    * Should be in a public util.
    * 
@@ -43,10 +41,10 @@ public class ClearRecipeMessage implements IMessage, IMessageHandler<ClearRecipe
    * @param player
    * @param doRefresh
    */
-  public static void clearContainerRecipe(EntityPlayerMP player, boolean doRefresh) {
-    if (player.openContainer instanceof IStorageContainer) {
-      IStorageContainer container = (IStorageContainer) player.openContainer;
-      InventoryCrafting craftMatrix = container.getCraftMatrix();
+  static void clearContainerRecipe(ServerPlayerEntity player, boolean doRefresh) {
+    if (player.openContainer instanceof ContainerNetworkBase) {
+      ContainerNetworkBase container = (ContainerNetworkBase) player.openContainer;
+      CraftingInventory craftMatrix = container.getCraftMatrix();
       TileMaster tileMaster = container.getTileMaster();
       for (int i = 0; i < 9; i++) {
         if (tileMaster == null) {
@@ -61,22 +59,19 @@ public class ClearRecipeMessage implements IMessage, IMessageHandler<ClearRecipe
         if (numBeforeInsert == remainingAfter) {
           continue;
         }
-        if (remainingAfter == 0)
+        if (remainingAfter == 0) {
           craftMatrix.setInventorySlotContents(i, ItemStack.EMPTY);
-        else
+        }
+        else {
           craftMatrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(stackInSlot, remainingAfter));
+        }
       }
       if (doRefresh) {
         List<ItemStack> list = tileMaster.getStacks();
-        PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), player);
-        ((Container) container).detectAndSendChanges();
+        PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
+            player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        container.detectAndSendChanges();
       }
     }
   }
-
-  @Override
-  public void fromBytes(ByteBuf buf) {}
-
-  @Override
-  public void toBytes(ByteBuf buf) {}
 }
