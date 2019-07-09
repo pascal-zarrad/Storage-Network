@@ -1,7 +1,7 @@
 package mrriegel.storagenetwork.gui;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.mojang.realmsclient.gui.ChatFormatting;
+import com.mojang.blaze3d.platform.GlStateManager;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.jei.JeiHooks;
@@ -9,25 +9,19 @@ import mrriegel.storagenetwork.jei.JeiSettings;
 import mrriegel.storagenetwork.network.ClearRecipeMessage;
 import mrriegel.storagenetwork.network.InsertMessage;
 import mrriegel.storagenetwork.network.RequestMessage;
-import mrriegel.storagenetwork.network.SortMessage;
 import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.text.ITextComponent;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -39,25 +33,25 @@ import java.util.List;
  *
  *
  */
-public abstract class GuiContainerStorageInventory extends GuiContainer {
+public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerNetworkBase> {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
-  private ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private int page = 1, maxPage = 1;
   private List<ItemStack> stacks, craftableStacks;
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
-  private GuiTextField searchBar;
-  private GuiStorageButton directionBtn, sortBtn, jeiBtn, clearTextBtn;
+  private TextFieldWidget searchBar;
+  private Button directionBtn, sortBtn, jeiBtn, clearTextBtn;
   private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
   private boolean isSimple;
 
-  public GuiContainerStorageInventory(ContainerNetworkBase container) {
-    super(container);
-    this.xSize = WIDTH;
-    this.ySize = HEIGHT;
+  public GuiContainerStorageInventory(ContainerNetworkBase container, PlayerInventory inv, ITextComponent name) {
+    super(container, inv, name);
+    xSize = WIDTH;
+    ySize = HEIGHT;
     stacks = Lists.newArrayList();
     craftableStacks = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
@@ -68,32 +62,33 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
     return System.currentTimeMillis() > lastClick + 100L;
   }
 
-  @Override
+  //  @Override
   public void setStacks(List<ItemStack> stacks) {
     this.stacks = stacks;
   }
 
-  @Override
+  //  @Override
   public void setCraftableStacks(List<ItemStack> stacks) {
     craftableStacks = stacks;
   }
 
   @Override
-  public void initGui() {
-    super.initGui();
-    Keyboard.enableRepeatEvents(true);
-    searchBar = new GuiTextField(0, fontRenderer, guiLeft + 81, guiTop + 96, 85, fontRenderer.FONT_HEIGHT);
+  public void init() {
+    super.init();
+    //    Keyboard.enableRepeatEvents(true);
+    searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "");
     searchBar.setMaxStringLength(30);
     if (isSimple) {
       searchBar.x -= 71;
       searchBar.y += 64;
-      searchBar.width += 74;
+      //      searchBar.width += 74;
+      searchBar.setWidth(searchBar.getWidth() + 74);
       searchBar.setMaxStringLength(60);
     }
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
-    searchBar.setFocused(true);
+    searchBar.setFocused2(true);
     if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       searchBar.setText(JeiHooks.getFilterText());
     }
@@ -139,29 +134,29 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
     return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + h);
   }
 
-  private boolean inSearchbar(int mouseX, int mouseY) {
-    return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.width, fontRenderer.FONT_HEIGHT + 6, mouseX, mouseY);
+  private boolean inSearchbar(double mouseX, double mouseY) {
+    return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6, mouseX, mouseY);
   }
-
-  @Override
-  public void drawGradientRectP(int left, int top, int right, int bottom, int startColor, int endColor) {
-    super.drawGradientRect(left, top, right, bottom, startColor, endColor);
-  }
-
-  @Override
-  public FontRenderer getFont() {
-    return this.fontRenderer;
-  }
-
-  @Override
-  public boolean isPointInRegionP(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
-    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
-  }
-
-  @Override
-  public void renderToolTipP(ItemStack stack, int x, int y) {
-    super.renderToolTip(stack, x, y);
-  }
+  //
+  //  @Override
+  //  public void drawGradientRectP(int left, int top, int right, int bottom, int startColor, int endColor) {
+  //    super.drawGradientRect(left, top, right, bottom, startColor, endColor);
+  //  }
+  //
+  //  @Override
+  //  public font getFont() {
+  //    return font;
+  //  }
+  //
+  //  @Override
+  //  public boolean isPointInRegionP(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+  //    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
+  //  }
+  //
+  //  @Override
+  //  public void renderToolTipP(ItemStack stack, int x, int y) {
+  //    super.renderToolTip(stack, x, y);
+  //  }
 
   protected abstract boolean isScreenValid();
 
@@ -173,31 +168,32 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
     }
     else if (searchText.startsWith("#")) {
       String tooltipString;
-      List<String> tooltip = stack.getTooltip(mc.player, TooltipFlags.NORMAL);
+      Minecraft mc = Minecraft.getInstance();
+      List<ITextComponent> tooltip = stack.getTooltip(mc.player, TooltipFlags.NORMAL);
       tooltipString = Joiner.on(' ').join(tooltip).toLowerCase();
-      tooltipString = ChatFormatting.stripFormatting(tooltipString);
+      //      tooltipString = ChatFormatting.stripFormatting(tooltipString);
       return tooltipString.toLowerCase().contains(searchText.toLowerCase().substring(1));
     }
-    else if (searchText.startsWith("$")) {
-      StringBuilder oreDictStringBuilder = new StringBuilder();
-      for (int oreId : OreDictionary.getOreIDs(stack)) {
-        String oreName = OreDictionary.getOreName(oreId);
-        oreDictStringBuilder.append(oreName).append(' ');
-      }
-      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
-    }
-    else if (searchText.startsWith("%")) {
-      StringBuilder creativeTabStringBuilder = new StringBuilder();
-      for (CreativeTabs creativeTab : stack.getItem().getCreativeTabs()) {
-        if (creativeTab != null) {
-          String creativeTabName = creativeTab.getTranslatedTabLabel();
-          creativeTabStringBuilder.append(creativeTabName).append(' ');
-        }
-      }
-      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
-    }
+    //    else if (searchText.startsWith("$")) {
+    //      StringBuilder oreDictStringBuilder = new StringBuilder();
+    //      for (int oreId : OreDictionary.getOreIDs(stack)) {
+    //        String oreName = OreDictionary.getOreName(oreId);
+    //        oreDictStringBuilder.append(oreName).append(' ');
+    //      }
+    //      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
+    //    }
+    //    else if (searchText.startsWith("%")) {
+    //      StringBuilder creativeTabStringBuilder = new StringBuilder();
+    //      for (CreativeTabs creativeTab : stack.getItem().getCreativeTabs()) {
+    //        if (creativeTab != null) {
+    //          String creativeTabName = creativeTab.getTranslatedTabLabel();
+    //          creativeTabStringBuilder.append(creativeTabName).append(' ');
+    //        }
+    //      }
+    //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
+    //    }
     else {
-      return stack.getDisplayName().toLowerCase().contains(searchText.toLowerCase());
+      return stack.getDisplayName().toString().toLowerCase().contains(searchText.toLowerCase());
     }
   }
 
@@ -206,22 +202,22 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
     if (isScreenValid() == false) {
       return;
     }
-    drawDefaultBackground();//dim the background as normal
+    renderBackground();// drawDefaultBackground();//dim the background as normal
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
     applyScrollPaging(stacksToDisplay);
     rebuildItemSlots(stacksToDisplay);
     renderItemSlots(mouseX, mouseY);
-    searchBar.drawTextBox();
+    //    searchBar.render();
   }
 
   private void renderTextures() {
-    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-    this.mc.getTextureManager().bindTexture(texture);
-    int xCenter = (this.width - this.xSize) / 2;
-    int yCenter = (this.height - this.ySize) / 2;
-    drawTexturedModalRect(xCenter, yCenter, 0, 0, this.xSize, this.ySize);
+    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    minecraft.getTextureManager().bindTexture(texture);
+    int xCenter = (width - xSize) / 2;
+    int yCenter = (height - ySize) / 2;
+    blit(xCenter, yCenter, 0, 0, xSize, ySize);
   }
 
   private List<ItemStack> applySearchTextToSlots() {
@@ -294,7 +290,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
           case AMOUNT:
             return Integer.compare(o1.getCount(), o2.getCount()) * mul;
           case NAME:
-            return o2.getDisplayName().compareToIgnoreCase(o1.getDisplayName()) * mul;
+            return o2.getDisplayName().toString().compareToIgnoreCase(o1.getDisplayName().toString()) * mul;
           case MOD:
             return UtilTileEntity.getModNameForItem(o2.getItem()).compareToIgnoreCase(UtilTileEntity.getModNameForItem(o1.getItem())) * mul;
         }
@@ -303,21 +299,6 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
     });
   }
 
-  @Override
-  public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-    super.drawScreen(mouseX, mouseY, partialTicks);
-    super.renderHoveredToolTip(mouseX, mouseY);
-    if (isScreenValid() == false) {
-      mc.player.closeScreen();
-      return;
-    }
-    try {
-      drawTooltips(mouseX, mouseY);
-    }
-    catch (Throwable e) {
-      StorageNetwork.error(e.getMessage());
-    }
-  }
 
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
@@ -326,10 +307,24 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
       return;
     }
     if (forceFocus) {
-      searchBar.setFocused(true);
+      searchBar.setFocused2(true);
       if (searchBar.isFocused()) {
         forceFocus = false;
       }
+    }
+    //    @Override
+    //    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    //      super.drawScreen(mouseX, mouseY, partialTicks);
+    super.renderHoveredToolTip(mouseX, mouseY);
+    if (isScreenValid() == false) {
+      minecraft.player.closeScreen();
+      return;
+    }
+    try {
+      drawTooltips(mouseX, mouseY);
+    }
+    catch (Throwable e) {
+      StorageNetwork.LOGGER.error(e.getMessage());
     }
   }
 
@@ -341,7 +336,8 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
     }
     if (inSearchbar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
-      if (!isShiftKeyDown()) {
+      //      this.keyPressed()
+      if (!Screen.hasShiftDown()) {
         lis.add(I18n.format("gui.storagenetwork.shift"));
       }
       else {
@@ -350,56 +346,55 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));
       }
-      drawHoveringText(lis, mouseX, mouseY);
+      renderTooltip(lis, mouseX, mouseY);
     }
-    if (clearTextBtn != null && clearTextBtn.isMouseOver()) {
-      drawHoveringText(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX, mouseY);
+    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX, mouseY);
     }
-    if (sortBtn != null && sortBtn.isMouseOver()) {
-      drawHoveringText(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX, mouseY);
+    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX, mouseY);
     }
-    if (directionBtn != null && directionBtn.isMouseOver()) {
-      drawHoveringText(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX, mouseY);
+    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX, mouseY);
     }
-    if (jeiBtn != null && jeiBtn.isMouseOver()) {
+    if (jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      drawHoveringText(Lists.newArrayList(s), mouseX, mouseY);
+      renderTooltip(Lists.newArrayList(s), mouseX, mouseY);
     }
   }
 
   @Override
-  public void onGuiClosed() {
-    super.onGuiClosed();
-    Keyboard.enableRepeatEvents(false);
+  public void onClose() {
+    super.onClose();
+    //    Keyboard.enableRepeatEvents(false);
   }
-
-  @Override
-  public void actionPerformed(GuiButton button) throws IOException {
-    super.actionPerformed(button);
-    if (button == null) {
-      return;
-    }
-    boolean doSort = true;
-    if (button.id == directionBtn.id) {
-      setDownwards(!getDownwards());
-    }
-    else if (button.id == sortBtn.id) {
-      setSort(getSort().next());
-    }
-    else if (button.id == jeiBtn.id) {
-      doSort = false;
-      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
-    }
-    else if (button.id == clearTextBtn.id) {
-      doSort = false;
-      clearSearch();
-      //      this.fieldOperationLimit.setFocused(true);//doesnt work..somethings overriding it?
-      forceFocus = true;//we have to force it to go next-tick
-    }
-    if (doSort) {
-      PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
-    }
-  }
+  //  @Override
+  //  public void actionPerformed(Button button) throws IOException {
+  //    super.actionPerformed(button);
+  //    if (button == null) {
+  //      return;
+  //    }
+  //    boolean doSort = true;
+  //    if (button.id == directionBtn.id) {
+  //      setDownwards(!getDownwards());
+  //    }
+  //    else if (button.id == sortBtn.id) {
+  //      setSort(getSort().next());
+  //    }
+  //    else if (button.id == jeiBtn.id) {
+  //      doSort = false;
+  //      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
+  //    }
+  //    else if (button.id == clearTextBtn.id) {
+  //      doSort = false;
+  //      clearSearch();
+  //      //      this.fieldOperationLimit.setFocused(true);//doesnt work..somethings overriding it?
+  //      forceFocus = true;//we have to force it to go next-tick
+  //    }
+  //    if (doSort) {
+  //      PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
+  //    }
+  //  }
 
   private void clearSearch() {
     searchBar.setText("");
@@ -409,13 +404,13 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
   }
 
   @Override
-  public void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+  public void mouseClicked(double mouseX, double mouseY, int mouseButton) throws IOException {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    searchBar.setFocused(false);
+    searchBar.setFocused2(false);
     int rectX = 63;
     int rectY = 110;
     if (inSearchbar(mouseX, mouseY)) {
-      searchBar.setFocused(true);
+      searchBar.setFocused2(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         clearSearch();
       }
@@ -425,12 +420,12 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }
     else {
-      ItemStack stackCarriedByMouse = mc.player.inventory.getItemStack();
+      ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
       if (!stackUnderMouse.isEmpty()
           && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT
               || mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK)
           && stackCarriedByMouse.isEmpty() && canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, isShiftKeyDown(),
+        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, hasShiftDown(),
             mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK));
         lastClick = System.currentTimeMillis();
       }
@@ -442,10 +437,12 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
   }
 
   @Override
-  public void keyTyped(char typedChar, int keyCode) throws IOException {
-    if (!checkHotbarKeys(keyCode)) {
-      Keyboard.enableRepeatEvents(true);
-      if (searchBar.isFocused() && searchBar.textboxKeyTyped(typedChar, keyCode)) {
+  public boolean charTyped(char typedChar, int keyCode) {
+    //    super.keyPressed()
+    //func_195363_d
+    //    if (!checkHotbarKeys(keyCode)) {
+    //      Keyboard.enableRepeatEvents(true);
+    if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
@@ -456,30 +453,31 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
           JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
         }
         catch (Throwable e) {
-          //its ok JEI not installed for maybe an addon mod is ok 
+          //its ok JEI not installed for maybe an addon mod is ok
         }
       }
       else {
-        super.keyTyped(typedChar, keyCode);
+      //      super.keyPressed(typedChar, keyCode, whatami);
       }
-    }
+    //    }
+    return super.charTyped(typedChar, keyCode);
   }
+  //  @Override
+  //  public void updateScreen() {
+  //
+  //    super.updateScreen();
+  //    if (searchBar != null) {
+  //      searchBar.updateCursorCounter();
+  //    }
+  //  }
 
   @Override
-  public void updateScreen() {
-    super.updateScreen();
-    if (searchBar != null) {
-      searchBar.updateCursorCounter();
-    }
-  }
-
-  @Override
-  public void handleMouseInput() throws IOException {
-    super.handleMouseInput();
-    int i = Mouse.getX() * this.width / this.mc.displayWidth;
-    int j = this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1;
-    if (inField(i, j)) {
-      int mouse = Mouse.getEventDWheel();
+  public boolean mouseClicked(double x, double y, int mouse) {
+    super.mouseClicked(x, y, mouse);
+    double i = x * width / minecraft.mainWindow.getWidth();
+    double j = height - y * height / minecraft.mainWindow.getHeight() - 1;
+    if (inField((int) i, (int) j)) {
+      //      int mouse = Mouse.getEventDWheel();
       if (mouse > 0 && page > 1) {
         page--;
       }
@@ -487,52 +485,6 @@ public abstract class GuiContainerStorageInventory extends GuiContainer {
         page++;
       }
     }
-  }
-
-  public class GuiStorageButton extends GuiButton {
-
-    GuiStorageButton(int id, int x, int y, String str) {
-      super(id, x, y, 14, 14, str);
-    }
-
-    public GuiStorageButton(int id, int x, int y, int width, String str) {
-      super(id, x, y, width, 14, str);
-    }
-
-    @Override
-    public void drawButton(Minecraft mc, int x, int y, float pticks) {
-      if (this.visible) {
-        FontRenderer fontrenderer = mc.fontRenderer;
-        mc.getTextureManager().bindTexture(texture);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.hovered = x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height;
-        int k = getHoverState(this.hovered);
-        GlStateManager.enableBlend();
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.blendFunc(770, 771);
-        drawTexturedModalRect(this.x, this.y, 162 + 14 * k, 0, width, height);
-        if (id == directionBtn.id) {
-          drawTexturedModalRect(this.x + 4, this.y + 3, GuiContainerStorageInventory.WIDTH + (getDownwards() ? 6 : 0), 14, 6, 8);
-        }
-        if (id == sortBtn.id) {
-          drawTexturedModalRect(this.x + 4, this.y + 3, 188 + (getSort() == EnumSortType.AMOUNT ? 6 : getSort() == EnumSortType.MOD ? 12 : 0), 14, 6, 8);
-        }
-        if (id == jeiBtn.id) {
-          drawTexturedModalRect(this.x + 4, this.y + 3, GuiContainerStorageInventory.WIDTH + (JeiSettings.isJeiSearchSynced() ? 0 : 6), 22, 6, 8);
-        }
-        mouseDragged(mc, x, y);
-        int l = 14737632;
-        if (packedFGColour != 0) {
-          l = packedFGColour;
-        }
-        else if (!this.enabled) {
-          l = 10526880;
-        }
-        else if (this.hovered) {
-          l = 16777120;
-        }
-        drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, l);
-      }
-    }
+    return true;
   }
 }
