@@ -35,9 +35,8 @@ public class PacketRegistry {
     // TODO:
     //	HANDLER.registerMessage(disc++, KeyPressPKT.class, KeyPressPKT::encode, KeyPressPKT::decode, KeyPressPKT.Handler::handle);
     //https://gist.github.com/williewillus/353c872bcf1a6ace9921189f6100d09a
-    //	https://github.com/sinkillerj/ProjectE/blob/c17ff6e1b7151b9ef12396af47a937bb599bf7bf/src/main/java/moze_intel/projecte/network/PacketHandler.java#L23-L52
     int id = 0;
-    INSTANCE.registerMessage(CableDataMessage.class, CableDataMessage.class, id++, Dist.DEDICATED_SERVER);
+    INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
     INSTANCE.registerMessage(StackRefreshClientMessage.class, StackRefreshClientMessage.class, id++, Dist.CLIENT);
     INSTANCE.registerMessage(RequestMessage.class, RequestMessage.class, id++, Dist.DEDICATED_SERVER);
     INSTANCE.registerMessage(ClearRecipeMessage.class, ClearRecipeMessage.class, id++, Dist.DEDICATED_SERVER);

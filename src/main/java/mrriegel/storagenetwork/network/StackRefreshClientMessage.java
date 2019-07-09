@@ -1,6 +1,4 @@
 package mrriegel.storagenetwork.network;
-
-import java.util.List;
 import com.google.common.collect.Lists;
 import io.netty.buffer.ByteBuf;
 import mrriegel.storagenetwork.gui.IStorageInventory;
@@ -8,9 +6,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import java.util.List;
 
 /**
  * Refresh the current screen with large data set of stacks.
@@ -25,16 +24,15 @@ public class StackRefreshClientMessage implements IMessage, IMessageHandler<Stac
 
   public StackRefreshClientMessage() {}
 
-  public StackRefreshClientMessage(List<ItemStack> stacks, List<ItemStack> craftableStacks) {
+  StackRefreshClientMessage(List<ItemStack> stacks, List<ItemStack> craftableStacks) {
     super();
     this.stacks = stacks;
     this.craftableStacks = craftableStacks;
-    this.size = stacks.size();
-    this.csize = craftableStacks.size();
+    size = stacks.size();
+    csize = craftableStacks.size();
   }
 
-  @Override
-  public IMessage onMessage(final StackRefreshClientMessage message, final MessageContext ctx) {
+  public static IMessage onMessage(StackRefreshClientMessage message, MessageContext ctx) {
     IThreadListener mainThread = Minecraft.getMinecraft();
     mainThread.addScheduledTask(new Runnable() {
 
@@ -52,8 +50,8 @@ public class StackRefreshClientMessage implements IMessage, IMessageHandler<Stac
 
   @Override
   public void fromBytes(ByteBuf buf) {
-    this.size = buf.readInt();
-    this.csize = buf.readInt();
+    size = buf.readInt();
+    csize = buf.readInt();
     stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
       ItemStack stack = new ItemStack(ByteBufUtils.readTag(buf));
@@ -70,8 +68,8 @@ public class StackRefreshClientMessage implements IMessage, IMessageHandler<Stac
 
   @Override
   public void toBytes(ByteBuf buf) {
-    buf.writeInt(this.size);
-    buf.writeInt(this.csize);
+    buf.writeInt(size);
+    buf.writeInt(csize);
     for (ItemStack stack : stacks) {
       ByteBufUtils.writeTag(buf, stack.serializeNBT());
       buf.writeInt(stack.getCount());
