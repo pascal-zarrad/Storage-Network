@@ -1,5 +1,4 @@
 package mrriegel.storagenetwork.gui;
-import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -8,8 +7,7 @@ import javax.annotation.Nonnull;
  * used as the MAIN grid in the network item display
  * 
  * also as ghost/filter items in the cable filter slots
- * 
- * @author
+ *
  *
  */
 public class ItemSlotNetwork {
@@ -20,10 +18,10 @@ public class ItemSlotNetwork {
   private final int guiLeft;
   private final int guiTop;
   private boolean showNumbers;
-  private final Container parent;
+  private final GuiContainerStorageInventory parent;
   private ItemStack stack;
 
-  public ItemSlotNetwork(Container parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
+  ItemSlotNetwork(GuiContainerStorageInventory parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -34,12 +32,12 @@ public class ItemSlotNetwork {
     setStack(stack);
   }
 
-  public static boolean isMouseOverSlot(int mouseX, int mouseY) {
+  static boolean isMouseOverSlot(int mouseX, int mouseY) {
     // TODO: this
     return false;//parent.isPointInRegionP(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  public void drawSlot(int mx, int my) {
+  void drawSlot(int mx, int my) {
     // TODO: renderItem and keyboard isKeyDown issues
     //    GlStateManager.pushMatrix();
     //    if (!getStack().isEmpty()) {
@@ -75,7 +73,7 @@ public class ItemSlotNetwork {
     //    GlStateManager.popMatrix();
   }
 
-  public void drawTooltip(int mx, int my) {
+  void drawTooltip(int mx, int my) {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
       // TODO this tooltip
       //      parent.renderToolTipP(getStack(), mx, my);
@@ -94,7 +92,7 @@ public class ItemSlotNetwork {
     return showNumbers;
   }
 
-  public void setShowNumbers(boolean showNumbers) {
+  private void setShowNumbers(boolean showNumbers) {
     this.showNumbers = showNumbers;
   }
 }

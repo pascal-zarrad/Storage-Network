@@ -5,7 +5,7 @@ public class ConfigHandler {
 
   //  public static Configuration config;
   public static int rangeWirelessAccessor;
-  public static long refreshTicks;
+  public static long refreshTicks = 20;
   public static boolean allowFastWorkBenchIntegration;
   public static boolean logEverything;
   public static boolean reloadNetworkWhenUnloadChunk;

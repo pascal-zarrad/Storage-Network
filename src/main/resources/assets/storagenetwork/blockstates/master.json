@@ -1,7 +1,7 @@
 {
     "variants" : {
-        "normal" : {
-            "model" : "storagenetwork:master"
+        "": {
+            "model": "storagenetwork:block/master"
         }
     }
 }

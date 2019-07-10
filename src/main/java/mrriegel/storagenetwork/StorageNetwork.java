@@ -2,6 +2,7 @@ package mrriegel.storagenetwork;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.block.request.BlockRequest;
 import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.TileRequest;
 import mrriegel.storagenetwork.registry.ModBlocks;
@@ -72,12 +73,14 @@ public class StorageNetwork {
     @SubscribeEvent
     public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
       event.getRegistry().register(new BlockMaster());
+      event.getRegistry().register(new BlockRequest());
     }
 
     @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
       Item.Properties properties = new Item.Properties().group(ModBlocks.itemGroup);
       event.getRegistry().register(new BlockItem(ModBlocks.master, properties).setRegistryName("master"));
+      event.getRegistry().register(new BlockItem(ModBlocks.request, properties).setRegistryName("request"));
     }
 
     @SubscribeEvent

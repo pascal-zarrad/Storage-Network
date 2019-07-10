@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class TileRequest extends TileConnectable {
 
-  public Map<Integer, ItemStack> matrix = new HashMap<>();
+  Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;
 
@@ -24,7 +24,9 @@ public class TileRequest extends TileConnectable {
   public void read(CompoundNBT compound) {
     super.read(compound);
     setDownwards(compound.getBoolean("dir"));
-    setSort(EnumSortType.valueOf(compound.getString("sort")));
+    if (compound.contains("sort")) {
+      setSort(EnumSortType.values()[compound.getInt("sort")]);
+    }
     ListNBT invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
     matrix = new HashMap<>();
     for (int i = 0; i < invList.size(); i++) {
@@ -39,7 +41,7 @@ public class TileRequest extends TileConnectable {
   public CompoundNBT write(CompoundNBT compound) {
     super.write(compound);
     compound.putBoolean("dir", isDownwards());
-    compound.putString("sort", getSort().toString());
+    compound.putInt("sort", getSort().ordinal());
     ListNBT invList = new ListNBT();
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
@@ -53,7 +55,7 @@ public class TileRequest extends TileConnectable {
     return compound;
   }
 
-  public boolean isDownwards() {
+  boolean isDownwards() {
     return downwards;
   }
 
@@ -61,7 +63,7 @@ public class TileRequest extends TileConnectable {
     this.downwards = downwards;
   }
 
-  public EnumSortType getSort() {
+  EnumSortType getSort() {
     return sort;
   }
 

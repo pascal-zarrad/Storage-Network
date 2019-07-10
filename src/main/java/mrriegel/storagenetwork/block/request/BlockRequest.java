@@ -14,8 +14,8 @@ import java.util.List;
 public class BlockRequest extends AbstractBlockConnectable {
   //private static final PropertyDirection FACING = PropertyDirection.create("facing");
 
-  public BlockRequest(String registryName) {
-    super(Material.IRON, registryName);
+  public BlockRequest() {
+    super(Material.IRON, "request");
     //    setHardness(3.0F);
     //    setCreativeTab(CreativeTab.tab);
     //    setDefaultState(this.blockState.getBaseState().withProperty(FACING, Direction.NORTH));
