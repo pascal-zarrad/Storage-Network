@@ -23,8 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.client.config.GuiButtonExt;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -94,15 +94,22 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       searchBar.setText(JeiHooks.getFilterText());
     }
     if (!isSimple) {
-      directionBtn = new GuiStorageButton(0, guiLeft + 7, searchBar.y - 3, "");
+      directionBtn = new GuiButtonExt(20, 20, guiLeft + 7, searchBar.y - 3, "", (p) -> {
+        StorageNetwork.LOGGER.info("TODO ");
+      });
       addButton(directionBtn);
-      sortBtn = new GuiStorageButton(1, guiLeft + 21, searchBar.y - 3, "");
+      sortBtn = new GuiButtonExt(20, 20, guiLeft + 21, searchBar.y - 3, "", (p) -> {
+        StorageNetwork.LOGGER.info("TODO ");
+      });
       addButton(sortBtn);
-      jeiBtn = new GuiStorageButton(4, guiLeft + 35, searchBar.y - 3, "");
+      jeiBtn = new GuiButtonExt(20, 20, guiLeft + 35, searchBar.y - 3, "", (p) -> {
+        StorageNetwork.LOGGER.info("TODO ");
+      });
       if (JeiSettings.isJeiLoaded()) {
         addButton(jeiBtn);
       }
-      clearTextBtn = new GuiStorageButton(5, guiLeft + 64, searchBar.y - 3, "X");
+      clearTextBtn = new GuiButtonExt(20, 20, guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+      });
       addButton(clearTextBtn);
     }
   }
@@ -407,7 +414,23 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
   @Override
-  public void mouseClicked(double mouseX, double mouseY, int mouseButton) throws IOException {
+  public boolean mouseScrolled(double x, double y, double mouseButton) {
+    super.mouseScrolled(x, y, mouseButton);
+    double i = x * width / minecraft.mainWindow.getWidth();
+    double j = height - y * height / minecraft.mainWindow.getHeight() - 1;
+    if (inField((int) i, (int) j)) {
+      //      int mouse = Mouse.getEventDWheel();
+      if (mouseButton > 0 && page > 1) {
+        page--;
+      }
+      if (mouseButton < 0 && page < maxPage) {
+        page++;
+      }
+    }
+    return true;
+  }
+  @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
     searchBar.setFocused2(false);
     int rectX = 63;
@@ -432,11 +455,12 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
             mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK));
         lastClick = System.currentTimeMillis();
       }
-      else if (!stackCarriedByMouse.isEmpty() && inField(mouseX, mouseY) && canClick()) {
+      else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) && canClick()) {
         PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton, stackCarriedByMouse));
         lastClick = System.currentTimeMillis();
       }
     }
+    return true;
   }
 
   @Override
@@ -474,20 +498,4 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   //    }
   //  }
 
-  @Override
-  public boolean mouseClicked(double x, double y, int mouse) {
-    super.mouseClicked(x, y, mouse);
-    double i = x * width / minecraft.mainWindow.getWidth();
-    double j = height - y * height / minecraft.mainWindow.getHeight() - 1;
-    if (inField((int) i, (int) j)) {
-      //      int mouse = Mouse.getEventDWheel();
-      if (mouse > 0 && page > 1) {
-        page--;
-      }
-      if (mouse < 0 && page < maxPage) {
-        page++;
-      }
-    }
-    return true;
-  }
 }
