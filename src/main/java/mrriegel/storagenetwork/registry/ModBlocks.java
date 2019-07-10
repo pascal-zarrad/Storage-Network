@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.registry;
 import mrriegel.storagenetwork.StorageNetwork;
+import mrriegel.storagenetwork.block.cable.BlockCable;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
@@ -31,6 +32,11 @@ public class ModBlocks {
   public static TileEntityType<TileRequest> requesttile;
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static ContainerType<ContainerRequest> requestcontainer;
+  //
+
+  @ObjectHolder(StorageNetwork.MODID + ":kabel")
+  public static BlockCable kabel;
+  //
   //  @ObjectHolder(StorageNetwork.MODID + ":kabel")
   //  public static BlockCable kabel;
   //  @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")

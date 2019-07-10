@@ -11,6 +11,7 @@ out/
 saves/
 .gradle/
 .settings/
+src/generated
 .idea/
 server.properties 
 run/screenshots/
