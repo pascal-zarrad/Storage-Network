@@ -24,6 +24,7 @@ public class ModBlocks {
   public static TileEntityType<TileMaster> mastertile;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMaster master;
+  //
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static BlockRequest request;
   @ObjectHolder(StorageNetwork.MODID + ":request")

@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.block.request;
 import mrriegel.storagenetwork.block.AbstractBlockConnectable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,11 @@ public class BlockRequest extends AbstractBlockConnectable {
     //    setHardness(3.0F);
     //    setCreativeTab(CreativeTab.tab);
     //    setDefaultState(this.blockState.getBaseState().withProperty(FACING, Direction.NORTH));
+  }
+
+  @Override
+  public boolean hasTileEntity(BlockState state) {
+    return true;
   }
 
   @Override

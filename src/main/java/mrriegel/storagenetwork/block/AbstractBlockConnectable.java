@@ -25,6 +25,7 @@ public abstract class AbstractBlockConnectable extends BaseBlock {
 
   @Override
   public void onNeighborChange(BlockState state, IWorldReader worldIn, BlockPos pos, BlockPos fromPos) {
+    super.onNeighborChange(state, worldIn, pos, fromPos);
     try {
       TileEntity tile = worldIn.getTileEntity(pos);
       if (tile != null) {
