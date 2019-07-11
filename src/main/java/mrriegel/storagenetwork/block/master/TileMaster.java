@@ -39,7 +39,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
-  private static String[] blacklist;
+  private static String[] blacklist= new String[0];//TODO
   private boolean shouldRefresh = true;
 
   private DimPos getDimPos() {
