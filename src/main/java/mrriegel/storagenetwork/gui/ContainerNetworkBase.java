@@ -90,7 +90,8 @@ public abstract class ContainerNetworkBase extends Container {
       if (optional.isPresent()) {
         ICraftingRecipe icraftingrecipe = optional.get();
         if (result.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
-          itemstack = icraftingrecipe.func_77572_b(inventory);
+          itemstack = icraftingrecipe.getCraftingResult(inventory );
+//          itemstack = icraftingrecipe.func_77572_b(inventory);
         }
       }
       result.setInventorySlotContents(0, itemstack);

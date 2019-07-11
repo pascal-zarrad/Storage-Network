@@ -97,9 +97,10 @@ public class BlockCable extends Block {
   StorageNetwork.LOGGER.info("nb change"+pos);
 
  Direction found =  findNewDirection(world, pos);
+    StorageNetwork.LOGGER.info("FOUND  change"+found);
 
-
-   }
+((ServerWorld) world).setBlockState(pos, stateIn.with(FACING_TO_PROPERTY_MAP.get(found),EnumConnectType.INVENTORY));
+ }
 
   public Direction findNewDirection(IWorldReader worldIn, BlockPos pos) {
 //    if (isValidLinkNeighbor()) {// for myslef?
