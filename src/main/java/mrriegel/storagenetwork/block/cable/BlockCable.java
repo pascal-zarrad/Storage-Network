@@ -2,6 +2,7 @@ package mrriegel.storagenetwork.block.cable;
 import com.google.common.collect.Maps;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
+import mrriegel.storagenetwork.registry.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

@@ -2,11 +2,13 @@ package mrriegel.storagenetwork.registry;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.cable.BlockCable;
 import mrriegel.storagenetwork.block.cable.TileCable;
+import mrriegel.storagenetwork.block.cablelink.TileCableLink;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
 import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.TileRequest;
+import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -39,6 +41,10 @@ public class ModBlocks {
   public static BlockCable kabel;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static TileEntityType<TileCable> kabeltile;
+  @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
+  public static Block storagekabel;
+  @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
+  public static TileEntityType<TileCableLink> storagekabeltile;
   //
   //  @ObjectHolder(StorageNetwork.MODID + ":kabel")
   //  public static BlockCable kabel;
