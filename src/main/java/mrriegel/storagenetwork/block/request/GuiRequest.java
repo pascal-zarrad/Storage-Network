@@ -1,5 +1,4 @@
 package mrriegel.storagenetwork.block.request;
-
 import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.GuiContainerStorageInventory;
@@ -13,9 +12,8 @@ public class GuiRequest extends GuiContainerStorageInventory {
   private TileRequest tile;
 
   public GuiRequest(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
-    super(container, inv, name);
-    //what how
-    //    tile = inventorySlotsIn.getTileRequest();
+    super(container, inv, name); 
+        tile = container.getTileRequest();
   }
 
   @Override

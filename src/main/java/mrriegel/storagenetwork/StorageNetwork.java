@@ -63,6 +63,7 @@ public class StorageNetwork {
     // some preinit code
     LOGGER.info("HELLO FROM PREINIT");
     StorageNetworkCapabilities.initCapabilities();
+    proxy.init();
   }
 
   @SubscribeEvent
