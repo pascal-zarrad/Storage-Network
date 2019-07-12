@@ -25,6 +25,8 @@ public class StackResponseClientMessage {
 
   public static void handle(StackResponseClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
+      //  Error executing task on Client
+      //java.lang.NullPointerException: null
       ServerPlayerEntity player = ctx.get().getSender();
       ServerWorld world = player.getServerWorld();
       Minecraft.getInstance().player.inventory.setItemStack(message.stack);

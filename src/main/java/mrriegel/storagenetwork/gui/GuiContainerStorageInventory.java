@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.request.ContainerRequest;
+import mrriegel.storagenetwork.block.request.GuiButtonRequest;
 import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.jei.JeiHooks;
 import mrriegel.storagenetwork.jei.JeiSettings;
@@ -14,6 +15,7 @@ import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.BeaconScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -44,11 +46,11 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private List<ItemStack> stacks, craftableStacks;
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
   private TextFieldWidget searchBar;
-  private Button directionBtn, sortBtn, jeiBtn, clearTextBtn;
+  private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
-  private boolean isSimple;
+  protected boolean isSimple ;
 
   public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
@@ -67,6 +69,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   //  @Override
   public void setStacks(List<ItemStack> stacks) {
     this.stacks = stacks;
+    StorageNetwork.LOGGER.info("set stacks "+stacks.size() );
   }
 
   //  @Override
@@ -95,21 +98,22 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       searchBar.setText(JeiHooks.getFilterText());
     }
     if (!isSimple) {
-      directionBtn = new GuiButtonExt(20, 20, guiLeft + 7, searchBar.y - 3, "", (p) -> {
+      directionBtn = new GuiButtonRequest(20, 20, guiLeft + 7, searchBar.y - 3, "", (p) -> {
         StorageNetwork.LOGGER.info("TODO ");
       });
+
       addButton(directionBtn);
-      sortBtn = new GuiButtonExt(20, 20, guiLeft + 21, searchBar.y - 3, "", (p) -> {
+      sortBtn = new GuiButtonRequest(20, 20, guiLeft + 21, searchBar.y - 3, "", (p) -> {
         StorageNetwork.LOGGER.info("TODO ");
       });
       addButton(sortBtn);
-      jeiBtn = new GuiButtonExt(20, 20, guiLeft + 35, searchBar.y - 3, "", (p) -> {
+      jeiBtn = new GuiButtonRequest(20, 20, guiLeft + 35, searchBar.y - 3, "", (p) -> {
         StorageNetwork.LOGGER.info("TODO ");
       });
       if (JeiSettings.isJeiLoaded()) {
         addButton(jeiBtn);
       }
-      clearTextBtn = new GuiButtonExt(20, 20, guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+      clearTextBtn = new GuiButtonRequest(20, 20, guiLeft + 64, searchBar.y - 3, "X", (p) -> {
       });
       addButton(clearTextBtn);
     }
@@ -146,7 +150,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
   private boolean inSearchbar(double mouseX, double mouseY) {
-    return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6, mouseX, mouseY);
+    return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6,
+        mouseX, mouseY);
   }
   //
   //  @Override
@@ -213,7 +218,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     if (isScreenValid() == false) {
       return;
     }
-    renderBackground();// drawDefaultBackground();//dim the background as normal
+//    renderBackground();// drawDefaultBackground();//dim the background as normal
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
@@ -221,6 +226,13 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     rebuildItemSlots(stacksToDisplay);
     renderItemSlots(mouseX, mouseY);
     //    searchBar.render();
+  }
+  @Override
+  public void render(int mouseX, int mouseY, float partialTicks) {
+    this.renderBackground();
+    BeaconScreen x;
+    super.render(mouseX, mouseY, partialTicks);
+    this.renderHoveredToolTip(mouseX, mouseY);
   }
 
   private void renderTextures() {
