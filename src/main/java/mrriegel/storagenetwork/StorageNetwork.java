@@ -1,6 +1,7 @@
 package mrriegel.storagenetwork;
 import mrriegel.storagenetwork.apiimpl.StorageNetworkHelpers;
 import mrriegel.storagenetwork.block.cable.BlockCable;
+import mrriegel.storagenetwork.block.cable.TileCable;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
@@ -92,6 +93,7 @@ public class StorageNetwork {
 
       event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, ModBlocks.master).build(null).setRegistryName("master"));
       event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, ModBlocks.request).build(null).setRegistryName("request"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, ModBlocks.kabel).build(null).setRegistryName("kabel"));
     }
 
     @SubscribeEvent

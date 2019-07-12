@@ -44,11 +44,6 @@ public class BlockMaster extends BaseBlock {
   }
 
   @Override
-  public boolean hasTileEntity(BlockState state) {
-    return true;
-  }
-
-  @Override
   public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
     super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
     DimPos masterPos = null;
@@ -128,6 +123,11 @@ public class BlockMaster extends BaseBlock {
   public void addInformation(ItemStack stack, @Nullable IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);
     tooltip.add(new TranslationTextComponent("tooltip.storagenetwork.master"));
+  }
+
+  @Override
+  public boolean hasTileEntity(BlockState state) {
+    return true;
   }
 
   @Nullable @Override

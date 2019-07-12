@@ -5,6 +5,7 @@ import mrriegel.storagenetwork.block.master.TileMaster;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.HugeMushroomBlock;
 import net.minecraft.block.material.Material;
@@ -15,6 +16,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.ServerWorld;
@@ -22,9 +24,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
-public class BlockCable extends Block {
+public class BlockCable extends ContainerBlock {
 
   public enum EnumConnectType implements IStringSerializable {
     NONE, CABLE, INVENTORY, BLOCKED;
@@ -53,15 +56,6 @@ public class BlockCable extends Block {
     p.put(Direction.UP, UP);
     p.put(Direction.DOWN, DOWN);
   });
-  //  protected static final Map<Direction, EnumProperty<EnumConnectType>> PROPERTIES = Maps.newEnumMap(
-  //      new ImmutableMap.Builder<Direction, EnumProperty<EnumConnectType>>()
-  //          .put(Direction.DOWN,DOWN)
-  //          .put(Direction.UP, UP)
-  //          .put(Direction.NORTH, NORTH)
-  //          .put(Direction.SOUTH, SOUTH)
-  //          .put(Direction.WEST, WEST)
-  //          .put(Direction.EAST, EAST)
-  //          .build());
 
   public BlockCable(String registryName) {
     super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
@@ -74,9 +68,30 @@ public class BlockCable extends Block {
     FenceBlock y;
   }
 
-  @Override public BlockRenderType getRenderType(BlockState state) {
-    return BlockRenderType.MODEL;
+  public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    return BlockRenderType.MODEL ;
   }
+
+  @Override
+  public boolean hasTileEntity(BlockState state) {
+    return true;
+  }
+
+  @Nullable @Override
+  public TileEntity createNewTileEntity(IBlockReader worldIn) {
+    return new TileCable();
+
+
+  }
+  @Override
+  public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor){
+    super.onNeighborChange(state,world,pos,neighbor);
+    StorageNetwork.LOGGER.info("!onNeighborChange change" + pos  );
+  }
+
+//  @Override public BlockRenderType getRenderType(BlockState state) {
+//    return BlockRenderType.MODEL;
+//  }
 
   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
     super.fillStateContainer(builder);
@@ -87,6 +102,10 @@ public class BlockCable extends Block {
   public void neighborChanged(BlockState stateIn, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
     super.neighborChanged(stateIn, world, pos, blockIn, fromPos, isMoving);
     StorageNetwork.LOGGER.info("!FDASDASDASDASDASD change" + pos + "?" + blockIn);
+  //  updateConnections(stateIn, world, pos);
+  }
+
+  private void updateConnections(BlockState stateIn, World world, BlockPos pos) {
     for (Direction facing : Direction.values()) {
       EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
       if (world.getBlockState(pos.offset(facing)).getBlock() instanceof BlockCable
