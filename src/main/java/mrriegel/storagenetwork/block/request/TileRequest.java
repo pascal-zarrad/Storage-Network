@@ -2,15 +2,21 @@ package mrriegel.storagenetwork.block.request;
 import mrriegel.storagenetwork.block.TileConnectable;
 import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.registry.ModBlocks;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileRequest extends TileConnectable {
+public class TileRequest extends TileConnectable implements INamedContainerProvider {
 
   Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;
@@ -69,5 +75,16 @@ public class TileRequest extends TileConnectable {
 
   public void setSort(EnumSortType sort) {
     this.sort = sort;
+  }
+
+
+  @Override
+  public ITextComponent getDisplayName() {
+    return new StringTextComponent(getType().getRegistryName().getPath());
+  }
+
+  @Override
+  public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    return new ContainerRequest(i, world, pos, playerInventory, playerEntity);
   }
 }

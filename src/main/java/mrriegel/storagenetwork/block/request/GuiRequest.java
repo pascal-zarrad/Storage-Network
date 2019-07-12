@@ -4,6 +4,7 @@ import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.GuiContainerStorageInventory;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
@@ -11,7 +12,7 @@ public class GuiRequest extends GuiContainerStorageInventory {
 
   private TileRequest tile;
 
-  public GuiRequest(ContainerNetworkBase container, PlayerInventory inv, ITextComponent name) {
+  public GuiRequest(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     //what how
     //    tile = inventorySlotsIn.getTileRequest();

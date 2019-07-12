@@ -3,6 +3,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mrriegel.storagenetwork.StorageNetwork;
+import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.jei.JeiHooks;
 import mrriegel.storagenetwork.jei.JeiSettings;
@@ -34,7 +35,7 @@ import java.util.List;
  *
  *
  */
-public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerNetworkBase> {
+public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -49,7 +50,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private boolean forceFocus;
   private boolean isSimple;
 
-  public GuiContainerStorageInventory(ContainerNetworkBase container, PlayerInventory inv, ITextComponent name) {
+  public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     xSize = WIDTH;
     ySize = HEIGHT;
