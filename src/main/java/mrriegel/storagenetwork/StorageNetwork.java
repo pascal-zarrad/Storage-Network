@@ -9,6 +9,7 @@ import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
 import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.TileRequest;
+import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.registry.ModBlocks;
 import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.setup.ClientProxy;
@@ -61,6 +62,7 @@ public class StorageNetwork {
   private static void setup(FMLCommonSetupEvent event) {
     // some preinit code
     LOGGER.info("HELLO FROM PREINIT");
+    StorageNetworkCapabilities.initCapabilities();
   }
 
   @SubscribeEvent

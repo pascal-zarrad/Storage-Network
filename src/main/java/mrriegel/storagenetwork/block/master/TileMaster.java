@@ -134,7 +134,8 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       }
       // Prevent having multiple masters on a network and break all others.
       TileMaster maybeMasterTile = lookPos.getTileEntity(TileMaster.class);
-      if (maybeMasterTile != null && !lookPos.equals(world, pos)) {
+      if (maybeMasterTile != null && !lookPos.equals(world, pos) ) {
+        StorageNetwork.LOGGER.info("break master at  "+ lookPos.getBlockPos() + "  is different than ME +"+pos );
         nukeAndDrop(lookPos);
         continue;
       }
@@ -142,6 +143,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       if (tileHere == null) {
         continue;
       }
+      StorageNetwork.LOGGER.info("TILEHERE "+ tileHere + " AT POS +"+lookPos);
       //      boolean isConnectable = tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
       IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
       if (capabilityConnectable != null) {
@@ -326,7 +328,8 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
-            StorageNetwork.LOGGER.info("error thrown " + e.getMessage());
+            StorageNetwork.LOGGER.error("error thrown " , e);
+
           }
         }
         ItemStack requestedStack = request(matcher, amtToRequest, true);
@@ -428,42 +431,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     }
     return result;
   }
-  //  public List<ProcessWrapper> getProcessors() {
-  //    List<ProcessWrapper> result = new ArrayList<>();
-  //    for (DimPos pos : getConnectablePositions()) {
-  //      if (!pos.isLoaded()) {
-  //        continue;
-  //      }
-  //      TileCableProcess cableProcess = pos.getTileEntity(TileCableProcess.class);
-  //      if (cableProcess == null) {
-  //        continue;
-  //      }
-  //      DimPos inventoryPos = pos.offset(cableProcess.getDirection());
-  //      if (inventoryPos == null) {
-  //        StorageNetwork.LOGGER.info("Error: processor null at  " + pos + "," + cableProcess.getDirection());
-  //        continue;
-  //      }
-  //      BlockState blockState = inventoryPos.getBlockState();
-  //      String name = blockState.getBlock().getRegistryName().toString();
-  //      try {
-  //        ItemStack pickBlock = blockState.getBlock().getPickBlock(blockState, null, inventoryPos.getWorld(), inventoryPos.getBlockPos(), null);
-  //        if (pickBlock.isEmpty() == false) {
-  //          name = pickBlock.getDisplayName().toString();
-  //        }
-  //      }
-  //      catch (Exception e) {
-  //        StorageNetwork.LOGGER.error("Error with display name ", e);
-  //      }
-  //      ProcessRequestModel proc = cableProcess.getProcessModel();
-  //      //if list of models then wrapper would not need to change at all
-  //      ProcessWrapper processor = new ProcessWrapper(new DimPos(cableProcess.getWorld(), cableProcess.getPos()), cableProcess.getFirstRecipeOut(), proc.getCount(), name, proc.isAlwaysActive());
-  //      processor.ingredients = cableProcess.getProcessIngredients();
-  //      processor.blockId = blockState.getBlock().getRegistryName();
-  //      result.add(processor);
-  //    }
-  //    return result;
-  //  }
-
   private List<IConnectableLink> getSortedConnectableStorage() {
     return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
   }
@@ -477,12 +444,14 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     if (getConnectablePositions() == null || (world.getGameTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
+        StorageNetwork.LOGGER.info("connectables # "+ connectables.size());
         shouldRefresh = false;
         // addInventorys();
         world.getChunk(pos).setModified(true);//.setChunkModified();
       }
       catch (Throwable e) {
         StorageNetwork.LOGGER.error("Refresh network error ", e);
+        e.printStackTrace();
       }
     }
     updateImports();

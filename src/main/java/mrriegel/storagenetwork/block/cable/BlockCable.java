@@ -1,6 +1,7 @@
 package mrriegel.storagenetwork.block.cable;
 import com.google.common.collect.Maps;
 import mrriegel.storagenetwork.StorageNetwork;
+import mrriegel.storagenetwork.block.cablelink.TileCableLink;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.registry.ModBlocks;
 import net.minecraft.block.Block;
@@ -93,35 +94,47 @@ public class BlockCable extends ContainerBlock {
     super.fillStateContainer(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
   }
+
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
-    if (world.getBlockState(currentPos.offset(facing)).getBlock() instanceof BlockCable) {
+    //TODO: api should come back here
+    if (facingState.getBlock() instanceof BlockCable || facingState.getBlock() == ModBlocks.master
+       || facingState.getBlock() == ModBlocks.request){
       //dont set self to self
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-    else if (isValidLinkNeighbor(world, facingState , facing, facingPos)
-      //          && stateIn.get(property) != EnumConnectType.INVENTORY
+    else if (isValidLinkNeighbor( stateIn,facing,facingState,world,currentPos,facingPos)
     ) {
       return stateIn.with(property, EnumConnectType.INVENTORY);
     }
     else {
       return stateIn.with(property, EnumConnectType.NONE);
     }
-
   }
 
-
-
-  protected boolean isValidLinkNeighbor(IWorldReader world, BlockState facingState, Direction facing, BlockPos facingPos) {
+  protected boolean isValidLinkNeighbor(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos)  {
     if (facing == null) {
       return false;
     }
-    if (!TileMaster.isTargetAllowed( facingState)) {
+    if (!TileMaster.isTargetAllowed(facingState)) {
       return false;
     }
-    TileEntity neighbor = world.getTileEntity(facingPos.offset(facing));
+    TileEntity neighbor = world.getTileEntity(facingPos);
     if (neighbor != null
-        && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null) {
+        && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null
+    && stateIn.getBlock()  == ModBlocks.storagekabel) {
+      StorageNetwork.LOGGER.info("storage found " + neighbor + " DIR " + facing);
+
+        StorageNetwork.LOGGER.info("storage got a direction");
+        TileEntity myself  = world.getTileEntity(currentPos);
+        if(myself instanceof TileCableLink){
+          TileCableLink link=(TileCableLink) myself;
+
+          StorageNetwork.LOGGER.info(" SET DIR " + facing );
+          link.setDirection(facing);
+
+
+      }
       return true;
     }
     return false;

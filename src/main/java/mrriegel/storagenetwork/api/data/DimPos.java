@@ -160,7 +160,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       StorageNetwork.LOGGER.info("Error: null offset in DimPos " + direction);
       return null;
     }
-    return new DimPos(dimension, pos.offset(direction));
+    return new DimPos(world, pos.offset(direction));
   }
 
   public IChunk getChunk() {
