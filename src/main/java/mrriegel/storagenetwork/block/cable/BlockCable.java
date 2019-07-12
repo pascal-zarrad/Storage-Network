@@ -10,9 +10,11 @@ import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.HugeMushroomBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.network.DebugPacketSender;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.ChestType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Util;
@@ -70,7 +72,7 @@ public class BlockCable extends ContainerBlock {
   }
 
   public BlockRenderType getRenderType(BlockState p_149645_1_) {
-    return BlockRenderType.MODEL ;
+    return BlockRenderType.MODEL;
   }
 
   @Override
@@ -81,85 +83,43 @@ public class BlockCable extends ContainerBlock {
   @Nullable @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
     return new TileCable();
-
-
-  }
-  @Override
-  public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor){
-    super.onNeighborChange(state,world,pos,neighbor);
-    StorageNetwork.LOGGER.info("!onNeighborChange change" + pos  );
   }
 
-//  @Override public BlockRenderType getRenderType(BlockState state) {
-//    return BlockRenderType.MODEL;
-//  }
+  public BlockState getExtendedState(BlockState state, IBlockReader world, BlockPos pos) {
+    return super.getExtendedState(state, world, pos);
+  }
 
   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
     super.fillStateContainer(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
-
   }
-
-  public void neighborChanged(BlockState stateIn, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-    super.neighborChanged(stateIn, world, pos, blockIn, fromPos, isMoving);
-    StorageNetwork.LOGGER.info("!FDASDASDASDASDASD change" + pos + "?" + blockIn);
-  //  updateConnections(stateIn, world, pos);
-  }
-
-  private void updateConnections(BlockState stateIn, World world, BlockPos pos) {
-    for (Direction facing : Direction.values()) {
-      EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
-      if (world.getBlockState(pos.offset(facing)).getBlock() instanceof BlockCable
-          && stateIn.get(property) != EnumConnectType.CABLE) {
-        //dont set self to self
-        world.setBlockState(pos, stateIn.with(property, EnumConnectType.CABLE));
-      }
-      else if (isValidLinkNeighbor(world, pos, facing)
-          && stateIn.get(property) != EnumConnectType.INVENTORY) {
-        world.setBlockState(pos, stateIn.with(property, EnumConnectType.INVENTORY));
-      }
-      else {
-        world.setBlockState(pos, stateIn.with(property, EnumConnectType.NONE));
-
-      }
+  public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+    EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
+    if (world.getBlockState(currentPos.offset(facing)).getBlock() instanceof BlockCable) {
+      //dont set self to self
+      return stateIn.with(property, EnumConnectType.CABLE);
     }
-  }
-  //  @Override
-  //  public void onNeighborChange(BlockState stateIn, IWorldReader world, BlockPos pos, BlockPos fromPos) {
-  //    super.onNeighborChange(stateIn, world, pos, fromPos);
-  //
-  //    if (!(world instanceof ServerWorld)) {
-  //      return;
-  //    }
-  //    Direction found = findNewDirection(stateIn, ((ServerWorld) world), pos);
-  //    StorageNetwork.LOGGER.info("FOUND  change" + found);
-  //  }
-  //
-  //  public Direction findNewDirection(BlockState stateIn, ServerWorld world, BlockPos pos) {
-  //    //    if (isValidLinkNeighbor()) {// for myslef?
-  //    //      return;
-  //    //    }
-  //    for (Direction facing : Direction.values()) {
-  //      if (world.getBlockState(pos.offset(facing)).getBlock() instanceof BlockCable) {
-  //        world.setBlockState(pos, stateIn.with(FACING_TO_PROPERTY_MAP.get(facing), EnumConnectType.CABLE));
-  //      }
-  //      else if (isValidLinkNeighbor(world, pos, facing)) {
-  //        world.setBlockState(pos, stateIn.with(FACING_TO_PROPERTY_MAP.get(facing), EnumConnectType.INVENTORY));
-  //        return facing;
-  //      }
-  //    }
-  //    //    setDirection(null);
-  //    return null;
-  //  }
+    else if (isValidLinkNeighbor(world, facingState , facing, facingPos)
+      //          && stateIn.get(property) != EnumConnectType.INVENTORY
+    ) {
+      return stateIn.with(property, EnumConnectType.INVENTORY);
+    }
+    else {
+      return stateIn.with(property, EnumConnectType.NONE);
+    }
 
-  protected boolean isValidLinkNeighbor(IWorldReader world, BlockPos pos, Direction facing) {
+  }
+
+
+
+  protected boolean isValidLinkNeighbor(IWorldReader world, BlockState facingState, Direction facing, BlockPos facingPos) {
     if (facing == null) {
       return false;
     }
-    if (!TileMaster.isTargetAllowed(world.getBlockState(pos.offset(facing)))) {
+    if (!TileMaster.isTargetAllowed( facingState)) {
       return false;
     }
-    TileEntity neighbor = world.getTileEntity(pos.offset(facing));
+    TileEntity neighbor = world.getTileEntity(facingPos.offset(facing));
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null) {
       return true;
