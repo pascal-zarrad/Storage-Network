@@ -257,16 +257,25 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return stacksToDisplay;
   }
 
+  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
+  }
+  public void renderStackToolTip(ItemStack stack, int x, int y) {
+    super.renderTooltip(stack, x, y);
+  }
+
+
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
   private void renderItemSlots(int mouseX, int mouseY) {
 
+
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
       slot.font = this.font;
       slot.drawSlot(mouseX, mouseY);
-      if (ItemSlotNetwork.isMouseOverSlot(mouseX, mouseY)) {
+      if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
         //        break;
       }
@@ -365,13 +374,12 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   private void drawTooltips(int mouseX, int mouseY) {
     for (ItemSlotNetwork s : slots) {
-      if (s != null && ItemSlotNetwork.isMouseOverSlot(mouseX, mouseY)) {
+      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
       }
     }
     if (inSearchbar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
-      //      this.keyPressed()
       if (!Screen.hasShiftDown()) {
         lis.add(I18n.format("gui.storagenetwork.shift"));
       }

@@ -10,10 +10,8 @@ import javax.annotation.Nonnull;
 
 /**
  * used as the MAIN grid in the network item display
- * 
+ * <p>
  * also as ghost/filter items in the cable filter slots
- *
- *
  */
 public class ItemSlotNetwork {
 
@@ -38,56 +36,54 @@ public class ItemSlotNetwork {
     setStack(stack);
   }
 
-  static boolean isMouseOverSlot(int mouseX, int mouseY) {
-    // TODO: this
-    return false;//parent.isPointInRegionP(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
+  public boolean isMouseOverSlot(int mouseX, int mouseY) {
+    return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
   void drawSlot(int mx, int my) {
-//     TODO: renderItem and keyboard isKeyDown issues
+    //     TODO: renderItem and keyboard isKeyDown issues
+    GlStateManager.pushMatrix();
+    if (!getStack().isEmpty()) {
+      RenderHelper.enableGUIStandardItemLighting();
+      Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
+      String amount;
+      //cant sneak in gui
+      //default to short form, show full amount if sneak
+      if (parent.hasShiftDown()) {
+        amount = size + "";
+      }
+      else {
+        amount = UtilInventory.formatLargeNumber(size);
+      }
+      if (isShowNumbers()) {
         GlStateManager.pushMatrix();
-        if (!getStack().isEmpty()) {
-          RenderHelper.enableGUIStandardItemLighting();
-          Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
-          String amount;
-          //cant sneak in gui
-          //default to short form, show full amount if sneak
-          if (parent.hasShiftDown()) {
-            amount = size + "";
-          }
-          else {
-            amount = UtilInventory.formatLargeNumber(size);
-          }
-          if (isShowNumbers()) {
-            GlStateManager.pushMatrix();
-            GlStateManager.scalef(.5f, .5f, .5f);
-
-            Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack,
-                x * 2 + 16,
-                 y * 2 + 16, amount);
-            GlStateManager.popMatrix();
-          }
-        }
-        if (isMouseOverSlot(mx, my)) {
-          GlStateManager.disableLighting();
-          GlStateManager.disableDepthTest();
-          //GlStateManager.disableDepth();
-          int j1 = x;
-          int k1 = y;
-          GlStateManager.colorMask(true, true, true, false);
-
-          parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-          GlStateManager.colorMask(true, true, true, true);
-          GlStateManager.enableLighting();
-         // GlStateManager.enableDepth();
-        }
+        GlStateManager.scalef(.5f, .5f, .5f);
+        Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack,
+            x * 2 + 16,
+            y * 2 + 16, amount);
         GlStateManager.popMatrix();
+      }
+    }
+    if (isMouseOverSlot(mx, my)) {
+      GlStateManager.disableLighting();
+      GlStateManager.disableDepthTest();
+      //GlStateManager.disableDepth();
+      int j1 = x;
+      int k1 = y;
+      GlStateManager.colorMask(true, true, true, false);
+      parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+      GlStateManager.colorMask(true, true, true, true);
+      GlStateManager.enableLighting();
+      // GlStateManager.enableDepth();
+    }
+    GlStateManager.popMatrix();
   }
 
   void drawTooltip(int mx, int my) {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
-      // TODO this tooltip
-      //      parent.renderToolTipP(getStack(), mx, my);
+      parent.renderStackToolTip(getStack(),
+          mx - parent.getGuiLeft(),
+          my - parent.getGuiTop());
     }
   }
 
