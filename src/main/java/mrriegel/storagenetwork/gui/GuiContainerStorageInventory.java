@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -495,12 +496,20 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 @Override
   public boolean keyPressed(int x, int y, int b) {
+  InputMappings.Input mouseKey = InputMappings.getInputByCode(x, y);
+  if (x == 256) {
+    minecraft.player.closeScreen();
+    return true; // Forge MC-146650: Needs to return true when the key is handled.
+  }
   if (searchBar.isFocused()) {
     searchBar.keyPressed(x, y, b);
     StorageNetwork.log("!!keypressed in searchbar ");
       return true;
     }
-
+  if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+    minecraft.player.closeScreen();
+    return true; // Forge MC-146650: Needs to return true when the key is handled.
+  }
      return super.keyPressed(x,y,b);
   }
 

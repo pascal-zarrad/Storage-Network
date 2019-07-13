@@ -16,8 +16,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.IBooleanFunction;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -54,13 +56,24 @@ public class BlockCable extends ContainerBlock {
     p.put(Direction.UP, UP);
     p.put(Direction.DOWN, DOWN);
   });
-  private static VoxelShape AABB;
-  private static VoxelShape AABB_UP;
-  private static VoxelShape AABB_DOWN;
-  private static VoxelShape AABB_EAST;
-  private static VoxelShape AABB_WEST;
-  private static VoxelShape AABB_NORTH;
-  private static VoxelShape AABB_SOUTH;
+  private static final double top = 16;
+  private static final double bot = 0;
+  private static final double C = 8;
+  private static final double w = 2;
+  private static final double sm = C - w;
+  private static final double lg = C + w;
+  //TODO PRE COMPUTE ALL POSSIBLE COMBINATIONS OF ALL 6 DIRS
+  //(double x1, double y1, double z1, double x2, double y2, double z2)
+  private static final VoxelShape AABB = Block.makeCuboidShape(sm, sm, sm, lg, lg, lg);
+  //Y for updown
+  private static final VoxelShape AABB_UP = Block.makeCuboidShape(sm, sm, sm, lg, top, lg);
+  private static final VoxelShape AABB_DOWN = Block.makeCuboidShape(sm, bot, sm, lg, lg, lg);
+  //Z for n-s
+  private static final VoxelShape AABB_NORTH = Block.makeCuboidShape(sm, sm, bot, lg, lg, lg);
+  private static final VoxelShape AABB_SOUTH = Block.makeCuboidShape(sm, sm, sm, lg, lg, top);
+  //X for e-w
+  private static final VoxelShape AABB_WEST = Block.makeCuboidShape(bot, sm, sm, lg, lg, lg);
+  private static final VoxelShape AABB_EAST = Block.makeCuboidShape(sm, sm, sm, top, lg, lg);
 
   public BlockCable(String registryName) {
     super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
@@ -69,56 +82,31 @@ public class BlockCable extends ContainerBlock {
         .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
         .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
         .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
+    VoxelShapes x;
   }
 
   @Override
   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-    makeShapes();
-    //    Block block = state.getBlock();
-    //
-    //    if (block == BOPBlocks.desert_grass)
-    //    {
-    //      return SHORT;
-    //    }
+    VoxelShape shape = AABB;
     if (state.get(UP).equals(EnumConnectType.CABLE)) {
-      return AABB_UP;
+      shape = VoxelShapes.combine(shape, AABB_UP, IBooleanFunction.OR);
     }
     if (state.get(DOWN).equals(EnumConnectType.CABLE)) {
-      return AABB_DOWN;
+      shape = VoxelShapes.combine(shape, AABB_DOWN, IBooleanFunction.OR);
     }
     if (state.get(WEST).equals(EnumConnectType.CABLE)) {
-      return AABB_WEST;
+      shape = VoxelShapes.combine(shape, AABB_WEST, IBooleanFunction.OR);
     }
     if (state.get(EAST).equals(EnumConnectType.CABLE)) {
-      return AABB_EAST;
+      shape = VoxelShapes.combine(shape, AABB_EAST, IBooleanFunction.OR);
     }
     if (state.get(NORTH).equals(EnumConnectType.CABLE)) {
-      return AABB_NORTH;
+      shape = VoxelShapes.combine(shape, AABB_NORTH, IBooleanFunction.OR);
     }
     if (state.get(SOUTH).equals(EnumConnectType.CABLE)) {
-      return AABB_SOUTH;
+      shape = VoxelShapes.combine(shape, AABB_SOUTH, IBooleanFunction.OR);
     }
-    return AABB;
-  }
-
-  private static void makeShapes() {
-    double top = 16;
-    double bot = 0;
-    double C = 8;
-    double w = 3;
-    double sm = C - w;
-    double lg = C + w;
-    //(double x1, double y1, double z1, double x2, double y2, double z2)
-    AABB = Block.makeCuboidShape(sm, sm, sm, lg, lg, lg);
-    //Y for updown
-    AABB_UP = Block.makeCuboidShape(sm, sm, sm, lg, top, lg);
-    AABB_DOWN = Block.makeCuboidShape(sm, bot, sm, lg, lg, lg);
-    //Z for n-s
-    AABB_NORTH = Block.makeCuboidShape(sm, sm, bot, lg, lg, lg);
-    AABB_SOUTH = Block.makeCuboidShape(sm, sm, sm, lg, lg, top);
-    //X for e-w
-    AABB_WEST = Block.makeCuboidShape(bot, sm, sm, lg, lg, lg);
-    AABB_EAST = Block.makeCuboidShape(sm, sm, sm, top, lg, lg);
+    return shape;
   }
 
   @Override public BlockRenderType getRenderType(BlockState p_149645_1_) {
@@ -174,13 +162,13 @@ public class BlockCable extends ContainerBlock {
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null
         && stateIn.getBlock() == ModBlocks.storagekabel) {
       StorageNetwork.LOGGER.info("storage found " + neighbor + " DIR " + facing);
-        StorageNetwork.LOGGER.info("storage got a direction");
-        TileEntity myself  = world.getTileEntity(currentPos);
-        if(myself instanceof TileCableLink){
-          TileCableLink link=(TileCableLink) myself;
-          StorageNetwork.LOGGER.info(" SET DIR " + facing );
-          link.setDirection(facing);
-        }
+      StorageNetwork.LOGGER.info("storage got a direction");
+      TileEntity myself = world.getTileEntity(currentPos);
+      if (myself instanceof TileCableLink) {
+        TileCableLink link = (TileCableLink) myself;
+        StorageNetwork.LOGGER.info(" SET DIR " + facing);
+        link.setDirection(facing);
+      }
       return true;
     }
     return false;
