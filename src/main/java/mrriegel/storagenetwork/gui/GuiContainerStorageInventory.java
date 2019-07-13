@@ -15,10 +15,8 @@ import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.BeaconScreen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,10 +95,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       searchBar.setText(JeiHooks.getFilterText());
     }
     if (!isSimple) {
-      directionBtn = new GuiButtonRequest( guiLeft + 7, searchBar.y - 3, "", (p) -> {
+      directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
         StorageNetwork.LOGGER.info("TODO directionBtn");
       });
-
       addButton(directionBtn);
       sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
         StorageNetwork.LOGGER.info("TODO sortBtn");
@@ -113,7 +109,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       if (JeiSettings.isJeiLoaded()) {
         addButton(jeiBtn);
       }
-      clearTextBtn = new GuiButtonRequest( guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+      clearTextBtn = new GuiButtonRequest(guiLeft + 64, searchBar.y - 3, "X", (p) -> {
         StorageNetwork.LOGGER.info("clearTextBtn ");
       });
       addButton(clearTextBtn);
@@ -230,10 +226,10 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
-    this.renderBackground();
+    renderBackground();
     super.render(mouseX, mouseY, partialTicks);
-     this.renderHoveredToolTip(mouseX, mouseY);
-    this.searchBar.render(mouseX,mouseY,partialTicks);
+    renderHoveredToolTip(mouseX, mouseY);
+    searchBar.render(mouseX, mouseY, partialTicks);
   }
 
   private void renderTextures() {
@@ -258,23 +254,21 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return stacksToDisplay;
   }
 
-  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+  boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
     return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
   }
-  public void renderStackToolTip(ItemStack stack, int x, int y) {
+
+  void renderStackToolTip(ItemStack stack, int x, int y) {
     super.renderTooltip(stack, x, y);
   }
 
-
-  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+  void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
   private void renderItemSlots(int mouseX, int mouseY) {
-
-
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
-      slot.font = this.font;
+      slot.font = font;
       slot.drawSlot(mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
@@ -299,8 +293,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
 //        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
         slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in),
-          guiLeft + 8                + col * 18,
-           guiTop +                10 + row * 18,
+            guiLeft + 8 + col * 18,
+            guiTop + 10 + row * 18,
             stacksToDisplay.get(in).getCount(), guiLeft, guiTop, true));
         index++;
       }
@@ -479,7 +473,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }
-    else if (this.searchBar.mouseClicked(mouseX,mouseY,mouseButton)) {
+    else if (searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
       return true;
     }
     else {
@@ -501,11 +495,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 @Override
   public boolean keyPressed(int x, int y, int b) {
-
-
-    if(this.searchBar.isFocused())
-    if(this.searchBar.keyPressed(x,y,b)){
-      StorageNetwork.log("keypressed in searchbar ");
+  if (searchBar.isFocused()) {
+    searchBar.keyPressed(x, y, b);
+    StorageNetwork.log("!!keypressed in searchbar ");
       return true;
     }
 
@@ -520,7 +512,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
 
     if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
-      StorageNetwork.LOGGER.info("SEND RequestMessage on char typed " +searchBar.getText());
+      StorageNetwork.LOGGER.info("SEND RequestMessage on char typed " + searchBar.getText());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
@@ -539,7 +531,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       //      super.keyPressed(typedChar, keyCode, whatami);
       }
     //    }
-    return super.charTyped(typedChar, keyCode);
+    return false;// super.charTyped(typedChar, keyCode);
   }
   //  @Override
   //  public void updateScreen() {

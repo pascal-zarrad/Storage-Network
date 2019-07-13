@@ -444,7 +444,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     if (getConnectablePositions() == null || (world.getGameTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
-        StorageNetwork.LOGGER.info("connectables # " + connectables.size());
         shouldRefresh = false;
         // addInventorys();
         world.getChunk(pos).setModified(true);//.setChunkModified();
