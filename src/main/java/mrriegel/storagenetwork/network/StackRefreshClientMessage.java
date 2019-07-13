@@ -25,7 +25,7 @@ public class StackRefreshClientMessage {
   private final List<ItemStack> stacks;
   private final List<ItemStack> craftableStacks;
 
-  StackRefreshClientMessage(List<ItemStack> stacks, List<ItemStack> craftableStacks) {
+  public StackRefreshClientMessage(List<ItemStack> stacks, List<ItemStack> craftableStacks) {
     super();
     this.stacks = stacks;
     this.craftableStacks = craftableStacks;

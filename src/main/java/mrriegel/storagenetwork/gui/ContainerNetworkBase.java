@@ -99,7 +99,7 @@ public abstract class ContainerNetworkBase extends Container {
     }
   }
 
-  protected static void findMatchingRecipe(CraftingInventory craftMatrix) {
+  protected   void findMatchingRecipe(CraftingInventory craftMatrix) {
     IRecipe recipe = null;
     //    try {
     //

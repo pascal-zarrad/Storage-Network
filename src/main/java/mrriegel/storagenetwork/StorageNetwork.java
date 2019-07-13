@@ -70,6 +70,13 @@ public class StorageNetwork {
     LOGGER.info("HELLO from server starting");
   }
 
+  static boolean logspam=true;
+  public static void log(String s) {
+    if(logspam){
+      LOGGER.info(s);
+    }
+  }
+
   // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
   // Event bus for receiving Registry Events)
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
