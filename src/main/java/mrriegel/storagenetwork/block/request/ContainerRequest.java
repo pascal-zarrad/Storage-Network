@@ -241,8 +241,8 @@ public class ContainerRequest extends ContainerNetworkBase {
       if (!player.inventory.addItemStackToInventory(res)) {
         player.dropItem(res, false);
       }
-      NonNullList<ItemStack> remainder = null;//raftingManager.getRemainingItems(matrix, player.world);
-        StorageNetwork.log("[craftShift] getRemainingItems ");
+      NonNullList<ItemStack> remainder = recipeCurrent.getRemainingItems(this.matrix);//raftingManager.getRemainingItems(matrix, player.world);
+        StorageNetwork.log("[craftShift] getRemainingItems "+remainder);
       for (int i = 0; i < remainder.size(); ++i) {
         ItemStack remainderCurrent = remainder.get(i);
         ItemStack slot = this.matrix.getStackInSlot(i);
