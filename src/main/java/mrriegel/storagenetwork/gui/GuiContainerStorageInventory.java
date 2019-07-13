@@ -81,7 +81,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   public void init() {
     super.init();
     //    Keyboard.enableRepeatEvents(true);
-    searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "");
+    searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "search");
     searchBar.setMaxStringLength(30);
     if (isSimple) {
       searchBar.x -= 71;
@@ -233,6 +233,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     this.renderBackground();
     super.render(mouseX, mouseY, partialTicks);
      this.renderHoveredToolTip(mouseX, mouseY);
+    this.searchBar.render(mouseX,mouseY,partialTicks);
   }
 
   private void renderTextures() {
@@ -296,7 +297,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         }
         int in = index;
 
-        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
+//        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
         slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in),
           guiLeft + 8                + col * 18,
            guiTop +                10 + row * 18,
@@ -478,6 +479,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }
+    else if (this.searchBar.mouseClicked(mouseX,mouseY,mouseButton)) {
+      return true;
+    }
     else {
       ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
       if (!stackUnderMouse.isEmpty()
@@ -495,19 +499,33 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     return true;
   }
+@Override
+  public boolean keyPressed(int x, int y, int b) {
+
+
+    if(this.searchBar.isFocused())
+    if(this.searchBar.keyPressed(x,y,b)){
+      StorageNetwork.log("keypressed in searchbar ");
+      return true;
+    }
+
+     return super.keyPressed(x,y,b);
+  }
 
   @Override
   public boolean charTyped(char typedChar, int keyCode) {
     //    super.keyPressed()
     //func_195363_d
-    //    if (!checkHotbarKeys(keyCode)) {
-    //      Keyboard.enableRepeatEvents(true);
+
+
+
     if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
       StorageNetwork.LOGGER.info("SEND RequestMessage on char typed " +searchBar.getText());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
         }
+        return true;
       }
       else if (stackUnderMouse.isEmpty() == false) {
         try {
