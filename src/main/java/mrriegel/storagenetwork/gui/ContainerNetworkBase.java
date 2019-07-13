@@ -3,6 +3,8 @@ import com.google.common.collect.Lists;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -30,14 +32,16 @@ public abstract class ContainerNetworkBase extends Container {
   protected PlayerInventory playerInv;
   protected CraftingResultSlot result;
   protected final CraftResultInventory resultInventory;//field_75160_f;
-  protected InventoryCraftingNetwork matrix;
+  public InventoryCraftingNetwork matrix;
   protected boolean recipeLocked = false;
   protected boolean isSimple;
   protected PlayerEntity player;
   protected World world;
+  protected ICraftingRecipe recipeCurrent;
 
   protected ContainerNetworkBase(@Nullable ContainerType<?> type, int id) {
     super(type, id);
+//    SlabBlock
 
 
     this.resultInventory = new CraftResultInventory();
@@ -91,13 +95,27 @@ public abstract class ContainerNetworkBase extends Container {
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     StorageNetwork.log("onmatrix changed");
     super.onCraftMatrixChanged(inventoryIn);
+    this.recipeCurrent = null;
 
     findMatchingRecipe(this.windowId, world, this.player, this.matrix, this.resultInventory);
 
   }
+  //it runs on server tho
+  protected   void findMatchingRecipeClient( World world,  CraftingInventory inventory, CraftResultInventory result) {
+    StorageNetwork.LOGGER.info("findMatchingRecipeClient matching recipe");//actually it runs on server sp
+//    if (world.isRemote) {
+
+      Optional<ICraftingRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
+      if (optional.isPresent()) {
+        ICraftingRecipe icraftingrecipe = optional.get();
+
+          this.recipeCurrent = icraftingrecipe;
+        }
+//    }
+  }
 
   //from WorkbenchContainer::func_217066_a
-  protected static void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
+  protected   void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
     StorageNetwork.LOGGER.info("func_217066_a matching recipe");
     if (!world.isRemote) {
       ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
@@ -106,8 +124,11 @@ public abstract class ContainerNetworkBase extends Container {
       if (optional.isPresent()) {
         ICraftingRecipe icraftingrecipe = optional.get();
         if (result.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
+
           itemstack = icraftingrecipe.getCraftingResult(inventory );
 //          itemstack = icraftingrecipe.func_77572_b(inventory);
+        //save for next time
+        this.recipeCurrent = icraftingrecipe;
         }
       }
       result.setInventorySlotContents(0, itemstack);
@@ -267,46 +288,4 @@ public abstract class ContainerNetworkBase extends Container {
   //    }
   //    return itemstack;
   //  }
-  public final class SlotCraftingNetwork extends CraftingResultSlot {
-
-    public SlotCraftingNetwork(PlayerEntity player,
-        CraftingInventory craftingInventory, IInventory inventoryIn,
-    int slotIndex, int xPosition, int yPosition) {
-      super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
-    }
-
-    private TileMaster tileMaster;
-
-    @Override
-    public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
-      if (playerIn.world.isRemote) {
-        return stack;
-      }
-      List<ItemStack> lis = Lists.newArrayList();
-      for (int i = 0; i < matrix.getSizeInventory(); i++) {
-        lis.add(matrix.getStackInSlot(i).copy());
-      }
-      super.onTake(playerIn, stack);
-      detectAndSendChanges();
-      for (int i = 0; i < matrix.getSizeInventory(); i++) {
-        if (matrix.getStackInSlot(i).isEmpty() && getTileMaster() != null) {
-          ItemStack req = getTileMaster().request(
-              !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i), true, false, false) : null, 1, false);
-          if (!req.isEmpty()) {
-            matrix.setInventorySlotContents(i, req);
-          }
-        }
-      }
-      detectAndSendChanges();
-      return stack;
-    }
-
-    public TileMaster getTileMaster() {
-      return tileMaster;
-    }
-
-    public void setTileMaster(TileMaster tileMaster) {
-      this.tileMaster = tileMaster;
-    }
-  }
 }

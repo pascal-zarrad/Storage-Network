@@ -20,6 +20,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.AbstractCookingRecipe;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
@@ -53,9 +54,8 @@ public class ContainerRequest extends ContainerNetworkBase {
     //        public SlotCraftingNetwork(PlayerEntity player,
     //        CraftingInventory craftingInventory, IInventory inventoryIn,
     //    int slotIndex, int xPosition, int yPosition) {
-
     //temporary
-    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, resultInventory, 0, 101, 128);
+    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
     slotCraftOutput.setTileMaster(getTileMaster());
     addSlot(slotCraftOutput);
     bindGrid();
@@ -78,11 +78,9 @@ public class ContainerRequest extends ContainerNetworkBase {
       //StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
-//    findMatchingRecipe(matrix);
-
-  super.onCraftMatrixChanged(inventoryIn  );
+    //    findMatchingRecipe(matrix);
+    super.onCraftMatrixChanged(inventoryIn);
   }
-
 
   @Override
   public void slotChanged() {
@@ -129,11 +127,9 @@ public class ContainerRequest extends ContainerNetworkBase {
     return true;
   }
 
-
   @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {
-    StorageNetwork.log("ContainerRequest transfer "+slotIndex);
-
+    StorageNetwork.log("ContainerRequest transfer " + slotIndex);
     if (playerIn.world.isRemote) {
       return ItemStack.EMPTY;
     }
@@ -144,6 +140,7 @@ public class ContainerRequest extends ContainerNetworkBase {
       itemstack = itemstack1.copy();
       TileMaster tileMaster = this.getTileMaster();
       if (slotIndex == 0) {
+        StorageNetwork.log(" craftShift !!! " + tileMaster);
         craftShift(playerIn, tileMaster);
         return ItemStack.EMPTY;
       }
@@ -153,7 +150,7 @@ public class ContainerRequest extends ContainerNetworkBase {
         slot.putStack(stack);
         detectAndSendChanges();
         List<ItemStack> list = tileMaster.getStacks();
-        if(playerIn instanceof ServerPlayerEntity) {
+        if (playerIn instanceof ServerPlayerEntity) {
           ServerPlayerEntity sp = (ServerPlayerEntity) playerIn;
           PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
               sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
@@ -177,23 +174,23 @@ public class ContainerRequest extends ContainerNetworkBase {
     }
     return itemstack;
   }
-//STEAL FROM WORKBENCH CONTAINER
-protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEntity p_217066_2_, CraftingInventory p_217066_3_, CraftResultInventory p_217066_4_) {
-  if (!p_217066_1_.isRemote) {
-    ServerPlayerEntity lvt_5_1_ = (ServerPlayerEntity)p_217066_2_;
-    ItemStack lvt_6_1_ = ItemStack.EMPTY;
-    Optional<ICraftingRecipe> lvt_7_1_ = p_217066_1_.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, p_217066_3_, p_217066_1_);
-    if (lvt_7_1_.isPresent()) {
-      ICraftingRecipe lvt_8_1_ = (ICraftingRecipe)lvt_7_1_.get();
-      if (p_217066_4_.canUseRecipe(p_217066_1_, lvt_5_1_, lvt_8_1_)) {
-        lvt_6_1_ = lvt_8_1_.getCraftingResult(p_217066_3_);
-      }
-    }
 
-    p_217066_4_.setInventorySlotContents(0, lvt_6_1_);
-    lvt_5_1_.connection.sendPacket(new SSetSlotPacket(p_217066_0_, 0, lvt_6_1_));
+  //STEAL FROM WORKBENCH CONTAINER
+  protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEntity p_217066_2_, CraftingInventory p_217066_3_, CraftResultInventory p_217066_4_) {
+    if (!p_217066_1_.isRemote) {
+      ServerPlayerEntity lvt_5_1_ = (ServerPlayerEntity) p_217066_2_;
+      ItemStack lvt_6_1_ = ItemStack.EMPTY;
+      Optional<ICraftingRecipe> lvt_7_1_ = p_217066_1_.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, p_217066_3_, p_217066_1_);
+      if (lvt_7_1_.isPresent()) {
+        ICraftingRecipe lvt_8_1_ = (ICraftingRecipe) lvt_7_1_.get();
+        if (p_217066_4_.canUseRecipe(p_217066_1_, lvt_5_1_, lvt_8_1_)) {
+          lvt_6_1_ = lvt_8_1_.getCraftingResult(p_217066_3_);
+        }
+      }
+      p_217066_4_.setInventorySlotContents(0, lvt_6_1_);
+      lvt_5_1_.connection.sendPacket(new SSetSlotPacket(p_217066_0_, 0, lvt_6_1_));
+    }
   }
-}
 
   /**
    * A note on the shift-craft delay bug root cause was ANY interaction with matrix (setting contents etc) was causing triggers/events to do a recipe lookup. Meaning during this shift-click action you
@@ -206,9 +203,10 @@ protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEn
     if (matrix == null) {
       return;
     }
-    WorkbenchContainer x;
-    IRecipe recipeCurrent =  null;//findMatchingRecipe(matrix);
+    recipeCurrent = null;
+    this.findMatchingRecipeClient(player.world, this.matrix, this.resultInventory);
     if (recipeCurrent == null) {
+      StorageNetwork.log("current is null");
       return;
     }
     this.recipeLocked = true;
@@ -219,43 +217,43 @@ protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEn
     }
     ItemStack res = recipeCurrent.getCraftingResult(matrix);
     if (res.isEmpty()) {
-      //  StorageNetwork.instance.logger.error("Recipe output is an empty stack " + recipeCurrent);
+        StorageNetwork.log("err Recipe output is an empty stack " + recipeCurrent);
       return;
     }
     int sizePerCraft = res.getCount();
     // int sizeFull = res.getMaxStackSize();
     //   int numberToCraft = sizeFull / sizePerCraft;
-  //StorageNetwork.log("[craftShift] numberToCraft = " + numberToCraft + " for stack " + res);
+    StorageNetwork.log("[craftShift] sizePerCraft = " + sizePerCraft + " for stack " + res);
     while (crafted + sizePerCraft <= res.getMaxStackSize()) {
       res = recipeCurrent.getCraftingResult(matrix);
-       StorageNetwork.log("[craftShift]  crafted = " + crafted + " ; res.count() = " + res.getCount() + " MAX=" + res.getMaxStackSize());
+      StorageNetwork.log("[craftShift]  crafted = " + crafted + " ; res.count() = " + res.getCount() + " MAX=" + res.getMaxStackSize());
       if (!ItemHandlerHelper.insertItemStacked(new PlayerMainInvWrapper(playerInv), res, true).isEmpty()) {
-          StorageNetwork.log("[craftShift] cannot insert more, end");
+        StorageNetwork.log("[craftShift] cannot insert more, end");
         break;
       }
       //stop if empty
       if (recipeCurrent.matches(matrix, player.world) == false) {
-              StorageNetwork.log("[craftShift] recipe doesnt match i quit");
+        StorageNetwork.log("[craftShift] recipe doesnt match i quit");
         break;
       }
       //onTake replaced with this handcoded rewrite
-      //  StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
+        StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
       if (!player.inventory.addItemStackToInventory(res)) {
         player.dropItem(res, false);
       }
-      NonNullList<ItemStack> remainder =  null;//raftingManager.getRemainingItems(matrix, player.world);
-      //  StorageNetwork.log("[craftShift] getRemainingItems ");
+      NonNullList<ItemStack> remainder = null;//raftingManager.getRemainingItems(matrix, player.world);
+        StorageNetwork.log("[craftShift] getRemainingItems ");
       for (int i = 0; i < remainder.size(); ++i) {
         ItemStack remainderCurrent = remainder.get(i);
         ItemStack slot = this.matrix.getStackInSlot(i);
         if (remainderCurrent.isEmpty()) {
-          //     StorageNetwork.log("[craftShift] getRemainingItems  set empty " + i);
+          StorageNetwork.log("[craftShift] getRemainingItems  set empty " + i);
           matrix.getStackInSlot(i).shrink(1);
           continue;
         }
-//        if (remainderCurrent.isItemDamaged() && remainderCurrent.getItemDamage() > remainderCurrent.getMaxDamage()) {
-//          remainderCurrent = ItemStack.EMPTY;
-//        }
+        //        if (remainderCurrent.isItemDamaged() && remainderCurrent.getItemDamage() > remainderCurrent.getMaxDamage()) {
+        //          remainderCurrent = ItemStack.EMPTY;
+        //        }
         if (slot.getItem().getContainerItem() != null) { //is the fix for milk and similar
           slot = new ItemStack(slot.getItem().getContainerItem());
           matrix.setInventorySlotContents(i, slot);
@@ -265,7 +263,7 @@ protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEn
           matrix.setInventorySlotContents(i, slot);
         }
         else if (!remainderCurrent.isEmpty()) {
-          //   StorageNetwork.log("[craftShift] NONEMPTY " + remainderCurrent);
+            StorageNetwork.log("[craftShift] NONEMPTY " + remainderCurrent);
           if (slot.isEmpty()) {
             this.matrix.setInventorySlotContents(i, remainderCurrent);
           }
@@ -311,5 +309,4 @@ protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEn
     //update recipe again in case remnants left : IE hammer and such
     this.onCraftMatrixChanged(this.matrix);
   }
-
 }
