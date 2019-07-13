@@ -52,11 +52,11 @@ public class StackRefreshClientMessage {
     for (ItemStack stack : msg.stacks) {
       StorageNetwork.LOGGER.info("SRCM encode "+ stack );
       buf.writeCompoundTag(stack.serializeNBT());
-//      buf.writeInt(stack.getCount());
+      buf.writeInt(stack.getCount());
     }
     for (ItemStack stack : msg.craftableStacks) {
       buf.writeCompoundTag(stack.serializeNBT());
-//      buf.writeInt(stack.getCount());
+      buf.writeInt(stack.getCount());
     }
   }
 
@@ -64,17 +64,18 @@ public class StackRefreshClientMessage {
     int size = buf.readInt();
     int csize = buf.readInt();
     StorageNetwork.LOGGER.info("SRCM DECODE  "+ size  );
-    StorageNetwork.LOGGER.info("SRCM buf  "+ buf.toString()  );
     List stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
       CompoundNBT stacktag = buf.readCompoundTag();
       StorageNetwork.LOGGER.info("   stacktag  "+ stacktag);
       ItemStack stack = ItemStack.read(stacktag);
+      stack.setCount(buf.readInt());
       stacks.add(stack);
     }
     List craftableStacks = Lists.newArrayList();
     for (int i = 0; i < csize; i++) {
       ItemStack stack = ItemStack.read(buf.readCompoundTag());
+      stack.setCount(buf.readInt());
       craftableStacks.add(stack);
     }
     return new StackRefreshClientMessage(stacks, craftableStacks);

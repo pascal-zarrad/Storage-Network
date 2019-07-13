@@ -57,7 +57,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     }
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       for (ItemStack stack : storage.getStoredStacks()) {
-        if (stack == null || stack.isEmpty()) {
+        if (stack == null || stack.isEmpty() ) {
           continue;
         }
         addOrMergeIntoList(stacks, stack.copy());
