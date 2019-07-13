@@ -53,9 +53,11 @@ public class ContainerRequest extends ContainerNetworkBase {
     //        public SlotCraftingNetwork(PlayerEntity player,
     //        CraftingInventory craftingInventory, IInventory inventoryIn,
     //    int slotIndex, int xPosition, int yPosition) {
-    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, playerInv, 0, 101, 128);
-    slotCraftOutput.setTileMaster(getTileMaster());
-    addSlot(slotCraftOutput);
+
+    //temporary
+//    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, playerInv, 0, 101, 128);
+//    slotCraftOutput.setTileMaster(getTileMaster());
+//    addSlot(slotCraftOutput);
     bindGrid();
     bindPlayerInvo(playerInv);
     bindHotbar();
