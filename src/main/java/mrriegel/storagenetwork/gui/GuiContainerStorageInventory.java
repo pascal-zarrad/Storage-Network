@@ -257,15 +257,21 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return stacksToDisplay;
   }
 
+  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+    super.fillGradient(left, top, right, bottom, startColor, endColor);
+  }
   private void renderItemSlots(int mouseX, int mouseY) {
+
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
+      slot.font = this.font;
       slot.drawSlot(mouseX, mouseY);
       if (ItemSlotNetwork.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
         //        break;
       }
     }
+
     if (slots.isEmpty()) {
       stackUnderMouse = ItemStack.EMPTY;
     }

@@ -1,4 +1,9 @@
 package mrriegel.storagenetwork.gui;
+import com.mojang.blaze3d.platform.GlStateManager;
+import mrriegel.storagenetwork.util.UtilInventory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -17,6 +22,7 @@ public class ItemSlotNetwork {
   private final int size;
   private final int guiLeft;
   private final int guiTop;
+  public FontRenderer font;
   private boolean showNumbers;
   private final GuiContainerStorageInventory parent;
   private ItemStack stack;
@@ -38,39 +44,42 @@ public class ItemSlotNetwork {
   }
 
   void drawSlot(int mx, int my) {
-    // TODO: renderItem and keyboard isKeyDown issues
-    //    GlStateManager.pushMatrix();
-    //    if (!getStack().isEmpty()) {
-    //      RenderHelper.enableGUIStandardItemLighting();
-    //      Minecraft.getInstance().getRenderItem().renderItemAndEffectIntoGUI(getStack(), x, y);
-    //      String amount;
-    //      //cant sneak in gui
-    //      //default to short form, show full amount if sneak
-    //      if (GLFW.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || Keyboard.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT)) {
-    //        amount = size + "";
-    //      }
-    //      else {
-    //        amount = UtilInventory.formatLargeNumber(size);
-    //      }
-    //      if (isShowNumbers()) {
-    //        GlStateManager.pushMatrix();
-    //        GlStateManager.scale(.5f, .5f, .5f);
-    //        mc.getRenderItem().renderItemOverlayIntoGUI(parent.getFont(), stack, x * 2 + 16, y * 2 + 16, amount);
-    //        GlStateManager.popMatrix();
-    //      }
-    //    }
-    //    if (isMouseOverSlot(mx, my)) {
-    //      GlStateManager.disableLighting();
-    //      GlStateManager.disableDepth();
-    //      int j1 = x;
-    //      int k1 = y;
-    //      GlStateManager.colorMask(true, true, true, false);
-    //      parent.drawGradientRectP(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-    //      GlStateManager.colorMask(true, true, true, true);
-    //      GlStateManager.enableLighting();
-    //      GlStateManager.enableDepth();
-    //    }
-    //    GlStateManager.popMatrix();
+//     TODO: renderItem and keyboard isKeyDown issues
+        GlStateManager.pushMatrix();
+        if (!getStack().isEmpty()) {
+          RenderHelper.enableGUIStandardItemLighting();
+          Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
+          String amount;
+          //cant sneak in gui
+          //default to short form, show full amount if sneak
+          if (parent.hasShiftDown()) {
+            amount = size + "";
+          }
+          else {
+            amount = UtilInventory.formatLargeNumber(size);
+          }
+          if (isShowNumbers()) {
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(.5f, .5f, .5f);
+
+            Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack, x * 2 + 16, y * 2 + 16, amount);
+            GlStateManager.popMatrix();
+          }
+        }
+        if (isMouseOverSlot(mx, my)) {
+          GlStateManager.disableLighting();
+          GlStateManager.disableDepthTest();
+          //GlStateManager.disableDepth();
+          int j1 = x;
+          int k1 = y;
+          GlStateManager.colorMask(true, true, true, false);
+
+          parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+          GlStateManager.colorMask(true, true, true, true);
+          GlStateManager.enableLighting();
+         // GlStateManager.enableDepth();
+        }
+        GlStateManager.popMatrix();
   }
 
   void drawTooltip(int mx, int my) {
