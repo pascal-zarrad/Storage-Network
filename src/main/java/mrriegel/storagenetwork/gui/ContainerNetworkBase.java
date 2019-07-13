@@ -92,12 +92,12 @@ public abstract class ContainerNetworkBase extends Container {
     StorageNetwork.log("onmatrix changed");
     super.onCraftMatrixChanged(inventoryIn);
 
-        func_217066_a(this.windowId, world, this.player, this.matrix, this.resultInventory);
+    findMatchingRecipe(this.windowId, world, this.player, this.matrix, this.resultInventory);
 
   }
 
-  //from WorkbenchContainer
-  protected static void func_217066_a(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
+  //from WorkbenchContainer::func_217066_a
+  protected static void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
     StorageNetwork.LOGGER.info("func_217066_a matching recipe");
     if (!world.isRemote) {
       ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
@@ -113,32 +113,6 @@ public abstract class ContainerNetworkBase extends Container {
       result.setInventorySlotContents(0, itemstack);
       serverplayerentity.connection.sendPacket(new SSetSlotPacket(number, 0, itemstack));
     }
-  }
-
-  protected   void findMatchingRecipe(CraftingInventory craftMatrix) {
-    StorageNetwork.LOGGER.info("find matching recipe");
-    IRecipe recipe = null;
-    WorkbenchContainer x;
-    //    try {
-    //
-    //      recipe = CraftingManager.findMatchingRecipe(matrix, playerInv.player.world);
-    //    }
-    //    catch (java.util.NoSuchElementException err) {
-    //      // this seems basically out of my control, its DEEP in vanilla and some library, no idea whats up with that
-    //      // https://pastebin.com/2S9LSe23
-    //      StorageNetwork.LOGGER.error("Error finding recipe [0] Possible conflict with forge, vanilla, or Storage Network", err);
-    //    }
-    //    catch (Throwable e) {
-    //      StorageNetwork.LOGGER.error("Error finding recipe [-1]", e);
-    //    }
-    //    if (recipe != null) {
-    //      ItemStack itemstack = recipe.getCraftingResult(matrix);
-    //      //real way to not lose nbt tags BETTER THAN COPY
-    //      result.setInventorySlotContents(0, itemstack);
-    //    }
-    //    else {
-    //      result.setInventorySlotContents(0, ItemStack.EMPTY);
-    //    }
   }
 
   /**
@@ -297,7 +271,7 @@ public abstract class ContainerNetworkBase extends Container {
 
     public SlotCraftingNetwork(PlayerEntity player,
         CraftingInventory craftingInventory, IInventory inventoryIn,
-        int slotIndex, int xPosition, int yPosition) {
+    int slotIndex, int xPosition, int yPosition) {
       super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
     }
 
