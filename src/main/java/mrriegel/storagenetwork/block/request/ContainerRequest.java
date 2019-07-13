@@ -55,9 +55,9 @@ public class ContainerRequest extends ContainerNetworkBase {
     //    int slotIndex, int xPosition, int yPosition) {
 
     //temporary
-//    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, playerInv, 0, 101, 128);
-//    slotCraftOutput.setTileMaster(getTileMaster());
-//    addSlot(slotCraftOutput);
+    SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(playerInv.player, matrix, resultInventory, 0, 101, 128);
+    slotCraftOutput.setTileMaster(getTileMaster());
+    addSlot(slotCraftOutput);
     bindGrid();
     bindPlayerInvo(playerInv);
     bindHotbar();
@@ -78,9 +78,11 @@ public class ContainerRequest extends ContainerNetworkBase {
       //StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
-     StorageNetwork.LOGGER.info("find matching recipe");
-    findMatchingRecipe(matrix);
+//    findMatchingRecipe(matrix);
+
+  super.onCraftMatrixChanged(inventoryIn  );
   }
+
 
   @Override
   public void slotChanged() {

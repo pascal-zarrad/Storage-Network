@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.gui;
 import com.google.common.collect.Lists;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,6 +13,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.inventory.container.WorkbenchContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
@@ -27,12 +29,19 @@ public abstract class ContainerNetworkBase extends Container {
 
   protected PlayerInventory playerInv;
   protected CraftingResultSlot result;
+  protected final CraftResultInventory resultInventory;//field_75160_f;
   protected InventoryCraftingNetwork matrix;
   protected boolean recipeLocked = false;
   protected boolean isSimple;
+  protected PlayerEntity player;
+  protected World world;
 
   protected ContainerNetworkBase(@Nullable ContainerType<?> type, int id) {
     super(type, id);
+
+
+    this.resultInventory = new CraftResultInventory();
+
   }
 
   public CraftingInventory getCraftMatrix() {
@@ -48,6 +57,8 @@ public abstract class ContainerNetworkBase extends Container {
   boolean test = false;
 
   protected void bindPlayerInvo(PlayerInventory playerInv) {
+    this.player = playerInv.player;
+    this.world = player.world;
     //player inventory
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {
@@ -78,11 +89,16 @@ public abstract class ContainerNetworkBase extends Container {
 
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
+    StorageNetwork.log("onmatrix changed");
     super.onCraftMatrixChanged(inventoryIn);
+
+        func_217066_a(this.windowId, world, this.player, this.matrix, this.resultInventory);
+
   }
 
   //from WorkbenchContainer
   protected static void func_217066_a(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
+    StorageNetwork.LOGGER.info("func_217066_a matching recipe");
     if (!world.isRemote) {
       ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
       ItemStack itemstack = ItemStack.EMPTY;
@@ -100,7 +116,9 @@ public abstract class ContainerNetworkBase extends Container {
   }
 
   protected   void findMatchingRecipe(CraftingInventory craftMatrix) {
+    StorageNetwork.LOGGER.info("find matching recipe");
     IRecipe recipe = null;
+    WorkbenchContainer x;
     //    try {
     //
     //      recipe = CraftingManager.findMatchingRecipe(matrix, playerInv.player.world);
