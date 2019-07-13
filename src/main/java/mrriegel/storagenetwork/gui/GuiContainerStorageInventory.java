@@ -289,10 +289,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
         StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
         slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in),
-//            guiLeft + 8
-                + col * 18,
-//            guiTop +
-                10 + row * 18,
+          guiLeft + 8                + col * 18,
+           guiTop +                10 + row * 18,
             stacksToDisplay.get(in).getCount(), guiLeft, guiTop, true));
         index++;
       }

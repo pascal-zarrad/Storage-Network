@@ -62,7 +62,9 @@ public class ItemSlotNetwork {
             GlStateManager.pushMatrix();
             GlStateManager.scalef(.5f, .5f, .5f);
 
-            Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack, x * 2 + 16, y * 2 + 16, amount);
+            Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack,
+                x * 2 + 16,
+                 y * 2 + 16, amount);
             GlStateManager.popMatrix();
           }
         }
