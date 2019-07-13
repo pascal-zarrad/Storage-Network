@@ -32,13 +32,15 @@ public class RequestMessage {
 
   public RequestMessage(int id, ItemStack stack, boolean shift, boolean ctrl) {
     mouseButton = id;
-    this.stack = stack;
+    this.stack = new ItemStack(stack.getItem());
     this.shift = shift;
     this.ctrl = ctrl;
+    StorageNetwork.LOGGER.info(" RequestMessage CONSTRUCTOR  "+this.stack);
   }
 
   public static void handle(RequestMessage message, Supplier<NetworkEvent.Context> ctx) {
-    StorageNetwork.LOGGER.info(" RequestMessage HANDLE" );
+    //HOW AND WHY IS THIS -128 AIR
+    StorageNetwork.LOGGER.info(" RequestMessage HANDLE"+message.toString());
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
     //  ServerWorld world = player.getServerWorld();
@@ -67,9 +69,12 @@ public class RequestMessage {
         sizeRequested = Math.min(message.stack.getMaxStackSize() / 2, in / 2);
       }
       sizeRequested = Math.max(sizeRequested, 1);
+
+      StorageNetwork.LOGGER.info(" RequestMessage sizeRequested "+sizeRequested);
       stack = tileMaster.request(
           new ItemStackMatcher(message.stack, true, false, true),
           sizeRequested, false);
+      StorageNetwork.LOGGER.info(" requestMessage request resolt   "+stack);
       if (stack.isEmpty()) {
         //try again with NBT as false
         stack = tileMaster.request(
@@ -103,12 +108,15 @@ public class RequestMessage {
     //    msg.stack.setCount(buf.readInt());
     msg.shift = buf.readBoolean();
     msg.ctrl = buf.readBoolean();
+    StorageNetwork.LOGGER.info(" RequestMessage DECODE  "+msg.stack);
     return msg;
   }
 
   public static void encode(RequestMessage msg, PacketBuffer buf) {
+    StorageNetwork.LOGGER.info(" RequestMessage ENCODE "+msg.stack);
     buf.writeInt(msg.mouseButton);
     //    ByteBufUtils.writeItemStack(buf, stack);
+
     buf.writeCompoundTag(msg.stack.serializeNBT());
     buf.writeBoolean(msg.shift);
     buf.writeBoolean(msg.ctrl);

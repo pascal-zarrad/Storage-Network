@@ -483,7 +483,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
           && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT
               || mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK)
           && stackCarriedByMouse.isEmpty() && canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, stackUnderMouse, Screen.hasShiftDown(),
+        StorageNetwork.log("gui container storage: send request messeage for stack "+ stackUnderMouse.getItem() );
+        ItemStack copyNotNegativeAir = new ItemStack(stackUnderMouse.getItem());
+        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
             mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK));
         lastClick = System.currentTimeMillis();
       }
