@@ -56,12 +56,10 @@ public class StorageNetwork {
 
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new RegistryEvents());
-    PacketRegistry.init();
   }
 
   private static void setup(FMLCommonSetupEvent event) {
-    // some preinit code
-    LOGGER.info("HELLO FROM PREINIT");
+    PacketRegistry.init();
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
   }

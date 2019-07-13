@@ -98,22 +98,23 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       searchBar.setText(JeiHooks.getFilterText());
     }
     if (!isSimple) {
-      directionBtn = new GuiButtonRequest(20, 20, guiLeft + 7, searchBar.y - 3, "", (p) -> {
-        StorageNetwork.LOGGER.info("TODO ");
+      directionBtn = new GuiButtonRequest( guiLeft + 7, searchBar.y - 3, "", (p) -> {
+        StorageNetwork.LOGGER.info("TODO directionBtn");
       });
 
       addButton(directionBtn);
-      sortBtn = new GuiButtonRequest(20, 20, guiLeft + 21, searchBar.y - 3, "", (p) -> {
-        StorageNetwork.LOGGER.info("TODO ");
+      sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
+        StorageNetwork.LOGGER.info("TODO sortBtn");
       });
       addButton(sortBtn);
-      jeiBtn = new GuiButtonRequest(20, 20, guiLeft + 35, searchBar.y - 3, "", (p) -> {
-        StorageNetwork.LOGGER.info("TODO ");
+      jeiBtn = new GuiButtonRequest(guiLeft + 35, searchBar.y - 3, "", (p) -> {
+        StorageNetwork.LOGGER.info("TODOjeiBtn ");
       });
       if (JeiSettings.isJeiLoaded()) {
         addButton(jeiBtn);
       }
-      clearTextBtn = new GuiButtonRequest(20, 20, guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+      clearTextBtn = new GuiButtonRequest( guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+        StorageNetwork.LOGGER.info("clearTextBtn ");
       });
       addButton(clearTextBtn);
     }
@@ -230,9 +231,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
     this.renderBackground();
-    BeaconScreen x;
     super.render(mouseX, mouseY, partialTicks);
-    this.renderHoveredToolTip(mouseX, mouseY);
+     this.renderHoveredToolTip(mouseX, mouseY);
   }
 
   private void renderTextures() {
@@ -245,6 +245,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   private List<ItemStack> applySearchTextToSlots() {
     String searchText = searchBar.getText();
+    // StorageNetwork.LOGGER.info("asdfasdf   search to slots " +searchText);
     List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(stacks) : Lists.newArrayList();
     if (!searchText.equals("")) {
       for (ItemStack stack : stacks) {
@@ -279,7 +280,14 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
           break;
         }
         int in = index;
-        slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in), guiLeft + 8 + col * 18, guiTop + 10 + row * 18, stacksToDisplay.get(in).getCount(), guiLeft, guiTop, true));
+
+        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
+        slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in),
+//            guiLeft + 8
+                + col * 18,
+//            guiTop +
+                10 + row * 18,
+            stacksToDisplay.get(in).getCount(), guiLeft, guiTop, true));
         index++;
       }
     }
@@ -338,7 +346,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    @Override
     //    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     //      super.drawScreen(mouseX, mouseY, partialTicks);
-    super.renderHoveredToolTip(mouseX, mouseY);
+   // super.renderHoveredToolTip(mouseX, mouseY);
     if (isScreenValid() == false) {
       minecraft.player.closeScreen();
       return;
@@ -483,6 +491,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    if (!checkHotbarKeys(keyCode)) {
     //      Keyboard.enableRepeatEvents(true);
     if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
+      StorageNetwork.LOGGER.info("SEND RequestMessage on char typed " +searchBar.getText());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());

@@ -1,4 +1,5 @@
 package mrriegel.storagenetwork.network;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.data.ItemStackMatcher;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
@@ -37,9 +38,10 @@ public class RequestMessage {
   }
 
   public static void handle(RequestMessage message, Supplier<NetworkEvent.Context> ctx) {
+    StorageNetwork.LOGGER.info(" RequestMessage HANDLE" );
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      ServerWorld world = player.getServerWorld();
+    //  ServerWorld world = player.getServerWorld();
       TileMaster tileMaster = null;
       if (player.openContainer instanceof ContainerNetworkBase) {
         ContainerNetworkBase ctr = (ContainerNetworkBase) player.openContainer;
@@ -86,6 +88,8 @@ public class RequestMessage {
         }
       }
       List<ItemStack> list = tileMaster.getStacks();
+
+      StorageNetwork.LOGGER.info("RequestMessage:  send to client  "+list.size());
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       player.openContainer.detectAndSendChanges();

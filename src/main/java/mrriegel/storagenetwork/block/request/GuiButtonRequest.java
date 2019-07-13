@@ -7,8 +7,8 @@ import net.minecraftforge.fml.client.config.GuiButtonExt;
 public class GuiButtonRequest extends GuiButtonExt {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
-  public GuiButtonRequest(int xPos, int yPos, int width, int height, String displayString, IPressable handler) {
-    super(xPos, yPos, width, height, displayString, handler); 
+  public GuiButtonRequest(int xPos, int yPos, String displayString, IPressable handler) {
+    super(xPos, yPos, 14, 14,  displayString, handler);
   }
 
 

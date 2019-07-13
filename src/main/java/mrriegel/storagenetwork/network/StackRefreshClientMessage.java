@@ -1,9 +1,11 @@
 package mrriegel.storagenetwork.network;
 import com.google.common.collect.Lists;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.gui.GuiContainerStorageInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -33,7 +35,7 @@ public class StackRefreshClientMessage {
 
   public static void handle(StackRefreshClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
+
       Minecraft mc = Minecraft.getInstance();//StorageNetwork.proxy.getMinecraft();
       // TODO: IStorageInventory API
       if (mc.currentScreen instanceof GuiContainerStorageInventory) {
@@ -48,21 +50,26 @@ public class StackRefreshClientMessage {
     buf.writeInt(msg.size);
     buf.writeInt(msg.csize);
     for (ItemStack stack : msg.stacks) {
+      StorageNetwork.LOGGER.info("SRCM encode "+ stack );
       buf.writeCompoundTag(stack.serializeNBT());
-      buf.writeInt(stack.getCount());
+//      buf.writeInt(stack.getCount());
     }
     for (ItemStack stack : msg.craftableStacks) {
       buf.writeCompoundTag(stack.serializeNBT());
-      buf.writeInt(stack.getCount());
+//      buf.writeInt(stack.getCount());
     }
   }
 
   public static StackRefreshClientMessage decode(PacketBuffer buf) {
     int size = buf.readInt();
     int csize = buf.readInt();
+    StorageNetwork.LOGGER.info("SRCM DECODE  "+ size  );
+    StorageNetwork.LOGGER.info("SRCM buf  "+ buf.toString()  );
     List stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
-      ItemStack stack = ItemStack.read(buf.readCompoundTag());
+      CompoundNBT stacktag = buf.readCompoundTag();
+      StorageNetwork.LOGGER.info("   stacktag  "+ stacktag);
+      ItemStack stack = ItemStack.read(stacktag);
       stacks.add(stack);
     }
     List craftableStacks = Lists.newArrayList();
