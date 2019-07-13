@@ -105,20 +105,20 @@ public class BlockCable extends ContainerBlock {
     double top = 16;
     double bot = 0;
     double C = 8;
-    double w = 3.5;
+    double w = 3;
     double sm = C - w;
     double lg = C + w;
-    // xx, zz, yy
-    AABB = Block.makeCuboidShape(sm, lg, sm, lg, sm, lg);
-    //
-    AABB_UP = Block.makeCuboidShape(sm, lg, sm, lg, sm, top);
-    AABB_DOWN = Block.makeCuboidShape(sm, lg, sm, lg, bot, lg);
-    //
-    AABB_NORTH = Block.makeCuboidShape(sm, lg, bot, lg, sm, lg);
-    AABB_SOUTH = Block.makeCuboidShape(sm, lg, sm, top, sm, lg);
-    //
-    AABB_WEST = Block.makeCuboidShape(bot, lg, sm, lg, sm, lg);
-    AABB_EAST = Block.makeCuboidShape(sm, top, sm, lg, sm, lg);
+    //(double x1, double y1, double z1, double x2, double y2, double z2)
+    AABB = Block.makeCuboidShape(sm, sm, sm, lg, lg, lg);
+    //Y for updown
+    AABB_UP = Block.makeCuboidShape(sm, sm, sm, lg, top, lg);
+    AABB_DOWN = Block.makeCuboidShape(sm, bot, sm, lg, lg, lg);
+    //Z for n-s
+    AABB_NORTH = Block.makeCuboidShape(sm, sm, bot, lg, lg, lg);
+    AABB_SOUTH = Block.makeCuboidShape(sm, sm, sm, lg, lg, top);
+    //X for e-w
+    AABB_WEST = Block.makeCuboidShape(bot, sm, sm, lg, lg, lg);
+    AABB_EAST = Block.makeCuboidShape(sm, sm, sm, top, lg, lg);
   }
 
   @Override public BlockRenderType getRenderType(BlockState p_149645_1_) {
@@ -148,13 +148,13 @@ public class BlockCable extends ContainerBlock {
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
     //TODO: api should come back here
-    if (facingState.getBlock() instanceof BlockCable || facingState.getBlock() == ModBlocks.master
+    if (facingState.getBlock() instanceof BlockCable
+        || facingState.getBlock() == ModBlocks.master
         || facingState.getBlock() == ModBlocks.request) {
       //dont set self to self
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-    else if (isValidLinkNeighbor(stateIn, facing, facingState, world, currentPos, facingPos)
-    ) {
+    else if (isValidLinkNeighbor(stateIn, facing, facingState, world, currentPos, facingPos)) {
       return stateIn.with(property, EnumConnectType.INVENTORY);
     }
     else {
