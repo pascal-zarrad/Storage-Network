@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.registry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
+import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -47,6 +48,8 @@ public class ModBlocks {
   //
   @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
   public static Block importkabel;
+  @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
+  public static TileEntityType<TileCableIO> importkabeltile;
   //
   //  @ObjectHolder(StorageNetwork.MODID + ":kabel")
   //  public static BlockCable kabel;

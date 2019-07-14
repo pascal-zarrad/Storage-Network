@@ -3,24 +3,36 @@ package com.lothrazar.storagenetwork.block.cableio;
 import javax.annotation.Nullable;
 
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
+import com.lothrazar.storagenetwork.block.TileCableWithFacing;
+import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.registry.ModBlocks;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableIO extends TileCable {
+public class TileCableIO extends TileCableWithFacing implements ITickableTileEntity {
 
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableIO() {
+    super(ModBlocks.importkabeltile);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.BOTH);
   }
 
+
+  @Override
+  public void setDirection(@Nullable Direction direction) {
+    super.setDirection(direction);
+    this.ioStorage.setInventoryFace(direction);
+  }
 
   @Override
   public void read(CompoundNBT compound) {
@@ -35,10 +47,6 @@ public class TileCableIO extends TileCable {
     return result;
   }
 
-  public void setDirection(@Nullable Direction direction) {
-    this.ioStorage.setInventoryFace(direction);
-  }
-
 
   @Nullable
   @Override
@@ -51,4 +59,14 @@ public class TileCableIO extends TileCable {
   }
 
 
+  @Override public void tick() {
+    if (this.getDirection() == null) {
+      this.findNewDirection();
+      if (getDirection() != null) {
+        BlockState newState = BlockCable.emptyBlockState(this.getBlockState());
+        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), BlockCable.EnumConnectType.CABLE);
+        world.setBlockState(pos, newState);
+      }
+    }
+  }
 }
