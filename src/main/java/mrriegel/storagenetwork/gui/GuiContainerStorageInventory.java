@@ -480,13 +480,11 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     else {
       ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
       if (!stackUnderMouse.isEmpty()
-          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT
-              || mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK)
+          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT           )
           && stackCarriedByMouse.isEmpty() && canClick()) {
-        StorageNetwork.log("gui container storage: send request messeage for stack "+ stackUnderMouse.getItem() );
         ItemStack copyNotNegativeAir = new ItemStack(stackUnderMouse.getItem());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
-            mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK));
+            Screen.hasAltDown() || Screen.hasControlDown()));
         lastClick = System.currentTimeMillis();
       }
       else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) && canClick()) {
