@@ -93,8 +93,7 @@ public abstract class ContainerNetworkBase extends Container {
 
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
-    StorageNetwork.log("onmatrix changed");
-    super.onCraftMatrixChanged(inventoryIn);
+     super.onCraftMatrixChanged(inventoryIn);
     this.recipeCurrent = null;
 
     findMatchingRecipe(this.windowId, world, this.player, this.matrix, this.resultInventory);

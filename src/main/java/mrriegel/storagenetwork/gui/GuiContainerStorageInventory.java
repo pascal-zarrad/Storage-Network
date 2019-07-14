@@ -95,12 +95,12 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     if (!isSimple) {
       directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
-         this.setDownwards(!this.getDownwards());
+        this.setDownwards(!this.getDownwards());
         this.syncSortData();
       });
       addButton(directionBtn);
       sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
-         this.setSort(this.getSort().next());
+        this.setSort(this.getSort().next());
         this.syncSortData();
       });
       addButton(sortBtn);
@@ -111,8 +111,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         addButton(jeiBtn);
       }
       clearTextBtn = new GuiButtonRequest(guiLeft + 64, searchBar.y - 3, "X", (p) -> {
-           this.clearSearch();
-
+        this.clearSearch();
       });
       addButton(clearTextBtn);
     }
@@ -156,6 +155,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6,
         mouseX, mouseY);
   }
+
   public abstract boolean isScreenValid();
 
   private boolean doesStackMatchSearch(ItemStack stack) {
@@ -217,6 +217,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
     searchBar.render(mouseX, mouseY, partialTicks);
+    this.directionBtn.setMessage(this.getDownwards() ? "D" : "U");
+    this.sortBtn.setMessage(this.getSort().name().substring(0, 2));
   }
 
   private void renderTextures() {
@@ -260,7 +262,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       slot.drawSlot(mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
-                break;
       }
     }
     if (slots.isEmpty()) {
@@ -330,27 +331,33 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     if (isScreenValid() == false) {
       return;
     }
-    if (forceFocus) {
+    if (forceFocus && searchBar != null) {
       searchBar.setFocused2(true);
       if (searchBar.isFocused()) {
         forceFocus = false;
       }
     }
-
-
     if (isScreenValid() == false) {
       minecraft.player.closeScreen();
       return;
     }
-    try {
-      drawTooltips(mouseX, mouseY);
-    }
-    catch (Throwable e) {
-      StorageNetwork.LOGGER.error(e.getMessage());
-    }
+    drawTooltips(mouseX, mouseY);
   }
 
-  private void drawTooltips(int mouseX, int mouseY) {
+  private void drawTooltips(final int mouseX, final int mouseY) {
+    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX - guiLeft, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX, mouseY);
+    }
+    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY);
+    }
+    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY);
+    }
+    if (jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY);
+    }
     for (ItemSlotNetwork s : slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
@@ -369,19 +376,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       }
       renderTooltip(lis, mouseX, mouseY);
     }
-    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX, mouseY);
-    }
-    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX, mouseY);
-    }
-    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX, mouseY);
-    }
-    if (jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      renderTooltip(Lists.newArrayList(s), mouseX, mouseY);
-    }
   }
 
   @Override
@@ -391,7 +385,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
   private void clearSearch() {
-    if(searchBar == null){
+    if (searchBar == null) {
       return;
     }
     searchBar.setText("");
@@ -434,7 +428,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }
     else if (searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
-      if(mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT){
+      if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         this.clearSearch();
       }
       return true;
@@ -465,7 +459,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (searchBar.isFocused()) {
-      searchBar.keyPressed(x, y, b); 
+      searchBar.keyPressed(x, y, b);
       return true;
     }
     if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
@@ -500,12 +494,4 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    }
     return false;// super.charTyped(typedChar, keyCode);
   }
-  //  @Override
-  //  public void updateScreen() {
-  //
-  //    super.updateScreen();
-  //    if (searchBar != null) {
-  //      searchBar.updateCursorCounter();
-  //    }
-  //  }
 }
