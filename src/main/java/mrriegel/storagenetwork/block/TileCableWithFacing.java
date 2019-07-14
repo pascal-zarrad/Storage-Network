@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.cable.TileCable;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.registry.ModBlocks;
@@ -22,10 +23,6 @@ public class TileCableWithFacing extends TileConnectable {
 
   public TileCableWithFacing(TileEntityType<?> tileEntityTypeIn) {
     super(tileEntityTypeIn);
-  }
-
-  public boolean hasDirection() {
-    return direction != null;
   }
 
   public Direction getDirection() {
@@ -55,9 +52,10 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   public void findNewDirection() {
-    if (isValidLinkNeighbor(direction)) {
-      return;
-    }
+    StorageNetwork.log("find new direction");
+//    if (isValidLinkNeighbor(direction)) {
+//      return;
+//    }
     for (Direction facing : Direction.values()) {
       if (isValidLinkNeighbor(facing)) {
         setDirection(facing);
