@@ -24,7 +24,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
 
   public TileCableIO() {
     super(ModBlocks.importkabeltile);
-    this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.BOTH);
+    this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 
 

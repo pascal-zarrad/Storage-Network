@@ -52,6 +52,9 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     if (direction == EnumStorageDirection.OUT) {
       filters.setIsWhitelist(true);
     }
+    else{
+      filters.setIsWhitelist(false);
+    }
   }
 
   public void setInventoryFace(Direction inventoryFace) {
@@ -80,9 +83,11 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   @Override
   public void deserializeNBT(CompoundNBT nbt) {
     CompoundNBT upgrades = (CompoundNBT) nbt.get("upgrades");
-    this.upgrades.deserializeNBT(upgrades);
+    if (upgrades != null)
+      this.upgrades.deserializeNBT(upgrades);
     CompoundNBT filters = (CompoundNBT) nbt.get("filters");
-    this.filters.deserializeNBT(filters);
+    if (filters != null)
+      this.filters.deserializeNBT(filters);
     CompoundNBT operation = (CompoundNBT) nbt.get("operation");
     operationLimit = operation.getInt("limit");
     operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
