@@ -161,12 +161,10 @@ public class BlockCable extends ContainerBlock {
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null
         && stateIn.getBlock() == ModBlocks.storagekabel) {
-      StorageNetwork.LOGGER.info("storage found " + neighbor + " DIR " + facing);
-      StorageNetwork.LOGGER.info("storage got a direction");
+
       TileEntity myself = world.getTileEntity(currentPos);
       if (myself instanceof TileCableLink) {
         TileCableLink link = (TileCableLink) myself;
-        StorageNetwork.LOGGER.info(" SET DIR " + facing);
         link.setDirection(facing);
       }
       return true;

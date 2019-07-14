@@ -41,8 +41,7 @@ public class BlockRequest extends BaseBlock {
 
   @Override
   public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-    StorageNetwork.LOGGER.info("TODO: REQUEST GUI HERE ");
-    if (!world.isRemote) {
+     if (!world.isRemote) {
       TileEntity tileEntity = world.getTileEntity(pos);
       if (tileEntity instanceof INamedContainerProvider) {
         NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());

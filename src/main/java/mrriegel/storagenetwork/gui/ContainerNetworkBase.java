@@ -102,8 +102,6 @@ public abstract class ContainerNetworkBase extends Container {
   }
   //it runs on server tho
   protected   void findMatchingRecipeClient( World world,  CraftingInventory inventory, CraftResultInventory result) {
-    StorageNetwork.LOGGER.info("findMatchingRecipeClient matching recipe");//actually it runs on server sp
-//    if (world.isRemote) {
 
       Optional<ICraftingRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
       if (optional.isPresent()) {
@@ -111,12 +109,12 @@ public abstract class ContainerNetworkBase extends Container {
 
           this.recipeCurrent = icraftingrecipe;
         }
-//    }
+
   }
 
   //from WorkbenchContainer::func_217066_a
   protected   void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
-    StorageNetwork.LOGGER.info("func_217066_a matching recipe");
+
     if (!world.isRemote) {
       ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
       ItemStack itemstack = ItemStack.EMPTY;

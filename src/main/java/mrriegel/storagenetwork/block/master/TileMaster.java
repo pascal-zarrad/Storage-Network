@@ -135,7 +135,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       // Prevent having multiple masters on a network and break all others.
       TileMaster maybeMasterTile = lookPos.getTileEntity(TileMaster.class);
       if (maybeMasterTile != null && !lookPos.equals(world, pos)) {
-        StorageNetwork.LOGGER.info("break master at  " + lookPos.getBlockPos() + "  is different than ME +" + pos);
         nukeAndDrop(lookPos);
         continue;
       }

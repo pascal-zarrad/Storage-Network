@@ -32,8 +32,6 @@ import java.util.List;
 
 /**
  * Base class for Request table inventory and Remote inventory
- *
- *
  */
 public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> {
 
@@ -48,7 +46,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
-  protected boolean isSimple ;
+  protected boolean isSimple;
 
   public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
@@ -67,7 +65,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   //  @Override
   public void setStacks(List<ItemStack> stacks) {
     this.stacks = stacks;
-    StorageNetwork.LOGGER.info("set stacks "+stacks.size() );
   }
 
   //  @Override
@@ -216,7 +213,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     if (isScreenValid() == false) {
       return;
     }
-//    renderBackground();// drawDefaultBackground();//dim the background as normal
+    //    renderBackground();// drawDefaultBackground();//dim the background as normal
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
@@ -225,6 +222,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     renderItemSlots(mouseX, mouseY);
     //    searchBar.render();
   }
+
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
     renderBackground();
@@ -266,6 +264,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
+
   private void renderItemSlots(int mouseX, int mouseY) {
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
@@ -276,7 +275,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         //        break;
       }
     }
-
     if (slots.isEmpty()) {
       stackUnderMouse = ItemStack.EMPTY;
     }
@@ -291,8 +289,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
           break;
         }
         int in = index;
-
-//        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
+        //        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
         slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in),
             guiLeft + 8 + col * 18,
             guiTop + 10 + row * 18,
@@ -339,7 +336,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     });
   }
 
-
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
@@ -355,7 +351,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    @Override
     //    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
     //      super.drawScreen(mouseX, mouseY, partialTicks);
-   // super.renderHoveredToolTip(mouseX, mouseY);
+    // super.renderHoveredToolTip(mouseX, mouseY);
     if (isScreenValid() == false) {
       minecraft.player.closeScreen();
       return;
@@ -458,6 +454,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     return true;
   }
+
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -480,7 +477,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     else {
       ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
       if (!stackUnderMouse.isEmpty()
-          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT           )
+          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
           && stackCarriedByMouse.isEmpty() && canClick()) {
         ItemStack copyNotNegativeAir = new ItemStack(stackUnderMouse.getItem());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
@@ -494,51 +491,48 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     return true;
   }
-@Override
+
+  @Override
   public boolean keyPressed(int x, int y, int b) {
-  InputMappings.Input mouseKey = InputMappings.getInputByCode(x, y);
-  if (x == 256) {
-    minecraft.player.closeScreen();
-    return true; // Forge MC-146650: Needs to return true when the key is handled.
-  }
-  if (searchBar.isFocused()) {
-    searchBar.keyPressed(x, y, b);
-    StorageNetwork.log("!!keypressed in searchbar ");
+    InputMappings.Input mouseKey = InputMappings.getInputByCode(x, y);
+    if (x == 256) {
+      minecraft.player.closeScreen();
+      return true; // Forge MC-146650: Needs to return true when the key is handled.
+    }
+    if (searchBar.isFocused()) {
+      searchBar.keyPressed(x, y, b);
+      StorageNetwork.log("!!keypressed in searchbar ");
       return true;
     }
-  if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
-    minecraft.player.closeScreen();
-    return true; // Forge MC-146650: Needs to return true when the key is handled.
-  }
-     return super.keyPressed(x,y,b);
+    if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+      minecraft.player.closeScreen();
+      return true; // Forge MC-146650: Needs to return true when the key is handled.
+    }
+    return super.keyPressed(x, y, b);
   }
 
   @Override
   public boolean charTyped(char typedChar, int keyCode) {
     //    super.keyPressed()
     //func_195363_d
-
-
-
     if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
-      StorageNetwork.LOGGER.info("SEND RequestMessage on char typed " + searchBar.getText());
-        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-        if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-          JeiHooks.setFilterText(searchBar.getText());
-        }
-        return true;
+      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
+      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+        JeiHooks.setFilterText(searchBar.getText());
       }
-      else if (stackUnderMouse.isEmpty() == false) {
-        try {
-          //          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
-        }
-        catch (Throwable e) {
-          //its ok JEI not installed for maybe an addon mod is ok
-        }
+      return true;
+    }
+    else if (stackUnderMouse.isEmpty() == false) {
+      try {
+        //          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
       }
-      else {
+      catch (Throwable e) {
+        //its ok JEI not installed for maybe an addon mod is ok
+      }
+    }
+    else {
       //      super.keyPressed(typedChar, keyCode, whatami);
-      }
+    }
     //    }
     return false;// super.charTyped(typedChar, keyCode);
   }
@@ -550,5 +544,4 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   //      searchBar.updateCursorCounter();
   //    }
   //  }
-
 }
