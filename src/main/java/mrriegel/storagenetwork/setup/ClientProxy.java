@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.setup;
 
+import mrriegel.storagenetwork.block.inventory.GuiInventory;
 import mrriegel.storagenetwork.block.request.GuiRequest;
 import mrriegel.storagenetwork.registry.ModBlocks;
 import net.minecraft.client.Minecraft;
@@ -11,8 +12,10 @@ public class ClientProxy implements IProxy {
 
 
 	@Override
-	public void init() {
+	public void init()
+	{
 		ScreenManager.registerFactory(ModBlocks.requestcontainer , GuiRequest::new);
+		ScreenManager.registerFactory(ModBlocks.inventoryctr , GuiInventory::new);
 	}
 
 	@Override

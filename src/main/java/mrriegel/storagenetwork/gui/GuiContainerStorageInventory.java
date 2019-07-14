@@ -3,6 +3,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.GlStateManager;
 import mrriegel.storagenetwork.StorageNetwork;
+import mrriegel.storagenetwork.block.inventory.ContainerInventory;
 import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.GuiButtonRequest;
 import mrriegel.storagenetwork.data.EnumSortType;
@@ -34,8 +35,8 @@ import java.util.List;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> {
-
+public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest>{
+//<ContainerNetworkBase>
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
@@ -43,7 +44,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private List<ItemStack> stacks, craftableStacks;
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
   private TextFieldWidget searchBar;
-  private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
@@ -57,7 +57,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     craftableStacks = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
     lastClick = System.currentTimeMillis();
-  }
+    isSimple=true;
+   }
 
   private boolean canClick() {
     return System.currentTimeMillis() > lastClick + 100L;
@@ -92,28 +93,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     searchBar.setFocused2(true);
     if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       searchBar.setText(JeiHooks.getFilterText());
-    }
-    if (!isSimple) {
-      directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
-        this.setDownwards(!this.getDownwards());
-        this.syncSortData();
-      });
-      addButton(directionBtn);
-      sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
-        this.setSort(this.getSort().next());
-        this.syncSortData();
-      });
-      addButton(sortBtn);
-      jeiBtn = new GuiButtonRequest(guiLeft + 35, searchBar.y - 3, "", (p) -> {
-        StorageNetwork.LOGGER.info("TODOjeiBtn ");
-      });
-      if (JeiSettings.isJeiLoaded()) {
-        addButton(jeiBtn);
-      }
-      clearTextBtn = new GuiButtonRequest(guiLeft + 64, searchBar.y - 3, "X", (p) -> {
-        this.clearSearch();
-      });
-      addButton(clearTextBtn);
     }
   }
 
@@ -217,8 +196,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
     searchBar.render(mouseX, mouseY, partialTicks);
-    this.directionBtn.setMessage(this.getDownwards() ? "D" : "U");
-    this.sortBtn.setMessage(this.getSort().name().substring(0, 2));
   }
 
   private void renderTextures() {
@@ -345,19 +322,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
   private void drawTooltips(final int mouseX, final int mouseY) {
-    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX - guiLeft, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX, mouseY);
-    }
-    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY);
-    }
-    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY);
-    }
-    if (jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY);
-    }
+
     for (ItemSlotNetwork s : slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);

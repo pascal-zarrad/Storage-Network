@@ -3,6 +3,7 @@ import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.cable.BlockCable;
 import mrriegel.storagenetwork.block.cable.TileCable;
 import mrriegel.storagenetwork.block.cablelink.TileCableLink;
+import mrriegel.storagenetwork.block.inventory.ContainerInventory;
 import mrriegel.storagenetwork.block.inventory.TileInventory;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
@@ -50,6 +51,8 @@ public class ModBlocks {
   public static Block inventory;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
   public static TileEntityType<TileInventory> inventorytile;
+  @ObjectHolder(StorageNetwork.MODID + ":inventory")
+  public static ContainerType<ContainerInventory> inventoryctr;
   //
   //  @ObjectHolder(StorageNetwork.MODID + ":kabel")
   //  public static BlockCable kabel;
