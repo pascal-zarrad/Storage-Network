@@ -11,6 +11,7 @@ import mrriegel.storagenetwork.jei.JeiSettings;
 import mrriegel.storagenetwork.network.ClearRecipeMessage;
 import mrriegel.storagenetwork.network.InsertMessage;
 import mrriegel.storagenetwork.network.RequestMessage;
+import mrriegel.storagenetwork.network.SortMessage;
 import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.UtilTileEntity;
 import net.minecraft.client.Minecraft;
@@ -94,11 +95,13 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     if (!isSimple) {
       directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
-        StorageNetwork.LOGGER.info("TODO directionBtn");
+         this.setDownwards(!this.getDownwards());
+        this.syncSortData();
       });
       addButton(directionBtn);
       sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
-        StorageNetwork.LOGGER.info("TODO sortBtn");
+         this.setSort(this.getSort().next());
+        this.syncSortData();
       });
       addButton(sortBtn);
       jeiBtn = new GuiButtonRequest(guiLeft + 35, searchBar.y - 3, "", (p) -> {
@@ -108,10 +111,15 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         addButton(jeiBtn);
       }
       clearTextBtn = new GuiButtonRequest(guiLeft + 64, searchBar.y - 3, "X", (p) -> {
-        StorageNetwork.LOGGER.info("clearTextBtn ");
+           this.clearSearch();
+
       });
       addButton(clearTextBtn);
     }
+  }
+
+  private void syncSortData() {
+    PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 
   private int getLines() {
@@ -148,27 +156,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6,
         mouseX, mouseY);
   }
-  //
-  //  @Override
-  //  public void drawGradientRectP(int left, int top, int right, int bottom, int startColor, int endColor) {
-  //    super.drawGradientRect(left, top, right, bottom, startColor, endColor);
-  //  }
-  //
-  //  @Override
-  //  public font getFont() {
-  //    return font;
-  //  }
-  //
-  //  @Override
-  //  public boolean isPointInRegionP(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
-  //    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
-  //  }
-  //
-  //  @Override
-  //  public void renderToolTipP(ItemStack stack, int x, int y) {
-  //    super.renderToolTip(stack, x, y);
-  //  }
-
   public abstract boolean isScreenValid();
 
   private boolean doesStackMatchSearch(ItemStack stack) {
@@ -185,6 +172,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       //      tooltipString = ChatFormatting.stripFormatting(tooltipString);
       return tooltipString.toLowerCase().contains(searchText.toLowerCase().substring(1));
     }
+    //TODO : tag search?
     //    else if (searchText.startsWith("$")) {
     //      StringBuilder oreDictStringBuilder = new StringBuilder();
     //      for (int oreId : OreDictionary.getOreIDs(stack)) {
@@ -272,7 +260,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       slot.drawSlot(mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
-        //        break;
+                break;
       }
     }
     if (slots.isEmpty()) {
@@ -348,10 +336,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         forceFocus = false;
       }
     }
-    //    @Override
-    //    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-    //      super.drawScreen(mouseX, mouseY, partialTicks);
-    // super.renderHoveredToolTip(mouseX, mouseY);
+
+
     if (isScreenValid() == false) {
       minecraft.player.closeScreen();
       return;
@@ -403,35 +389,11 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     super.onClose();
     //    Keyboard.enableRepeatEvents(false);
   }
-  //  @Override
-  //  public void actionPerformed(Button button) throws IOException {
-  //    super.actionPerformed(button);
-  //    if (button == null) {
-  //      return;
-  //    }
-  //    boolean doSort = true;
-  //    if (button.id == directionBtn.id) {
-  //      setDownwards(!getDownwards());
-  //    }
-  //    else if (button.id == sortBtn.id) {
-  //      setSort(getSort().next());
-  //    }
-  //    else if (button.id == jeiBtn.id) {
-  //      doSort = false;
-  //      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
-  //    }
-  //    else if (button.id == clearTextBtn.id) {
-  //      doSort = false;
-  //      clearSearch();
-  //      //      this.fieldOperationLimit.setFocused(true);//doesnt work..somethings overriding it?
-  //      forceFocus = true;//we have to force it to go next-tick
-  //    }
-  //    if (doSort) {
-  //      PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
-  //    }
-  //  }
 
   private void clearSearch() {
+    if(searchBar == null){
+      return;
+    }
     searchBar.setText("");
     if (JeiSettings.isJeiSearchSynced()) {
       JeiHooks.setFilterText("");
@@ -472,6 +434,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }
     else if (searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
+      if(mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT){
+        this.clearSearch();
+      }
       return true;
     }
     else {
@@ -500,8 +465,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (searchBar.isFocused()) {
-      searchBar.keyPressed(x, y, b);
-      StorageNetwork.log("!!keypressed in searchbar ");
+      searchBar.keyPressed(x, y, b); 
       return true;
     }
     if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
