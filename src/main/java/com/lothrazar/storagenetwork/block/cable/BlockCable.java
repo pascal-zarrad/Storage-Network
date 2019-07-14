@@ -28,11 +28,16 @@ import java.util.Map;
 
 public class BlockCable extends ContainerBlock {
 
-  public static BlockState emptyBlockState(BlockState blockState) {
+  public static BlockState cleanBlockState(BlockState state) {
+    for (Direction d : Direction.values()) {
+      EnumProperty prop = FACING_TO_PROPERTY_MAP.get(d);
+      if (state.get(prop) == EnumConnectType.INVENTORY) {
+        //dont replace cable types only inv types
+        state = state.with(prop, EnumConnectType.NONE);
+      }
+    }
 
-    return  blockState.with(NORTH, BlockCable.EnumConnectType.NONE).with(EAST, BlockCable.EnumConnectType.NONE)
-        .with(SOUTH, BlockCable.EnumConnectType.NONE).with(WEST, BlockCable.EnumConnectType.NONE)
-        .with(UP, BlockCable.EnumConnectType.NONE).with(DOWN, BlockCable.EnumConnectType.NONE);
+    return state;
   }
 
   public enum EnumConnectType implements IStringSerializable {
@@ -137,24 +142,23 @@ public class BlockCable extends ContainerBlock {
     super.fillStateContainer(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
   }
-
-//
-//  @Nullable
-//  public BlockState getStateForPlacement(BlockItemUseContext context) {
-//    BlockState stateIn = super.getStateForPlacement(context);
-//    for (Direction dir : Direction.values()) {
-//      BlockPos facingPos = context.getPos().offset(dir);
-//      BlockState facingState = context.getWorld().getBlockState(facingPos);
-//      if (isValidLinkNeighbor(stateIn, dir, facingState, context.getWorld(), context.getPos(), facingPos)) {
-//        stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(dir), EnumConnectType.INVENTORY);
-////        context.getWorld().setBlockState(context.getPos() , stateIn);
-//        TileCableWithFacing cable = (TileCableWithFacing) context.getWorld().getTileEntity(context.getPos());
-//        cable.setDirection(dir);
-//        return stateIn;
-//      }
-//    }
-//    return stateIn;
-//  }
+  //
+  //  @Nullable
+  //  public BlockState getStateForPlacement(BlockItemUseContext context) {
+  //    BlockState stateIn = super.getStateForPlacement(context);
+  //    for (Direction dir : Direction.values()) {
+  //      BlockPos facingPos = context.getPos().offset(dir);
+  //      BlockState facingState = context.getWorld().getBlockState(facingPos);
+  //      if (isValidLinkNeighbor(stateIn, dir, facingState, context.getWorld(), context.getPos(), facingPos)) {
+  //        stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(dir), EnumConnectType.INVENTORY);
+  ////        context.getWorld().setBlockState(context.getPos() , stateIn);
+  //        TileCableWithFacing cable = (TileCableWithFacing) context.getWorld().getTileEntity(context.getPos());
+  //        cable.setDirection(dir);
+  //        return stateIn;
+  //      }
+  //    }
+  //    return stateIn;
+  //  }
 
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
@@ -166,10 +170,10 @@ public class BlockCable extends ContainerBlock {
       //dont set self to self
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-//    else if (isValidLinkNeighbor(stateIn, facing, facingState, world, currentPos, facingPos)) {
-//      StorageNetwork.log(" post placement: inventory ");
-//      return stateIn.with(property, EnumConnectType.INVENTORY);
-//    }
+    //    else if (isValidLinkNeighbor(stateIn, facing, facingState, world, currentPos, facingPos)) {
+    //      StorageNetwork.log(" post placement: inventory ");
+    //      return stateIn.with(property, EnumConnectType.INVENTORY);
+    //    }
     else {
       return stateIn.with(property, EnumConnectType.NONE);
     }

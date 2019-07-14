@@ -5,12 +5,9 @@ import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.registry.ModBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -63,7 +60,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
     if (this.getDirection() == null) {
       this.findNewDirection();
       if (getDirection() != null) {
-        BlockState newState = BlockCable.emptyBlockState(this.getBlockState());
+        BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
         newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), BlockCable.EnumConnectType.CABLE);
         world.setBlockState(pos, newState);
       }

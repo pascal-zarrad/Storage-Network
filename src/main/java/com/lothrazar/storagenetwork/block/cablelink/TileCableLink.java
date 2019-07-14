@@ -57,8 +57,8 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
     if (this.getDirection() == null) {
       this.findNewDirection();
       if (getDirection() != null) {
-        BlockState newState = BlockCable.emptyBlockState(this.getBlockState());
-        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), BlockCable.EnumConnectType.CABLE);
+        BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
+        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), BlockCable.EnumConnectType.INVENTORY);
         world.setBlockState(pos, newState);
       }
     }
