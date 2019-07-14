@@ -9,10 +9,14 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +26,8 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
@@ -132,6 +138,37 @@ public class BlockCable extends ContainerBlock {
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
   }
 
+  @Override public void onNeighborChange(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+    super.onNeighborChange(state, world, pos, neighbor);
+    Direction d = null;
+    for (Direction dir : Direction.values()) {
+      if (pos.offset(dir).equals(neighbor)) {
+        d = dir;
+        break;
+      }
+    }
+    //  StorageNetwork.log("on nbr ch  "+d);
+    //   this.updatePostPlacement(state, d, world.getBlockState(neighbor), (IWorld) world, pos, neighbor  );
+  }
+
+  @Override
+  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+  }
+
+  @Nullable
+  public BlockState getStateForPlacement(BlockItemUseContext context) {
+    BlockState stateIn = super.getStateForPlacement(context);
+    for (Direction dir : Direction.values()) {
+      BlockPos facingPos = context.getPos().offset(dir);
+      BlockState facingState = context.getWorld().getBlockState(facingPos);
+      if (isValidLinkNeighbor(stateIn, dir, facingState, context.getWorld(), context.getPos(), facingPos)) {
+        return stateIn.with(FACING_TO_PROPERTY_MAP.get(dir), EnumConnectType.INVENTORY);
+      }
+    }
+    return stateIn;
+  }
+
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
@@ -143,6 +180,7 @@ public class BlockCable extends ContainerBlock {
       return stateIn.with(property, EnumConnectType.CABLE);
     }
     else if (isValidLinkNeighbor(stateIn, facing, facingState, world, currentPos, facingPos)) {
+      StorageNetwork.log(" post placement: inventory ");
       return stateIn.with(property, EnumConnectType.INVENTORY);
     }
     else {
@@ -161,7 +199,6 @@ public class BlockCable extends ContainerBlock {
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null
         && stateIn.getBlock() == ModBlocks.storagekabel) {
-
       TileEntity myself = world.getTileEntity(currentPos);
       if (myself instanceof TileCableLink) {
         TileCableLink link = (TileCableLink) myself;
