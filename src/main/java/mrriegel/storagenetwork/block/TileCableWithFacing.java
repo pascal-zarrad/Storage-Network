@@ -52,7 +52,7 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   public void findNewDirection() {
-    StorageNetwork.log("find new direction");
+
 //    if (isValidLinkNeighbor(direction)) {
 //      return;
 //    }

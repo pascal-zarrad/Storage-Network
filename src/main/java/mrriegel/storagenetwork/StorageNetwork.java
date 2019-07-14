@@ -4,6 +4,8 @@ import mrriegel.storagenetwork.block.cable.BlockCable;
 import mrriegel.storagenetwork.block.cable.TileCable;
 import mrriegel.storagenetwork.block.cablelink.BlockCableLink;
 import mrriegel.storagenetwork.block.cablelink.TileCableLink;
+import mrriegel.storagenetwork.block.inventory.BlockInventory;
+import mrriegel.storagenetwork.block.inventory.TileInventory;
 import mrriegel.storagenetwork.block.master.BlockMaster;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.BlockRequest;
@@ -86,6 +88,7 @@ public class StorageNetwork {
     public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
       event.getRegistry().register(new BlockMaster());
       event.getRegistry().register(new BlockRequest());
+      event.getRegistry().register(new BlockInventory());
       event.getRegistry().register(new BlockCable("kabel"));
       event.getRegistry().register(new BlockCableLink("storage_kabel"));
     }
@@ -95,6 +98,7 @@ public class StorageNetwork {
       Item.Properties properties = new Item.Properties().group(ModBlocks.itemGroup);
       event.getRegistry().register(new BlockItem(ModBlocks.master, properties).setRegistryName("master"));
       event.getRegistry().register(new BlockItem(ModBlocks.request, properties).setRegistryName("request"));
+      event.getRegistry().register(new BlockItem(ModBlocks.inventory, properties).setRegistryName("inventory"));
       event.getRegistry().register(new BlockItem(ModBlocks.kabel, properties).setRegistryName("kabel"));
       event.getRegistry().register(new BlockItem(ModBlocks.storagekabel, properties).setRegistryName("storage_kabel"));
 
@@ -105,6 +109,7 @@ public class StorageNetwork {
 
       event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, ModBlocks.master).build(null).setRegistryName("master"));
       event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, ModBlocks.request).build(null).setRegistryName("request"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileInventory::new, ModBlocks.inventory).build(null).setRegistryName("inventory"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, ModBlocks.kabel).build(null).setRegistryName("kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, ModBlocks.storagekabel).build(null).setRegistryName("storage_kabel"));
     }

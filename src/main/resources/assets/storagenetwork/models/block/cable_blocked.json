@@ -1,7 +1,7 @@
 {
     "__comment": "Copyright © InsomniaKitten 2017 and Lothrazar 2018",
     "textures": {
-        "particle": "storagenetwork:block/cable_particle",
+        "particle": "storagenetwork:block/cable_blocked",
         "texture": "storagenetwork:block/cable_blocked"
     },
     "elements": [
