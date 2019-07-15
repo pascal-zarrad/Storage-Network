@@ -3,6 +3,7 @@ import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
+import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cableio.BlockCableIO;
 import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
@@ -89,6 +90,7 @@ public class StorageNetwork {
       event.getRegistry().register(new BlockCable("kabel"));
       event.getRegistry().register(new BlockCableLink("storage_kabel"));
       event.getRegistry().register(new BlockCableIO("import_kabel"));
+      event.getRegistry().register(new BlockCableFilter("filter_kabel"));
     }
 
     @SubscribeEvent
@@ -100,6 +102,7 @@ public class StorageNetwork {
       event.getRegistry().register(new BlockItem(ModBlocks.kabel, properties).setRegistryName("kabel"));
       event.getRegistry().register(new BlockItem(ModBlocks.storagekabel, properties).setRegistryName("storage_kabel"));
       event.getRegistry().register(new BlockItem(ModBlocks.importkabel, properties).setRegistryName("import_kabel"));
+      event.getRegistry().register(new BlockItem(ModBlocks.filterkabel, properties).setRegistryName("filter_kabel"));
 
     }
 
@@ -112,6 +115,7 @@ public class StorageNetwork {
       event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, ModBlocks.kabel).build(null).setRegistryName("kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, ModBlocks.storagekabel).build(null).setRegistryName("storage_kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableIO::new, ModBlocks.importkabel).build(null).setRegistryName("import_kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, ModBlocks.filterkabel).build(null).setRegistryName("filter_kabel"));
     }
 
     @SubscribeEvent

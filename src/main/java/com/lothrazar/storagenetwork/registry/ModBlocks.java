@@ -41,6 +41,7 @@ public class ModBlocks {
   public static BlockCable kabel;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static TileEntityType<TileCable> kabeltile;
+  //
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
   public static Block storagekabel;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
@@ -50,6 +51,12 @@ public class ModBlocks {
   public static Block importkabel;
   @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
   public static TileEntityType<TileCableIO> importkabeltile;
+  //
+
+  @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
+  public static Block filterkabel;
+  @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
+  public static TileEntityType<TileCableLink> filterkabeltile;
   //
   //  @ObjectHolder(StorageNetwork.MODID + ":kabel")
   //  public static BlockCable kabel;

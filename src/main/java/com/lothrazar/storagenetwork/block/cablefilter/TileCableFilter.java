@@ -1,24 +1,22 @@
-package com.lothrazar.storagenetwork.block.cablelink;
-import javax.annotation.Nullable;
-
+package com.lothrazar.storagenetwork.block.cablefilter;
+import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.registry.ModBlocks;
-import com.lothrazar.storagenetwork.block.TileCableWithFacing;
-import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableLink extends TileCableWithFacing implements ITickableTileEntity {
+import javax.annotation.Nullable;
+
+public class TileCableFilter extends TileCableWithFacing implements ITickableTileEntity {
 
   protected CapabilityConnectableLink itemStorage;
 
-  public TileCableLink() {
-    super(ModBlocks.storagekabeltile);
+  public TileCableFilter() {
+    super(ModBlocks.filterkabeltile);
     this.itemStorage = new CapabilityConnectableLink(this);
   }
 
