@@ -33,7 +33,7 @@ public class CableDataMessage {
         //        if (player.openContainer instanceof ContainerCableIO) {
         //          updateCableIO(player, type);
         //        }
-        //        if (player.openContainer instanceof ContainerCableLink) {
+        //        if (player.openContainer instanceof ContainerCableFilter) {
         //          updateCableLink(player, type);
         //        }
         //        if (player.openContainer instanceof ContainerCableProcessing) {
@@ -66,7 +66,7 @@ public class CableDataMessage {
     //      }
     //
     //    private static void updateCableLink(ServerPlayerEntity player, CableMessageType type) {
-    //        ContainerCableLink con = (ContainerCableLink) player.openContainer;
+    //        ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
     //        if (con == null || con.link == null) {
     //          return;
     //        }

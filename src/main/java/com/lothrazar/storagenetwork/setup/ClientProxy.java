@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.setup;
 
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.block.request.GuiRequest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -13,7 +13,7 @@ public class ClientProxy implements IProxy {
 	@Override
 	public void init()
 	{
-		ScreenManager.registerFactory(ModBlocks.requestcontainer , GuiRequest::new);
+		ScreenManager.registerFactory(SsnRegistry.requestcontainer , GuiRequest::new);
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package com.lothrazar.storagenetwork.registry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
+import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
+import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
@@ -16,20 +18,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.registries.ObjectHolder;
 
-public class ModBlocks {
+public class SsnRegistry {
 
   public static ItemGroup itemGroup = new ItemGroup(StorageNetwork.MODID) {
 
     @Override
     public ItemStack createIcon() {
-      return new ItemStack(ModBlocks.master);
+      return new ItemStack(SsnRegistry.master);
     }
   };
+  // master
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static TileEntityType<TileMaster> mastertile;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMaster master;
-  //
+  //request
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static BlockRequest request;
   @ObjectHolder(StorageNetwork.MODID + ":request")
@@ -52,24 +55,11 @@ public class ModBlocks {
   @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
   public static TileEntityType<TileCableIO> importkabeltile;
   //
-
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
   public static Block filterkabel;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
-  public static TileEntityType<TileCableLink> filterkabeltile;
+  public static TileEntityType<TileCableFilter> filterkabeltile;
+  @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
+  public static ContainerType<ContainerCableFilter> filterContainer;
   //
-  //  @ObjectHolder(StorageNetwork.MODID + ":kabel")
-  //  public static BlockCable kabel;
-  //  @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
-  //  public static BlockCableLink storageKabel;
-  // @GameRegistry.ObjectHolder("storage_kabel_plain")
-  // public static BlockCableLinkPlain storage_kabel_plain;
-  //  @ObjectHolder("ex_kabel")
-  //  public static BlockCableIO exKabel;
-  //  @ObjectHolder("im_kabel")
-  //  public static BlockCableIO imKabel;
-  //  @ObjectHolder("process_kabel")
-  //  public static BlockCable processKabel;
-  //  @ObjectHolder("controller")
-  //  public static BlockControl controller;
 }

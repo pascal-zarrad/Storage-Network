@@ -133,7 +133,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         mouseX, mouseY);
   }
 
-  public abstract boolean isScreenValid();
 
   private boolean doesStackMatchSearch(ItemStack stack) {
     String searchText = searchBar.getText();
@@ -175,17 +174,14 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    if (isScreenValid() == false) {
-      return;
-    }
-    //    renderBackground();// drawDefaultBackground();//dim the background as normal
+
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
     applyScrollPaging(stacksToDisplay);
     rebuildItemSlots(stacksToDisplay);
     renderItemSlots(mouseX, mouseY);
-    //    searchBar.render();
+
   }
 
   @Override
@@ -303,19 +299,14 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    if (isScreenValid() == false) {
-      return;
-    }
+
     if (forceFocus && searchBar != null) {
       searchBar.setFocused2(true);
       if (searchBar.isFocused()) {
         forceFocus = false;
       }
     }
-    if (isScreenValid() == false) {
-      minecraft.player.closeScreen();
-      return;
-    }
+
     drawTooltips(mouseX, mouseY);
   }
 

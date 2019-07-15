@@ -7,7 +7,7 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -20,7 +20,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableIO() {
-    super(ModBlocks.importkabeltile);
+    super(SsnRegistry.importkabeltile);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 

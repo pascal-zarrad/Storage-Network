@@ -1,9 +1,10 @@
 package com.lothrazar.storagenetwork;
-import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
+import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
+import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.cableio.BlockCableIO;
 import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
@@ -14,7 +15,7 @@ import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
@@ -35,7 +36,6 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,27 +95,27 @@ public class StorageNetwork {
 
     @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
-      Item.Properties properties = new Item.Properties().group(ModBlocks.itemGroup);
-      event.getRegistry().register(new BlockItem(ModBlocks.master, properties).setRegistryName("master"));
-      event.getRegistry().register(new BlockItem(ModBlocks.request, properties).setRegistryName("request"));
-//      event.getRegistry().register(new BlockItem(ModBlocks.inventory, properties).setRegistryName("inventory"));
-      event.getRegistry().register(new BlockItem(ModBlocks.kabel, properties).setRegistryName("kabel"));
-      event.getRegistry().register(new BlockItem(ModBlocks.storagekabel, properties).setRegistryName("storage_kabel"));
-      event.getRegistry().register(new BlockItem(ModBlocks.importkabel, properties).setRegistryName("import_kabel"));
-      event.getRegistry().register(new BlockItem(ModBlocks.filterkabel, properties).setRegistryName("filter_kabel"));
+      Item.Properties properties = new Item.Properties().group(SsnRegistry.itemGroup);
+      event.getRegistry().register(new BlockItem(SsnRegistry.master, properties).setRegistryName("master"));
+      event.getRegistry().register(new BlockItem(SsnRegistry.request, properties).setRegistryName("request"));
+//      event.getRegistry().register(new BlockItem(SsnRegistry.inventory, properties).setRegistryName("inventory"));
+      event.getRegistry().register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
+      event.getRegistry().register(new BlockItem(SsnRegistry.storagekabel, properties).setRegistryName("storage_kabel"));
+      event.getRegistry().register(new BlockItem(SsnRegistry.importkabel, properties).setRegistryName("import_kabel"));
+      event.getRegistry().register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
 
     }
 
     @SubscribeEvent
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
 
-      event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, ModBlocks.master).build(null).setRegistryName("master"));
-      event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, ModBlocks.request).build(null).setRegistryName("request"));
-      //event.getRegistry().register(TileEntityType.Builder.create(TileInventory::new, ModBlocks.inventory).build(null).setRegistryName("inventory"));
-      event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, ModBlocks.kabel).build(null).setRegistryName("kabel"));
-      event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, ModBlocks.storagekabel).build(null).setRegistryName("storage_kabel"));
-      event.getRegistry().register(TileEntityType.Builder.create(TileCableIO::new, ModBlocks.importkabel).build(null).setRegistryName("import_kabel"));
-      event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, ModBlocks.filterkabel).build(null).setRegistryName("filter_kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, SsnRegistry.master).build(null).setRegistryName("master"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, SsnRegistry.request).build(null).setRegistryName("request"));
+      //event.getRegistry().register(TileEntityType.Builder.create(TileInventory::new, SsnRegistry.inventory).build(null).setRegistryName("inventory"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.kabel).build(null).setRegistryName("kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, SsnRegistry.storagekabel).build(null).setRegistryName("storage_kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCableIO::new, SsnRegistry.importkabel).build(null).setRegistryName("import_kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCableFilter::new, SsnRegistry.filterkabel).build(null).setRegistryName("filter_kabel"));
     }
 
     @SubscribeEvent
@@ -126,10 +126,10 @@ public class StorageNetwork {
       }).setRegistryName("request"));
       //
 
-//      event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
-//        BlockPos pos = data.readBlockPos();
-//        return new ContainerInventory(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
-//      }).setRegistryName("inventory"));
+      event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        return new ContainerCableFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+      }).setRegistryName("filter_kabel"));
     }
   }
 

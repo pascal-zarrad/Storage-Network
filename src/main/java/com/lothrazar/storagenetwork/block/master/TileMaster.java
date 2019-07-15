@@ -9,7 +9,7 @@ import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.config.ConfigHandler;
 import com.lothrazar.storagenetwork.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.block.BlockState;
@@ -47,7 +47,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
   }
 
   public TileMaster() {
-    super(ModBlocks.mastertile);
+    super(SsnRegistry.mastertile);
   }
 
   public List<ItemStack> getStacks() {

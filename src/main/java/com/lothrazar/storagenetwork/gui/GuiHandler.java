@@ -11,7 +11,7 @@ public class GuiHandler {//implements IGuiHandler
   //    BlockPos pos = new BlockPos(x, y, z);
   //    UtilTileEntity.updateTile(world, pos);
   //    if (ID == GuiIDs.LINK.ordinal()) {
-  //      return new ContainerCableLink((TileCable) world.getTileEntity(pos), player.inventory);
+  //      return new ContainerCableFilter((TileCable) world.getTileEntity(pos), player.inventory);
   //    }
   //    if (ID == GuiIDs.IMPORT.ordinal()) {
   //      return new ContainerCableIO((TileCable) world.getTileEntity(pos), player.inventory);
@@ -52,7 +52,7 @@ public class GuiHandler {//implements IGuiHandler
   //    BlockPos pos = new BlockPos(x, y, z);
   //    if (ID == GuiIDs.LINK.ordinal()) {
   //      TileCable tile = (TileCable) world.getTileEntity(pos);
-  //      return new GuiCableLink(new ContainerCableLink(tile, player.inventory));
+  //      return new GuiCableFilter(new ContainerCableFilter(tile, player.inventory));
   //    }
   //    if (ID == GuiIDs.IMPORT.ordinal()) {
   //      TileCable tile = (TileCable) world.getTileEntity(pos);

@@ -45,8 +45,4 @@ public class GuiRequest extends GuiContainerStorageInventory {
     return tile.getPos();
   }
 
-  @Override
-  public boolean isScreenValid() {
-    return true;
-  }
 }

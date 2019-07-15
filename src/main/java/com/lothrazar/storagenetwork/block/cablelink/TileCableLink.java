@@ -3,10 +3,8 @@ import javax.annotation.Nullable;
 
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
-import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
@@ -18,7 +16,7 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
   protected CapabilityConnectableLink itemStorage;
 
   public TileCableLink() {
-    super(ModBlocks.storagekabeltile);
+    super(SsnRegistry.storagekabeltile);
     this.itemStorage = new CapabilityConnectableLink(this);
   }
 

@@ -4,7 +4,7 @@ import com.lothrazar.storagenetwork.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
 import com.lothrazar.storagenetwork.gui.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -36,7 +36,7 @@ public class ContainerRequest extends ContainerNetworkBase {
   private final TileRequest tileRequest;
 
   public ContainerRequest(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
-    super(ModBlocks.requestcontainer, windowId);
+    super(SsnRegistry.requestcontainer, windowId);
     tileRequest = (TileRequest) world.getTileEntity(pos);
     matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
     this.playerInv = playerInv;

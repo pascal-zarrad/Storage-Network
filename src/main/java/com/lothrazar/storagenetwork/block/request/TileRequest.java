@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 import com.lothrazar.storagenetwork.data.EnumSortType;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,7 +23,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
   private EnumSortType sort = EnumSortType.NAME;
 
   public TileRequest() {
-    super(ModBlocks.requesttile);
+    super(SsnRegistry.requesttile);
   }
 
   @Override

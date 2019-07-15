@@ -33,7 +33,6 @@ public abstract class ContainerNetworkBase extends Container {
 
   protected ContainerNetworkBase(@Nullable ContainerType<?> type, int id) {
     super(type, id);
-//    SlabBlock
 
 
     this.resultInventory = new CraftResultInventory();

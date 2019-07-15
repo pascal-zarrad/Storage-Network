@@ -36,8 +36,8 @@ public class CableFilterMessage {
       //          processCable.markDirty();
       //        }
       //      }
-      //      if (player.openContainer instanceof ContainerCableLink) {
-      //        ContainerCableLink con = (ContainerCableLink) player.openContainer;
+      //      if (player.openContainer instanceof ContainerCableFilter) {
+      //        ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
       //        if (con == null || con.link == null) {
       //          return;
       //        }

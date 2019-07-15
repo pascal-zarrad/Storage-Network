@@ -2,21 +2,27 @@ package com.lothrazar.storagenetwork.block.cablefilter;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
 
-public class TileCableFilter extends TileCableWithFacing implements ITickableTileEntity {
+public class TileCableFilter extends TileCableWithFacing implements ITickableTileEntity , INamedContainerProvider {
 
   protected CapabilityConnectableLink itemStorage;
 
   public TileCableFilter() {
-    super(ModBlocks.filterkabeltile);
+    super(SsnRegistry.filterkabeltile);
     this.itemStorage = new CapabilityConnectableLink(this);
   }
 
@@ -24,6 +30,18 @@ public class TileCableFilter extends TileCableWithFacing implements ITickableTil
   public void read(CompoundNBT compound) {
     super.read(compound);
     this.itemStorage.deserializeNBT(compound.getCompound("itemStorage"));
+  }
+
+  @Override
+  public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    return new
+        ContainerCableFilter(i, world, pos, playerInventory, playerEntity);
+  }
+
+  @Override
+  public ITextComponent getDisplayName() {
+    return new
+        StringTextComponent(getType().getRegistryName().getPath());
   }
 
   @Override

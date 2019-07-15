@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.cable;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.registry.ModBlocks;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -165,8 +165,8 @@ public class BlockCable extends ContainerBlock {
     EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
     //TODO: api should come back here
     if (facingState.getBlock() instanceof BlockCable
-        || facingState.getBlock() == ModBlocks.master
-        || facingState.getBlock() == ModBlocks.request) {
+        || facingState.getBlock() == SsnRegistry.master
+        || facingState.getBlock() == SsnRegistry.request) {
       //dont set self to self
       return stateIn.with(property, EnumConnectType.CABLE);
     }
@@ -189,7 +189,7 @@ public class BlockCable extends ContainerBlock {
     TileEntity neighbor = world.getTileEntity(facingPos);
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null
-        && stateIn.getBlock() == ModBlocks.storagekabel) {
+        && stateIn.getBlock() == SsnRegistry.storagekabel) {
       TileEntity myself = world.getTileEntity(currentPos);
       if (myself instanceof TileCableLink) {
         TileCableLink link = (TileCableLink) myself;
