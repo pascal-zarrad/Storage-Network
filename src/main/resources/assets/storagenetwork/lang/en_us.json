@@ -1,4 +1,5 @@
 {
+    "itemGroup.storagenetwork": "Simple Storage Network",
     "block.storagenetwork.kabel": "Network Cable",
     "block.storagenetwork.storage_kabel": "Link Cable",
     "block.storagenetwork.ex_kabel": "Export Cable",
