@@ -1,27 +1,27 @@
 {
-    "block.storagenetwork:kabel": "Storage Cable",
-    "block.storagenetwork:storage_kabel": "Storage Link Cable",
-    "block.storagenetwork:ex_kabel": "Storage Export Cable",
-    "block.storagenetwork:im_kabel": "Storage Import Cable",
-    "block.storagenetwork:process_kabel": "Processing Cable",
+    "block.storagenetwork.kabel": "Network Cable",
+    "block.storagenetwork.storage_kabel": "Link Cable",
+    "block.storagenetwork.ex_kabel": "Export Cable",
+    "block.storagenetwork.import_kabel": "Import Cable",
+    "block.storagenetwork.process_kabel": "Processing Cable",
 
-    "block.storagenetwork:master": "Storage Network Master",
-    "block.storagenetwork:request": "Storage Request Table",
+    "block.storagenetwork.master": "Storage Network Master",
+    "block.storagenetwork.request": "Storage Request Table",
 
-    "item.storagenetwork:upgrade_0": "Speed Upgrade",
-    "item.storagenetwork:upgrade_1": "Operation Upgrade",
-    "item.storagenetwork:upgrade_2": "Stack Upgrade",
-    "item.storagenetwork:upgrade_3": "Stock Upgrade",
+    "item.storagenetwork.upgrade_0": "Speed Upgrade",
+    "item.storagenetwork.upgrade_1": "Operation Upgrade",
+    "item.storagenetwork.upgrade_2": "Stack Upgrade",
+    "item.storagenetwork.upgrade_3": "Stock Upgrade",
 
-    "item.storagenetwork:remote_0": "Storage Remote",
-    "item.storagenetwork:remote_1": "Advanced Storage Remote",
-    "item.storagenetwork:remote_2": "Upgraded Storage Remote",
-    "item.storagenetwork:remote_3": "Simple Storage Remote",
+    "item.storagenetwork.remote_0": "Storage Remote",
+    "item.storagenetwork.remote_1": "Advanced Storage Remote",
+    "item.storagenetwork.remote_2": "Upgraded Storage Remote",
+    "item.storagenetwork.remote_3": "Simple Storage Remote",
 
-    "block.storagenetwork:recipe.invalid": "Transaction invalid:",
-    "block.storagenetwork:recipe.invalidleft": "Set Input on left",
-    "block.storagenetwork:recipe.invalidright": "Set Output on right",
-    "block.storagenetwork:recipe.valid": "Transaction valid",
+    "block.storagenetwork.recipe.invalid": "Transaction invalid:",
+    "block.storagenetwork.recipe.invalidleft": "Set Input on left",
+    "block.storagenetwork.recipe.invalidright": "Set Output on right",
+    "block.storagenetwork.recipe.valid": "Transaction valid",
 
     "item.remote.outofrange": "Out of range",
     "item.remote.notloaded": "Chunk not loaded",
@@ -82,7 +82,7 @@
     "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
 
-    "block.storagenetwork:controller": "Controller",
+    "block.storagenetwork.controller": "Controller",
     "tooltip.storagenetwork.controller": "Manage all Processing Cables in the network",
 
     "chat.master.emptyslots": "Potential Empty Slots:",

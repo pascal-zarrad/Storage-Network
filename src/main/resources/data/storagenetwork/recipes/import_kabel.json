@@ -1,7 +1,5 @@
 {
-
   "type": "minecraft:crafting_shaped",
-  "group": "storagenetwork",
   "pattern": [
     " k ",
     "kpk",
@@ -12,11 +10,11 @@
       "item": "storagenetwork:kabel"
     },
     "p":  {
-	  "item": "minecraft:chest"
+	  "item": "minecraft:hopper"
 	}
   },
   "result": {
-    "item": "storagenetwork:storage_kabel",
+    "item": "storagenetwork:import_kabel",
 	 "count": 4
   }
 }
