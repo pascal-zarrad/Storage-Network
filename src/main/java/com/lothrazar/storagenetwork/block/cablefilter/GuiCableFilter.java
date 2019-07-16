@@ -18,7 +18,7 @@ import java.util.List;
 public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
-  private int priority;
+
   //  protected GuiCableButton btnInputOutputStorage;
   ContainerCableFilter containerCableLink;
   private GuiButtonRequest btnMinus;
@@ -35,22 +35,21 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
   @Override
   public void init() {
     super.init();
-    this.priority = containerCableLink.link.getPriority();
     this.isWhitelist = containerCableLink.link.getFilter().isWhitelist;
     int x = guiLeft + 7, y = guiTop + 8;
     btnMinus = addButton(new GuiButtonRequest(x, y, "-", (p) -> {
-      this.priority--;
-      this.syncData();
+
+      this.syncData(-1);
     }));
     x += 30;
     btnPlus = addButton(new GuiButtonRequest(x, y, "+", (p) -> {
-      this.priority++;
-      this.syncData();
+
+      this.syncData(+1);
     }));
     x += 30;
     btnWhite = addButton(new GuiButtonRequest(x, y, "", (p) -> {
       this.isWhitelist = !this.isWhitelist;
-      this.syncData();
+      this.syncData(0);
     }));
     x += 30;
     btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
@@ -62,8 +61,8 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
     PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.IMPORT_FILTER.ordinal()));
   }
 
-  private void syncData() {
-    containerCableLink.link.setPriority(priority);
+  private void syncData(int priority) {
+//    containerCableLink.link.setPriority(priority);
     containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
     PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
@@ -83,6 +82,8 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+    int priority = containerCableLink.link.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
         5,// btnMinus.y,

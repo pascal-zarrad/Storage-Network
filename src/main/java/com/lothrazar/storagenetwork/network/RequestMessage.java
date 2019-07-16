@@ -47,7 +47,7 @@ public class RequestMessage {
         //maybe the table broke after doing this, rare case
         return;
       }
-      int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, true, false, true));
+      int in = tileMaster.getAmount(new ItemStackMatcher(message.stack,  false, true));
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
       boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;
@@ -63,12 +63,12 @@ public class RequestMessage {
       }
       sizeRequested = Math.max(sizeRequested, 1);
       stack = tileMaster.request(
-          new ItemStackMatcher(message.stack, true, false, true),
+          new ItemStackMatcher(message.stack,  false, true),
           sizeRequested, false);
       if (stack.isEmpty()) {
         //try again with NBT as false
         stack = tileMaster.request(
-            new ItemStackMatcher(message.stack, true, false, false),
+            new ItemStackMatcher(message.stack,  false, false),
             sizeRequested, false);
       }
       if (!stack.isEmpty()) {

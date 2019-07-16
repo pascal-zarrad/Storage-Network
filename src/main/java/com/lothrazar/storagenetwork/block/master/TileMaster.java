@@ -346,7 +346,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
           targetStack.setCount(movedItems);
         }
         // Alright, some items got moved in the simulation. Let's do it for real this time.
-        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, true, false, true), targetStack.getCount(), false);
+        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack,  false, true), targetStack.getCount(), false);
         if (realExtractedStack.isEmpty()) {
           continue;
         }
@@ -370,7 +370,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         continue;
       }
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
-      usedMatcher = new ItemStackMatcher(simExtract, true, false, true);
+      usedMatcher = new ItemStackMatcher(simExtract,  false, true);
       alreadyTransferred += simExtract.getCount();
       if (alreadyTransferred >= size) {
         break;

@@ -88,14 +88,17 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     CompoundNBT filters = (CompoundNBT) nbt.get("filters");
     if (filters != null)
       this.filters.deserializeNBT(filters);
-    CompoundNBT operation = (CompoundNBT) nbt.get("operation");
-    operationLimit = operation.getInt("limit");
-    operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
-    if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
-      operationStack = ItemStack.read((CompoundNBT) operation.get("stack"));
-    }
-    else {
-      operationStack = ItemStack.EMPTY;
+    CompoundNBT operation =  nbt.getCompound("operation");
+    operationStack = ItemStack.EMPTY;
+    if(operation != null) {
+      operationLimit = operation.getInt("limit");
+      operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
+      if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
+        operationStack = ItemStack.read((CompoundNBT) operation.get("stack"));
+      }
+//      else {
+//        operationStack = ItemStack.EMPTY;
+//      }
     }
     priority = nbt.getInt("prio");
     if (nbt.contains("inventoryFace")) {
@@ -209,7 +212,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
       return true;
     }
     // TODO: Investigate whether the operation limiter should consider the filter toggles
-    int availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.meta, filters.ores, filters.nbt));
+    int availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
     if (operationMustBeSmaller) {
       return operationLimit >= availableStack;
     }

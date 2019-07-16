@@ -11,8 +11,7 @@ import java.util.stream.Collectors;
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 
   public static final int FILTER_SIZE = 18;
-  public boolean ores = false;
-  public boolean meta = true;
+  public boolean tags = false;
   public boolean nbt = false;
   public boolean isWhitelist = true;
 
@@ -21,12 +20,9 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   public void setMatchOreDict(boolean ores) {
-    this.ores = ores;
+    this.tags = ores;
   }
 
-  public void setMatchMeta(boolean meta) {
-    this.meta = meta;
-  }
 
   public void setMatchNbt(boolean nbt) {
     this.nbt = nbt;
@@ -42,7 +38,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   public List<IItemStackMatcher> getStackMatchers() {
-    return getStacks().stream().map(stack -> new ItemStackMatcher(stack, meta, ores, nbt)).collect(Collectors.toList());
+    return getStacks().stream().map(stack -> new ItemStackMatcher(stack,  tags, nbt)).collect(Collectors.toList());
   }
 
   public void clear() {
@@ -68,8 +64,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   public void deserializeNBT(CompoundNBT nbt) {
     super.deserializeNBT(nbt);
     CompoundNBT rulesTag = nbt.getCompound("rules");
-    ores = rulesTag.getBoolean("ores");
-    meta = rulesTag.getBoolean("meta");
+    tags = rulesTag.getBoolean("tags");
     this.nbt = rulesTag.getBoolean("nbt");
     isWhitelist = rulesTag.getBoolean("whitelist");
   }
@@ -78,8 +73,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   public CompoundNBT serializeNBT() {
     CompoundNBT result = super.serializeNBT();
     CompoundNBT rulesTag = new CompoundNBT();
-    rulesTag.putBoolean("ores", ores);
-    rulesTag.putBoolean("meta", meta);
+    rulesTag.putBoolean("tags", tags);
     rulesTag.putBoolean("nbt", nbt);
     rulesTag.putBoolean("whitelist", isWhitelist);
     result.put("rules", rulesTag);

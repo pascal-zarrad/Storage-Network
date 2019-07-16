@@ -8,17 +8,16 @@ import javax.annotation.Nonnull;
 public class ItemStackMatcher implements IItemStackMatcher {
 
   private ItemStack stack;
-  private boolean meta, ore, nbt;
+  private boolean  ore, nbt;
 
   public ItemStackMatcher(ItemStack stack) {
     //so glad meta is ded
     // stack != null ? stack.getItemDamage() != OreDictionary.WILDCARD_VALUE : true
-    this(stack, false, false, false);
+    this(stack,  false, false);
   }
 
-  public ItemStackMatcher(ItemStack stack, boolean meta, boolean ore, boolean nbt) {
+  public ItemStackMatcher(ItemStack stack,  boolean ore, boolean nbt) {
     this.stack = stack;
-    this.meta = meta;
     this.ore = ore;
     this.nbt = nbt;
   }
@@ -28,7 +27,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
   public void readFromNBT(CompoundNBT compound) {
     CompoundNBT c = (CompoundNBT) compound.get("stack");
     stack = ItemStack.read(c);
-    meta = compound.getBoolean("meta");
+//    meta = compound.getBoolean("meta");
     ore = compound.getBoolean("ore");
     nbt = compound.getBoolean("nbt");
   }
@@ -37,7 +36,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     CompoundNBT c = new CompoundNBT();
     stack.write(c);
     compound.put("stack", c);
-    compound.putBoolean("meta", meta);
+//    compound.putBoolean("meta", meta);
     compound.putBoolean("ore", ore);
     compound.putBoolean("nbt", nbt);
     return c;
@@ -45,7 +44,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
 
   @Override
   public String toString() {
-    return "ItemStackMatcher [stack=" + stack + ", meta=" + meta + ", ore=" + ore + ", nbt=" + nbt + "]";
+    return "ItemStackMatcher [stack=" + stack +  ", ore=" + ore + ", nbt=" + nbt + "]";
   }
 
   @Override public ItemStack getStack() {
@@ -56,13 +55,6 @@ public class ItemStackMatcher implements IItemStackMatcher {
     this.stack = stack;
   }
 
-  public boolean isMeta() {
-    return meta;
-  }
-
-  public void setMeta(boolean meta) {
-    this.meta = meta;
-  }
 
   public boolean isOre() {
     return ore;

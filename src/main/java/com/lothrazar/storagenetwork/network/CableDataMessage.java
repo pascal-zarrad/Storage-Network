@@ -69,8 +69,9 @@ public class CableDataMessage {
             con.tile.markDirty();
             break;
           case SYNC_DATA:
-            con.link.setPriority(message.value);
-            con.link.getFilter().setIsWhitelist( message.whitelist);
+            con.link.setPriority(con.link.getPriority() + message.value);
+            StorageNetwork.log("PRI after set  " + con.link.getPriority());
+            con.link.getFilter().setIsWhitelist(message.whitelist);
             if (master != null) {
               master.clearCache();
             }

@@ -23,13 +23,13 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
   @Override
   public void read(CompoundNBT compound) {
     super.read(compound);
-    this.itemStorage.deserializeNBT(compound.getCompound("itemStorage"));
+    this.itemStorage.deserializeNBT(compound.getCompound("capability"));
   }
 
   @Override
   public CompoundNBT write(CompoundNBT compound) {
     CompoundNBT result = super.write(compound);
-    result.put("itemStorage", itemStorage.serializeNBT());
+    result.put("capability", itemStorage.serializeNBT());
     return result;
   }
 

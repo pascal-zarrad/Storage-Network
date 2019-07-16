@@ -30,7 +30,7 @@ public class CableFilterMessage {
       //        TileCable tileCable = ((ContainerCable) player.openContainer).tile;
       //        if (tileCable instanceof TileCableProcess) {
       //          TileCableProcess processCable = (TileCableProcess) tileCable;
-      //          processCable.filters.ores = message.ore;
+      //          processCable.filters.tags = message.ore;
       //          processCable.filters.meta = message.meta;
       //          processCable.filters.nbt = message.nbt;
       //          processCable.markDirty();
@@ -44,7 +44,7 @@ public class CableFilterMessage {
       //        if (message.stack != null && message.index >= 0) {
       //          con.link.filters.setStackInSlot(message.index, message.stack);
       //        }
-      //        con.link.filters.ores = message.ore;
+      //        con.link.filters.tags = message.ore;
       //        con.link.filters.meta = message.meta;
       //        con.link.filters.nbt = message.nbt;
       //        con.tile.markDirty();
@@ -57,7 +57,7 @@ public class CableFilterMessage {
       //        if (message.stack != null && message.index >= 0) {
       //          con.autoIO.filters.setStackInSlot(message.index, message.stack);
       //        }
-      //        con.autoIO.filters.ores = message.ore;
+      //        con.autoIO.filters.tags = message.ore;
       //        con.autoIO.filters.meta = message.meta;
       //        con.autoIO.filters.nbt = message.nbt;
       //        con.tile.markDirty();
@@ -72,7 +72,7 @@ public class CableFilterMessage {
       //        if (message.stack != null && message.index >= 0) {
       //          tileCable.filters.setStackInSlot(message.index, message.stack);
       //        }
-      //        tileCable.filters.ores = message.ore;
+      //        tileCable.filters.tags = message.ore;
       //        tileCable.filters.meta = message.meta;
       //        tileCable.filters.nbt = message.nbt;
       //        tileCable.markDirty();

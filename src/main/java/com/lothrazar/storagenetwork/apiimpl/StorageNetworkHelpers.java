@@ -24,7 +24,7 @@ public class StorageNetworkHelpers {
     return connectable.getMasterPos().getTileEntity(TileMaster.class);
   }
 
-  public static IItemStackMatcher createItemStackMatcher(ItemStack stack, boolean ore, boolean nbt, boolean meta) {
-    return new ItemStackMatcher(stack, meta, ore, nbt);
+  public static IItemStackMatcher createItemStackMatcher(ItemStack stack, boolean ore, boolean nbt) {
+    return new ItemStackMatcher(stack,  ore, nbt);
   }
 }

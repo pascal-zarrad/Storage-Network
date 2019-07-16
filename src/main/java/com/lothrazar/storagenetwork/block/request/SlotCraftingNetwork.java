@@ -40,7 +40,7 @@ public   class SlotCraftingNetwork extends CraftingResultSlot {
     for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {
       if (parent.matrix.getStackInSlot(i).isEmpty() && getTileMaster() != null) {
         ItemStack req = getTileMaster().request(
-            !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i), true, false, false) : null, 1, false);
+            !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i),  false, false) : null, 1, false);
         if (!req.isEmpty()) {
           parent.matrix.setInventorySlotContents(i, req);
         }

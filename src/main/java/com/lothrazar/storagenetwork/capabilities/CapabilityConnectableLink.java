@@ -44,9 +44,11 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     filters.setIsWhitelist(false);
   }
-public FilterItemStackHandler getFilter(){
+
+  public FilterItemStackHandler getFilter() {
     return filters;
-}
+  }
+
   @Override
   public int getPriority() {
     return priority;
@@ -201,8 +203,6 @@ public FilterItemStackHandler getFilter(){
   @Override
   public CompoundNBT serializeNBT() {
     CompoundNBT result = new CompoundNBT();
-    CompoundNBT filters = this.filters.serializeNBT();
-    result.put("filters", filters);
     result.putInt("prio", priority);
     if (inventoryFace != null) {
       result.putString("inventoryFace", inventoryFace.toString());
@@ -213,14 +213,16 @@ public FilterItemStackHandler getFilter(){
     operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
     operation.putInt("limit", operationLimit);
     result.put("operation", operation);
+    CompoundNBT filters = this.filters.serializeNBT();
+    result.put("filters", filters);
     return result;
   }
 
   @Override
   public void deserializeNBT(CompoundNBT nbt) {
+    priority = nbt.getInt("prio");
     CompoundNBT filters = nbt.getCompound("filters");
     this.filters.deserializeNBT(filters);
-    priority = nbt.getInt("prio");
     if (nbt.contains("inventoryFace")) {
       inventoryFace = Direction.byName(nbt.getString("inventoryFace"));
     }
@@ -231,13 +233,13 @@ public FilterItemStackHandler getFilter(){
       filterDirection = EnumStorageDirection.BOTH;
     }
     CompoundNBT operation = nbt.getCompound("operation");
-    operationLimit = operation.getInt("limit");
-    operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
-    if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
-      operationStack = ItemStack.read(operation.getCompound("stack"));
-    }
-    else {
-      operationStack = ItemStack.EMPTY;
+    operationStack = ItemStack.EMPTY;
+    if (operation != null) {
+      operationLimit = operation.getInt("limit");
+      operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
+      if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
+        operationStack = ItemStack.read(operation.getCompound("stack"));
+      }
     }
   }
 

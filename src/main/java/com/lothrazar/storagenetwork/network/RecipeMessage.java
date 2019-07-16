@@ -123,7 +123,7 @@ public class RecipeMessage {
             itemStackMatcher.setOre(isOreDict);//important: set this for correct matching
             if (stackCurrent.getMaxDamage() > 0) {
               //its a tool or something with a durability cap so IGNORE metadata 
-              itemStackMatcher.setMeta(false);
+//              itemStackMatcher.setMeta(false);
             }
             //            StorageNetwork.log("CALL exctractItem   " + stackCurrent + " isOreDict " + isOreDict + " DAMAGE " + stackCurrent.getItemDamage()
             //                + " !!HASMAXDAMG" + stackCurrent.getMaxDamage());

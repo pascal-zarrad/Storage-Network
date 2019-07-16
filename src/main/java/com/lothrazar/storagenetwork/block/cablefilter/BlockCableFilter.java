@@ -30,19 +30,19 @@ public class BlockCableFilter extends BlockCable {
     return new TileCableFilter();
   }
 
-
   @Override
   public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
       TileEntity tileEntity = world.getTileEntity(pos);
       if (tileEntity instanceof INamedContainerProvider) {
+        tileEntity.markDirty();
         NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
-      } else {
+      }
+      else {
         throw new IllegalStateException("Our named container provider is missing!" + tileEntity);
       }
       return true;
     }
     return super.onBlockActivated(state, world, pos, player, hand, result);
   }
-
 }

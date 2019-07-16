@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cablefilter;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
@@ -19,18 +20,13 @@ import javax.annotation.Nullable;
 
 public class TileCableFilter extends TileCableWithFacing implements ITickableTileEntity , INamedContainerProvider {
 
-  protected CapabilityConnectableLink itemStorage;
+  protected CapabilityConnectableLink capability;
 
   public TileCableFilter() {
     super(SsnRegistry.filterkabeltile);
-    this.itemStorage = new CapabilityConnectableLink(this);
+    this.capability = new CapabilityConnectableLink(this);
   }
 
-  @Override
-  public void read(CompoundNBT compound) {
-    super.read(compound);
-    this.itemStorage.deserializeNBT(compound.getCompound("itemStorage"));
-  }
 
   @Override
   public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
@@ -45,23 +41,30 @@ public class TileCableFilter extends TileCableWithFacing implements ITickableTil
   }
 
   @Override
+  public void read(CompoundNBT compound) {
+    StorageNetwork.log("read " +compound);
+    super.read(compound);
+    this.capability.deserializeNBT(compound.getCompound("capability"));
+  }
+  @Override
   public CompoundNBT write(CompoundNBT compound) {
     CompoundNBT result = super.write(compound);
-    result.put("itemStorage", itemStorage.serializeNBT());
+    result.put("capability", capability.serializeNBT());
+    StorageNetwork.log("WRITE  " +compound);
     return result;
   }
 
   @Override
   public void setDirection(@Nullable Direction direction) {
     super.setDirection(direction);
-    this.itemStorage.setInventoryFace(direction);
+    this.capability.setInventoryFace(direction);
   }
 
   @Nullable
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY) {
-      LazyOptional<CapabilityConnectableLink> cap = LazyOptional.of(() -> itemStorage);
+      LazyOptional<CapabilityConnectableLink> cap = LazyOptional.of(() -> this.capability);
       return (LazyOptional<T>) cap;
     }
     return super.getCapability(capability, facing);

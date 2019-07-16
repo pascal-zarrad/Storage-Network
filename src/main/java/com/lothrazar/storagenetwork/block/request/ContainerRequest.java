@@ -286,7 +286,7 @@ public class ContainerRequest extends ContainerNetworkBase {
         if (stackInSlot.isEmpty()) {
           recipeStack = recipeCopy.get(i);
           //////////////// booleans are meta, ore(?ignored?), nbt
-          itemStackMatcherCurrent = !recipeStack.isEmpty() ? new ItemStackMatcher(recipeStack, true, false, false) : null;
+          itemStackMatcherCurrent = !recipeStack.isEmpty() ? new ItemStackMatcher(recipeStack, false, false) : null;
           //false here means dont simulate
           ItemStack req = tile.request(itemStackMatcherCurrent, 1, false);
           matrix.setInventorySlotContents(i, req);
