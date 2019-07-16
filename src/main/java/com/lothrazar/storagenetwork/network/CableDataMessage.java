@@ -1,27 +1,36 @@
 package com.lothrazar.storagenetwork.network;
+import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
+import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
+import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.lwjgl.system.CallbackI;
 
 import java.util.function.Supplier;
 
 public class CableDataMessage {
 
-  // TODO: This message handling should be split up into multiple messages
   public enum CableMessageType {
-    PRIORITY_DOWN, PRIORITY_UP, P_ONOFF, TOGGLE_WHITELIST, TOGGLE_MODE, IMPORT_FILTER, TOGGLE_WAY, P_FACE_TOP, P_FACE_BOTTOM, TOGGLE_P_RESTARTTRIGGER, P_CTRL_MORE, P_CTRL_LESS
+    SYNC_DATA, IMPORT_FILTER;
   }
 
+  private boolean whitelist;
   private final int id;
   private int value = 0;
 
-  private CableDataMessage(int id) {
+  public CableDataMessage(int id) {
     this.id = id;
   }
 
-  private CableDataMessage(int id, int value) {
+  public CableDataMessage(int id, int value, boolean whitelist) {
     this(id);
     this.value = value;
+    this.whitelist = whitelist;
   }
 
   public static class Handler {
@@ -29,48 +38,52 @@ public class CableDataMessage {
     public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
       ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
+        StorageNetwork.log(message.value + "cable data msg " + message.id);
+        ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
+        if (con == null || con.link == null) {
+          return;
+        }
+        TileMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.link.connectable);
+        //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         CableMessageType type = CableMessageType.values()[message.id];
-        //        if (player.openContainer instanceof ContainerCableIO) {
-        //          updateCableIO(player, type);
-        //        }
-        //        if (player.openContainer instanceof ContainerCableFilter) {
-        //          updateCableLink(player, type);
-        //        }
-        //        if (player.openContainer instanceof ContainerCableProcessing) {
-        //          updateProcessing(message, player, type);
-        //        }
+        switch (type) {
+          case IMPORT_FILTER:
+            //TODO: Fix this not auto sync to client
+            //TODO: Fix this not auto sync to client
+            con.link.getFilter().clear();
+            int targetSlot = 0;
+            for (ItemStack filterSuggestion : con.link.getStoredStacks()) {
+              // Ignore stacks that are already filtered
+              if (con.link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
+                continue;
+              }
+              con.link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
+              targetSlot++;
+              if (targetSlot >= con.link.getFilter().getSlots()) {
+                continue;
+              }
+            }
+            PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.getFilter().getStacks()),
+                player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+            StorageNetwork.log("Send new refresh client msg, stacks " + con.link.getFilter().getStacks().size());
+            con.tile.markDirty();
+            break;
+          case SYNC_DATA:
+            con.link.setPriority(message.value);
+            con.link.getFilter().setIsWhitelist( message.whitelist);
+            if (master != null) {
+              master.clearCache();
+            }
+            break;
+        }
       });
     }
-    //
-    //    private static void updateProcessing(CableDataMessage message, ServerPlayerEntity player, CableMessageType type) {
-    //        ContainerCableProcessing con = (ContainerCableProcessing) player.openContainer;
-    //        if (!(con.tile instanceof TileCableProcess)) {
-    //          return;
-    //        }
-    //        TileCableProcess tileCable = (TileCableProcess) con.tile;
-    //        switch (type) {
-    //          case TOGGLE_P_RESTARTTRIGGER:
-    //            //stop listening for result, export recipe into block
-    //            tileCable.getRequest().setStatus(ProcessRequestModel.ProcessStatus.EXPORTING);
-    //          break;
-    //          case P_FACE_BOTTOM:
-    //            tileCable.processingBottom = EnumFacing.values()[message.value];
-    //          break;
-    //          case P_FACE_TOP:
-    //            tileCable.processingTop = EnumFacing.values()[message.value];
-    //          //                StorageNetwork.log(tileCable.processingTop.name() + " server is ?" + message.value);
-    //          break;
-    //        }
-    //        tileCable.markDirty();
-    //        UtilTileEntity.updateTile(tileCable.getWorld(), tileCable.getPos());
-    //      }
     //
     //    private static void updateCableLink(ServerPlayerEntity player, CableMessageType type) {
     //        ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
     //        if (con == null || con.link == null) {
     //          return;
     //        }
-    //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.link.connectable);
     //        switch (type) {
     //          case TOGGLE_WAY:
     //            con.link.filterDirection = con.link.filterDirection.next();
@@ -92,23 +105,9 @@ public class CableDataMessage {
     //          break;
     //          case IMPORT_FILTER:
     //            // First clear out all filters
-    //            //            con.link.filters.clear();
     //            //TODO: Fix this not auto sync to client
     //            //TODO: Fix this not auto sync to client
-    //            int targetSlot = 0;
-    //            for (ItemStack filterSuggestion : con.link.getStoredStacks()) {
-    //              // Ignore stacks that are already filtered
-    //              if (con.link.filters.exactStackAlreadyInList(filterSuggestion)) {
-    //                continue;
-    //              }
-    //              con.link.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
-    //              targetSlot++;
-    //              if (targetSlot >= con.link.filters.getSlots()) {
-    //                continue;
-    //              }
-    //            }
-    //            PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.filters.getStacks()), player);
-    //            con.tile.markDirty();
+    //
     //          break;
     //        }
     //      }
@@ -164,9 +163,10 @@ public class CableDataMessage {
   public static void encode(CableDataMessage msg, PacketBuffer buffer) {
     buffer.writeInt(msg.id);
     buffer.writeInt(msg.value);
+    buffer.writeBoolean(msg.whitelist);
   }
 
   public static CableDataMessage decode(PacketBuffer buffer) {
-    return new CableDataMessage(buffer.readInt(), buffer.readInt());
+    return new CableDataMessage(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
   }
 }

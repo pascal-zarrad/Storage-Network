@@ -16,9 +16,10 @@ import net.minecraft.world.World;
 
 public class ContainerCableFilter extends ContainerCable {
 
-  private final TileCableFilter tile;
+  public final TileCableFilter tile;
   @Nullable
   public CapabilityConnectableLink link;
+
 
   public ContainerCableFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterContainer, windowId);

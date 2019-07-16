@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork.network;
+import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.block.cablefilter.GuiCableFilter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -30,12 +33,13 @@ public class RefreshFilterClientMessage {
 
   public static void handle(RefreshFilterClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
-      ServerWorld world = player.getServerWorld();
-      //        if (Minecraft.getMinecraft().currentScreen instanceof GuiCableBase) {
-      //          GuiCableBase gui = (GuiCableBase) Minecraft.getMinecraft().currentScreen;
-      //          gui.setFilterItems(message.stacks);
-      //        }
+      StorageNetwork.log("refresh client filter mesg");
+    //  ServerPlayerEntity player = ctx.get().getSender();
+//      ServerWorld world = player.getServerWorld();
+              if (Minecraft.getInstance().currentScreen instanceof GuiCableFilter) {
+                GuiCableFilter gui = (GuiCableFilter) Minecraft.getInstance().currentScreen;
+                gui.setFilterItems(message.stacks);
+              }
     });
   }
 
@@ -55,6 +59,7 @@ public class RefreshFilterClientMessage {
     buf.writeInt(msg.size);
     for (ItemStack stack : msg.stacks) {
       buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeInt(stack.getCount());
     }
   }
 }

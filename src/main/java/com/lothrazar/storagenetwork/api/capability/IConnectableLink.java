@@ -73,4 +73,6 @@ public interface IConnectableLink {
    * @return
    */
   int getEmptySlots();
+
+  void setPriority(int value);
 }

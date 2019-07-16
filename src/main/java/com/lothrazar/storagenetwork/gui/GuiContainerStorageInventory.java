@@ -78,7 +78,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    Keyboard.enableRepeatEvents(true);
     searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "search");
     searchBar.setMaxStringLength(30);
- 
+
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
@@ -88,12 +88,12 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
       this.setDownwards(!this.getDownwards());
-      this.syncSortData();
+      this.syncData();
     });
     addButton(directionBtn);
     sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
       this.setSort(this.getSort().next());
-      this.syncSortData();
+      this.syncData();
     });
     addButton(sortBtn);
     jeiBtn = new GuiButtonRequest(guiLeft + 35, searchBar.y - 3, "", (p) -> {
@@ -108,7 +108,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     addButton(clearTextBtn);
   }
 
-  private void syncSortData() {
+  private void syncData() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 

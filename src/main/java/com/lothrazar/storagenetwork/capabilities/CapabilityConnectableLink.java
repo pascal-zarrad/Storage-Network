@@ -26,7 +26,7 @@ import java.util.concurrent.Callable;
 // TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
 public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<CompoundNBT> {
 
-  private final IConnectable connectable;
+  public final IConnectable connectable;
   private boolean operationMustBeSmaller = true;
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;
@@ -44,7 +44,9 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     filters.setIsWhitelist(false);
   }
-
+public FilterItemStackHandler getFilter(){
+    return filters;
+}
   @Override
   public int getPriority() {
     return priority;
@@ -181,6 +183,10 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       emptySlots++;
     }
     return emptySlots;
+  }
+
+  @Override public void setPriority(int value) {
+    this.priority = value;
   }
 
   @Override
