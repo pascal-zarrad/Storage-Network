@@ -12,15 +12,21 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
 
 //  protected GuiCableButton btnInputOutputStorage;
-  ContainerCableFilter containerCableFilter;
+  ContainerCableFilter containerCableLink;
 
   public GuiCableFilter(ContainerCableFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
     super(containerCableFilter, inv, name);
-    this.containerCableFilter = containerCableFilter;
+    this.containerCableLink = containerCableFilter;
   }
   @Override
   public void init() {
     super.init();
+
+
+
+
+
+
   }
 
   @Override protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -30,6 +36,14 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
+    if (containerCableLink == null || containerCableLink.link == null) {
+      return;
+    }
+    font.drawString(String.valueOf(containerCableLink.link.getPriority()),
+        guiLeft + 30 - font.getStringWidth(String.valueOf(containerCableLink.link.getPriority())) / 2,
+        5 + guiTop,// btnMinus.y,
+        4210752);
 
   }
+
 }

@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.gui;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
 import com.lothrazar.storagenetwork.data.EnumSortType;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
@@ -33,8 +34,8 @@ import java.util.List;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest>{
-//<ContainerNetworkBase>
+public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> {
+
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
@@ -45,7 +46,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
-  protected boolean isSimple;
+  private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
 
   public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
@@ -55,8 +56,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     craftableStacks = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
     lastClick = System.currentTimeMillis();
-    isSimple=true;
-   }
+  }
 
   private boolean canClick() {
     return System.currentTimeMillis() > lastClick + 100L;
@@ -78,13 +78,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    Keyboard.enableRepeatEvents(true);
     searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "search");
     searchBar.setMaxStringLength(30);
-    if (isSimple) {
-      searchBar.x -= 71;
-      searchBar.y += 64;
-      //      searchBar.width += 74;
-      searchBar.setWidth(searchBar.getWidth() + 74);
-      searchBar.setMaxStringLength(60);
-    }
+ 
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
@@ -92,6 +86,26 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       searchBar.setText(JeiHooks.getFilterText());
     }
+    directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
+      this.setDownwards(!this.getDownwards());
+      this.syncSortData();
+    });
+    addButton(directionBtn);
+    sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
+      this.setSort(this.getSort().next());
+      this.syncSortData();
+    });
+    addButton(sortBtn);
+    jeiBtn = new GuiButtonRequest(guiLeft + 35, searchBar.y - 3, "", (p) -> {
+      StorageNetwork.LOGGER.info("TODOjeiBtn ");
+    });
+    if (JeiSettings.isJeiLoaded()) {
+      addButton(jeiBtn);
+    }
+    clearTextBtn = new GuiButtonRequest(guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+      this.clearSearch();
+    });
+    addButton(clearTextBtn);
   }
 
   private void syncSortData() {
@@ -99,7 +113,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
   private int getLines() {
-    return isSimple ? 8 : 4;
+    return 4;
   }
 
   private static int getColumns() {
@@ -122,9 +136,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   private boolean inField(int mouseX, int mouseY) {
     int h = 90;
-    if (isSimple) {
-      h += 60;
-    }
     return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + h);
   }
 
@@ -132,7 +143,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6,
         mouseX, mouseY);
   }
-
 
   private boolean doesStackMatchSearch(ItemStack stack) {
     String searchText = searchBar.getText();
@@ -157,14 +167,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //      }
     //      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
     //    }
-    //    else if (searchText.startsWith("%")) {
-    //      StringBuilder creativeTabStringBuilder = new StringBuilder();
-    //      for (CreativeTabs creativeTab : stack.getItem().getCreativeTabs()) {
-    //        if (creativeTab != null) {
-    //          String creativeTabName = creativeTab.getTranslatedTabLabel();
-    //          creativeTabStringBuilder.append(creativeTabName).append(' ');
-    //        }
-    //      }
+
     //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
     //    }
     else {
@@ -174,14 +177,12 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
     applyScrollPaging(stacksToDisplay);
     rebuildItemSlots(stacksToDisplay);
     renderItemSlots(mouseX, mouseY);
-
   }
 
   @Override
@@ -299,19 +300,43 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
     if (forceFocus && searchBar != null) {
       searchBar.setFocused2(true);
       if (searchBar.isFocused()) {
         forceFocus = false;
       }
     }
-
+    this.directionBtn.setMessage(this.getDownwards() ? "D" : "U");
+    String sort = "";
+    switch (this.getSort()) {
+      case NAME:
+        sort = "N";
+        break;
+      case MOD:
+        sort = "@";
+        break;
+      case AMOUNT:
+        sort = "#";
+        break;
+    }
+    this.sortBtn.setMessage(sort);
     drawTooltips(mouseX, mouseY);
   }
 
   private void drawTooltips(final int mouseX, final int mouseY) {
-
+    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX - guiLeft, mouseY);
+    }
+    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY);
+    }
+    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY);
+    }
+    if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY);
+    }
     for (ItemSlotNetwork s : slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
@@ -323,12 +348,13 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         lis.add(I18n.format("gui.storagenetwork.shift"));
       }
       else {
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
+        //TODO: tag search
+//        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
       }
-      renderTooltip(lis, mouseX, mouseY);
+      renderTooltip(lis, mouseX-guiLeft, mouseY);
     }
   }
 
@@ -377,7 +403,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         clearSearch();
       }
     }
-    else if (!isSimple && isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
+    else if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
       PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }

@@ -12,7 +12,7 @@ public class GuiRequest extends GuiContainerStorageInventory {
   public GuiRequest(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
-    this.isSimple = false;
+
   }
 
   @Override

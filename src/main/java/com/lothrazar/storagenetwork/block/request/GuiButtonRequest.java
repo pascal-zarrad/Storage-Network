@@ -7,7 +7,8 @@ public class GuiButtonRequest extends GuiButtonExt {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/widgets.png");
   public GuiButtonRequest(int xPos, int yPos, String displayString, IPressable handler) {
-    super(xPos, yPos, 14, 14,  displayString, handler);
+    super(xPos, yPos, 14, 12,  displayString, handler);
+
   }
 
   @Override public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
