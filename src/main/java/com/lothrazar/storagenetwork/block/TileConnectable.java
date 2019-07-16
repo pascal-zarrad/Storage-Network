@@ -57,12 +57,10 @@ public class TileConnectable extends TileEntity {
     result.put("connectable", connectable.serializeNBT());
     return result;
   }
-  //  @Override
-  //  public CompoundNBT getUpdateTag() {
-  //    return writeToNBT(new CompoundNBT());
-  //  }
+
 
   public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
+
     return oldState.getBlock() != newSate.getBlock();
   }
 
@@ -70,11 +68,13 @@ public class TileConnectable extends TileEntity {
   public SUpdateTileEntityPacket getUpdatePacket() {
     CompoundNBT syncData = new CompoundNBT();
     write(syncData);
-    return new SUpdateTileEntityPacket(pos, 1, syncData);
+    return new SUpdateTileEntityPacket(pos, 0, syncData);
   }
 
+
+
   @Override
-  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) { 
     read(pkt.getNbtCompound());
   }
 
@@ -114,4 +114,7 @@ public class TileConnectable extends TileEntity {
   public DimPos getMaster() {
     return connectable.getMasterPos();
   }
+
+
+
 }

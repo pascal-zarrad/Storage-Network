@@ -66,7 +66,7 @@ public class CableDataMessage {
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.getFilter().getStacks()),
                 player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
             StorageNetwork.log("Send new refresh client msg, stacks " + con.link.getFilter().getStacks().size());
-            con.tile.markDirty();
+
             break;
           case SYNC_DATA:
             con.link.setPriority(con.link.getPriority() + message.value);
@@ -77,88 +77,11 @@ public class CableDataMessage {
             }
             break;
         }
+//
+        player.connection.sendPacket(con.tile.getUpdatePacket());
+//
       });
     }
-    //
-    //    private static void updateCableLink(ServerPlayerEntity player, CableMessageType type) {
-    //        ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
-    //        if (con == null || con.link == null) {
-    //          return;
-    //        }
-    //        switch (type) {
-    //          case TOGGLE_WAY:
-    //            con.link.filterDirection = con.link.filterDirection.next();
-    //          break;
-    //          case TOGGLE_WHITELIST:
-    //            con.link.filters.isWhitelist = !con.link.filters.isWhitelist;
-    //          break;
-    //          case PRIORITY_UP:
-    //            con.link.priority++;
-    //            if (master != null) {
-    //              master.clearCache();
-    //            }
-    //          break;
-    //          case PRIORITY_DOWN:
-    //            con.link.priority--;
-    //            if (master != null) {
-    //              master.clearCache();
-    //            }
-    //          break;
-    //          case IMPORT_FILTER:
-    //            // First clear out all filters
-    //            //TODO: Fix this not auto sync to client
-    //            //TODO: Fix this not auto sync to client
-    //
-    //          break;
-    //        }
-    //      }
-    //
-    //    private static void updateCableIO(ServerPlayerEntity player, CableMessageType type) {
-    //        ContainerCableIO con = (ContainerCableIO) player.openContainer;
-    //        if (con == null || con.autoIO == null) {
-    //          return;
-    //        }
-    //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
-    //        switch (type) {
-    //          case TOGGLE_MODE:
-    //            con.autoIO.operationMustBeSmaller = !con.autoIO.operationMustBeSmaller;
-    //          break;
-    //          case TOGGLE_WHITELIST:
-    //            con.autoIO.filters.isWhitelist = !con.autoIO.filters.isWhitelist;
-    //          break;
-    //          case PRIORITY_UP:
-    //            con.autoIO.priority++;
-    //            if (master != null) {
-    //              master.clearCache();
-    //            }
-    //          break;
-    //          case PRIORITY_DOWN:
-    //            con.autoIO.priority--;
-    //            if (master != null) {
-    //              master.clearCache();
-    //            }
-    //          break;
-    //          case IMPORT_FILTER:
-    //            //TODO: Fix this not auto sync to client
-    //            //TODO: Fix this not auto sync to client
-    //            int targetSlot = 0;
-    //            for (ItemStack filterSuggestion : con.autoIO.getStacksForFilter()) {
-    //              // Ignore stacks that are already filtered
-    //              if (con.autoIO.filters.exactStackAlreadyInList(filterSuggestion)) {
-    //                continue;
-    //              }
-    //              con.autoIO.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
-    //              targetSlot++;
-    //              if (targetSlot >= con.autoIO.filters.getSlots()) {
-    //                continue;
-    //              }
-    //            }
-    //          break;
-    //        }
-    //        StorageNetwork.log("Send new refresh client msg");
-    //        PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.autoIO.filters.getStacks()), player);
-    //        con.tile.markDirty();
-    //      }
   }
 
   public static void encode(CableDataMessage msg, PacketBuffer buffer) {
