@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> {
+public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> implements  IGuiPrivate{
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -215,23 +215,23 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return stacksToDisplay;
   }
 
-  boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
     return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
   }
 
-  void renderStackToolTip(ItemStack stack, int x, int y) {
+  public void renderStackToolTip(ItemStack stack, int x, int y) {
     super.renderTooltip(stack, x, y);
   }
 
-  void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
   private void renderItemSlots(int mouseX, int mouseY) {
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
-      slot.font = font;
-      slot.drawSlot(mouseX, mouseY);
+
+      slot.drawSlot(font, mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
       }

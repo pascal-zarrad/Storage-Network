@@ -48,7 +48,7 @@ public class TileCableFilter extends TileCableWithFacing implements ITickableTil
   @Override
   public CompoundNBT write(CompoundNBT compound) {
     CompoundNBT result = super.write(compound);
-    result.put("capability", capability.serializeNBT()); 
+    result.put("capability", capability.serializeNBT());
     return result;
   }
 

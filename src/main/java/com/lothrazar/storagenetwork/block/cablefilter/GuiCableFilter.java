@@ -2,6 +2,8 @@ package com.lothrazar.storagenetwork.block.cablefilter;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
+import com.lothrazar.storagenetwork.gui.IGuiPrivate;
+import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.inventory.FilterItemStackHandler;
@@ -13,9 +15,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
+public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
 
@@ -26,6 +29,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
   private GuiButtonRequest btnWhite;
   private GuiButtonRequest btnImport;
   private boolean isWhitelist;
+  private List<ItemSlotNetwork> itemSlotsGhost;
 
   public GuiCableFilter(ContainerCableFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
     super(containerCableFilter, inv, name);
@@ -105,6 +109,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY-guiTop);
     }
   }
+  public static final int SLOT_SIZE = 18;
 
   @Override protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -112,6 +117,29 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
+    // TODO CHECK BOXES
+
+//    checkOreBtn.setIsChecked(containerCableLink.link.filters.ores);
+//    checkNbtBtn.setIsChecked(containerCableLink.link.filters.nbt);
+    itemSlotsGhost = Lists.newArrayList();
+    //TODO: shared with GuiCableIO
+    int rows = 2;
+    int cols = 9;
+    int index = 0;
+    int y = 26;
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        ItemStack stack = containerCableLink.link.getFilter().getStackInSlot(index);
+        int x = 8 + col * SLOT_SIZE;
+        itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));
+        index++;
+      }
+      //move down to second row
+      y += SLOT_SIZE;
+    }
+    for (ItemSlotNetwork s : itemSlotsGhost) {
+      s.drawSlot(font, mouseX, mouseY);
+    }
   }
 
   public void setFilterItems(List<ItemStack> stacks) {
@@ -121,4 +149,18 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
       filter.setStackInSlot(i, s);
     }
   }
+  ///INTERFACE YO
+
+  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
+  }
+
+  public void renderStackToolTip(ItemStack stack, int x, int y) {
+    super.renderTooltip(stack, x, y);
+  }
+
+  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+    super.fillGradient(left, top, right, bottom, startColor, endColor);
+  }
+
 }

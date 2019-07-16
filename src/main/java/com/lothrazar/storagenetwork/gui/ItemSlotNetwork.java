@@ -1,8 +1,11 @@
 package com.lothrazar.storagenetwork.gui;
+import com.lothrazar.storagenetwork.block.cablefilter.GuiCableFilter;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 
@@ -20,12 +23,11 @@ public class ItemSlotNetwork {
   private final int size;
   private final int guiLeft;
   private final int guiTop;
-  public FontRenderer font;
   private boolean showNumbers;
-  private final GuiContainerStorageInventory parent;
+  private final IGuiPrivate parent;
   private ItemStack stack;
-
-  ItemSlotNetwork(GuiContainerStorageInventory parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
+//TODO: Interface for parent expose isInRegion and drawgradient rect and the tooltip one
+  public ItemSlotNetwork(IGuiPrivate parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -40,7 +42,7 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  void drawSlot(int mx, int my) {
+  public void drawSlot(FontRenderer font,int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
     GlStateManager.pushMatrix();
     if (!getStack().isEmpty()) {
@@ -49,7 +51,7 @@ public class ItemSlotNetwork {
       String amount;
       //cant sneak in gui
       //default to short form, show full amount if sneak
-      if (parent.hasShiftDown()) {
+      if (Screen.hasShiftDown()) {
         amount = size + "";
       }
       else {
