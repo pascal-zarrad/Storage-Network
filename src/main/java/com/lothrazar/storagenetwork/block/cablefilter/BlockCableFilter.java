@@ -41,8 +41,7 @@ public class BlockCableFilter extends BlockCable {
       else {
         throw new IllegalStateException("Our named container provider is missing!" + tileEntity);
       }
-      return true;
     }
-    return super.onBlockActivated(state, world, pos, player, hand, result);
+    return true;
   }
 }

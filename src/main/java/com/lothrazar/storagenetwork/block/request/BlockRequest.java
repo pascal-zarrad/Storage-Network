@@ -47,9 +47,8 @@ public class BlockRequest extends BaseBlock {
       } else {
         throw new IllegalStateException("Our named container provider is missing!");
       }
-      return true;
     }
-    return super.onBlockActivated(state, world, pos, player, hand, result);
+    return true;
   }
   @Override
   public void addInformation(ItemStack stack, @Nullable IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
