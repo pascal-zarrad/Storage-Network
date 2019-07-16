@@ -76,7 +76,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
     if (containerCableLink == null || containerCableLink.link == null) {
       return;
     }
-    btnWhite.setMessage(this.isWhitelist ? "w" : "b");
+    btnWhite.setMessage(this.isWhitelist ? "W" : "B");
   }
 
   @Override
@@ -92,14 +92,17 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> {
   }
 
   private void drawTooltips(final int mouseX, final int mouseY) {
-    //    "gui.storagenetwork.gui.import": "Import Filter",
-    //        "gui.storagenetwork.gui.whitelist": "Whitelist",
-    //        "gui.storagenetwork.gui.blacklist": "Blacklist",
+    if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY-guiTop);
+    }
+    if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
+      renderTooltip(Lists.newArrayList(I18n.format(this.isWhitelist ?"gui.storagenetwork.whitelist":"gui.storagenetwork.blacklist")), mouseX - guiLeft, mouseY-guiTop);
+    }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY-guiTop);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY-guiTop);
     }
   }
 

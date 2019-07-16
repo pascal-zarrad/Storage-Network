@@ -74,7 +74,7 @@ public class TileConnectable extends TileEntity {
 
 
   @Override
-  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) { 
+  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
     read(pkt.getNbtCompound());
   }
 
