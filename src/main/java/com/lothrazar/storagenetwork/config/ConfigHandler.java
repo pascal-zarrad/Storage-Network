@@ -3,21 +3,13 @@ import java.io.File;
 
 public class ConfigHandler {
 
-  //  public static Configuration config;
-  public static int rangeWirelessAccessor;
-  public static long refreshTicks = 20;
-  public static boolean allowFastWorkBenchIntegration;
-  public static boolean logEverything;
-  public static boolean reloadNetworkWhenUnloadChunk;
+  // TODO: CONFIG
+//  public static int rangeWirelessAccessor;
+  public static final long refreshTicks = 20;
+//  public static boolean allowFastWorkBenchIntegration;
+//  public static boolean logEverything;
+  public static final boolean reloadNetworkWhenUnloadChunk = true;
 
-  public static void refreshConfig(File file) {
-    //    config = new Configuration(file);
-    //    config.load();
-    //    syncConfig();
-    //    if (config.hasChanged()) {
-    //      config.save();
-    //    }
-  }
 
   private static void syncConfig() {
     //    default 200 ticks aka 10 seconds

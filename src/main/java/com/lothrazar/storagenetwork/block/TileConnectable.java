@@ -22,7 +22,6 @@ import javax.annotation.Nullable;
 
 /**
  * Base class for Cable, Control, Request
- *
  */
 public class TileConnectable extends TileEntity {
 
@@ -58,9 +57,7 @@ public class TileConnectable extends TileEntity {
     return result;
   }
 
-
   public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
-
     return oldState.getBlock() != newSate.getBlock();
   }
 
@@ -71,16 +68,13 @@ public class TileConnectable extends TileEntity {
     return new SUpdateTileEntityPacket(pos, 0, syncData);
   }
 
-
-
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
     read(pkt.getNbtCompound());
   }
 
-  //@Override
-  //TODO: UNUSED?
-  public void onChunkUnload() {
+  @Override public void onChunkUnloaded() {
+    super.onChunkUnloaded();
     if (ConfigHandler.reloadNetworkWhenUnloadChunk && connectable != null && connectable.getMasterPos() != null) {
       try {
         TileMaster maybeMaster = StorageNetworkHelpers.getTileMasterForConnectable(connectable);
@@ -93,13 +87,6 @@ public class TileConnectable extends TileEntity {
       }
     }
   }
-  //  @Override
-  //  public boolean hasCapability(Capability<?> capability, @Nullable Direction facing) {
-  //    if (capability == StorageNetworkCapabilities.CONNECTABLE_CAPABILITY) {
-  //      return true;
-  //    }
-  //    return super.hasCapability(capability, facing);
-  //  }
 
   @Nullable
   @Override
@@ -114,7 +101,4 @@ public class TileConnectable extends TileEntity {
   public DimPos getMaster() {
     return connectable.getMasterPos();
   }
-
-
-
 }
