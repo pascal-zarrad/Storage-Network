@@ -397,8 +397,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         snd = true;
       }
       if (snd) {
-        minecraft.player.world.playSound(minecraft.player, minecraft.player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS,
-            0.002F, 0.5F);
+        //works but idk
+//        minecraft.player.world.playSound(minecraft.player, minecraft.player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS,
+//            0.002F, 0.5F);
       }
     }
     return true;
