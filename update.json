@@ -85,6 +85,6 @@
     "0.0.1": "Initial port, only small number of barebones blocks exist.",
     "0.0.2": "Fixed recipes",
     "0.0.3": "Added filter and sorting buttons in request table, fixed some tooltips.  Blocks now drop when broken.  Fixed block use when open GUIs.  Added filtered cable.  ",
-    "0.0.4": "Updated to forge 1.14.3-27.0.57.  de lang support added by pandory-network "
+    "0.0.4": "Updated to forge 1.14.3-27.0.57.  Fix a tooltip.  de lang support added by pandory-network "
   }
 }

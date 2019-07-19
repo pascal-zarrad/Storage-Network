@@ -36,6 +36,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +54,6 @@ public class StorageNetwork {
   public StorageNetwork() {
     // Register the setup method for modloading
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
-
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new RegistryEvents());
   }
@@ -63,16 +63,15 @@ public class StorageNetwork {
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
   }
-//
-//  @SubscribeEvent
-//  public static void onServerStarting(FMLServerStartingEvent event) {
-//    // do something when the server starts
-//    LOGGER.info("HELLO from server starting");
-//  }
 
-  static boolean logspam=true;
+    @SubscribeEvent
+    public static void onServerStarting(FMLServerStartingEvent event) {
+      // do something when the server starts
+    }
+  static boolean logspam = false;
+
   public static void log(String s) {
-    if(logspam){
+    if (logspam) {
       LOGGER.info(s);
     }
   }
@@ -98,17 +97,15 @@ public class StorageNetwork {
       Item.Properties properties = new Item.Properties().group(SsnRegistry.itemGroup);
       event.getRegistry().register(new BlockItem(SsnRegistry.master, properties).setRegistryName("master"));
       event.getRegistry().register(new BlockItem(SsnRegistry.request, properties).setRegistryName("request"));
-//      event.getRegistry().register(new BlockItem(SsnRegistry.inventory, properties).setRegistryName("inventory"));
+      //      event.getRegistry().register(new BlockItem(SsnRegistry.inventory, properties).setRegistryName("inventory"));
       event.getRegistry().register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.storagekabel, properties).setRegistryName("storage_kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.importkabel, properties).setRegistryName("import_kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
-
     }
 
     @SubscribeEvent
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
-
       event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, SsnRegistry.master).build(null).setRegistryName("master"));
       event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, SsnRegistry.request).build(null).setRegistryName("request"));
       //event.getRegistry().register(TileEntityType.Builder.create(TileInventory::new, SsnRegistry.inventory).build(null).setRegistryName("inventory"));
@@ -125,7 +122,6 @@ public class StorageNetwork {
         return new ContainerRequest(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("request"));
       //
-
       event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         return new ContainerCableFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
@@ -157,5 +153,4 @@ public class StorageNetwork {
     TranslationTextComponent t = new TranslationTextComponent(message);
     return t.getFormattedText();
   }
-
 }

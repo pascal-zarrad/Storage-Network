@@ -38,7 +38,7 @@
     "gui.storagenetwork.checkbox.ore": "OreDict",
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
-    "gui.storagenetwork.gui.import": "Import Filter",
+    "gui.storagenetwork.import": "Import contents as Filter",
     "gui.storagenetwork.gui.whitelist": "Whitelist",
     "gui.storagenetwork.gui.blacklist": "Blacklist",
 
@@ -103,5 +103,6 @@
     "processing.empty.ingredients": "Empty Ingredients",
 
     "gui.storagenetwork.processing.recipe": "Ingredients for each cycle will be sent as if coming from this block-side",
-    "gui.storagenetwork.processing.extract": "When pulling processing results it will be taken as if from this block-side"
+    "gui.storagenetwork.processing.extract": "When pulling processing results it will be taken as if from this block-side",
+    "gui.storagenetwork.": "Tooltip new thing goes here"
 }
