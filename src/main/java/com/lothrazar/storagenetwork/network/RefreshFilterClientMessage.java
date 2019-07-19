@@ -14,9 +14,8 @@ import java.util.function.Supplier;
 
 /**
  * Refresh the current screen with large data set of stacks.
- *
+ * <p>
  * Used by Containers displaying network inventory as well as most other packets that perform small actions
- *
  */
 public class RefreshFilterClientMessage {
 
@@ -33,13 +32,10 @@ public class RefreshFilterClientMessage {
 
   public static void handle(RefreshFilterClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      StorageNetwork.log("refresh client filter mesg");
-    //  ServerPlayerEntity player = ctx.get().getSender();
-//      ServerWorld world = player.getServerWorld();
-              if (Minecraft.getInstance().currentScreen instanceof GuiCableFilter) {
-                GuiCableFilter gui = (GuiCableFilter) Minecraft.getInstance().currentScreen;
-                gui.setFilterItems(message.stacks);
-              }
+      if (Minecraft.getInstance().currentScreen instanceof GuiCableFilter) {
+        GuiCableFilter gui = (GuiCableFilter) Minecraft.getInstance().currentScreen;
+        gui.setFilterItems(message.stacks);
+      }
     });
   }
 

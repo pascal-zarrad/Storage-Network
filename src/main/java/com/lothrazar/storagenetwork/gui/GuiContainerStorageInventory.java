@@ -24,6 +24,8 @@ import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
@@ -34,7 +36,7 @@ import java.util.List;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> implements  IGuiPrivate{
+public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> implements IGuiPrivate {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -78,7 +80,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //    Keyboard.enableRepeatEvents(true);
     searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "search");
     searchBar.setMaxStringLength(30);
-
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
@@ -140,7 +141,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
   private boolean inSearchbar(double mouseX, double mouseY) {
-    return isPointInRegion(searchBar.x - guiLeft + 14, searchBar.y - guiTop, searchBar.getWidth(), font.FONT_HEIGHT + 6,
+    return isPointInRegion(searchBar.x - guiLeft + 14,
+        searchBar.y - guiTop,
+        searchBar.getWidth(), font.FONT_HEIGHT + 6,
         mouseX, mouseY);
   }
 
@@ -167,7 +170,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //      }
     //      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
     //    }
-
     //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
     //    }
     else {
@@ -230,7 +232,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private void renderItemSlots(int mouseX, int mouseY) {
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
-
       slot.drawSlot(font, mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
@@ -351,10 +352,10 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
         //TODO: tag search
-//        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
+        //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
       }
-      renderTooltip(lis, mouseX-guiLeft, mouseY);
+      renderTooltip(lis, mouseX - guiLeft, mouseY);
     }
   }
 
@@ -374,18 +375,30 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
   }
 
+  public boolean isScrollable(double x, double y) {
+    return isPointInRegion(0, 0,
+        this.width-8, 135,
+        x, y);
+  }
+
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);
-    double i = x * width / minecraft.mainWindow.getWidth();
-    double j = height - y * height / minecraft.mainWindow.getHeight() - 1;
-    if (inField((int) i, (int) j)) {
-      //      int mouse = Mouse.getEventDWheel();
+    //<0 going down
+    // >0 going up
+    if (isScrollable(x, y) && mouseButton != 0) {
+      boolean snd = false;
       if (mouseButton > 0 && page > 1) {
         page--;
+        snd = true;
       }
       if (mouseButton < 0 && page < maxPage) {
         page++;
+        snd = true;
+      }
+      if (snd) {
+        minecraft.player.world.playSound(minecraft.player, minecraft.player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS,
+            0.002F, 0.5F);
       }
     }
     return true;

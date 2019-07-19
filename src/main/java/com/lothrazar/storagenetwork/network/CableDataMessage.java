@@ -38,7 +38,6 @@ public class CableDataMessage {
     public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
       ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
-        StorageNetwork.log(message.value + "cable data msg " + message.id);
         ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
         if (con == null || con.link == null) {
           return;
@@ -65,12 +64,10 @@ public class CableDataMessage {
             }
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.getFilter().getStacks()),
                 player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-            StorageNetwork.log("Send new refresh client msg, stacks " + con.link.getFilter().getStacks().size());
 
             break;
           case SYNC_DATA:
             con.link.setPriority(con.link.getPriority() + message.value);
-            StorageNetwork.log("PRI after set  " + con.link.getPriority());
             con.link.getFilter().setIsWhitelist(message.whitelist);
             if (master != null) {
               master.clearCache();

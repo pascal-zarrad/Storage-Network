@@ -34,7 +34,6 @@ public   class SlotCraftingNetwork extends CraftingResultSlot {
     for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {
       lis.add(parent.matrix.getStackInSlot(i).copy());
     }
-    StorageNetwork.log("onTake crafting slot");
     super.onTake(playerIn, stack);
     parent.detectAndSendChanges();
     for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {

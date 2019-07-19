@@ -119,7 +119,6 @@ public class ContainerRequest extends ContainerNetworkBase {
 
   @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {
-    StorageNetwork.log("ContainerRequest transfer " + slotIndex);
     if (playerIn.world.isRemote) {
       return ItemStack.EMPTY;
     }
@@ -130,7 +129,6 @@ public class ContainerRequest extends ContainerNetworkBase {
       itemstack = itemstack1.copy();
       TileMaster tileMaster = this.getTileMaster();
       if (slotIndex == 0) {
-        StorageNetwork.log(" craftShift !!! " + tileMaster);
         craftShift(playerIn, tileMaster);
         return ItemStack.EMPTY;
       }
@@ -196,7 +194,6 @@ public class ContainerRequest extends ContainerNetworkBase {
     recipeCurrent = null;
     this.findMatchingRecipeClient(player.world, this.matrix, this.resultInventory);
     if (recipeCurrent == null) {
-      StorageNetwork.log("current is null");
       return;
     }
     this.recipeLocked = true;
@@ -205,14 +202,12 @@ public class ContainerRequest extends ContainerNetworkBase {
     for (int i = 0; i < matrix.getSizeInventory(); i++) {
       recipeCopy.add(matrix.getStackInSlot(i).copy());
     }
-    ItemStack res = recipeCurrent.getCraftingResult(matrix);
+    ItemStack res = recipeCurrent.getCraftingResult(matrix); 
     if (res.isEmpty()) {
-        StorageNetwork.log("err Recipe output is an empty stack " + recipeCurrent);
+        StorageNetwork.LOGGER.error("err Recipe output is an empty stack " , recipeCurrent);
       return;
     }
     int sizePerCraft = res.getCount();
-    // int sizeFull = res.getMaxStackSize();
-    //   int numberToCraft = sizeFull / sizePerCraft;
     StorageNetwork.log("[craftShift] sizePerCraft = " + sizePerCraft + " for stack " + res);
     while (crafted + sizePerCraft <= res.getMaxStackSize()) {
       res = recipeCurrent.getCraftingResult(matrix);
