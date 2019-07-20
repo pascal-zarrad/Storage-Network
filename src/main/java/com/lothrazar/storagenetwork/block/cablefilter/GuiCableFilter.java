@@ -49,7 +49,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     btnPlus = addButton(new GuiButtonRequest(x, y, "+", (p) -> {
       this.syncData(+1);
     }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button.png"));
-    x +=20;
+    x += 20;
     btnWhite = addButton(new GuiButtonRequest(x, y, "", (p) -> {
       this.isWhitelist = !this.isWhitelist;
       this.syncData(0);
@@ -164,7 +164,12 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
         if (slot.getStack().isEmpty() == false) {
           //i hit non-empty slot, clear it no matter what
           if (mouseButton == 1) {
-            slot.getStack().setCount(1);
+            int direction = this.hasShiftDown() ? -1 : 1;
+            int newCount = Math.min(64, slot.getStack().getCount() + direction);
+            if (newCount < 1) {
+              newCount = 1;
+            }
+            slot.getStack().setCount(newCount);
           }
           else {
             slot.setStack(ItemStack.EMPTY);
