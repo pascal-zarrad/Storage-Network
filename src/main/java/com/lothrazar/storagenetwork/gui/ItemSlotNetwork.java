@@ -20,7 +20,8 @@ public class ItemSlotNetwork {
 
   private final int x;
   private final int y;
-  private final int size;
+
+  private  int size;
   private final int guiLeft;
   private final int guiTop;
   private boolean showNumbers;
@@ -96,6 +97,14 @@ public class ItemSlotNetwork {
   public void setStack(ItemStack stack) {
     this.stack = stack;
   }
+  public int getSize() {
+    return size;
+  }
+
+  public void setSize(int size) {
+    this.size = size;
+  }
+
 
   private boolean isShowNumbers() {
     return showNumbers;

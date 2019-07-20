@@ -30,7 +30,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   private boolean operationMustBeSmaller = true;
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;
-  private final FilterItemStackHandler filters = new FilterItemStackHandler();
+  private  FilterItemStackHandler filters = new FilterItemStackHandler();
   private EnumStorageDirection filterDirection = EnumStorageDirection.BOTH;
   private Direction inventoryFace;
   private int priority;
@@ -49,6 +49,11 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     return filters;
   }
 
+  public void setFilter(int value, ItemStack stack){
+    filters.setStackInSlot(value,stack);
+
+    filters.getStacks().set(value,stack);
+  }
   @Override
   public int getPriority() {
     return priority;

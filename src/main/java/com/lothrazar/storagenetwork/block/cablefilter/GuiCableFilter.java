@@ -15,13 +15,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
-
   //  protected GuiCableButton btnInputOutputStorage;
   ContainerCableFilter containerCableLink;
   private GuiButtonRequest btnMinus;
@@ -42,12 +40,10 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     this.isWhitelist = containerCableLink.link.getFilter().isWhitelist;
     int x = guiLeft + 7, y = guiTop + 8;
     btnMinus = addButton(new GuiButtonRequest(x, y, "-", (p) -> {
-
       this.syncData(-1);
     }));
     x += 30;
     btnPlus = addButton(new GuiButtonRequest(x, y, "+", (p) -> {
-
       this.syncData(+1);
     }));
     x += 30;
@@ -57,16 +53,20 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     }));
     x += 30;
     btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
-      syncFilterSlots();
+      importFilterSlots();
     }));
   }
 
-  private void syncFilterSlots() {
+  private void importFilterSlots() {
     PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.IMPORT_FILTER.ordinal()));
   }
 
+  private void sendStackSlot(int value, ItemStack stack) {
+    PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SAVE_FITLER.ordinal(), value, stack));
+  }
+
   private void syncData(int priority) {
-//    containerCableLink.link.setPriority(priority);
+    //    containerCableLink.link.setPriority(priority);
     containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
     PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
@@ -86,7 +86,6 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
     int priority = containerCableLink.link.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
@@ -97,18 +96,19 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   private void drawTooltips(final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY-guiTop);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format(this.isWhitelist ?"gui.storagenetwork.whitelist":"gui.storagenetwork.blacklist")), mouseX - guiLeft, mouseY-guiTop);
+      renderTooltip(Lists.newArrayList(I18n.format(this.isWhitelist ? "gui.storagenetwork.whitelist" : "gui.storagenetwork.blacklist")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY-guiTop);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY-guiTop);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY - guiTop);
     }
   }
+
   public static final int SLOT_SIZE = 18;
 
   @Override protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -118,9 +118,8 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
     // TODO CHECK BOXES
-
-//    checkOreBtn.setIsChecked(containerCableLink.link.filters.ores);
-//    checkNbtBtn.setIsChecked(containerCableLink.link.filters.nbt);
+    //    checkOreBtn.setIsChecked(containerCableLink.link.filters.ores);
+    //    checkNbtBtn.setIsChecked(containerCableLink.link.filters.nbt);
     itemSlotsGhost = Lists.newArrayList();
     //TODO: shared with GuiCableIO
     int rows = 2;
@@ -149,7 +148,26 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
       filter.setStackInSlot(i, s);
     }
   }
-  ///INTERFACE YO
+
+  @Override
+  public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+    for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
+      ItemSlotNetwork slot = itemSlotsGhost.get(i);
+      if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
+        //
+        StorageNetwork.log(mouseButton + " over filter " + slot.getStack());
+        if (mouseButton == 0) {
+          slot.setStack(ItemStack.EMPTY);
+        }
+        if (mouseButton == 1) {
+          slot.setSize(1);
+        }
+        this.sendStackSlot(i, slot.getStack());
+        return true;
+      }
+    }
+    return super.mouseClicked(mouseX, mouseY, mouseButton);
+  }
 
   public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
     return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
@@ -162,5 +180,4 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
-
 }

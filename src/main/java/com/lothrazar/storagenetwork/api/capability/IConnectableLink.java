@@ -75,4 +75,6 @@ public interface IConnectableLink {
   int getEmptySlots();
 
   void setPriority(int value);
+
+  void setFilter(int value, ItemStack copy);
 }
