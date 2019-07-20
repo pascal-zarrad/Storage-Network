@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.network;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -40,6 +41,15 @@ public class CableDataMessage {
     stack = whitelist;
   }
 
+  @Override public String toString() {
+    return "CableDataMessage{" +
+        "whitelist=" + whitelist +
+        ", id=" + id +
+        ", value=" + value +
+        ", stack=" + stack +
+        '}';
+  }
+
   public static class Handler {
 
     public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -64,10 +74,16 @@ public class CableDataMessage {
                 continue;
               }
               //int over max
-              con.link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
-              targetSlot++;
-              if (targetSlot >= con.link.getFilter().getSlots()) {
-                continue;
+              try {
+                con.link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
+                targetSlot++;
+                if (targetSlot >= con.link.getFilter().getSlots()) {
+                  continue;
+                }
+              }
+              catch (RuntimeException ex) {
+                //fail slot
+                StorageNetwork.log("Exception saving slot " + message);
               }
             }
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.getFilter().getStacks()),
@@ -81,10 +97,8 @@ public class CableDataMessage {
             }
             break;
           case SAVE_FITLER:
-
             FilterItemStackHandler list = con.link.getFilter();
-            con.link.setFilter(message.value, message.stack.copy() );
-
+            con.link.setFilter(message.value, message.stack.copy());
             break;
         }
         //

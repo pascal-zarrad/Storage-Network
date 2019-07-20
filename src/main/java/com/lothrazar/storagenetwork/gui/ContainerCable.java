@@ -27,6 +27,7 @@ public abstract class ContainerCable extends Container {
     this.player = playerInv.player;
     this.world = player.world;
 
+
     //player inventory
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {

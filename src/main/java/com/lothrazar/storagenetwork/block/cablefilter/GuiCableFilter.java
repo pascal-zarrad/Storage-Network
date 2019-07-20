@@ -102,7 +102,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format(this.isWhitelist ? "gui.storagenetwork.whitelist" : "gui.storagenetwork.blacklist")), mouseX - guiLeft, mouseY - guiTop);
+      renderTooltip(Lists.newArrayList(I18n.format(this.isWhitelist ? "gui.storagenetwork.gui.whitelist" : "gui.storagenetwork.gui.blacklist")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
@@ -128,7 +128,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     int rows = 2;
     int cols = 9;
     int index = 0;
-    int y = 26;
+    int y = 35;
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         ItemStack stack = containerCableLink.link.getFilter().getStackInSlot(index);
@@ -154,23 +154,29 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-
+    ItemStack mouse = minecraft.player.inventory.getItemStack();
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
         //
-        StorageNetwork.log(mouseButton + " over filter " + slot.getStack());
-        boolean oldIsEmpty = slot.getStack().isEmpty();
-//     ItemStack held =this.playerInventory.player.getActiveItemStack()
-        if (mouseButton == 0) {
-          slot.setStack(ItemStack.EMPTY);
+        StorageNetwork.log(mouseButton + " over filter " + slot.getStack() + " MOUSE + " + mouse);
+        if (slot.getStack().isEmpty() == false) {
+          //i hit non-empty slot, clear it no matter what
+          if (mouseButton == 1) {
+            slot.getStack().setCount(1);
+          }
+          else {
+            slot.setStack(ItemStack.EMPTY);
+          }
+          this.sendStackSlot(i, slot.getStack());
+          return true;
         }
-        if (mouseButton == 1) {
-          slot.getStack().setCount(1);
+        else {
+          //i hit an empty slot, save what im holding
+          slot.setStack(mouse.copy());
+          this.sendStackSlot(i, mouse.copy());
+          return true;
         }
-
-        this.sendStackSlot(i, slot.getStack());
-        return true;
       }
     }
     return super.mouseClicked(mouseX, mouseY, mouseButton);
