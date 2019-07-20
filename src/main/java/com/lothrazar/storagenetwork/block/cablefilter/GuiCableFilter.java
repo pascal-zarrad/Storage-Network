@@ -48,16 +48,17 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     x += 30;
     btnPlus = addButton(new GuiButtonRequest(x, y, "+", (p) -> {
       this.syncData(+1);
-    }));
-    x += 30;
+    }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button.png"));
+    x +=20;
     btnWhite = addButton(new GuiButtonRequest(x, y, "", (p) -> {
       this.isWhitelist = !this.isWhitelist;
       this.syncData(0);
     }));
-    x += 30;
+    x += 20;
     btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
       importFilterSlots();
-    }));
+    }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button_full.png"));
+    btnImport.setMessage("I");
   }
 
   private void importFilterSlots() {
