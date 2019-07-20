@@ -11,7 +11,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.Foods;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
@@ -151,17 +154,21 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
         //
         StorageNetwork.log(mouseButton + " over filter " + slot.getStack());
+        boolean oldIsEmpty = slot.getStack().isEmpty();
+//     ItemStack held =this.playerInventory.player.getActiveItemStack()
         if (mouseButton == 0) {
           slot.setStack(ItemStack.EMPTY);
         }
         if (mouseButton == 1) {
-          slot.setSize(1);
+          slot.getStack().setCount(1);
         }
+
         this.sendStackSlot(i, slot.getStack());
         return true;
       }

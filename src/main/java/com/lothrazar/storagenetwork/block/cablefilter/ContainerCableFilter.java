@@ -31,6 +31,8 @@ public class ContainerCableFilter extends ContainerCable {
       return;
     }
     this.link = (CapabilityConnectableLink) rawLink;
+    this.bindPlayerInvo(playerInv);
+
   }
 
   @Override

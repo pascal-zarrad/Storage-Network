@@ -15,9 +15,6 @@ public class ItemStackHandlerEx extends ItemStackHandler {
     List<ItemStack> result = new ArrayList<>();
     for (int slot = 0; slot < this.getSlots(); slot++) {
       ItemStack stack = this.getStackInSlot(slot);
-      if (stack == null || stack.isEmpty()) {
-        continue;
-      }
       result.add(stack);
     }
     return result;
