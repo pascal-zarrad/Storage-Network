@@ -1,3 +1,10 @@
 {
-    "parent" : "storagenetwork:block/cable_none_importfilter"
+    "parent" : "storagenetwork:block/cable_none_importfilter",
+    "display" : {
+    
+        "gui" : {
+            "rotation" : [30, -45, 0],
+            "scale" : [0.600, 0.600, 0.600]
+        }
+    }
 }

@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.network;
-import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;

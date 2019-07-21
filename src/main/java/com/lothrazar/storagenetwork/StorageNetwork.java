@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
-import com.lothrazar.storagenetwork.block.cableinfilter.BlockCableIOFilter;
-import com.lothrazar.storagenetwork.block.cableinfilter.TileCableIOFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.BlockCableImportFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.TileCableImportFilter;
 import com.lothrazar.storagenetwork.block.cableio.BlockCableIO;
 import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
@@ -17,8 +17,8 @@ import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
@@ -92,7 +92,7 @@ public class StorageNetwork {
       event.getRegistry().register(new BlockCable("kabel"));
       event.getRegistry().register(new BlockCableLink("storage_kabel"));
       event.getRegistry().register(new BlockCableIO("import_kabel"));
-      event.getRegistry().register(new BlockCableIOFilter("import_filter_kabel"));
+      event.getRegistry().register(new BlockCableImportFilter("import_filter_kabel"));
       event.getRegistry().register(new BlockCableFilter("filter_kabel"));
     }
 
@@ -117,7 +117,7 @@ public class StorageNetwork {
       event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.kabel).build(null).setRegistryName("kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, SsnRegistry.storagekabel).build(null).setRegistryName("storage_kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableIO::new, SsnRegistry.importkabel).build(null).setRegistryName("import_kabel"));
-      event.getRegistry().register(TileEntityType.Builder.create(TileCableIOFilter::new, SsnRegistry.importfilterkabel).build(null).setRegistryName("import_filter_kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCableImportFilter::new, SsnRegistry.importfilterkabel).build(null).setRegistryName("import_filter_kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableFilter::new, SsnRegistry.filterkabel).build(null).setRegistryName("filter_kabel"));
     }
 
@@ -132,6 +132,10 @@ public class StorageNetwork {
         BlockPos pos = data.readBlockPos();
         return new ContainerCableFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("filter_kabel"));
+      event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        return new ContainerCableImportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+      }).setRegistryName("import_filter_kabel"));
     }
   }
 

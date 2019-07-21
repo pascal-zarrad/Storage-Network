@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.config.ConfigHandler;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;

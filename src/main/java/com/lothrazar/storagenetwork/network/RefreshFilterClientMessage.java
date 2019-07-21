@@ -1,11 +1,8 @@
 package com.lothrazar.storagenetwork.network;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cablefilter.GuiCableFilter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.ArrayList;

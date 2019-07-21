@@ -1,9 +1,6 @@
-package com.lothrazar.storagenetwork.block.cablefilter;
-import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.api.capability.IConnectableItemAutoIO;
+package com.lothrazar.storagenetwork.block.cableinfilter;
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
-import com.lothrazar.storagenetwork.block.cableinfilter.TileCableImportFilter;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
+import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.gui.ContainerCable;
@@ -16,23 +13,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class ContainerCableFilter extends ContainerCable {
+public class ContainerCableImportFilter extends ContainerCable {
 
-  public final TileCableFilter tile;
+  public final TileCableImportFilter tile;
   @Nullable
   public CapabilityConnectableLink link;
-//  @Nullable
-//  public CapabilityConnectableAutoIO ioStorage;
 
 
-  public ContainerCableFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+  public ContainerCableImportFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterContainer, windowId);
-    tile = (TileCableFilter) world.getTileEntity(pos);
-
-//y not both
-//    this.ioStorage =(CapabilityConnectableAutoIO)
-//        tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
-
+    tile = (TileCableImportFilter) world.getTileEntity(pos);
 
 
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
@@ -40,7 +30,6 @@ public class ContainerCableFilter extends ContainerCable {
 //      return;
 //    }
     this.link = (CapabilityConnectableLink) rawLink;
-
     this.bindPlayerInvo(playerInv);
 
   }

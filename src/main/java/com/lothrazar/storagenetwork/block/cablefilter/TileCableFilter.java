@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork.block.cablefilter;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;

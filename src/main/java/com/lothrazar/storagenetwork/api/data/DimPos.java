@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.api.data;
 import com.google.common.base.Objects;
-import io.netty.buffer.ByteBuf;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;

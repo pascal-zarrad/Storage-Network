@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.data.inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class ItemStackHandlerEx extends ItemStackHandler {
 

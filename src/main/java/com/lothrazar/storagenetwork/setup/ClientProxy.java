@@ -1,7 +1,8 @@
 package com.lothrazar.storagenetwork.setup;
 import com.lothrazar.storagenetwork.block.cablefilter.GuiCableFilter;
-import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.block.cableinfilter.GuiCableImportFilter;
 import com.lothrazar.storagenetwork.block.request.GuiRequest;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +14,7 @@ public class ClientProxy implements IProxy {
   public void init() {
     ScreenManager.registerFactory(SsnRegistry.requestcontainer, GuiRequest::new);
     ScreenManager.registerFactory(SsnRegistry.filterContainer, GuiCableFilter::new);
+    ScreenManager.registerFactory(SsnRegistry.filterimportContainer, GuiCableImportFilter::new);
   }
 
   @Override

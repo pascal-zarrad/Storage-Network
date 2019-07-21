@@ -1,6 +1,4 @@
 package com.lothrazar.storagenetwork.config;
-import java.io.File;
-
 public class ConfigHandler {
 
   // TODO: CONFIG

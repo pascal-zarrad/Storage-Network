@@ -1,8 +1,6 @@
 package com.lothrazar.storagenetwork.api.capability;
-
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 

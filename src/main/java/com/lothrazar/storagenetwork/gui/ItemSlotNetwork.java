@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.gui;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;

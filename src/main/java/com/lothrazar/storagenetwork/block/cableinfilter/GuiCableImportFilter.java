@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cablefilter;
+package com.lothrazar.storagenetwork.block.cableinfilter;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
@@ -17,11 +17,11 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implements IGuiPrivate {
+public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
-  //  protected GuiCableButton btnInputOutputStorage;
-  ContainerCableFilter containerCableLink;
+
+  ContainerCableImportFilter containerCableLink;
   private GuiButtonRequest btnMinus;
   private GuiButtonRequest btnPlus;
   private GuiButtonRequest btnWhite;
@@ -29,7 +29,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   private boolean isWhitelist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
-  public GuiCableFilter(ContainerCableFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
+  public GuiCableImportFilter(ContainerCableImportFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
     super(containerCableFilter, inv, name);
     this.containerCableLink = containerCableFilter;
   }
@@ -37,6 +37,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   @Override
   public void init() {
     super.init();
+    this.isWhitelist = containerCableLink.link.getFilter().isWhitelist;
     int x = guiLeft + 7, y = guiTop + 8;
     btnMinus = addButton(new GuiButtonRequest(x, y, "-", (p) -> {
       this.syncData(-1);
@@ -67,7 +68,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   private void syncData(int priority) {
     //    containerCableLink.link.setPriority(priority);
-//    containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
+    containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
     PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
   }
@@ -128,7 +129,6 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     int y = 35;
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
-        //
         ItemStack stack = containerCableLink.link.getFilter().getStackInSlot(index);
         int x = 8 + col * SLOT_SIZE;
         itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));

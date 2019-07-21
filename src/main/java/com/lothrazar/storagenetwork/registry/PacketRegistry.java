@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork.registry;
-import com.lothrazar.storagenetwork.network.StackResponseClientMessage;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.network.CableFilterMessage;
@@ -11,6 +10,7 @@ import com.lothrazar.storagenetwork.network.RefreshFilterClientMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
+import com.lothrazar.storagenetwork.network.StackResponseClientMessage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;

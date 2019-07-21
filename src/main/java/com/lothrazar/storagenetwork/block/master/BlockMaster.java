@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block.master;
 import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
+import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
