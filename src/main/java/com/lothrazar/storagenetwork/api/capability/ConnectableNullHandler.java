@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.compat;
+package com.lothrazar.storagenetwork.api.capability;
 
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;

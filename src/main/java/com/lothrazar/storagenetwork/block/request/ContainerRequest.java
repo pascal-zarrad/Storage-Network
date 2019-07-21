@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.data.ItemStackMatcher;
+import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
 import com.lothrazar.storagenetwork.gui.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
@@ -8,7 +8,7 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;

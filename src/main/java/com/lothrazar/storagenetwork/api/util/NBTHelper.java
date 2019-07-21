@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.util;
+package com.lothrazar.storagenetwork.api.util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 

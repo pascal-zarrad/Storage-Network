@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.util.inventory;
+package com.lothrazar.storagenetwork.data.inventory;
 import com.lothrazar.storagenetwork.api.data.EnumUpgradeType;
 import net.minecraft.item.ItemStack;
 

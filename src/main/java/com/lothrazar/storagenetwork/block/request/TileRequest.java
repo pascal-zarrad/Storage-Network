@@ -1,5 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
-import com.lothrazar.storagenetwork.data.EnumSortType;
+import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import net.minecraft.entity.player.PlayerEntity;

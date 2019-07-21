@@ -1,11 +1,9 @@
 package com.lothrazar.storagenetwork.gui;
-import com.lothrazar.storagenetwork.block.cablefilter.GuiCableFilter;
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.lothrazar.storagenetwork.util.UtilInventory;
+import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 

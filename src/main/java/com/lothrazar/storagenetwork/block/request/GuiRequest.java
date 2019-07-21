@@ -1,5 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
-import com.lothrazar.storagenetwork.data.EnumSortType;
+import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.gui.GuiContainerStorageInventory;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.math.BlockPos;

@@ -1,5 +1,9 @@
-package com.lothrazar.storagenetwork.util;
+package com.lothrazar.storagenetwork.api.util;
 import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.api.capability.IConnectable;
+import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
+import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
+import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
@@ -11,6 +15,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +36,24 @@ public class UtilTileEntity {
     //      String modName = modEntry.getValue().getName();
     //      modNamesForIds.put(lowercaseId, modName);
     //    }
+  }
+
+  /**
+   * This can only be called on the server side! It returns the TileMaster tile entity for the given connectable.
+   *
+   * @param connectable
+   * @return
+   */
+  @Nullable
+  public static TileMaster getTileMasterForConnectable(@Nonnull IConnectable connectable) {
+    if (connectable == null || connectable.getMasterPos() == null) {
+      return null;
+    }
+    return connectable.getMasterPos().getTileEntity(TileMaster.class);
+  }
+
+  public static IItemStackMatcher createItemStackMatcher(ItemStack stack, boolean ore, boolean nbt) {
+    return new ItemStackMatcher(stack,  ore, nbt);
   }
 
   @Nonnull

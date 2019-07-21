@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.network;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import com.lothrazar.storagenetwork.util.inventory.FilterItemStackHandler;
+import com.lothrazar.storagenetwork.data.inventory.FilterItemStackHandler;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -59,7 +59,7 @@ public class CableDataMessage {
         if (con == null || con.link == null) {
           return;
         }
-        TileMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.link.connectable);
+        TileMaster master = UtilTileEntity.getTileMasterForConnectable(con.link.connectable);
         //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         CableMessageType type = CableMessageType.values()[message.id];
         switch (type) {

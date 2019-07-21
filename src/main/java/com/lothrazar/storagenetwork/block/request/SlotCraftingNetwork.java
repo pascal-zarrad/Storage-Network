@@ -1,7 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
 import net.minecraft.entity.player.PlayerEntity;

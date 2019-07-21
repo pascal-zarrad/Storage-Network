@@ -1,6 +1,6 @@
-package com.lothrazar.storagenetwork.util.inventory;
+package com.lothrazar.storagenetwork.data.inventory;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
-import com.lothrazar.storagenetwork.data.ItemStackMatcher;
+import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 

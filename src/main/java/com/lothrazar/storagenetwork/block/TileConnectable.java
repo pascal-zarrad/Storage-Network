@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
@@ -77,7 +77,7 @@ public class TileConnectable extends TileEntity {
     super.onChunkUnloaded();
     if (ConfigHandler.reloadNetworkWhenUnloadChunk && connectable != null && connectable.getMasterPos() != null) {
       try {
-        TileMaster maybeMaster = StorageNetworkHelpers.getTileMasterForConnectable(connectable);
+        TileMaster maybeMaster = UtilTileEntity.getTileMasterForConnectable(connectable);
         if (maybeMaster != null) {
           maybeMaster.refreshNetwork();
         }

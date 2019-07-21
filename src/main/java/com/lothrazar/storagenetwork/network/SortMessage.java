@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.network;
-import com.lothrazar.storagenetwork.data.EnumSortType;
+import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
-import com.lothrazar.storagenetwork.util.NBTHelper;
+import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;

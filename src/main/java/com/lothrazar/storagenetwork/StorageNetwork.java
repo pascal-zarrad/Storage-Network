@@ -1,5 +1,5 @@
 package com.lothrazar.storagenetwork;
-import com.lothrazar.storagenetwork.apiimpl.StorageNetworkHelpers;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
@@ -48,7 +48,7 @@ public class StorageNetwork {
   public static final String MODID = "storagenetwork";
   public static final Logger LOGGER = LogManager.getLogger();
   //  private static final PluginRegistry pluginRegistry = new PluginRegistry();
-  public static StorageNetworkHelpers helpers = new StorageNetworkHelpers();
+  //  public static UtilTileEntity helpers = new UtilTileEntity();
   static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {
@@ -64,10 +64,11 @@ public class StorageNetwork {
     proxy.init();
   }
 
-    @SubscribeEvent
-    public static void onServerStarting(FMLServerStartingEvent event) {
-      // do something when the server starts
-    }
+  @SubscribeEvent
+  public static void onServerStarting(FMLServerStartingEvent event) {
+    // do something when the server starts
+  }
+
   static boolean logspam = true;
 
   public static void log(String s) {
