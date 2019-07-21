@@ -17,29 +17,18 @@ import javax.annotation.Nullable;
 public class ContainerCableImportFilter extends ContainerCable {
 
   public final TileCableImportFilter tile;
-  @Nullable
-  public CapabilityConnectableLink link;
+
 
   @Nullable
-  public CapabilityConnectableAutoIO ioStorage;
+  public CapabilityConnectableAutoIO link;
 
   public ContainerCableImportFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterimportContainer, windowId);
     tile = (TileCableImportFilter) world.getTileEntity(pos);
 
-    //y not both
-    this.ioStorage =(CapabilityConnectableAutoIO)
+    this.link =(CapabilityConnectableAutoIO)
         tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
 
-
-
-//is null
-    //io should hve its own filter
-    IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
-//    if (!(rawLink instanceof CapabilityConnectableLink)) {
-//      return;
-//    }
-    this.link = (CapabilityConnectableLink) rawLink;
     this.bindPlayerInvo(playerInv);
 
   }

@@ -44,7 +44,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     connectable = new CapabilityConnectable();
     this.direction = direction;
   }
+  public FilterItemStackHandler getFilter() {
+    return filters;
+  }
 
+  public void setFilter(int value, ItemStack stack){
+    filters.setStackInSlot(value,stack);
+
+    filters.getStacks().set(value,stack);
+  }
   public CapabilityConnectableAutoIO(TileEntity tile, EnumStorageDirection direction) {
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     this.direction = direction;
