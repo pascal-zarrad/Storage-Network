@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.cableinfilter;
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
+import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.gui.ContainerCable;
@@ -19,10 +20,18 @@ public class ContainerCableImportFilter extends ContainerCable {
   @Nullable
   public CapabilityConnectableLink link;
 
+  @Nullable
+  public CapabilityConnectableAutoIO ioStorage;
 
   public ContainerCableImportFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
-    super(SsnRegistry.filterContainer, windowId);
+    super(SsnRegistry.filterimportContainer, windowId);
     tile = (TileCableImportFilter) world.getTileEntity(pos);
+
+    //y not both
+    this.ioStorage =(CapabilityConnectableAutoIO)
+        tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
+
+
 
 
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);

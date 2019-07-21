@@ -21,24 +21,16 @@ public class ContainerCableFilter extends ContainerCable {
   public final TileCableFilter tile;
   @Nullable
   public CapabilityConnectableLink link;
-//  @Nullable
-//  public CapabilityConnectableAutoIO ioStorage;
 
 
   public ContainerCableFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterContainer, windowId);
     tile = (TileCableFilter) world.getTileEntity(pos);
 
-//y not both
-//    this.ioStorage =(CapabilityConnectableAutoIO)
-//        tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
-
-
-
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
-//    if (!(rawLink instanceof CapabilityConnectableLink)) {
-//      return;
-//    }
+    if (!(rawLink instanceof CapabilityConnectableLink)) {
+      return;
+    }
     this.link = (CapabilityConnectableLink) rawLink;
 
     this.bindPlayerInvo(playerInv);

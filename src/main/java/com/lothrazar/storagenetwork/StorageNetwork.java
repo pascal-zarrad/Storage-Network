@@ -88,7 +88,6 @@ public class StorageNetwork {
     public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
       event.getRegistry().register(new BlockMaster());
       event.getRegistry().register(new BlockRequest());
-      //event.getRegistry().register(new BlockInventory());
       event.getRegistry().register(new BlockCable("kabel"));
       event.getRegistry().register(new BlockCableLink("storage_kabel"));
       event.getRegistry().register(new BlockCableIO("import_kabel"));
@@ -101,7 +100,6 @@ public class StorageNetwork {
       Item.Properties properties = new Item.Properties().group(SsnRegistry.itemGroup);
       event.getRegistry().register(new BlockItem(SsnRegistry.master, properties).setRegistryName("master"));
       event.getRegistry().register(new BlockItem(SsnRegistry.request, properties).setRegistryName("request"));
-      //      event.getRegistry().register(new BlockItem(SsnRegistry.inventory, properties).setRegistryName("inventory"));
       event.getRegistry().register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.storagekabel, properties).setRegistryName("storage_kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.importkabel, properties).setRegistryName("import_kabel"));
@@ -113,7 +111,6 @@ public class StorageNetwork {
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
       event.getRegistry().register(TileEntityType.Builder.create(TileMaster::new, SsnRegistry.master).build(null).setRegistryName("master"));
       event.getRegistry().register(TileEntityType.Builder.create(TileRequest::new, SsnRegistry.request).build(null).setRegistryName("request"));
-      //event.getRegistry().register(TileEntityType.Builder.create(TileInventory::new, SsnRegistry.inventory).build(null).setRegistryName("inventory"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.kabel).build(null).setRegistryName("kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, SsnRegistry.storagekabel).build(null).setRegistryName("storage_kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableIO::new, SsnRegistry.importkabel).build(null).setRegistryName("import_kabel"));
