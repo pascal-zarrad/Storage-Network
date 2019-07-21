@@ -4,6 +4,7 @@
     "block.storagenetwork.storage_kabel": "Link Cable",
     "block.storagenetwork.export_kabel": "Export Cable",
     "block.storagenetwork.import_kabel": "Import Cable",
+    "block.storagenetwork.import_filter_kabel": "Filtered Import Cable",
     "block.storagenetwork.filter_kabel": "Filtered Link Cable",
     "block.storagenetwork.process_kabel": "Processing Cable",
 

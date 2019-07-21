@@ -4,6 +4,7 @@ import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.TileCableIOFilter;
 import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
@@ -61,5 +62,10 @@ public class SsnRegistry {
   public static TileEntityType<TileCableFilter> filterkabeltile;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
   public static ContainerType<ContainerCableFilter> filterContainer;
+  //
+  @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
+  public static Block importfilterkabel;
+  @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
+  public static TileEntityType<TileCableIOFilter> filterimportkabeltile;
   //
 }

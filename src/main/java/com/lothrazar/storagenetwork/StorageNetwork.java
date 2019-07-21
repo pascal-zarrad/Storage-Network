@@ -5,6 +5,8 @@ import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.BlockCableIOFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.TileCableIOFilter;
 import com.lothrazar.storagenetwork.block.cableio.BlockCableIO;
 import com.lothrazar.storagenetwork.block.cableio.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
@@ -90,6 +92,7 @@ public class StorageNetwork {
       event.getRegistry().register(new BlockCable("kabel"));
       event.getRegistry().register(new BlockCableLink("storage_kabel"));
       event.getRegistry().register(new BlockCableIO("import_kabel"));
+      event.getRegistry().register(new BlockCableIOFilter("import_filter_kabel"));
       event.getRegistry().register(new BlockCableFilter("filter_kabel"));
     }
 
@@ -102,6 +105,7 @@ public class StorageNetwork {
       event.getRegistry().register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.storagekabel, properties).setRegistryName("storage_kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.importkabel, properties).setRegistryName("import_kabel"));
+      event.getRegistry().register(new BlockItem(SsnRegistry.importfilterkabel, properties).setRegistryName("import_filter_kabel"));
       event.getRegistry().register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
     }
 
@@ -113,6 +117,7 @@ public class StorageNetwork {
       event.getRegistry().register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.kabel).build(null).setRegistryName("kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableLink::new, SsnRegistry.storagekabel).build(null).setRegistryName("storage_kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableIO::new, SsnRegistry.importkabel).build(null).setRegistryName("import_kabel"));
+      event.getRegistry().register(TileEntityType.Builder.create(TileCableIOFilter::new, SsnRegistry.importfilterkabel).build(null).setRegistryName("import_filter_kabel"));
       event.getRegistry().register(TileEntityType.Builder.create(TileCableFilter::new, SsnRegistry.filterkabel).build(null).setRegistryName("filter_kabel"));
     }
 
