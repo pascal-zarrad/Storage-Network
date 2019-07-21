@@ -33,7 +33,8 @@ public class ContainerCableImportFilter extends ContainerCable {
 
 
 
-
+//is null
+    //io should hve its own filter
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
 //    if (!(rawLink instanceof CapabilityConnectableLink)) {
 //      return;
