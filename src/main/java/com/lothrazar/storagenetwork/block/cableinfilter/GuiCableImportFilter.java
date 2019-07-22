@@ -51,11 +51,11 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
       this.isWhitelist = !this.isWhitelist;
       this.syncData(0);
     }));
-    x += 20;
-    btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
-      importFilterSlots();
-    }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button_full.png"));
-    btnImport.setMessage("I");
+//    x += 20;
+//    btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
+//      importFilterSlots();
+//    }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button_full.png"));
+//    btnImport.setMessage("I");
   }
 
   private void importFilterSlots() {

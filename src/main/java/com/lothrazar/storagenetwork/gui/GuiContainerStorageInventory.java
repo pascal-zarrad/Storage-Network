@@ -85,25 +85,29 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       searchBar.setText(JeiHooks.getFilterText());
     }
-    directionBtn = new GuiButtonRequest(guiLeft + 7, searchBar.y - 3, "", (p) -> {
+    int y = searchBar.y - 3;
+    directionBtn = new GuiButtonRequest(guiLeft + 7, y, "", (p) -> {
       this.setDownwards(!this.getDownwards());
       this.syncData();
     });
+    directionBtn.setHeight(16);
     addButton(directionBtn);
-    sortBtn = new GuiButtonRequest(guiLeft + 21, searchBar.y - 3, "", (p) -> {
+    sortBtn = new GuiButtonRequest(guiLeft + 21, y, "", (p) -> {
       this.setSort(this.getSort().next());
       this.syncData();
     });
+    sortBtn.setHeight(16);
     addButton(sortBtn);
-    jeiBtn = new GuiButtonRequest(guiLeft + 35, searchBar.y - 3, "", (p) -> {
+    jeiBtn = new GuiButtonRequest(guiLeft + 35, y, "", (p) -> {
       StorageNetwork.LOGGER.info("TODOjeiBtn ");
     });
     if (JeiSettings.isJeiLoaded()) {
       addButton(jeiBtn);
     }
-    clearTextBtn = new GuiButtonRequest(guiLeft + 64, searchBar.y - 3, "X", (p) -> {
+    clearTextBtn = new GuiButtonRequest(guiLeft + 64, y, "X", (p) -> {
       this.clearSearch();
     });
+    clearTextBtn.setHeight(16);
     addButton(clearTextBtn);
   }
 
@@ -375,7 +379,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   public boolean isScrollable(double x, double y) {
     return isPointInRegion(0, 0,
-        this.width-8, 135,
+        this.width - 8, 135,
         x, y);
   }
 
@@ -396,8 +400,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       }
       if (snd) {
         //works but idk
-//        minecraft.player.world.playSound(minecraft.player, minecraft.player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS,
-//            0.002F, 0.5F);
+        //        minecraft.player.world.playSound(minecraft.player, minecraft.player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS,
+        //            0.002F, 0.5F);
       }
     }
     return true;
