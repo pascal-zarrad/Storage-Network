@@ -57,7 +57,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     }
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       for (ItemStack stack : storage.getStoredStacks()) {
-        if (stack == null || stack.isEmpty() ) {
+        if (stack == null || stack.isEmpty()) {
           continue;
         }
         addOrMergeIntoList(stacks, stack.copy());
@@ -317,6 +317,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         int amtToRequest = storage.getTransferRate();
         if (stockMode) {
           try {
+            StorageNetwork.log("updateExports: attempt " + matcher.getStack());
             TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
             IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
             //request with false to see how many even exist in there.  
@@ -324,16 +325,19 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             if (stillNeeds == 0) {
               continue;
             }
+            StorageNetwork.log("updateExports: amtToRequest " + amtToRequest);
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
             StorageNetwork.LOGGER.error("error thrown ", e);
           }
         }
-        ItemStack requestedStack = request(matcher, amtToRequest, true);
+        ItemStack requestedStack = this.request(matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
+        //  StorageNetwork.log("updateExports: requestedStack is empty so nothing pushed " + matcher);
           continue;
         }
+        StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
         // The stack is available in the network, let's simulate inserting it into the storage
         ItemStack insertedSim = storage.insertStack(requestedStack.copy(), true);
         // Determine the amount of items moved in the stack
@@ -346,7 +350,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
           targetStack.setCount(movedItems);
         }
         // Alright, some items got moved in the simulation. Let's do it for real this time.
-        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack,  false, true), targetStack.getCount(), false);
+        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, false, true), targetStack.getCount(), false);
         if (realExtractedStack.isEmpty()) {
           continue;
         }
@@ -370,7 +374,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         continue;
       }
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
-      usedMatcher = new ItemStackMatcher(simExtract,  false, true);
+      usedMatcher = new ItemStackMatcher(simExtract, false, true);
       alreadyTransferred += simExtract.getCount();
       if (alreadyTransferred >= size) {
         break;

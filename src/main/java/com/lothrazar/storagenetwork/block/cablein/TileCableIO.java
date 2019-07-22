@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableio;
+package com.lothrazar.storagenetwork.block.cablein;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -21,6 +21,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   public TileCableIO() {
     super(SsnRegistry.importkabeltile);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
+
   }
 
 

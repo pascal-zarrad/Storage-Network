@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableio;
+package com.lothrazar.storagenetwork.block.cablein;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
