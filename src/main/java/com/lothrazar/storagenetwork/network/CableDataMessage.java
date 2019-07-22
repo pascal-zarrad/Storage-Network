@@ -2,7 +2,10 @@ package com.lothrazar.storagenetwork.network;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
+import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
+import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.data.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -55,29 +58,42 @@ public class CableDataMessage {
     public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
       ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
-        ContainerCableFilter con = (ContainerCableFilter) player.openContainer;
-        if (con == null || con.link == null) {
+
+        CapabilityConnectableLink link=null;
+        ContainerCableImportFilter y; // also must import
+        if(player.openContainer instanceof ContainerCableImportFilter){
+          //then 
+          ContainerCableImportFilter ctr=(ContainerCableImportFilter)player.openContainer;
+          CapabilityConnectableAutoIO link2 = ctr.link;
+          ///
+          // //TODO: INHERITACNE FROM
+          //  link=link2;//
+
+        }
+        ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
+        if (container == null || container.link == null) {
           return;
         }
-        TileMaster master = UtilTileEntity.getTileMasterForConnectable(con.link.connectable);
+          link = container.link;
+
+        TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
         //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         CableMessageType type = CableMessageType.values()[message.id];
         switch (type) {
           case IMPORT_FILTER:
             //TODO: Fix this not auto sync to client
-            //TODO: Fix this not auto sync to client
-            con.link.getFilter().clear();
+            link.getFilter().clear();
             int targetSlot = 0;
-            for (ItemStack filterSuggestion : con.link.getStoredStacks()) {
+            for (ItemStack filterSuggestion : link.getStoredStacks()) {
               // Ignore stacks that are already filtered
-              if (con.link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
+              if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
                 continue;
               }
               //int over max
               try {
-                con.link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
+                link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
                 targetSlot++;
-                if (targetSlot >= con.link.getFilter().getSlots()) {
+                if (targetSlot >= link.getFilter().getSlots()) {
                   continue;
                 }
               }
@@ -86,23 +102,23 @@ public class CableDataMessage {
                 StorageNetwork.log("Exception saving slot " + message);
               }
             }
-            PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.getFilter().getStacks()),
+            PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
                 player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
             break;
           case SYNC_DATA:
-            con.link.setPriority(con.link.getPriority() + message.value);
-            con.link.getFilter().setIsWhitelist(message.whitelist);
+            link.setPriority(link.getPriority() + message.value);
+            link.getFilter().setIsWhitelist(message.whitelist);
             if (master != null) {
               master.clearCache();
             }
             break;
           case SAVE_FITLER:
-            FilterItemStackHandler list = con.link.getFilter();
-            con.link.setFilter(message.value, message.stack.copy());
+            //            FilterItemStackHandler list = con.link.getFilter();
+            link.setFilter(message.value, message.stack.copy());
             break;
         }
         //
-        player.connection.sendPacket(con.tile.getUpdatePacket());
+        player.connection.sendPacket(container.tile.getUpdatePacket());
         //
       });
     }
