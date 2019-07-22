@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.registry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.network.CableFilterMessage;
+import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.network.CableLimitMessage;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.InsertMessage;
@@ -32,6 +33,7 @@ public class PacketRegistry {
     //https://gist.github.com/williewillus/353c872bcf1a6ace9921189f6100d09a
     int id = 0;
     INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
+    INSTANCE.registerMessage(id++, CableIOMessage.class, CableIOMessage::encode, CableIOMessage::decode, CableIOMessage.Handler::handle);
     INSTANCE.registerMessage(id++, StackRefreshClientMessage.class, StackRefreshClientMessage::encode, StackRefreshClientMessage::decode, StackRefreshClientMessage::handle);
     INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
     INSTANCE.registerMessage(id++, RequestMessage.class, RequestMessage::encode, RequestMessage::decode, RequestMessage::handle);
@@ -41,9 +43,7 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, CableFilterMessage.class, CableFilterMessage::encode, CableFilterMessage::decode, CableFilterMessage::handle);
     INSTANCE.registerMessage(id++, CableLimitMessage.class, CableLimitMessage::encode, CableLimitMessage::decode, CableLimitMessage::handle);
     INSTANCE.registerMessage(id++, StackResponseClientMessage.class, StackResponseClientMessage::encode, StackResponseClientMessage::decode, StackResponseClientMessage::handle);
-    //    INSTANCE.registerMessage(CableRefreshClientMessage.class, CableRefreshClientMessage.class, id++, Dist.CLIENT);
-    //    INSTANCE.registerMessage(RequestCableMessage.class, RequestCableMessage.class, id++, Dist.DEDICATED_SERVER);
-    //    INSTANCE.registerMessage(CableControlMessage.class, CableControlMessage.class, id++, Dist.DEDICATED_SERVER);
+
     INSTANCE.registerMessage(id++, RefreshFilterClientMessage.class, RefreshFilterClientMessage::encode, RefreshFilterClientMessage::decode, RefreshFilterClientMessage::handle);
   }
 }

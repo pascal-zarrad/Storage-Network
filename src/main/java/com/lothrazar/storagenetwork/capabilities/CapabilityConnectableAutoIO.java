@@ -30,7 +30,7 @@ import java.util.concurrent.Callable;
 
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT>, IConnectableItemAutoIO {
 
-  private final IConnectable connectable;
+  public final IConnectable connectable;
   public EnumStorageDirection direction;
   private final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
   private final FilterItemStackHandler filters = new FilterItemStackHandler();
@@ -48,6 +48,36 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return filters;
   }
 
+//TODO: shrae with ConnectableLink  @Override
+  public List<ItemStack> getStoredStacks() {
+    if (inventoryFace == null) {
+      return Collections.EMPTY_LIST;
+    }
+    DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
+    // Test whether the connected block has the IItemHandler capability
+    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    if (itemHandler == null) {
+      return Collections.emptyList();
+    }
+    // If it does, iterate its stacks, filter them and add them to the result list
+    List<ItemStack> result = new ArrayList<>();
+    for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+      ItemStack stack = itemHandler.getStackInSlot(slot);
+      if (stack == null || stack.isEmpty()) {
+        continue;
+      }
+      if (filters.isStackFiltered(stack)) {
+        continue;
+      }
+      result.add(stack.copy());
+    }
+    return result;
+  }
+
+  //TODO: shrae with ConnectableLink
+   public void setPriority(int value) {
+    this.priority = value;
+  }
   public void setFilter(int value, ItemStack stack){
     filters.setStackInSlot(value,stack);
 

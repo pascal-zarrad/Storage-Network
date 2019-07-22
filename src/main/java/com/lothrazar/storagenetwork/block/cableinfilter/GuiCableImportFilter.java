@@ -5,7 +5,7 @@ import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
 import com.lothrazar.storagenetwork.data.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.IGuiPrivate;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
-import com.lothrazar.storagenetwork.network.CableDataMessage;
+import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
@@ -59,17 +59,17 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   }
 
   private void importFilterSlots() {
-    PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.IMPORT_FILTER.ordinal()));
+    PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.IMPORT_FILTER.ordinal()));
   }
 
   private void sendStackSlot(int value, ItemStack stack) {
-    PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SAVE_FITLER.ordinal(), value, stack));
+    PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SAVE_FITLER.ordinal(), value, stack));
   }
 
   private void syncData(int priority) {
     //    containerCableLink.link.setPriority(priority);
     containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
-    PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SYNC_DATA.ordinal(),
+    PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
   }
 
