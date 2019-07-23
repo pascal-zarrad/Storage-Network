@@ -1,6 +1,8 @@
 package com.lothrazar.storagenetwork.network;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
+import com.lothrazar.storagenetwork.block.TileCableWithFacing;
+import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -58,14 +60,18 @@ public class CableIOMessage {
       ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
         CapabilityConnectableAutoIO link = null;
-//        if (player.openContainer instanceof ContainerCableImportFilter) {
-//          //then
+        TileCableWithFacing tile = null;
+        //super super HACK TODO: this is hacky
+        if (player.openContainer instanceof ContainerCableExportFilter) {
+          ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.openContainer;
+          link = ctr.link;
+          tile = ctr.tile;
+        }
+        if (player.openContainer instanceof ContainerCableImportFilter) {
           ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
           link = ctr.link;
-          ///
-          // //TODO: INHERITACNE FROM
-          //  link=link2;//
-//        }
+          tile = ctr.tile;
+        }
         TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
         //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         CableMessageType type = CableMessageType.values()[message.id];
@@ -108,7 +114,7 @@ public class CableIOMessage {
             break;
         }
         //
-        player.connection.sendPacket(ctr.tile.getUpdatePacket());
+        player.connection.sendPacket(tile.getUpdatePacket());
         //
       });
     }

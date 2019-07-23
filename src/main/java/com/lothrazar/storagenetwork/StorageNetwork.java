@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
+import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
@@ -11,8 +12,8 @@ import com.lothrazar.storagenetwork.block.cablein.BlockCableIO;
 import com.lothrazar.storagenetwork.block.cablein.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
-import com.lothrazar.storagenetwork.block.cableoutput.BlockCableExport;
-import com.lothrazar.storagenetwork.block.cableoutput.TileCableExport;
+import com.lothrazar.storagenetwork.block.cable.export.BlockCableExport;
+import com.lothrazar.storagenetwork.block.cable.export.TileCableExport;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
@@ -138,6 +139,10 @@ public class StorageNetwork {
         BlockPos pos = data.readBlockPos();
         return new ContainerCableImportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("import_filter_kabel"));
+      event.getRegistry().register(IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        return new ContainerCableExportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+      }).setRegistryName("export_kabel"));
     }
   }
 

@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.registry;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
+import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
@@ -75,5 +76,7 @@ public class SsnRegistry {
   public static Block exportkabel;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static TileEntityType<TileCableImportFilter> exportkabeltile;
+  @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
+  public static ContainerType<ContainerCableExportFilter> filterexportContainer;
 
 }

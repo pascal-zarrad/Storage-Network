@@ -332,7 +332,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             StorageNetwork.LOGGER.error("error thrown ", e);
           }
         }
-        StorageNetwork.log("updateExports: this.request starting now " + matcher.getStack());//air
         ItemStack requestedStack = this.request(matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
         //  StorageNetwork.log("updateExports: requestedStack is empty so nothing pushed " + matcher);

@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableinfilter;
+package com.lothrazar.storagenetwork.block.cable.export;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
@@ -17,11 +17,11 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
+public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
 
-  ContainerCableImportFilter containerCableLink;
+  ContainerCableExportFilter containerCableLink;
   private GuiButtonRequest btnMinus;
   private GuiButtonRequest btnPlus;
   private GuiButtonRequest btnWhite;
@@ -29,7 +29,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   private boolean isWhitelist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
-  public GuiCableImportFilter(ContainerCableImportFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
+  public GuiCableExportFilter (ContainerCableExportFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
     super(containerCableFilter, inv, name);
     this.containerCableLink = containerCableFilter;
   }
