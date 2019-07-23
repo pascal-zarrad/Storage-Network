@@ -317,7 +317,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         int amtToRequest = storage.getTransferRate();
         if (stockMode) {
           try {
-            StorageNetwork.log("updateExports: attempt " + matcher.getStack());
+    //       StorageNetwork.log("updateExports: attempt " + matcher.getStack());
             TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
             IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
             //request with false to see how many even exist in there.  
@@ -325,19 +325,24 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             if (stillNeeds == 0) {
               continue;
             }
-            StorageNetwork.log("updateExports: amtToRequest " + amtToRequest);
+          //  StorageNetwork.log("updateExports: amtToRequest " + amtToRequest);
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
             StorageNetwork.LOGGER.error("error thrown ", e);
           }
+        }if(matcher.getStack().isEmpty() || amtToRequest == 0){
+
+        //  StorageNetwork.log("updateExports: i have empty " +amtToRequest) ;
+          continue;
         }
+
         ItemStack requestedStack = this.request(matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
         //  StorageNetwork.log("updateExports: requestedStack is empty so nothing pushed " + matcher);
           continue;
         }
-        StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
+   //     StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
         // The stack is available in the network, let's simulate inserting it into the storage
         ItemStack insertedSim = storage.insertStack(requestedStack.copy(), true);
         // Determine the amount of items moved in the stack
