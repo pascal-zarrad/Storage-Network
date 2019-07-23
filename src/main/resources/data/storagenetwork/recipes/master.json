@@ -3,19 +3,19 @@
   "pattern": [
     "dkd",
     "kck",
-	"dkd"
+    "dkd"
   ],
   "key": {
     "k": {
       "item": "storagenetwork:kabel"
     },
-    "d":  {
-	  "item": "minecraft:quartz_block",
-	  "data":0
-	},
-    "c":  {
-	  "item": "minecraft:diamond"
-	}
+    "d": {
+      "item": "minecraft:quartz_block",
+      "data": 0
+    },
+    "c": {
+      "item": "minecraft:diamond"
+    }
   },
   "result": {
     "item": "storagenetwork:master"

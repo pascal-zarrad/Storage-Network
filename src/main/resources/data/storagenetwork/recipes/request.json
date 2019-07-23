@@ -3,19 +3,19 @@
   "pattern": [
     "dkd",
     "kck",
-	"dkd"
+    "dkd"
   ],
   "key": {
     "k": {
       "item": "storagenetwork:kabel"
     },
-    "d":  {
-	  "item": "minecraft:gold_ingot",
-	  "data":0
-	},
-    "c":  {
-	  "item": "minecraft:crafting_table"
-	}
+    "d": {
+      "item": "minecraft:gold_ingot",
+      "data": 0
+    },
+    "c": {
+      "item": "minecraft:crafting_table"
+    }
   },
   "result": {
     "item": "storagenetwork:request"

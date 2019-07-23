@@ -3,18 +3,18 @@
   "pattern": [
     " k ",
     "kpk",
-	" k "
+    " k "
   ],
   "key": {
     "k": {
       "item": "storagenetwork:kabel"
     },
-    "p":  {
-	  "item": "minecraft:chest"
-	}
+    "p": {
+      "item": "minecraft:chest"
+    }
   },
   "result": {
     "item": "storagenetwork:storage_kabel",
-	 "count": 4
+    "count": 4
   }
 }
