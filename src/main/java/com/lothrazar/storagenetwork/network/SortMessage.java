@@ -8,7 +8,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -30,7 +29,6 @@ public class SortMessage {
   public static void handle(SortMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      ServerWorld world = player.getServerWorld();
       if (player.openContainer instanceof ContainerNetworkBase) {
         //          if (((ContainerNetworkBase) player.openContainer).isRequest()) {
             TileEntity tileEntity = player.world.getTileEntity(message.pos);

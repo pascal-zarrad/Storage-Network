@@ -2,7 +2,6 @@ package com.lothrazar.storagenetwork.network;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.world.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -23,7 +22,6 @@ public class CableLimitMessage {
   public static void handle(CableLimitMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      ServerWorld world = player.getServerWorld();
       //      if (player.openContainer instanceof ContainerCableIO) {
       //        ContainerCableIO con = (ContainerCableIO) player.openContainer;
       //        if (con == null || con.autoIO == null) {

@@ -9,8 +9,10 @@
     "1.12.1-recommended": "1.1.1",
     "1.12.2-latest": "1.7.8",
     "1.12.2-recommended": "1.7.8",
-    "1.14.3-latest": "0.0.5",
-    "1.14.3-recommended": "0.0.5"
+    "1.14.3-latest": "0.0.7",
+    "1.14.3-recommended": "0.0.7",
+    "1.14.4-latest": "0.0.8",
+    "1.14.4-recommended": "0.0.8"
   },
   "1.11.2": {
     "1.0.0": "First Release",
@@ -89,5 +91,8 @@
     "0.0.5": "Fix tooltip.  Cable gui texture.  In Filter Storage cable gui slots updated you can add item or remove item from filter .",
     "0.0.6": "Refactored packages.  Filtered Import Cable.  Fix item models.  Set to versionRange='[1.14,1.15)' for testing",
     "0.0.7": "Export Cables added.  Fixed some recipes."
+  },
+  "1.14.4": {
+    "0.0.8": "Updated to 1.14.4"
   }
 }
