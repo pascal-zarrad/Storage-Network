@@ -26,6 +26,7 @@ import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
 import net.minecraft.block.Block;
+import net.minecraft.client.MouseHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -33,6 +34,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -79,7 +81,7 @@ public class StorageNetwork {
   public static void log(String s) {
     if (logspam) {
       LOGGER.info(s);
-    }
+    } 
   }
 
   // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
