@@ -142,7 +142,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       if (tileHere == null) {
         continue;
       }
-      //      StorageNetwork.LOGGER.info("TILEHERE "+ tileHere + " AT POS +"+lookPos);
+               StorageNetwork.LOGGER.info("TILEHERE "+ tileHere + " AT POS +"+lookPos);
       //      boolean isConnectable = tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
       IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
       if (capabilityConnectable != null) {

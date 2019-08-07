@@ -28,7 +28,6 @@ crash-reports/
 *.iml
 .recommenders/
 .gitattributes
-*.launch
 *.lnk
 *.jks
 secret.properties
