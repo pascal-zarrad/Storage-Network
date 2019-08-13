@@ -157,7 +157,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
         //
-        StorageNetwork.log(mouseButton + " over filter " + slot.getStack() + " MOUSE + " + mouse);
+        //        StorageNetwork.log(mouseButton + " over filter " + slot.getStack() + " MOUSE + " + mouse);
         if (slot.getStack().isEmpty() == false) {
           //i hit non-empty slot, clear it no matter what
           if (mouseButton == 1) {

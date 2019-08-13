@@ -9,13 +9,11 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
 
   public UpgradesItemStackHandler() {
     super(SsnRegistry.UPGRADE_COUNT);
-    StorageNetwork.log("UpgradesItemStackHandler  is " + stacks.size()
-        + " : " + this.getSlots());
   }
 
   public UpgradesItemStackHandler(int size) {
-    //    this();
-    super(SsnRegistry.UPGRADE_COUNT);
+    this();
+    //    super(SsnRegistry.UPGRADE_COUNT);
   }
 
   @Override

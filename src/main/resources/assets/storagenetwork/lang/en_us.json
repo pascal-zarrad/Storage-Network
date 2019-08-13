@@ -11,10 +11,14 @@
     "block.storagenetwork.master": "Storage Network Master",
     "block.storagenetwork.request": "Storage Request Table",
 
-    "item.storagenetwork.upgrade_speed": "Speed Upgrade",
-    "item.storagenetwork.upgrade_op": "Operation Upgrade",
-    "item.storagenetwork.upgrade_stack": "Stack Upgrade",
-    "item.storagenetwork.upgrade_stock": "Stock Upgrade",
+    "item.storagenetwork.speed_upgrade": "Speed Upgrade",
+    "item.storagenetwork.operation_upgrade": "Operation Upgrade",
+    "item.storagenetwork.stack_upgrade": "Stack Upgrade",
+    "item.storagenetwork.stock_upgrade": "Stock Upgrade",
+    "tooltip.storagenetwork.upgrade_0": "Increases the speed of importing/exporting.",
+    "tooltip.storagenetwork.upgrade_1": "Activity of the cable depends on the amount of items.",
+    "tooltip.storagenetwork.upgrade_2": "Increases the stack size of task.",
+    "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
     "item.storagenetwork.remote": "Storage Remote",
     "item.storagenetwork.remote_1": "Advanced Storage Remote",
@@ -79,10 +83,6 @@
     "tooltip.storagenetwork.remote_2": "Used to access the network from unlimited distance.",
     "tooltip.storagenetwork.remote_3": "Network without crafting from unlimited distance.",
 
-    "tooltip.storagenetwork.upgrade_0": "Increases the speed of importing/exporting.",
-    "tooltip.storagenetwork.upgrade_1": "Activity of the cable depends on the amount of items.",
-    "tooltip.storagenetwork.upgrade_2": "Increases the stack size of task.",
-    "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
 
     "block.storagenetwork.controller": "Controller",
