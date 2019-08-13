@@ -32,7 +32,8 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   public final IConnectable connectable;
   public EnumStorageDirection direction;
-  public final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
+  @Deprecated
+  private final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
   private final FilterItemStackHandler filters = new FilterItemStackHandler();
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;

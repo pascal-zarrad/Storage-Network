@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerCableImportFilter extends ContainerCable {
@@ -22,11 +23,14 @@ public class ContainerCableImportFilter extends ContainerCable {
   public ContainerCableImportFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterimportContainer, windowId);
     tile = (TileCableImportFilter) world.getTileEntity(pos);
+    //      this.cap = (CapabilityConnectableAutoIO) tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
     tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO).ifPresent(h -> {
       //then
-      this.cap = (CapabilityConnectableAutoIO) tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
+      this.cap = (CapabilityConnectableAutoIO) h;
+    });
+    tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
       for (int i = 0; i < SsnRegistry.UPGRADE_COUNT; i++) {
-        this.addSlot(new SlotItemHandler(cap.upgrades, i, 98 + i * sq, 6) {
+        this.addSlot(new SlotItemHandler(h, i, 98 + i * sq, 6) {
 
           @Override
           public int getSlotStackLimit() {
@@ -40,7 +44,7 @@ public class ContainerCableImportFilter extends ContainerCable {
         });
       }
     });
-    //  this.bindPlayerInvo(playerInv);
+    this.bindPlayerInvo(playerInv);
   }
 
   @Override
