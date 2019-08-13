@@ -19,7 +19,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 
-  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable_filter.png");
   ContainerCableImportFilter containerCableLink;
   private GuiButtonRequest btnMinus;
   private GuiButtonRequest btnPlus;
@@ -185,14 +185,17 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     return super.mouseClicked(mouseX, mouseY, mouseButton);
   }
 
+  @Override
   public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
     return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
   }
 
+  @Override
   public void renderStackToolTip(ItemStack stack, int x, int y) {
     super.renderTooltip(stack, x, y);
   }
 
+  @Override
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
