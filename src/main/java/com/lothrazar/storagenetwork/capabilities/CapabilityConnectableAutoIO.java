@@ -1,15 +1,21 @@
 package com.lothrazar.storagenetwork.capabilities;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
-import com.lothrazar.storagenetwork.api.data.EnumUpgradeType;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.data.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.data.inventory.UpgradesItemStackHandler;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -22,17 +28,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT>, IConnectableItemAutoIO {
 
   public final IConnectable connectable;
   public EnumStorageDirection direction;
-  private final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
+  public final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
   private final FilterItemStackHandler filters = new FilterItemStackHandler();
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;
@@ -44,11 +44,12 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     connectable = new CapabilityConnectable();
     this.direction = direction;
   }
+
   public FilterItemStackHandler getFilter() {
     return filters;
   }
 
-//TODO: shrae with ConnectableLink  @Override
+  //TODO: shrae with ConnectableLink  @Override
   public List<ItemStack> getStoredStacks() {
     if (inventoryFace == null) {
       return Collections.EMPTY_LIST;
@@ -75,14 +76,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   //TODO: shrae with ConnectableLink
-   public void setPriority(int value) {
+  public void setPriority(int value) {
     this.priority = value;
   }
-  public void setFilter(int value, ItemStack stack){
-    filters.setStackInSlot(value,stack);
 
-    filters.getStacks().set(value,stack);
+  public void setFilter(int value, ItemStack stack) {
+    filters.setStackInSlot(value, stack);
+    filters.getStacks().set(value, stack);
   }
+
   public CapabilityConnectableAutoIO(TileEntity tile, EnumStorageDirection direction) {
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     this.direction = direction;
@@ -90,7 +92,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     if (direction == EnumStorageDirection.OUT) {
       filters.setIsWhitelist(true);
     }
-    else{
+    else {
       filters.setIsWhitelist(false);
     }
   }
@@ -126,17 +128,17 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     CompoundNBT filters = (CompoundNBT) nbt.get("filters");
     if (filters != null)
       this.filters.deserializeNBT(filters);
-    CompoundNBT operation =  nbt.getCompound("operation");
+    CompoundNBT operation = nbt.getCompound("operation");
     operationStack = ItemStack.EMPTY;
-    if(operation != null) {
+    if (operation != null) {
       operationLimit = operation.getInt("limit");
       operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
       if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
         operationStack = ItemStack.read((CompoundNBT) operation.get("stack"));
       }
-//      else {
-//        operationStack = ItemStack.EMPTY;
-//      }
+      //      else {
+      //        operationStack = ItemStack.EMPTY;
+      //      }
     }
     priority = nbt.getInt("prio");
     if (nbt.contains("inventoryFace")) {
@@ -156,7 +158,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public int getTransferRate() {
-    return upgrades.getUpgradesOfType(EnumUpgradeType.STACK) > 0 ? 64 : 4;
+    return upgrades.getUpgradesOfType(SsnRegistry.stack_upgrade) > 0 ? 64 : 4;
   }
 
   @Override
@@ -243,7 +245,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   private boolean doesPassOperationFilterLimit(TileMaster master) {
-    if (upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) < 1) {
+    if (upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade) < 1) {
       return true;
     }
     if (operationStack == null || operationStack.isEmpty()) {
@@ -261,7 +263,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public boolean runNow(DimPos connectablePos, TileMaster master) {
-    int speed = Math.max(upgrades.getUpgradesOfType(EnumUpgradeType.SPEED) + 1, 1);
+    int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.speed_upgrade) + 1, 1);
     int speedRatio = (30 / speed);
     if (speedRatio <= 1) {
       speedRatio = 1;
@@ -286,13 +288,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
 
-    @Override @Nullable
+    @Override
+    @Nullable
     public INBT writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
       return instance.serializeNBT();
     }
 
-    @Override public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, INBT nbt) {
+    @Override
+    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, INBT nbt) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
       instance.deserializeNBT((CompoundNBT) nbt);
     }
@@ -300,7 +304,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public boolean isStockMode() {
-    return upgrades.getUpgradesOfType(EnumUpgradeType.STOCK) > 0;
+    return upgrades.getUpgradesOfType(SsnRegistry.stock_upgrade) > 0;
   }
 
   @Override

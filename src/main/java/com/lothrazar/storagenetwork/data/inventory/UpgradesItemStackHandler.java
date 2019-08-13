@@ -1,15 +1,14 @@
 package com.lothrazar.storagenetwork.data.inventory;
-import com.lothrazar.storagenetwork.api.data.EnumUpgradeType;
-import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-//import mrriegel.storagenetwork.block.cable.io.ContainerCableIO;
-//import mrriegel.storagenetwork.registry.ModItems;
+import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.item.ItemStack;
 
 public class UpgradesItemStackHandler extends ItemStackHandlerEx {
 
   public UpgradesItemStackHandler() {
-    super(1);//ContainerCableIO.UPGRADE_COUNT);
+    super(SsnRegistry.UPGRADE_COUNT);
   }
 
   @Override
@@ -17,12 +16,12 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
     return 1;
   }
 
-  public int getUpgradesOfType(EnumUpgradeType upgradeType) {
+  public int getUpgradesOfType(ItemUpgrade upgradeType) {
     int res = 0;
     for (ItemStack stack : getStacks()) {
-      //      if (stack.getItem() == ModItems.upgrade) {
-      //        res += Math.max(stack.getCount(), 0);
-      //      }
+      if (stack.getItem() == upgradeType) {
+        res += Math.max(stack.getCount(), 0);
+      }
     }
     return res;
   }

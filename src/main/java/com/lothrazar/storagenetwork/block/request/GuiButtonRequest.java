@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
+
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,7 +24,8 @@ public class GuiButtonRequest extends GuiButtonExt {
     super(xPos, yPos, 14, 20, displayString, handler);
   }
 
-  @Override public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
+  @Override
+  public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
     super.render(p_render_1_, p_render_2_, p_render_3_);
   }
 
@@ -42,11 +44,11 @@ public class GuiButtonRequest extends GuiButtonExt {
     GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
     GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
     this.blit(this.x, this.y,
-        width/2,     16+0+i * 16,//46 + ,
-        width,height );
-//    this.blit(this.x + this.width / 2, this.y,
-//        16 - this.width / 2, i * 20,
-//        this.width / 2, this.height);
+        width / 2, 16 + 0 + i * 16, //46 + ,
+        width, height);
+    //    this.blit(this.x + this.width / 2, this.y,
+    //        16 - this.width / 2, i * 20,
+    //        this.width / 2, this.height);
     this.renderBg(minecraft, mouseX, mouseY);
     int j = getFGColor();
     if (this.getMessage() != null)

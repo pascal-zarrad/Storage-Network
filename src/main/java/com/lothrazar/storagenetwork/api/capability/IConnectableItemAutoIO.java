@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.api.capability;
+
+import java.util.Collections;
+import java.util.List;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks master. You could quite as well just expose {@link IConnectable} and do the

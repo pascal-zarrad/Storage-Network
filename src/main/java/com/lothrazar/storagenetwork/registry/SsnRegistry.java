@@ -6,18 +6,18 @@ import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
+import com.lothrazar.storagenetwork.block.cablein.TileCableIO;
 import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.cableinfilter.TileCableImportFilter;
-import com.lothrazar.storagenetwork.block.cablein.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
+import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
@@ -25,6 +25,7 @@ import net.minecraftforge.registries.ObjectHolder;
 
 public class SsnRegistry {
 
+  public static final int UPGRADE_COUNT = 4;
   public static ItemGroup itemGroup = new ItemGroup(StorageNetwork.MODID) {
 
     @Override
@@ -32,14 +33,14 @@ public class SsnRegistry {
       return new ItemStack(SsnRegistry.request);
     }
   };
-  @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade") 
-  public static Item speed_upgrade;
-  @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade") 
-  public static Item stack_upgrade;
-  @ObjectHolder(StorageNetwork.MODID + ":stock_upgrade") 
-  public static Item stock_upgrade;
-  @ObjectHolder(StorageNetwork.MODID + ":operation_upgrade") 
-  public static Item operation_upgrade ;
+  @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade")
+  public static ItemUpgrade speed_upgrade;
+  @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
+  public static ItemUpgrade stack_upgrade;
+  @ObjectHolder(StorageNetwork.MODID + ":stock_upgrade")
+  public static ItemUpgrade stock_upgrade;
+  @ObjectHolder(StorageNetwork.MODID + ":operation_upgrade")
+  public static ItemUpgrade operation_upgrade;
   // master
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static TileEntityType<TileMaster> mastertile;

@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.gui;
+
+import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
@@ -6,8 +8,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nonnull;
 
 /**
  * used as the MAIN grid in the network item display
@@ -18,14 +18,14 @@ public class ItemSlotNetwork {
 
   private final int x;
   private final int y;
-
-  private  int size;
+  private int size;
   private final int guiLeft;
   private final int guiTop;
   private boolean showNumbers;
   private final IGuiPrivate parent;
   private ItemStack stack;
-//TODO: Interface for parent expose isInRegion and drawgradient rect and the tooltip one
+
+  //TODO: Interface for parent expose isInRegion and drawgradient rect and the tooltip one
   public ItemSlotNetwork(IGuiPrivate parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
     this.x = x;
     this.y = y;
@@ -41,7 +41,7 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  public void drawSlot(FontRenderer font,int mx, int my) {
+  public void drawSlot(FontRenderer font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
     GlStateManager.pushMatrix();
     if (!getStack().isEmpty()) {
@@ -95,6 +95,7 @@ public class ItemSlotNetwork {
   public void setStack(ItemStack stack) {
     this.stack = stack;
   }
+
   public int getSize() {
     return size;
   }
@@ -102,7 +103,6 @@ public class ItemSlotNetwork {
   public void setSize(int size) {
     this.size = size;
   }
-
 
   private boolean isShowNumbers() {
     return showNumbers;

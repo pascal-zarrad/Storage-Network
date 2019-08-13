@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
+
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -9,17 +11,15 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
 
-import java.util.List;
-
-public   class SlotCraftingNetwork extends CraftingResultSlot {
+public class SlotCraftingNetwork extends CraftingResultSlot {
 
   private final ContainerNetworkBase parent;
 
-  public SlotCraftingNetwork(ContainerNetworkBase parent,PlayerEntity player,
+  public SlotCraftingNetwork(ContainerNetworkBase parent, PlayerEntity player,
       CraftingInventory craftingInventory, IInventory inventoryIn,
       int slotIndex, int xPosition, int yPosition) {
     super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
-  this.parent=parent;
+    this.parent = parent;
   }
 
   private TileMaster tileMaster;
@@ -38,7 +38,7 @@ public   class SlotCraftingNetwork extends CraftingResultSlot {
     for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {
       if (parent.matrix.getStackInSlot(i).isEmpty() && getTileMaster() != null) {
         ItemStack req = getTileMaster().request(
-            !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i),  false, false) : null, 1, false);
+            !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i), false, false) : null, 1, false);
         if (!req.isEmpty()) {
           parent.matrix.setInventorySlotContents(i, req);
         }

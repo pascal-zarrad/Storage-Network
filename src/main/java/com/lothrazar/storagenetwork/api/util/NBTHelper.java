@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.api.util;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -21,7 +22,6 @@ public class NBTHelper {
       stack.setTag(new CompoundNBT());
     }
   }
-
   // list
   //  public static NBTTagList getList(ItemStack stack, String tag, int objtype, boolean nullifyOnFail) {
   //    initNBTTagCompound(stack);

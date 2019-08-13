@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -10,16 +14,12 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 public class ClearRecipeMessage {
 
   public static void handle(ClearRecipeMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-        ClearRecipeMessage.clearContainerRecipe(player, true);
+      ClearRecipeMessage.clearContainerRecipe(player, true);
     });
   }
 
@@ -27,8 +27,8 @@ public class ClearRecipeMessage {
     return new ClearRecipeMessage();
   }
 
-  public static void encode(ClearRecipeMessage msg, PacketBuffer buf) {
-  }
+  public static void encode(ClearRecipeMessage msg, PacketBuffer buf) {}
+
   /**
    * Should be in a public util.
    * 

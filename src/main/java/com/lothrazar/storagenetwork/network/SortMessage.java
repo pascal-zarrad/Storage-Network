@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
@@ -9,8 +11,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class SortMessage {
 
@@ -31,20 +31,20 @@ public class SortMessage {
       ServerPlayerEntity player = ctx.get().getSender();
       if (player.openContainer instanceof ContainerNetworkBase) {
         //          if (((ContainerNetworkBase) player.openContainer).isRequest()) {
-            TileEntity tileEntity = player.world.getTileEntity(message.pos);
-            if (tileEntity instanceof TileRequest) {
-              TileRequest tile = (TileRequest) tileEntity;
-              tile.setSort(message.sort);
-              tile.setDownwards(message.direction);
-            }
-            tileEntity.markDirty();
-          }
-          else {
-            ItemStack stackPlayerHeld = player.inventory.getCurrentItem();
-            NBTHelper.setBoolean(stackPlayerHeld, "down", message.direction);
-            NBTHelper.setString(stackPlayerHeld, "sort", message.sort.toString());
-            return;
-          }
+        TileEntity tileEntity = player.world.getTileEntity(message.pos);
+        if (tileEntity instanceof TileRequest) {
+          TileRequest tile = (TileRequest) tileEntity;
+          tile.setSort(message.sort);
+          tile.setDownwards(message.direction);
+        }
+        tileEntity.markDirty();
+      }
+      else {
+        ItemStack stackPlayerHeld = player.inventory.getCurrentItem();
+        NBTHelper.setBoolean(stackPlayerHeld, "down", message.direction);
+        NBTHelper.setString(stackPlayerHeld, "sort", message.sort.toString());
+        return;
+      }
       //      }
     });
     //    return null;

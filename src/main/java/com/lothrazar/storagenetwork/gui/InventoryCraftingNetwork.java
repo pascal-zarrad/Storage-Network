@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.gui;
+
+import java.util.List;
+import java.util.Map;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.NonNullList;
-
-import java.util.List;
-import java.util.Map;
 
 public class InventoryCraftingNetwork extends CraftingInventory {
 
@@ -19,7 +19,7 @@ public class InventoryCraftingNetwork extends CraftingInventory {
   private InventoryCraftingNetwork(Container eventHandlerIn, int width, int height) {
     super(eventHandlerIn, width, height);
     eventHandler = eventHandlerIn;
-    stackList = NonNullList.<ItemStack>withSize(3 * 3, ItemStack.EMPTY);
+    stackList = NonNullList.<ItemStack> withSize(3 * 3, ItemStack.EMPTY);
   }
 
   public InventoryCraftingNetwork(Container eventHandlerIn, Map<Integer, ItemStack> matrix) {

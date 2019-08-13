@@ -2,12 +2,11 @@ package com.lothrazar.storagenetwork.config;
 public class ConfigHandler {
 
   // TODO: CONFIG
-//  public static int rangeWirelessAccessor;
+  //  public static int rangeWirelessAccessor;
   public static final long refreshTicks = 20;
-//  public static boolean allowFastWorkBenchIntegration;
-//  public static boolean logEverything;
+  //  public static boolean allowFastWorkBenchIntegration;
+  //  public static boolean logEverything;
   public static final boolean reloadNetworkWhenUnloadChunk = true;
-
 
   private static void syncConfig() {
     //    default 200 ticks aka 10 seconds

@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.block.cablein;
+
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
-
-import javax.annotation.Nullable;
 
 public class BlockCableIO extends BlockCable {
 

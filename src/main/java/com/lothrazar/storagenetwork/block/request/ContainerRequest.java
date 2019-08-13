@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.block.request;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
@@ -26,10 +30,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class ContainerRequest extends ContainerNetworkBase {
 
@@ -202,9 +202,9 @@ public class ContainerRequest extends ContainerNetworkBase {
     for (int i = 0; i < matrix.getSizeInventory(); i++) {
       recipeCopy.add(matrix.getStackInSlot(i).copy());
     }
-    ItemStack res = recipeCurrent.getCraftingResult(matrix); 
+    ItemStack res = recipeCurrent.getCraftingResult(matrix);
     if (res.isEmpty()) {
-        StorageNetwork.LOGGER.error("err Recipe output is an empty stack " , recipeCurrent);
+      StorageNetwork.LOGGER.error("err Recipe output is an empty stack ", recipeCurrent);
       return;
     }
     int sizePerCraft = res.getCount();
@@ -222,12 +222,12 @@ public class ContainerRequest extends ContainerNetworkBase {
         break;
       }
       //onTake replaced with this handcoded rewrite
-        StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
+      StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
       if (!player.inventory.addItemStackToInventory(res)) {
         player.dropItem(res, false);
       }
       NonNullList<ItemStack> remainder = recipeCurrent.getRemainingItems(this.matrix);//raftingManager.getRemainingItems(matrix, player.world);
-        StorageNetwork.log("[craftShift] getRemainingItems "+remainder);
+      StorageNetwork.log("[craftShift] getRemainingItems " + remainder);
       for (int i = 0; i < remainder.size(); ++i) {
         ItemStack remainderCurrent = remainder.get(i);
         ItemStack slot = this.matrix.getStackInSlot(i);
@@ -248,7 +248,7 @@ public class ContainerRequest extends ContainerNetworkBase {
           matrix.setInventorySlotContents(i, slot);
         }
         else if (!remainderCurrent.isEmpty()) {
-            StorageNetwork.log("[craftShift] NONEMPTY " + remainderCurrent);
+          StorageNetwork.log("[craftShift] NONEMPTY " + remainderCurrent);
           if (slot.isEmpty()) {
             this.matrix.setInventorySlotContents(i, remainderCurrent);
           }

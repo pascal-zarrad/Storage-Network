@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class CableFilterMessage {
 
@@ -24,7 +24,6 @@ public class CableFilterMessage {
   public static void handle(CableFilterMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-
       //      if (player.openContainer instanceof ContainerCable) {
       //        TileCable tileCable = ((ContainerCable) player.openContainer).tile;
       //        if (tileCable instanceof TileCableProcess) {

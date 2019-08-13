@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.List;
+import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.gui.GuiContainerStorageInventory;
 import net.minecraft.client.Minecraft;
@@ -6,9 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Refresh the current screen with large data set of stacks.
@@ -33,14 +33,13 @@ public class StackRefreshClientMessage {
 
   public static void handle(StackRefreshClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-
       Minecraft mc = Minecraft.getInstance();//StorageNetwork.proxy.getMinecraft();
       // TODO: IStorageInventory API
       if (mc.currentScreen instanceof GuiContainerStorageInventory) {
         GuiContainerStorageInventory gui = (GuiContainerStorageInventory) mc.currentScreen;
-          gui.setStacks(message.stacks);
-          gui.setCraftableStacks(message.craftableStacks);
-        }
+        gui.setStacks(message.stacks);
+        gui.setCraftableStacks(message.craftableStacks);
+      }
     });
   }
 
@@ -48,7 +47,7 @@ public class StackRefreshClientMessage {
     buf.writeInt(msg.size);
     buf.writeInt(msg.csize);
     for (ItemStack stack : msg.stacks) {
-       buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeCompoundTag(stack.serializeNBT());
       buf.writeInt(stack.getCount());
     }
     for (ItemStack stack : msg.craftableStacks) {
@@ -63,7 +62,7 @@ public class StackRefreshClientMessage {
     List stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
       CompoundNBT stacktag = buf.readCompoundTag();
-       ItemStack stack = ItemStack.read(stacktag);
+      ItemStack stack = ItemStack.read(stacktag);
       stack.setCount(buf.readInt());
       stacks.add(stack);
     }

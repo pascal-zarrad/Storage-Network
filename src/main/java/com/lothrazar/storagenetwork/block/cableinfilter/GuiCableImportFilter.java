@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.cableinfilter;
+
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
@@ -15,12 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.List;
-
 public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
-
   ContainerCableImportFilter containerCableLink;
   private GuiButtonRequest btnMinus;
   private GuiButtonRequest btnPlus;
@@ -37,7 +36,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   @Override
   public void init() {
     super.init();
-    this.isWhitelist = containerCableLink.link.getFilter().isWhitelist;
+    this.isWhitelist = containerCableLink.cap.getFilter().isWhitelist;
     int x = guiLeft + 7, y = guiTop + 8;
     btnMinus = addButton(new GuiButtonRequest(x, y, "-", (p) -> {
       this.syncData(-1);
@@ -68,7 +67,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
 
   private void syncData(int priority) {
     //    containerCableLink.link.setPriority(priority);
-    containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
+    containerCableLink.cap.getFilter().isWhitelist = this.isWhitelist;
     PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
   }
@@ -78,7 +77,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     renderBackground();
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
-    if (containerCableLink == null || containerCableLink.link == null) {
+    if (containerCableLink == null || containerCableLink.cap == null) {
       return;
     }
     btnWhite.setMessage(this.isWhitelist ? "W" : "B");
@@ -87,10 +86,10 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    int priority = containerCableLink.link.getPriority();
+    int priority = containerCableLink.cap.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
-        5,// btnMinus.y,
+        5, // btnMinus.y,
         4210752);
     this.drawTooltips(mouseX, mouseY);
   }
@@ -112,7 +111,8 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
 
   public static final int SLOT_SIZE = 18;
 
-  @Override protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  @Override
+  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
@@ -129,7 +129,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     int y = 35;
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
-        ItemStack stack = containerCableLink.link.getFilter().getStackInSlot(index);
+        ItemStack stack = containerCableLink.cap.getFilter().getStackInSlot(index);
         int x = 8 + col * SLOT_SIZE;
         itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));
         index++;
@@ -143,7 +143,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   }
 
   public void setFilterItems(List<ItemStack> stacks) {
-    FilterItemStackHandler filter = this.containerCableLink.link.getFilter();
+    FilterItemStackHandler filter = this.containerCableLink.cap.getFilter();
     for (int i = 0; i < stacks.size(); i++) {
       ItemStack s = stacks.get(i);
       filter.setStackInSlot(i, s);

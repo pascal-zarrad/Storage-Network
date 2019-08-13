@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
@@ -6,7 +8,6 @@ import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilt
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
-import com.lothrazar.storagenetwork.data.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -14,8 +15,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class CableDataMessage {
 
@@ -44,7 +43,8 @@ public class CableDataMessage {
     stack = whitelist;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "CableDataMessage{" +
         "whitelist=" + whitelist +
         ", id=" + id +
@@ -58,24 +58,21 @@ public class CableDataMessage {
     public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
       ctx.get().enqueueWork(() -> {
         ServerPlayerEntity player = ctx.get().getSender();
-
-        CapabilityConnectableLink link=null;
+        CapabilityConnectableLink link = null;
         ContainerCableImportFilter y; // also must import
-        if(player.openContainer instanceof ContainerCableImportFilter){
+        if (player.openContainer instanceof ContainerCableImportFilter) {
           //then 
-          ContainerCableImportFilter ctr=(ContainerCableImportFilter)player.openContainer;
-          CapabilityConnectableAutoIO link2 = ctr.link;
+          ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
+          CapabilityConnectableAutoIO link2 = ctr.cap;
           ///
           // //TODO: INHERITACNE FROM
           //  link=link2;//
-
         }
         ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
         if (container == null || container.link == null) {
           return;
         }
-          link = container.link;
-
+        link = container.link;
         TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
         //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         CableMessageType type = CableMessageType.values()[message.id];
@@ -104,18 +101,18 @@ public class CableDataMessage {
             }
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
                 player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-            break;
+          break;
           case SYNC_DATA:
             link.setPriority(link.getPriority() + message.value);
             link.getFilter().setIsWhitelist(message.whitelist);
             if (master != null) {
               master.clearCache();
             }
-            break;
+          break;
           case SAVE_FITLER:
             //            FilterItemStackHandler list = con.link.getFilter();
             link.setFilter(message.value, message.stack.copy());
-            break;
+          break;
         }
         //
         player.connection.sendPacket(container.tile.getUpdatePacket());

@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
+
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.gui.GuiContainerStorageInventory;
 import net.minecraft.entity.player.PlayerInventory;
@@ -12,7 +13,6 @@ public class GuiRequest extends GuiContainerStorageInventory {
   public GuiRequest(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
-
   }
 
   @Override
@@ -44,5 +44,4 @@ public class GuiRequest extends GuiContainerStorageInventory {
   public BlockPos getPos() {
     return tile.getPos();
   }
-
 }

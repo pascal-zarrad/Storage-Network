@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.cablefilter;
+
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
@@ -14,8 +16,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.List;
 
 public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
@@ -67,7 +67,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   private void syncData(int priority) {
     //    containerCableLink.link.setPriority(priority);
-//    containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
+    //    containerCableLink.link.getFilter().isWhitelist = this.isWhitelist;
     PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(CableDataMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
   }
@@ -89,7 +89,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     int priority = containerCableLink.link.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
-        5,// btnMinus.y,
+        5, // btnMinus.y,
         4210752);
     this.drawTooltips(mouseX, mouseY);
   }
@@ -111,7 +111,8 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   public static final int SLOT_SIZE = 18;
 
-  @Override protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  @Override
+  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;

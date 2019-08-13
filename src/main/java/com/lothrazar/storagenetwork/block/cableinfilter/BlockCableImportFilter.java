@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.cableinfilter;
+
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -12,11 +14,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-
 public class BlockCableImportFilter extends BlockCable {
 
-  public BlockCableImportFilter (String registryName) {
+  public BlockCableImportFilter(String registryName) {
     super(registryName);
   }
 
@@ -42,5 +42,4 @@ public class BlockCableImportFilter extends BlockCable {
     }
     return true;
   }
-
 }

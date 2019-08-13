@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.cable.export;
+
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
@@ -15,12 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-import java.util.List;
-
 public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
-
   ContainerCableExportFilter containerCableLink;
   private GuiButtonRequest btnMinus;
   private GuiButtonRequest btnPlus;
@@ -29,7 +28,7 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   private boolean isWhitelist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
-  public GuiCableExportFilter (ContainerCableExportFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
+  public GuiCableExportFilter(ContainerCableExportFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
     super(containerCableFilter, inv, name);
     this.containerCableLink = containerCableFilter;
   }
@@ -90,7 +89,7 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     int priority = containerCableLink.link.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
-        5,// btnMinus.y,
+        5, // btnMinus.y,
         4210752);
     this.drawTooltips(mouseX, mouseY);
   }
@@ -112,7 +111,8 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
 
   public static final int SLOT_SIZE = 18;
 
-  @Override protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  @Override
+  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;

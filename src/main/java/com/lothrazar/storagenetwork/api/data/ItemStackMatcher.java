@@ -1,21 +1,21 @@
 package com.lothrazar.storagenetwork.api.data;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 
 public class ItemStackMatcher implements IItemStackMatcher {
 
   private ItemStack stack;
-  private boolean  ore, nbt;
+  private boolean ore, nbt;
 
   public ItemStackMatcher(ItemStack stack) {
     //so glad meta is ded
     // stack != null ? stack.getItemDamage() != OreDictionary.WILDCARD_VALUE : true
-    this(stack,  false, false);
+    this(stack, false, false);
   }
 
-  public ItemStackMatcher(ItemStack stack,  boolean ore, boolean nbt) {
+  public ItemStackMatcher(ItemStack stack, boolean ore, boolean nbt) {
     this.stack = stack;
     this.ore = ore;
     this.nbt = nbt;
@@ -26,7 +26,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
   public void readFromNBT(CompoundNBT compound) {
     CompoundNBT c = (CompoundNBT) compound.get("stack");
     stack = ItemStack.read(c);
-//    meta = compound.getBoolean("meta");
+    //    meta = compound.getBoolean("meta");
     ore = compound.getBoolean("ore");
     nbt = compound.getBoolean("nbt");
   }
@@ -35,7 +35,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     CompoundNBT c = new CompoundNBT();
     stack.write(c);
     compound.put("stack", c);
-//    compound.putBoolean("meta", meta);
+    //    compound.putBoolean("meta", meta);
     compound.putBoolean("ore", ore);
     compound.putBoolean("nbt", nbt);
     return c;
@@ -43,17 +43,17 @@ public class ItemStackMatcher implements IItemStackMatcher {
 
   @Override
   public String toString() {
-    return "ItemStackMatcher [stack=" + stack +  ", ore=" + ore + ", nbt=" + nbt + "]";
+    return "ItemStackMatcher [stack=" + stack + ", ore=" + ore + ", nbt=" + nbt + "]";
   }
 
-  @Override public ItemStack getStack() {
+  @Override
+  public ItemStack getStack() {
     return stack;
   }
 
   public void setStack(@Nonnull ItemStack stack) {
     this.stack = stack;
   }
-
 
   public boolean isOre() {
     return ore;

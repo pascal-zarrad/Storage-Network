@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable;
+
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 
@@ -11,5 +12,4 @@ public class TileCable extends TileConnectable {
   public TileCable() {
     super(SsnRegistry.kabeltile);
   }
-
 }

@@ -1,4 +1,13 @@
 package com.lothrazar.storagenetwork.block.master;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
@@ -27,15 +36,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class BlockMaster extends BaseBlock {
 
@@ -130,7 +130,8 @@ public class BlockMaster extends BaseBlock {
     return true;
   }
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
     return new TileMaster();
   }

@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.gui;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
@@ -26,10 +30,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 /**
  * Base class for Request table inventory and Remote inventory
@@ -314,13 +314,13 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     switch (this.getSort()) {
       case NAME:
         sort = "N";
-        break;
+      break;
       case MOD:
         sort = "@";
-        break;
+      break;
       case AMOUNT:
         sort = "#";
-        break;
+      break;
     }
     this.sortBtn.setMessage(sort);
     drawTooltips(mouseX, mouseY);

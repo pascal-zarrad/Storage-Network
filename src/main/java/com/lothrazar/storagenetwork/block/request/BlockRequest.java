@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork.block.request;
+
+import java.util.List;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -17,9 +20,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
 public class BlockRequest extends BaseBlock {
 
   public BlockRequest() {
@@ -34,22 +34,22 @@ public class BlockRequest extends BaseBlock {
   @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
     return new TileRequest();
-
-
   }
 
   @Override
   public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-     if (!world.isRemote) {
+    if (!world.isRemote) {
       TileEntity tileEntity = world.getTileEntity(pos);
       if (tileEntity instanceof INamedContainerProvider) {
         NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
-      } else {
+      }
+      else {
         throw new IllegalStateException("Our named container provider is missing!");
       }
     }
     return true;
   }
+
   @Override
   public void addInformation(ItemStack stack, @Nullable IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);

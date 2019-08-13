@@ -1,4 +1,10 @@
 package com.lothrazar.storagenetwork.capabilities;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
 import com.lothrazar.storagenetwork.api.data.DimPos;
@@ -17,12 +23,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-
 // TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
 public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<CompoundNBT> {
 
@@ -30,7 +30,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   private boolean operationMustBeSmaller = true;
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;
-  private  FilterItemStackHandler filters = new FilterItemStackHandler();
+  private FilterItemStackHandler filters = new FilterItemStackHandler();
   private EnumStorageDirection filterDirection = EnumStorageDirection.BOTH;
   private Direction inventoryFace;
   private int priority;
@@ -49,11 +49,11 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     return filters;
   }
 
-  public void setFilter(int value, ItemStack stack){
-    filters.setStackInSlot(value,stack);
-
-    filters.getStacks().set(value,stack);
+  public void setFilter(int value, ItemStack stack) {
+    filters.setStackInSlot(value, stack);
+    filters.getStacks().set(value, stack);
   }
+
   @Override
   public int getPriority() {
     return priority;
@@ -192,7 +192,8 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     return emptySlots;
   }
 
-  @Override public void setPriority(int value) {
+  @Override
+  public void setPriority(int value) {
     this.priority = value;
   }
 
@@ -265,7 +266,8 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return instance.serializeNBT();
     }
 
-    @Override public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, INBT nbt) {
+    @Override
+    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, INBT nbt) {
       CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
       instance.deserializeNBT((CompoundNBT) nbt);
     }

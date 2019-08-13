@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork.data.inventory;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 
@@ -23,7 +23,6 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     this.tags = ores;
   }
 
-
   public void setMatchNbt(boolean nbt) {
     this.nbt = nbt;
   }
@@ -38,7 +37,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   public List<IItemStackMatcher> getStackMatchers() {
-    return getStacks().stream().map(stack -> new ItemStackMatcher(stack,  tags, nbt)).collect(Collectors.toList());
+    return getStacks().stream().map(stack -> new ItemStackMatcher(stack, tags, nbt)).collect(Collectors.toList());
   }
 
   public void clear() {

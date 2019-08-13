@@ -1,4 +1,9 @@
 package com.lothrazar.storagenetwork.block;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.block.BlockState;
@@ -8,11 +13,6 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class TileCableWithFacing extends TileConnectable {
 
@@ -50,10 +50,9 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   public void findNewDirection() {
-
-//    if (isValidLinkNeighbor(direction)) {
-//      return;
-//    }
+    //    if (isValidLinkNeighbor(direction)) {
+    //      return;
+    //    }
     for (Direction facing : Direction.values()) {
       if (isValidLinkNeighbor(facing)) {
         setDirection(facing);
@@ -84,6 +83,7 @@ public class TileCableWithFacing extends TileConnectable {
       }
     }
   }
+
   public void refreshDirection() {
     if (this.getDirection() == null) {
       this.findNewDirection();
@@ -94,6 +94,7 @@ public class TileCableWithFacing extends TileConnectable {
       }
     }
   }
+
   public TileMaster getTileMaster() {
     if (getMaster() == null) {
       return null;

@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork.gui;
+
+import java.util.Optional;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,9 +19,6 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
-import java.util.Optional;
-
 public abstract class ContainerNetworkBase extends Container {
 
   protected PlayerInventory playerInv;
@@ -33,10 +33,7 @@ public abstract class ContainerNetworkBase extends Container {
 
   protected ContainerNetworkBase(@Nullable ContainerType<?> type, int id) {
     super(type, id);
-
-
     this.resultInventory = new CraftResultInventory();
-
   }
 
   public CraftingInventory getCraftMatrix() {
@@ -72,7 +69,8 @@ public abstract class ContainerNetworkBase extends Container {
     }
   }
 
-  @Override public void onContainerClosed(PlayerEntity playerIn) {
+  @Override
+  public void onContainerClosed(PlayerEntity playerIn) {
     slotChanged();
     super.onContainerClosed(playerIn);
   }
@@ -84,27 +82,22 @@ public abstract class ContainerNetworkBase extends Container {
 
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
-     super.onCraftMatrixChanged(inventoryIn);
+    super.onCraftMatrixChanged(inventoryIn);
     this.recipeCurrent = null;
-
     findMatchingRecipe(this.windowId, world, this.player, this.matrix, this.resultInventory);
-
   }
+
   //it runs on server tho
-  protected   void findMatchingRecipeClient( World world,  CraftingInventory inventory, CraftResultInventory result) {
-
-      Optional<ICraftingRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
-      if (optional.isPresent()) {
-        ICraftingRecipe icraftingrecipe = optional.get();
-
-          this.recipeCurrent = icraftingrecipe;
-        }
-
+  protected void findMatchingRecipeClient(World world, CraftingInventory inventory, CraftResultInventory result) {
+    Optional<ICraftingRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
+    if (optional.isPresent()) {
+      ICraftingRecipe icraftingrecipe = optional.get();
+      this.recipeCurrent = icraftingrecipe;
+    }
   }
 
   //from WorkbenchContainer::func_217066_a
-  protected   void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
-
+  protected void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
     if (!world.isRemote) {
       ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
       ItemStack itemstack = ItemStack.EMPTY;
@@ -112,18 +105,16 @@ public abstract class ContainerNetworkBase extends Container {
       if (optional.isPresent()) {
         ICraftingRecipe icraftingrecipe = optional.get();
         if (result.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
-
-          itemstack = icraftingrecipe.getCraftingResult(inventory );
-//          itemstack = icraftingrecipe.func_77572_b(inventory);
-        //save for next time
-        this.recipeCurrent = icraftingrecipe;
+          itemstack = icraftingrecipe.getCraftingResult(inventory);
+          //          itemstack = icraftingrecipe.func_77572_b(inventory);
+          //save for next time
+          this.recipeCurrent = icraftingrecipe;
         }
       }
       result.setInventorySlotContents(0, itemstack);
       serverplayerentity.connection.sendPacket(new SSetSlotPacket(number, 0, itemstack));
     }
   }
-
   /**
    * A note on the shift-craft delay bug root cause was ANY interaction with matrix (setting contents etc) was causing triggers/events to do a recipe lookup. Meaning during this shift-click action you
    * can get up to 9x64 FULL recipe scans Solution is just to disable all those triggers but only for duration of this action

@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
-import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,8 +15,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
-
-import java.util.function.Supplier;
 
 public class CableIOMessage {
 
@@ -45,7 +43,8 @@ public class CableIOMessage {
     stack = whitelist;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "CableDataMessage{" +
         "whitelist=" + whitelist +
         ", id=" + id +
@@ -69,7 +68,7 @@ public class CableIOMessage {
         }
         if (player.openContainer instanceof ContainerCableImportFilter) {
           ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
-          link = ctr.link;
+          link = ctr.cap;
           tile = ctr.tile;
         }
         TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
@@ -100,18 +99,18 @@ public class CableIOMessage {
             }
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
                 player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-            break;
+          break;
           case SYNC_DATA:
             link.setPriority(link.getPriority() + message.value);
             link.getFilter().setIsWhitelist(message.whitelist);
             if (master != null) {
               master.clearCache();
             }
-            break;
+          break;
           case SAVE_FITLER:
             //            FilterItemStackHandler list = con.link.getFilter();
             link.setFilter(message.value, message.stack.copy());
-            break;
+          break;
         }
         //
         player.connection.sendPacket(tile.getUpdatePacket());

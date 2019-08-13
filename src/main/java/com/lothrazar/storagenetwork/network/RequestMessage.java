@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -10,10 +14,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class RequestMessage {
 
@@ -47,7 +47,7 @@ public class RequestMessage {
         //maybe the table broke after doing this, rare case
         return;
       }
-      int in = tileMaster.getAmount(new ItemStackMatcher(message.stack,  false, true));
+      int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, false, true));
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
       boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;
@@ -63,12 +63,12 @@ public class RequestMessage {
       }
       sizeRequested = Math.max(sizeRequested, 1);
       stack = tileMaster.request(
-          new ItemStackMatcher(message.stack,  false, true),
+          new ItemStackMatcher(message.stack, false, true),
           sizeRequested, false);
       if (stack.isEmpty()) {
         //try again with NBT as false
         stack = tileMaster.request(
-            new ItemStackMatcher(message.stack,  false, false),
+            new ItemStackMatcher(message.stack, false, false),
             sizeRequested, false);
       }
       if (!stack.isEmpty()) {

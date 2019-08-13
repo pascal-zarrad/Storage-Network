@@ -10,7 +10,6 @@ package com.lothrazar.storagenetwork.jei;
 //import mrriegel.storagenetwork.item.remote.ContainerRemote;
 //import SsnRegistry;
 //import net.minecraft.item.ItemStack;
-
 //@JEIPlugin
 public class JeiPlugin {//implements IModPlugin {
   //  @Override

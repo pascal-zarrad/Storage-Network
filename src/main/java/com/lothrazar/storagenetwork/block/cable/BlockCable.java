@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork.block.cable;
+
+import java.util.Map;
+import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -23,9 +26,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-import javax.annotation.Nullable;
-import java.util.Map;
-
 public class BlockCable extends ContainerBlock {
 
   public static BlockState cleanBlockState(BlockState state) {
@@ -36,7 +36,6 @@ public class BlockCable extends ContainerBlock {
         state = state.with(prop, EnumConnectType.NONE);
       }
     }
-
     return state;
   }
 
@@ -120,7 +119,8 @@ public class BlockCable extends ContainerBlock {
     return shape;
   }
 
-  @Override public BlockRenderType getRenderType(BlockState p_149645_1_) {
+  @Override
+  public BlockRenderType getRenderType(BlockState p_149645_1_) {
     return BlockRenderType.MODEL;
   }
 
@@ -129,16 +129,19 @@ public class BlockCable extends ContainerBlock {
     return true;
   }
 
-  @Nullable @Override
+  @Nullable
+  @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
     return new TileCable();
   }
 
-  @Override public BlockState getExtendedState(BlockState state, IBlockReader world, BlockPos pos) {
+  @Override
+  public BlockState getExtendedState(BlockState state, IBlockReader world, BlockPos pos) {
     return super.getExtendedState(state, world, pos);
   }
 
-  @Override protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+  @Override
+  protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
     super.fillStateContainer(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
   }

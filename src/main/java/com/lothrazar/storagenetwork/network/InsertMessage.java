@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
@@ -9,10 +13,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class InsertMessage {
 
@@ -25,13 +25,11 @@ public class InsertMessage {
     mouseButton = buttonID;
   }
 
-  private InsertMessage() {
-  }
+  private InsertMessage() {}
 
   public static void handle(InsertMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-
       TileMaster tileMaster = null;
       if (player.openContainer instanceof ContainerNetworkBase) {
         tileMaster = ((ContainerNetworkBase) player.openContainer).getTileMaster();

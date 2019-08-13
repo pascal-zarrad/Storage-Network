@@ -1,8 +1,9 @@
 package com.lothrazar.storagenetwork.block.cable.export;
+
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -19,32 +20,25 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nullable;
-
-public class TileCableExport extends TileCableWithFacing implements ITickableTileEntity , INamedContainerProvider {
+public class TileCableExport extends TileCableWithFacing implements ITickableTileEntity, INamedContainerProvider {
 
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableExport() {
     super(SsnRegistry.exportkabeltile);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.OUT);
-
-    this.ioStorage.getFilter().isWhitelist = false ;
+    this.ioStorage.getFilter().isWhitelist = false;
   }
-
 
   @Override
   public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-    return new
-        ContainerCableExportFilter(i, world, pos, playerInventory, playerEntity);
+    return new ContainerCableExportFilter(i, world, pos, playerInventory, playerEntity);
   }
 
   @Override
   public ITextComponent getDisplayName() {
-    return new
-        StringTextComponent(getType().getRegistryName().getPath());
+    return new StringTextComponent(getType().getRegistryName().getPath());
   }
-
 
   @Override
   public void setDirection(@Nullable Direction direction) {
@@ -65,7 +59,6 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
     return result;
   }
 
-
   @Nullable
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
@@ -76,8 +69,8 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
     return super.getCapability(capability, facing);
   }
 
-
-  @Override public void tick() {
+  @Override
+  public void tick() {
     if (this.getDirection() == null) {
       this.findNewDirection();
       if (getDirection() != null) {

@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.cablelink;
+
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
@@ -8,8 +10,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-
-import javax.annotation.Nullable;
 
 public class TileCableLink extends TileCableWithFacing implements ITickableTileEntity {
 
@@ -49,7 +49,8 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
     return super.getCapability(capability, facing);
   }
 
-  @Override public void tick() {
+  @Override
+  public void tick() {
     super.refreshDirection();
   }
 }

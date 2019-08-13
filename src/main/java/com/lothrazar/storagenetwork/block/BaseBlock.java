@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -13,7 +14,8 @@ public abstract class BaseBlock extends ContainerBlock {
     setRegistryName(registryName);
   }
 
-  @Override public BlockRenderType getRenderType(BlockState state) {
+  @Override
+  public BlockRenderType getRenderType(BlockState state) {
     return BlockRenderType.MODEL;
   }
 }
