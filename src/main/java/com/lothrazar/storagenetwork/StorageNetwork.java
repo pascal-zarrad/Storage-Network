@@ -1,32 +1,35 @@
 package com.lothrazar.storagenetwork;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
+import com.lothrazar.storagenetwork.block.cable.export.BlockCableExport;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
+import com.lothrazar.storagenetwork.block.cable.export.TileCableExport;
 import com.lothrazar.storagenetwork.block.cablefilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cablefilter.TileCableFilter;
+import com.lothrazar.storagenetwork.block.cablein.BlockCableIO;
+import com.lothrazar.storagenetwork.block.cablein.TileCableIO;
 import com.lothrazar.storagenetwork.block.cableinfilter.BlockCableImportFilter;
 import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.cableinfilter.TileCableImportFilter;
-import com.lothrazar.storagenetwork.block.cablein.BlockCableIO;
-import com.lothrazar.storagenetwork.block.cablein.TileCableIO;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
-import com.lothrazar.storagenetwork.block.cable.export.BlockCableExport;
-import com.lothrazar.storagenetwork.block.cable.export.TileCableExport;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
 import net.minecraft.block.Block;
-import net.minecraft.client.MouseHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -34,7 +37,6 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -45,21 +47,17 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(StorageNetwork.MODID)
 public class StorageNetwork {
 
-  private String certificateFingerprint = "@FINGERPRINT@";
-  public static final String MODID = "storagenetwork";
   public static final Logger LOGGER = LogManager.getLogger();
-  //  private static final PluginRegistry pluginRegistry = new PluginRegistry();
-  //  public static UtilTileEntity helpers = new UtilTileEntity();
+  public static final String MODID = "storagenetwork";
+  static final String certificateFingerprint = "@FINGERPRINT@";
   static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {
-    // Register the setup method for modloading
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
     MinecraftForge.EVENT_BUS.register(this);
     MinecraftForge.EVENT_BUS.register(new RegistryEvents());
@@ -72,20 +70,16 @@ public class StorageNetwork {
   }
 
   @SubscribeEvent
-  public static void onServerStarting(FMLServerStartingEvent event) {
-    // do something when the server starts
-  }
+  public static void onServerStarting(FMLServerStartingEvent event) {}
 
   static boolean logspam = true;
 
   public static void log(String s) {
     if (logspam) {
       LOGGER.info(s);
-    } 
+    }
   }
 
-  // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-  // Event bus for receiving Registry Events)
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class RegistryEvents {
 
@@ -104,14 +98,28 @@ public class StorageNetwork {
     @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
       Item.Properties properties = new Item.Properties().group(SsnRegistry.itemGroup);
-      event.getRegistry().register(new BlockItem(SsnRegistry.master, properties).setRegistryName("master"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.request, properties).setRegistryName("request"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.storagekabel, properties).setRegistryName("storage_kabel"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.importkabel, properties).setRegistryName("import_kabel"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.importfilterkabel, properties).setRegistryName("import_filter_kabel"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
-      event.getRegistry().register(new BlockItem(SsnRegistry.exportkabel, properties).setRegistryName("export_kabel"));
+      IForgeRegistry<Item> r = event.getRegistry();
+      r.register(new BlockItem(SsnRegistry.master, properties).setRegistryName("master"));
+      r.register(new BlockItem(SsnRegistry.request, properties).setRegistryName("request"));
+      r.register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
+      r.register(new BlockItem(SsnRegistry.storagekabel, properties).setRegistryName("storage_kabel"));
+      r.register(new BlockItem(SsnRegistry.importkabel, properties).setRegistryName("import_kabel"));
+      r.register(new BlockItem(SsnRegistry.importfilterkabel, properties).setRegistryName("import_filter_kabel"));
+      r.register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
+      r.register(new BlockItem(SsnRegistry.exportkabel, properties).setRegistryName("export_kabel"));
+      //up
+      r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
+      r.register(new ItemUpgrade(properties).setRegistryName("operation_upgrade"));
+      r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
+      r.register(new ItemUpgrade(properties).setRegistryName("stock_upgrade"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("dimension_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("inventory_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("shortrange_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("longrange_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("dimension_craft_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("inventory_craft_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("shortrange_craft_remote"));
+      //      r.register(new ItemUpgrade(properties).setRegistryName("longrange_craft_remote"));
     }
 
     @SubscribeEvent

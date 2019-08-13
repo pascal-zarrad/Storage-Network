@@ -1,0 +1,24 @@
+{
+
+  "type": "minecraft:crafting_shaped",
+  "group": "storagenetwork",
+  "pattern": [
+    " c ",
+    "gig",
+	" c "
+  ],
+  "key": {
+    "c": {
+      "item": "minecraft:redstone_block"
+    },
+    "i":  {
+	  "item": "storagenetwork:kabel"
+	},
+    "g":  {
+	  "item": "minecraft:gold_ingot"
+	}
+  },
+  "result": {
+    "item": "storagenetwork:speed_upgrade"
+  }
+}
