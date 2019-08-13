@@ -32,8 +32,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   public final IConnectable connectable;
   public EnumStorageDirection direction;
-  @Deprecated
-  private final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
+  public final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
   private final FilterItemStackHandler filters = new FilterItemStackHandler();
   private ItemStack operationStack = ItemStack.EMPTY;
   private int operationLimit = 0;
@@ -105,10 +104,8 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   @Override
   public CompoundNBT serializeNBT() {
     CompoundNBT result = new CompoundNBT();
-    CompoundNBT upgrades = this.upgrades.serializeNBT();
-    result.put("upgrades", upgrades);
-    CompoundNBT filters = this.filters.serializeNBT();
-    result.put("filters", filters);
+    result.put("upgrades", this.upgrades.serializeNBT());
+    result.put("filters", this.filters.serializeNBT());
     CompoundNBT operation = new CompoundNBT();
     operation.put("stack", operationStack.serializeNBT());
     operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
@@ -123,12 +120,14 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public void deserializeNBT(CompoundNBT nbt) {
-    CompoundNBT upgrades = (CompoundNBT) nbt.get("upgrades");
-    if (upgrades != null)
+    CompoundNBT upgrades = nbt.getCompound("upgrades");
+    if (upgrades != null) {
       this.upgrades.deserializeNBT(upgrades);
-    CompoundNBT filters = (CompoundNBT) nbt.get("filters");
-    if (filters != null)
+    }
+    CompoundNBT filters = nbt.getCompound("filters");
+    if (filters != null) {
       this.filters.deserializeNBT(filters);
+    }
     CompoundNBT operation = nbt.getCompound("operation");
     operationStack = ItemStack.EMPTY;
     if (operation != null) {
