@@ -21,6 +21,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -64,14 +65,19 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
 
   @Override
   public void read(CompoundNBT compound) {
-    super.read(compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
+    handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(compound));
+    super.read(compound);
   }
 
   @Override
   public CompoundNBT write(CompoundNBT compound) {
     CompoundNBT result = super.write(compound);
     result.put("ioStorage", this.ioStorage.serializeNBT());
+    handler.ifPresent(h -> {
+      CompoundNBT cc = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
+      result.put("inv", cc);
+    });
     return result;
   }
 
