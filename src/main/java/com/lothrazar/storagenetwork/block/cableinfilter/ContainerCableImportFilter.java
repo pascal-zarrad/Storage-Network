@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.cableinfilter;
 
 import javax.annotation.Nullable;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.gui.ContainerCable;
@@ -29,8 +30,9 @@ public class ContainerCableImportFilter extends ContainerCable {
       this.cap = (CapabilityConnectableAutoIO) h;
     });
     tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-      for (int i = 0; i < SsnRegistry.UPGRADE_COUNT; i++) {
-        this.addSlot(new SlotItemHandler(h, i, 98 + i * sq, 6) {
+      StorageNetwork.log("ContainerCableImportFilter ize is " + h.getSlots());
+      for (int i = 0; i < h.getSlots(); i++) {
+        this.addSlot(new SlotItemHandler(h, i, 98 + (i + 0) * sq, 6) {
 
           @Override
           public int getSlotStackLimit() {

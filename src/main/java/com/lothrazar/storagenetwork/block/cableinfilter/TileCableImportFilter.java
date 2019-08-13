@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.cableinfilter;
 
 import javax.annotation.Nullable;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -87,6 +88,7 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
       //      return (LazyOptional<T>) cap;
     }
     if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+      StorageNetwork.log("Tile Cap slots has   is " + ioStorage.upgrades.getSlots());
       LazyOptional<IItemHandler> cap = LazyOptional.of(() -> ioStorage.upgrades);
       return cap.cast();
     }

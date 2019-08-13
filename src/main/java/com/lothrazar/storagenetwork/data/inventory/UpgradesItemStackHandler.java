@@ -9,13 +9,31 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
 
   public UpgradesItemStackHandler() {
     super(SsnRegistry.UPGRADE_COUNT);
-    StorageNetwork.log("size is " + stacks.size());
+    StorageNetwork.log("UpgradesItemStackHandler  is " + stacks.size()
+        + " : " + this.getSlots());
   }
-  //
-  //  @Override
-  //  protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
-  //    return 1;
-  //  }
+
+  public UpgradesItemStackHandler(int size) {
+    //    this();
+    super(SsnRegistry.UPGRADE_COUNT);
+  }
+
+  @Override
+  protected void validateSlotIndex(int slot) {
+    if (stacks.size() == 1) {
+      StorageNetwork.log("ERRROR RESET TO 1");
+      StorageNetwork.log("ERRROR RESET TO 1");
+      StorageNetwork.log("ERRROR RESET TO 1");
+      StorageNetwork.log("ERRROR RESET TO 1");
+      this.setSize(SsnRegistry.UPGRADE_COUNT);
+    }
+    super.validateSlotIndex(slot);
+  }
+
+  @Override
+  public int getSlotLimit(int slot) {
+    return 1;
+  }
 
   public int getUpgradesOfType(ItemUpgrade upgradeType) {
     int res = 0;
