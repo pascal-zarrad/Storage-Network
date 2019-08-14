@@ -66,7 +66,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   }
 
   private void syncData(int priority) {
-    //    containerCableLink.link.setPriority(priority);
     containerCableLink.cap.getFilter().isWhitelist = this.isWhitelist;
     PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_DATA.ordinal(),
         priority, isWhitelist));
