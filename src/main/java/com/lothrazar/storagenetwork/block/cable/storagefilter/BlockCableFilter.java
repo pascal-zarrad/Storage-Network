@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableinfilter;
+package com.lothrazar.storagenetwork.block.cable.storagefilter;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -14,16 +14,16 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class BlockCableImportFilter extends BlockCable {
+public class BlockCableFilter extends BlockCable {
 
-  public BlockCableImportFilter(String registryName) {
+  public BlockCableFilter(String registryName) {
     super(registryName);
   }
 
   @Nullable
   @Override
   public TileEntity createNewTileEntity(IBlockReader worldIn) {
-    return new TileCableImportFilter();
+    return new TileCableFilter();
   }
 
   @Override

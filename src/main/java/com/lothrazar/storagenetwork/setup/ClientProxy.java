@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.setup;
 
 import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
-import com.lothrazar.storagenetwork.block.cablefilter.GuiCableFilter;
-import com.lothrazar.storagenetwork.block.cableinfilter.GuiCableImportFilter;
+import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
+import com.lothrazar.storagenetwork.block.cable.storagefilter.GuiCableFilter;
 import com.lothrazar.storagenetwork.block.request.GuiRequest;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.Minecraft;

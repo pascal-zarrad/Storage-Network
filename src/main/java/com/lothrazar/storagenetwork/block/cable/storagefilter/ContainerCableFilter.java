@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cablefilter;
+package com.lothrazar.storagenetwork.block.cable.storagefilter;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;

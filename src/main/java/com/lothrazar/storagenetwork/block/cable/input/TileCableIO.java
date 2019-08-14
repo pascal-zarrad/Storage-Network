@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cablein;
+package com.lothrazar.storagenetwork.block.cable.input;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;

@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableinfilter;
+package com.lothrazar.storagenetwork.block.cable.inputfilter;
 
 import java.util.List;
 import com.google.common.collect.Lists;

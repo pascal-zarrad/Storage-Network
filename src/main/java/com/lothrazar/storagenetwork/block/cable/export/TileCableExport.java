@@ -19,6 +19,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class TileCableExport extends TileCableWithFacing implements ITickableTileEntity, INamedContainerProvider {
 
@@ -50,12 +52,14 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
   public void read(CompoundNBT compound) {
     super.read(compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
+    ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
   }
 
   @Override
   public CompoundNBT write(CompoundNBT compound) {
     CompoundNBT result = super.write(compound);
     result.put("ioStorage", this.ioStorage.serializeNBT());
+    result.put("upgrades", ioStorage.upgrades.serializeNBT());
     return result;
   }
 
@@ -64,7 +68,11 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
   public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_AUTO_IO) {
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
-      return (LazyOptional<T>) cap;
+      return cap.cast();
+    }
+    if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+      LazyOptional<IItemHandler> cap = LazyOptional.of(() -> ioStorage.upgrades);
+      return cap.cast();
     }
     return super.getCapability(capability, facing);
   }

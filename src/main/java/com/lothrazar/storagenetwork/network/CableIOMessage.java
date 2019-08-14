@@ -5,7 +5,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
-import com.lothrazar.storagenetwork.block.cableinfilter.ContainerCableImportFilter;
+import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -63,7 +63,7 @@ public class CableIOMessage {
         //super super HACK TODO: this is hacky
         if (player.openContainer instanceof ContainerCableExportFilter) {
           ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.openContainer;
-          link = ctr.link;
+          link = ctr.cap;
           tile = ctr.tile;
         }
         if (player.openContainer instanceof ContainerCableImportFilter) {

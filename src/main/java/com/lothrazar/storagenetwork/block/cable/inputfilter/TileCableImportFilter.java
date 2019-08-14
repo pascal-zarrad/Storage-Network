@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableinfilter;
+package com.lothrazar.storagenetwork.block.cable.inputfilter;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
@@ -24,23 +24,12 @@ import net.minecraftforge.items.IItemHandler;
 
 public class TileCableImportFilter extends TileCableWithFacing implements ITickableTileEntity, INamedContainerProvider {
 
-  //  private LazyOptional<IItemHandler> handler = LazyOptional.of(this::createHandler);
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableImportFilter() {
     super(SsnRegistry.filterimportkabeltile);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
-  //
-  //  private IItemHandler createHandler() {
-  //    return new ItemStackHandler(SsnRegistry.UPGRADE_COUNT) {
-  //
-  //      @Override
-  //      public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-  //        return stack.getItem() instanceof ItemUpgrade;
-  //      }
-  //    };
-  //  }
 
   @Override
   public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
@@ -62,7 +51,6 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
   public void read(CompoundNBT compound) {
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
     ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
-    //    handler.ifPresent(h -> ((INBTSerializable<CompoundNBT>) h).deserializeNBT(compound));
     super.read(compound);
   }
 
@@ -71,10 +59,6 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
     CompoundNBT result = super.write(compound);
     result.put("ioStorage", this.ioStorage.serializeNBT());
     result.put("upgrades", ioStorage.upgrades.serializeNBT());
-    //    handler.ifPresent(h -> {
-    //      CompoundNBT cc = ((INBTSerializable<CompoundNBT>) h).serializeNBT();
-    //      result.put("inv", cc);
-    //    });
     return result;
   }
 
@@ -84,7 +68,6 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
     if (capability == StorageNetworkCapabilities.CONNECTABLE_AUTO_IO) {
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
       return cap.cast();
-      //      return (LazyOptional<T>) cap;
     }
     if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
       LazyOptional<IItemHandler> cap = LazyOptional.of(() -> ioStorage.upgrades);

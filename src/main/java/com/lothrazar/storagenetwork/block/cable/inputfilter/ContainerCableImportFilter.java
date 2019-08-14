@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cableinfilter;
+package com.lothrazar.storagenetwork.block.cable.inputfilter;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
@@ -23,13 +23,10 @@ public class ContainerCableImportFilter extends ContainerCable {
   public ContainerCableImportFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterimportContainer, windowId);
     tile = (TileCableImportFilter) world.getTileEntity(pos);
-    //      this.cap = (CapabilityConnectableAutoIO) tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null).orElse(null);
     tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO).ifPresent(h -> {
-      //then
       this.cap = (CapabilityConnectableAutoIO) h;
     });
     tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h -> {
-      //      StorageNetwork.log("ContainerCableImportFilter ize is " + h.getSlots());
       for (int i = 0; i < h.getSlots(); i++) {
         this.addSlot(new SlotItemHandler(h, i, 98 + (i + 0) * sq, 6) {
 
