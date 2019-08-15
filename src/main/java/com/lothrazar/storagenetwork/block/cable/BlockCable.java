@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.block.cable;
 import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
-import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
@@ -52,13 +52,13 @@ public class BlockCable extends ContainerBlock {
     }
   }
 
-  private static final EnumProperty DOWN = EnumProperty.create("down", EnumConnectType.class);
-  private static final EnumProperty UP = EnumProperty.create("up", EnumConnectType.class);
-  private static final EnumProperty NORTH = EnumProperty.create("north", EnumConnectType.class);
-  private static final EnumProperty SOUTH = EnumProperty.create("south", EnumConnectType.class);
-  private static final EnumProperty WEST = EnumProperty.create("west", EnumConnectType.class);
-  private static final EnumProperty EAST = EnumProperty.create("east", EnumConnectType.class);
-  public static final Map<Direction, EnumProperty> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (p) -> {
+  private static final EnumProperty<EnumConnectType> DOWN = EnumProperty.create("down", EnumConnectType.class);
+  private static final EnumProperty<EnumConnectType> UP = EnumProperty.create("up", EnumConnectType.class);
+  private static final EnumProperty<EnumConnectType> NORTH = EnumProperty.create("north", EnumConnectType.class);
+  private static final EnumProperty<EnumConnectType> SOUTH = EnumProperty.create("south", EnumConnectType.class);
+  private static final EnumProperty<EnumConnectType> WEST = EnumProperty.create("west", EnumConnectType.class);
+  private static final EnumProperty<EnumConnectType> EAST = EnumProperty.create("east", EnumConnectType.class);
+  public static final Map<Direction, EnumProperty<EnumConnectType>> FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (p) -> {
     p.put(Direction.NORTH, NORTH);
     p.put(Direction.EAST, EAST);
     p.put(Direction.SOUTH, SOUTH);
@@ -92,16 +92,20 @@ public class BlockCable extends ContainerBlock {
         .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
         .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
         .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
-    VoxelShapes x;
+  }
+
+  private boolean shapeConnects(BlockState state, EnumProperty<EnumConnectType> dirctionProperty) {
+    return state.get(dirctionProperty).equals(EnumConnectType.CABLE)
+        || state.get(dirctionProperty).equals(EnumConnectType.INVENTORY);
   }
 
   @Override
   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
     VoxelShape shape = AABB;
-    if (state.get(UP).equals(EnumConnectType.CABLE)) {
+    if (shapeConnects(state, UP)) {
       shape = VoxelShapes.combine(shape, AABB_UP, IBooleanFunction.OR);
     }
-    if (state.get(DOWN).equals(EnumConnectType.CABLE)) {
+    if (shapeConnects(state, DOWN)) {
       shape = VoxelShapes.combine(shape, AABB_DOWN, IBooleanFunction.OR);
     }
     if (state.get(WEST).equals(EnumConnectType.CABLE)) {
@@ -145,27 +149,10 @@ public class BlockCable extends ContainerBlock {
     super.fillStateContainer(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
   }
-  //
-  //  @Nullable
-  //  public BlockState getStateForPlacement(BlockItemUseContext context) {
-  //    BlockState stateIn = super.getStateForPlacement(context);
-  //    for (Direction dir : Direction.values()) {
-  //      BlockPos facingPos = context.getPos().offset(dir);
-  //      BlockState facingState = context.getWorld().getBlockState(facingPos);
-  //      if (isValidLinkNeighbor(stateIn, dir, facingState, context.getWorld(), context.getPos(), facingPos)) {
-  //        stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(dir), EnumConnectType.INVENTORY);
-  ////        context.getWorld().setBlockState(context.getPos() , stateIn);
-  //        TileCableWithFacing cable = (TileCableWithFacing) context.getWorld().getTileEntity(context.getPos());
-  //        cable.setDirection(dir);
-  //        return stateIn;
-  //      }
-  //    }
-  //    return stateIn;
-  //  }
 
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
-    EnumProperty property = FACING_TO_PROPERTY_MAP.get(facing);
+    EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     //TODO: api should come back here
     if (facingState.getBlock() instanceof BlockCable
         || facingState.getBlock() == SsnRegistry.master
@@ -173,16 +160,16 @@ public class BlockCable extends ContainerBlock {
       //dont set self to self
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-    //    else if (isValidLinkNeighbor(stateIn, facing, facingState, world, currentPos, facingPos)) {
-    //      StorageNetwork.log(" post placement: inventory ");
-    //      return stateIn.with(property, EnumConnectType.INVENTORY);
-    //    }
+    else if (isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
+      StorageNetwork.log(" post placement: inventory ");
+      return stateIn.with(property, EnumConnectType.INVENTORY);
+    }
     else {
       return stateIn.with(property, EnumConnectType.NONE);
     }
   }
 
-  public static boolean isValidLinkNeighbor(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+  private static boolean isInventory(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     if (facing == null) {
       return false;
     }
@@ -191,13 +178,28 @@ public class BlockCable extends ContainerBlock {
     }
     TileEntity neighbor = world.getTileEntity(facingPos);
     if (neighbor != null
-        && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()) != null
+        && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
+      return true;
+    }
+    return false;
+  }
+
+  private static boolean isValidLinkNeighbor(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+    if (facing == null) {
+      return false;
+    }
+    if (!TileMaster.isTargetAllowed(facingState)) {
+      return false;
+    }
+    TileEntity neighbor = world.getTileEntity(facingPos);
+    if (neighbor != null
+        && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null
         && stateIn.getBlock() == SsnRegistry.storagekabel) {
-      TileEntity myself = world.getTileEntity(currentPos);
-      if (myself instanceof TileCableLink) {
-        TileCableLink link = (TileCableLink) myself;
-        link.setDirection(facing);
-      }
+      //      TileEntity myself = world.getTileEntity(currentPos);
+      //      if (myself instanceof TileCableLink) {
+      //        TileCableLink link = (TileCableLink) myself;
+      //        link.setDirection(facing);
+      //      }
       return true;
     }
     return false;

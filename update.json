@@ -94,6 +94,6 @@
   },
   "1.14.4": {
     "0.0.8": "Updated to forge 1.14.4-28.0.13",
-    "0.0.8": "Added Speed and Stack upgrades for cables.  "
+    "0.0.9": "Added Speed and Stack upgrades for cables.  Fix network blocks not connecting to cables visually. "
   }
 }
