@@ -219,14 +219,17 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return stacksToDisplay;
   }
 
+  @Override
   public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
     return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
   }
 
+  @Override
   public void renderStackToolTip(ItemStack stack, int x, int y) {
     super.renderTooltip(stack, x, y);
   }
 
+  @Override
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
@@ -328,17 +331,17 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   private void drawTooltips(final int mouseX, final int mouseY) {
     if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX - guiLeft, mouseY);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX - guiLeft, mouseY - this.guiTop);
     }
     if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY - this.guiTop);
     }
     if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY);
+      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY - this.guiTop);
     }
     if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY);
+      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
     }
     for (ItemSlotNetwork s : slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
@@ -357,7 +360,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
       }
-      renderTooltip(lis, mouseX - guiLeft, mouseY);
+      renderTooltip(lis, mouseX - this.guiLeft, mouseY - this.guiTop);
     }
   }
 
