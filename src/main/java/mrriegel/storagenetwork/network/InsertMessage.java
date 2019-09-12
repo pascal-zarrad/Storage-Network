@@ -42,7 +42,6 @@ public class InsertMessage implements IMessage, IMessageHandler<InsertMessage, I
         int rest;
         ItemStack send = ItemStack.EMPTY;
         ItemStack stackCarriedByMouse = player.inventory.getItemStack();
-        System.out.println(stackCarriedByMouse);
         if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {//TODO ENUM OR SOMETHING
           rest = tileMaster.insertStack(stackCarriedByMouse, false);
           if (rest != 0)

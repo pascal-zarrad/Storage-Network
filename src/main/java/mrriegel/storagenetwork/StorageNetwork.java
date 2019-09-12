@@ -101,5 +101,4 @@ public class StorageNetwork {
   public static void error(String s) {
     instance.logger.error(s);
   }
-
 }

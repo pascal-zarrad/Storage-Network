@@ -17,7 +17,6 @@ public class TileCableIO extends TileCableWithFacing {
 
   public TileCableIO() {
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.BOTH);
-
   }
 
   public TileCableIO(EnumStorageDirection storageDirection) {
