@@ -18,7 +18,7 @@ public class ContainerCableIO extends ContainerCable {
 
   public static final int UPGRADE_COUNT = 4;
   @Nullable
-  public CapabilityConnectableAutoIO autoIO;
+  public CapabilityConnectableAutoIO cap;
 
   public ContainerCableIO(TileCable tile, InventoryPlayer playerInv) {
     super(tile, playerInv);
@@ -29,9 +29,9 @@ public class ContainerCableIO extends ContainerCable {
     if (!(rawAutoIO instanceof CapabilityConnectableAutoIO)) {
       return;
     }
-    this.autoIO = (CapabilityConnectableAutoIO) rawAutoIO;
+    this.cap = (CapabilityConnectableAutoIO) rawAutoIO;
     for (int ii = 0; ii < UPGRADE_COUNT; ii++) {
-      this.addSlotToContainer(new SlotItemHandler(autoIO.upgrades, ii, 98 + ii * sq, 6) {
+      this.addSlotToContainer(new SlotItemHandler(cap.upgrades, ii, 98 + ii * sq, 6) {
 
         @Override
         public int getSlotStackLimit() {

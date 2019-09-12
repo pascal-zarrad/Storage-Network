@@ -31,11 +31,11 @@ public class CableLimitMessage implements IMessage, IMessageHandler<CableLimitMe
     mainThread.addScheduledTask(() -> {
       if (player.openContainer instanceof ContainerCableIO) {
         ContainerCableIO con = (ContainerCableIO) player.openContainer;
-        if (con == null || con.autoIO == null) {
+        if (con == null || con.cap == null) {
           return;
         }
-        con.autoIO.operationLimit = message.limit;
-        con.autoIO.operationStack = message.stack;
+        con.cap.operationLimit = message.limit;
+        con.cap.operationStack = message.stack;
         con.tile.markDirty();
       }
     });

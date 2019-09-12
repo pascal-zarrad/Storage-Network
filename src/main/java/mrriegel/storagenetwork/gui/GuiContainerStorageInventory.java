@@ -434,7 +434,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
         lastClick = System.currentTimeMillis();
       }
       else if (!stackCarriedByMouse.isEmpty() && inField(mouseX, mouseY) && canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton, stackCarriedByMouse));
+        PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton));
         lastClick = System.currentTimeMillis();
       }
     }

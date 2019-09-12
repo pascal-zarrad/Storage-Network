@@ -64,15 +64,15 @@ public class CableFilterMessage implements IMessage, IMessageHandler<CableFilter
       }
       if (player.openContainer instanceof ContainerCableIO) {
         ContainerCableIO con = (ContainerCableIO) player.openContainer;
-        if (con == null || con.autoIO == null) {
+        if (con == null || con.cap == null) {
           return;
         }
         if (message.stack != null && message.index >= 0) {
-          con.autoIO.filters.setStackInSlot(message.index, message.stack);
+          con.cap.filters.setStackInSlot(message.index, message.stack);
         }
-        con.autoIO.filters.ores = message.ore;
-        con.autoIO.filters.meta = message.meta;
-        con.autoIO.filters.nbt = message.nbt;
+        con.cap.filters.ores = message.ore;
+        con.cap.filters.meta = message.meta;
+        con.cap.filters.nbt = message.nbt;
         con.tile.markDirty();
         UtilTileEntity.updateTile(con.tile.getWorld(), con.tile.getPos());
       }

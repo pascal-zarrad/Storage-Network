@@ -31,21 +31,21 @@ public class GuiCableIO extends GuiCable {
 
   @Override
   public FilterItemStackHandler getFilterHandler() {
-    return containerCableIO.autoIO.filters;
+    return containerCableIO.cap.filters;
   }
 
   @Override
   public void importSlotsButtonPressed() {
     super.importSlotsButtonPressed();
     int targetSlot = 0;
-    for (ItemStack filterSuggestion : containerCableIO.autoIO.getStacksForFilter()) {
+    for (ItemStack filterSuggestion : containerCableIO.cap.getStacksForFilter()) {
       // Ignore stacks that are already filtered
-      if (containerCableIO.autoIO.filters.isStackFiltered(filterSuggestion)) {
+      if (containerCableIO.cap.filters.isStackFiltered(filterSuggestion)) {
         continue;
       }
-      containerCableIO.autoIO.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
+      containerCableIO.cap.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
       targetSlot++;
-      if (targetSlot >= containerCableIO.autoIO.filters.getSlots()) {
+      if (targetSlot >= containerCableIO.cap.filters.getSlots()) {
         break;
       }
     }
@@ -55,7 +55,7 @@ public class GuiCableIO extends GuiCable {
   public void initGui() {
     super.initGui();
     btnWhite.setCustomDrawMethod(guiCableButton -> {
-      if (this.containerCableIO.autoIO.filters.isWhitelist) {
+      if (this.containerCableIO.cap.filters.isWhitelist) {
         this.drawTexturedModalRect(guiCableButton.x + 1, guiCableButton.y + 3, 176, 83, 13, 10);
       }
       else {
@@ -70,12 +70,12 @@ public class GuiCableIO extends GuiCable {
     fieldOperationLimit.setTextColor(16777215);
     fieldOperationLimit.setCanLoseFocus(false);
     fieldOperationLimit.setFocused(true);
-    fieldOperationLimit.setText("" + this.containerCableIO.autoIO.operationLimit);
+    fieldOperationLimit.setText("" + this.containerCableIO.cap.operationLimit);
     fieldOperationLimit.width = 20;
     btnOperationToggle = new GuiCableButton(CableDataMessage.CableMessageType.TOGGLE_MODE, guiLeft + 28, guiTop + 66, "");
     btnOperationToggle.setCustomDrawMethod(guiCableButton -> {
       // TODO: Do these < and > in the GUI need to get swapped?
-      if (this.containerCableIO.autoIO.operationMustBeSmaller) {
+      if (this.containerCableIO.cap.operationMustBeSmaller) {
         guiCableButton.displayString = "<";
       }
       else {
@@ -83,7 +83,7 @@ public class GuiCableIO extends GuiCable {
       }
     });
     this.addButton(btnOperationToggle);
-    operationItemSlot = new ItemSlotNetwork(this, this.containerCableIO.autoIO.operationStack, guiLeft + 8, guiTop + 66, 1, guiLeft, guiTop, false);
+    operationItemSlot = new ItemSlotNetwork(this, this.containerCableIO.cap.operationStack, guiLeft + 8, guiTop + 66, 1, guiLeft, guiTop, false);
   }
 
   @Override
@@ -96,7 +96,7 @@ public class GuiCableIO extends GuiCable {
     for (int ug = 0; ug < EnumUpgradeType.values().length; ug++) {
       this.drawTexturedModalRect(xMiddle + 97 + ug * SLOT_SIZE, yMiddle + 5, u, v, SLOT_SIZE, SLOT_SIZE);
     }
-    if (containerCableIO == null || containerCableIO.autoIO == null) {
+    if (containerCableIO == null || containerCableIO.cap == null) {
       return;
     }
     if (hasOperationUpgrade(EnumUpgradeType.OPERATION)) {
@@ -113,11 +113,11 @@ public class GuiCableIO extends GuiCable {
       btnOperationToggle.enabled = false;
       btnOperationToggle.visible = false;
     }
-    checkOreBtn.setIsChecked(containerCableIO.autoIO.filters.ores);
-    checkMetaBtn.setIsChecked(containerCableIO.autoIO.filters.meta);
-    checkNbtBtn.setIsChecked(containerCableIO.autoIO.filters.nbt);
-    fontRenderer.drawString(String.valueOf(containerCableIO.autoIO.getPriority()),
-        guiLeft + 30 - fontRenderer.getStringWidth(String.valueOf(containerCableIO.autoIO.getPriority())) / 2,
+    checkOreBtn.setIsChecked(containerCableIO.cap.filters.ores);
+    checkMetaBtn.setIsChecked(containerCableIO.cap.filters.meta);
+    checkNbtBtn.setIsChecked(containerCableIO.cap.filters.nbt);
+    fontRenderer.drawString(String.valueOf(containerCableIO.cap.getPriority()),
+        guiLeft + 30 - fontRenderer.getStringWidth(String.valueOf(containerCableIO.cap.getPriority())) / 2,
         5 + btnMinus.y, 4210752);
     itemSlotsGhost = Lists.newArrayList();
     int rows = 2;
@@ -126,7 +126,7 @@ public class GuiCableIO extends GuiCable {
     int y = 26;
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
-        ItemStack stack = containerCableIO.autoIO.filters.getStackInSlot(index);
+        ItemStack stack = containerCableIO.cap.filters.getStackInSlot(index);
         int x = 8 + col * SLOT_SIZE;
         itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));
         index++;
@@ -143,41 +143,41 @@ public class GuiCableIO extends GuiCable {
   @Override
   protected void drawTooltips(int mouseX, int mouseY) {
     super.drawTooltips(mouseX, mouseY);
-    if (containerCableIO == null || containerCableIO.autoIO == null) {
+    if (containerCableIO == null || containerCableIO.cap == null) {
       return;
     }
     if (hasOperationUpgrade(EnumUpgradeType.OPERATION)) {
       operationItemSlot.drawTooltip(mouseX, mouseY);
       if (btnOperationToggle.isMouseOver()) {
         String s = I18n.format("gui.storagenetwork.operate.tooltip",
-            I18n.format("gui.storagenetwork.operate.tooltip." + (containerCableIO.autoIO.operationMustBeSmaller ? "less" : "more")),
-            containerCableIO.autoIO.operationLimit,
-            containerCableIO.autoIO.operationStack != null ? containerCableIO.autoIO.operationStack.getDisplayName() : "Items");
+            I18n.format("gui.storagenetwork.operate.tooltip." + (containerCableIO.cap.operationMustBeSmaller ? "less" : "more")),
+            containerCableIO.cap.operationLimit,
+            containerCableIO.cap.operationStack != null ? containerCableIO.cap.operationStack.getDisplayName() : "Items");
         this.drawHoveringText(Lists.newArrayList(s), mouseX, mouseY, fontRenderer);
       }
     }
   }
 
   private boolean hasOperationUpgrade(EnumUpgradeType u) {
-    return containerCableIO.autoIO.upgrades.getUpgradesOfType(u) > 0;
+    return containerCableIO.cap.upgrades.getUpgradesOfType(u) > 0;
   }
 
   @Override
   protected void actionPerformed(GuiButton button) throws IOException {
     super.actionPerformed(button);
-    if (containerCableIO == null || containerCableIO.autoIO == null) {
+    if (containerCableIO == null || containerCableIO.cap == null) {
       return;
     }
     if (button.id == btnMinus.id) {
-      containerCableIO.autoIO.priority--;
+      containerCableIO.cap.priority--;
       PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(button.id));
     }
     else if (button.id == btnPlus.id) {
-      containerCableIO.autoIO.priority++;
+      containerCableIO.cap.priority++;
       PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(button.id));
     }
     else if (button.id == btnOperationToggle.id) {
-      containerCableIO.autoIO.operationMustBeSmaller = !containerCableIO.autoIO.operationMustBeSmaller;
+      containerCableIO.cap.operationMustBeSmaller = !containerCableIO.cap.operationMustBeSmaller;
       PacketRegistry.INSTANCE.sendToServer(new CableDataMessage(button.id));
     }
   }
@@ -186,7 +186,7 @@ public class GuiCableIO extends GuiCable {
   protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
     super.mouseClicked(mouseX, mouseY, mouseButton);
     ItemStack stackCarriedByMouse = mc.player.inventory.getItemStack().copy();
-    if (containerCableIO.autoIO.upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) < 1) {
+    if (containerCableIO.cap.upgrades.getUpgradesOfType(EnumUpgradeType.OPERATION) < 1) {
       return;
     }
     if (!operationItemSlot.isMouseOverSlot(mouseX, mouseY)) {
@@ -215,7 +215,7 @@ public class GuiCableIO extends GuiCable {
         catch (Exception e) {
           fieldOperationLimit.setText("0");
         }
-        containerCableIO.autoIO.operationLimit = num;
+        containerCableIO.cap.operationLimit = num;
         PacketRegistry.INSTANCE.sendToServer(new CableLimitMessage(num, operationItemSlot.getStack()));
       }
       else {

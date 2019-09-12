@@ -133,25 +133,25 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
 
       private void updateCableIO(EntityPlayerMP player, CableMessageType type) {
         ContainerCableIO con = (ContainerCableIO) player.openContainer;
-        if (con == null || con.autoIO == null) {
+        if (con == null || con.cap == null) {
           return;
         }
-        INetworkMaster master = StorageNetwork.helpers.getTileMasterForConnectable(con.autoIO.connectable);
+        INetworkMaster master = StorageNetwork.helpers.getTileMasterForConnectable(con.cap.connectable);
         switch (type) {
           case TOGGLE_MODE:
-            con.autoIO.operationMustBeSmaller = !con.autoIO.operationMustBeSmaller;
+            con.cap.operationMustBeSmaller = !con.cap.operationMustBeSmaller;
           break;
           case TOGGLE_WHITELIST:
-            con.autoIO.filters.isWhitelist = !con.autoIO.filters.isWhitelist;
+            con.cap.filters.isWhitelist = !con.cap.filters.isWhitelist;
           break;
           case PRIORITY_UP:
-            con.autoIO.priority++;
+            con.cap.priority++;
             if (master != null) {
               master.clearCache();
             }
           break;
           case PRIORITY_DOWN:
-            con.autoIO.priority--;
+            con.cap.priority--;
             if (master != null) {
               master.clearCache();
             }
@@ -160,21 +160,21 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
             //TODO: Fix this not auto sync to client 
             //TODO: Fix this not auto sync to client 
             int targetSlot = 0;
-            for (ItemStack filterSuggestion : con.autoIO.getStacksForFilter()) {
+            for (ItemStack filterSuggestion : con.cap.getStacksForFilter()) {
               // Ignore stacks that are already filtered 
-              if (con.autoIO.filters.exactStackAlreadyInList(filterSuggestion)) {
+              if (con.cap.filters.exactStackAlreadyInList(filterSuggestion)) {
                 continue;
               }
-              con.autoIO.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
+              con.cap.filters.setStackInSlot(targetSlot, filterSuggestion.copy());
               targetSlot++;
-              if (targetSlot >= con.autoIO.filters.getSlots()) {
+              if (targetSlot >= con.cap.filters.getSlots()) {
                 continue;
               }
             }
           break;
         }
         StorageNetwork.log("Send new refresh client msg");
-        PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.autoIO.filters.getStacks()), player);
+        PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.cap.filters.getStacks()), player);
         con.tile.markDirty();
       }
     });

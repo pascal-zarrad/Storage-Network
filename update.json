@@ -7,8 +7,8 @@
     "1.12-recommended": "1.0.15",
     "1.12.1-latest": "1.0.15",
     "1.12.1-recommended": "1.1.1",
-    "1.12.2-latest": "1.7.8",
-    "1.12.2-recommended": "1.7.8"
+    "1.12.2-latest": "1.7.9",
+    "1.12.2-recommended": "1.7.9"
   },
   "1.11.2":{
 	"1.0.0":"First Release"
@@ -78,5 +78,6 @@
 	,"1.7.6":"Newly placed Export cables now have Meta checked by default, for convenience.  Fixed a bug with shift-clicking in processing cable GUI.  Fixed bug where inventory can be switching places in the request table on open in servers.  Fixed some small issues introduced in 1.7.5 such as normal clicks not requesting 64 items.  You can now middle-click instead of holding ctrl to pull out exactly one item, instead of 64.  Reverted and fixed cable connector bounding-box/hitbox changes that were introduced in 1.7.4.  Fixed recipe transfers not finding damaged items such as tools or Infusion Crystals.  "
 	,"1.7.7":"Fixed Output Only mode in cables. ru_RU.lang updated by kellixon  "
   	,"1.7.8":"Fixed a mod compatibility crash with null buttons or elements from other mods injected into the GUI (quark trash bin for example)."
+  	,"1.7.9":"Fixed a dupe bug that is very hard to trigger when depositing items with InsertMessage.java due to a desync; especially with server delays.  "
   }
 }

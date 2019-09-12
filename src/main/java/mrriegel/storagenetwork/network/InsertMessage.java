@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -20,13 +19,11 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class InsertMessage implements IMessage, IMessageHandler<InsertMessage, IMessage> {
 
   private int dim, mouseButton;
-  private ItemStack stack;
 
   public InsertMessage() {}
 
-  public InsertMessage(int dim, int buttonID, ItemStack stack) {
+  public InsertMessage(int dim, int buttonID) {
     this.dim = dim;
-    this.stack = stack;
     this.mouseButton = buttonID;
   }
 
@@ -44,18 +41,20 @@ public class InsertMessage implements IMessage, IMessageHandler<InsertMessage, I
         }
         int rest;
         ItemStack send = ItemStack.EMPTY;
+        ItemStack stackCarriedByMouse = player.inventory.getItemStack();
+        System.out.println(stackCarriedByMouse);
         if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {//TODO ENUM OR SOMETHING
-          rest = tileMaster.insertStack(message.stack, false);
+          rest = tileMaster.insertStack(stackCarriedByMouse, false);
           if (rest != 0)
-            send = ItemHandlerHelper.copyStackWithSize(message.stack, rest);
+            send = ItemHandlerHelper.copyStackWithSize(stackCarriedByMouse, rest);
         }
         else if (message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-          ItemStack stack1 = message.stack.copy();
+          ItemStack stack1 = stackCarriedByMouse.copy();
           stack1.setCount(1);
-          message.stack.shrink(1);
-          rest = tileMaster.insertStack(stack1, false) + message.stack.getCount();
+          stackCarriedByMouse.shrink(1);
+          rest = tileMaster.insertStack(stack1, false) + stackCarriedByMouse.getCount();
           if (rest != 0)
-            send = ItemHandlerHelper.copyStackWithSize(message.stack, rest);
+            send = ItemHandlerHelper.copyStackWithSize(stackCarriedByMouse, rest);
         }
         //TODO: WHY TWO messages/?
         player.inventory.setItemStack(send);
@@ -71,14 +70,12 @@ public class InsertMessage implements IMessage, IMessageHandler<InsertMessage, I
   @Override
   public void fromBytes(ByteBuf buf) {
     this.dim = buf.readInt();
-    this.stack = ByteBufUtils.readItemStack(buf);
     this.mouseButton = buf.readInt();
   }
 
   @Override
   public void toBytes(ByteBuf buf) {
     buf.writeInt(this.dim);
-    ByteBufUtils.writeItemStack(buf, this.stack);
     buf.writeInt(this.mouseButton);
   }
 }
