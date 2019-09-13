@@ -17,12 +17,10 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class InsertMessage {
 
   private int dim, mouseButton;
-  private ItemStack stack;
 
-  public InsertMessage(int dim, int buttonID, ItemStack stack) {
+  public InsertMessage(int dim, int buttonID) {
     this.dim = dim;
-    this.stack = stack;
-    mouseButton = buttonID;
+    this.mouseButton = buttonID;
   }
 
   private InsertMessage() {}
@@ -36,19 +34,20 @@ public class InsertMessage {
       }
       int rest;
       ItemStack send = ItemStack.EMPTY;
+      ItemStack stack = player.inventory.getItemStack();
       if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {//TODO ENUM OR SOMETHING
-        rest = tileMaster.insertStack(message.stack, false);
+        rest = tileMaster.insertStack(stack, false);
         if (rest != 0) {
-          send = ItemHandlerHelper.copyStackWithSize(message.stack, rest);
+          send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
       else if (message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        ItemStack stack1 = message.stack.copy();
+        ItemStack stack1 = stack.copy();
         stack1.setCount(1);
-        message.stack.shrink(1);
-        rest = tileMaster.insertStack(stack1, false) + message.stack.getCount();
+        stack.shrink(1);
+        rest = tileMaster.insertStack(stack1, false) + stack.getCount();
         if (rest != 0) {
-          send = ItemHandlerHelper.copyStackWithSize(message.stack, rest);
+          send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
       //TODO: WHY TWO messages/?
@@ -65,14 +64,12 @@ public class InsertMessage {
   public static InsertMessage decode(PacketBuffer buf) {
     InsertMessage message = new InsertMessage();
     message.dim = buf.readInt();
-    message.stack = ItemStack.read(buf.readCompoundTag());
     message.mouseButton = buf.readInt();
     return message;
   }
 
   public static void encode(InsertMessage msg, PacketBuffer buf) {
     buf.writeInt(msg.dim);
-    buf.writeCompoundTag(msg.stack.serializeNBT());
     buf.writeInt(msg.mouseButton);
   }
 }

@@ -443,7 +443,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
         lastClick = System.currentTimeMillis();
       }
       else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) && canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton, stackCarriedByMouse));
+        PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton));
         lastClick = System.currentTimeMillis();
       }
     }

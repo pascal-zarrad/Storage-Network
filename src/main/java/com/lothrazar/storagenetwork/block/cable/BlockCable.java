@@ -28,6 +28,15 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockCable extends ContainerBlock {
 
+  public BlockCable(String registryName) {
+    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
+    setRegistryName(registryName);
+    setDefaultState(stateContainer.getBaseState()
+        .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
+        .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
+        .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
+  }
+
   public static BlockState cleanBlockState(BlockState state) {
     for (Direction d : Direction.values()) {
       EnumProperty prop = FACING_TO_PROPERTY_MAP.get(d);
@@ -84,15 +93,6 @@ public class BlockCable extends ContainerBlock {
   //X for e-w
   private static final VoxelShape AABB_WEST = Block.makeCuboidShape(bot, sm, sm, lg, lg, lg);
   private static final VoxelShape AABB_EAST = Block.makeCuboidShape(sm, sm, sm, top, lg, lg);
-
-  public BlockCable(String registryName) {
-    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
-    setRegistryName(registryName);
-    setDefaultState(stateContainer.getBaseState()
-        .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
-        .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
-        .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
-  }
 
   private boolean shapeConnects(BlockState state, EnumProperty<EnumConnectType> dirctionProperty) {
     return state.get(dirctionProperty).equals(EnumConnectType.CABLE)
@@ -179,27 +179,6 @@ public class BlockCable extends ContainerBlock {
     TileEntity neighbor = world.getTileEntity(facingPos);
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
-      return true;
-    }
-    return false;
-  }
-
-  private static boolean isValidLinkNeighbor(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
-    if (facing == null) {
-      return false;
-    }
-    if (!TileMaster.isTargetAllowed(facingState)) {
-      return false;
-    }
-    TileEntity neighbor = world.getTileEntity(facingPos);
-    if (neighbor != null
-        && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null
-        && stateIn.getBlock() == SsnRegistry.storagekabel) {
-      //      TileEntity myself = world.getTileEntity(currentPos);
-      //      if (myself instanceof TileCableLink) {
-      //        TileCableLink link = (TileCableLink) myself;
-      //        link.setDirection(facing);
-      //      }
       return true;
     }
     return false;
