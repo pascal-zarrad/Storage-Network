@@ -25,6 +25,7 @@ import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
@@ -69,6 +70,8 @@ public class StorageNetwork {
     PacketRegistry.init();
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
+    //TOOD: how
+    JeiSettings.setJeiLoaded(true);
   }
 
   @SubscribeEvent

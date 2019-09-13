@@ -7,11 +7,13 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -39,8 +41,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   public DimPos(World world, BlockPos pos) {
     this.world = world;
-    dimension = 0;
-    //    dimension = world == null ? 0 : world.provider.getDimension();
+    dimension = world.getDimension().getType().getId();
     this.pos = pos;
   }
 
@@ -49,6 +50,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     //    if (world != null) {
     return world;
     //    }
+//    MinecraftServer x
+//    DimensionManager.getWorld(MinecraftServer.)
     //    return DimensionManager.getWorld(dimension);
   }
 
