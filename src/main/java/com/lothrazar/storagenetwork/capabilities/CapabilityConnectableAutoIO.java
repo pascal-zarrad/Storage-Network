@@ -188,7 +188,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     // Test whether the connected block has the IItemHandler capability
     IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
     if (itemHandler == null) {
-      StorageNetwork.LOGGER.error("getStacksForFilter    null itemhandler connection ");
+      StorageNetwork.LOGGER.info("getStacksForFilter    null itemhandler connection ");
       return Collections.emptyList();
     }
     // If it does, iterate its stacks, filter them and add them to the result list

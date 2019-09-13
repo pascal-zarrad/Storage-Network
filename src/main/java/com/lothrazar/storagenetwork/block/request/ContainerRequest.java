@@ -204,7 +204,7 @@ public class ContainerRequest extends ContainerNetworkBase {
     }
     ItemStack res = recipeCurrent.getCraftingResult(matrix);
     if (res.isEmpty()) {
-      StorageNetwork.LOGGER.error("err Recipe output is an empty stack ", recipeCurrent);
+      StorageNetwork.LOGGER.info("err Recipe output is an empty stack " + recipeCurrent);
       return;
     }
     int sizePerCraft = res.getCount();

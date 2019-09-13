@@ -329,7 +329,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
-            StorageNetwork.LOGGER.error("error thrown ", e);
+            StorageNetwork.LOGGER.info("error thrown "+ e);
           }
         }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {
@@ -406,7 +406,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       }
       IConnectable cap = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
       if (cap == null) {
-        StorageNetwork.LOGGER.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
+        StorageNetwork.LOGGER.info("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
       result.add(cap);
@@ -456,7 +456,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         world.getChunk(pos).setModified(true);//.setChunkModified();
       }
       catch (Throwable e) {
-        StorageNetwork.LOGGER.error("Refresh network error ", e);
+        StorageNetwork.LOGGER.info("Refresh network error ");
         e.printStackTrace();
       }
     }

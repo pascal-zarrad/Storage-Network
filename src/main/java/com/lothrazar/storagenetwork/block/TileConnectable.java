@@ -84,7 +84,7 @@ public class TileConnectable extends TileEntity {
         }
       }
       catch (Exception e) {
-        StorageNetwork.LOGGER.error("Error on chunk unload ", e);
+        StorageNetwork.LOGGER.info("Error on chunk unload "+ e);
       }
     }
   }

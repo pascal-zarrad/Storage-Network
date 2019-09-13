@@ -15,7 +15,7 @@ public class JeiHooks {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error(" mezz.jei.Internal not found ", e);
+      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found "+ e);
     }
     return "";
   }
@@ -32,7 +32,7 @@ public class JeiHooks {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error(" mezz.jei.Internal not found ", e);
+      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found "+ e);
     }
   }
   //  @Optional.Method(modid = "jei")
