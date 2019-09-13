@@ -13,7 +13,7 @@ public class JeiHooks {
   public static String getFilterText() {
     try {
       if (JeiSettings.isJeiLoaded()) {
-        return "";// getJeiTextInternal();
+        return   getJeiTextInternal();
       }
     }
     catch (Exception e) {
@@ -30,7 +30,7 @@ public class JeiHooks {
   public static void setFilterText(String s) {
     try {
       if (JeiSettings.isJeiLoaded()) {
-        //        setJeiTextInternal(s);
+         setJeiTextInternal(s);
       }
     }
     catch (Exception e) {
