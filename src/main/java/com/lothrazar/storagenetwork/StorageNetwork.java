@@ -107,14 +107,14 @@ public class StorageNetwork {
       r.register(new BlockItem(SsnRegistry.importfilterkabel, properties).setRegistryName("import_filter_kabel"));
       r.register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
       r.register(new BlockItem(SsnRegistry.exportkabel, properties).setRegistryName("export_kabel"));
-      //up 
+      //up
       //      r.register(new ItemUpgrade(properties).setRegistryName("operation_upgrade"));
       //      r.register(new ItemUpgrade(properties).setRegistryName("stock_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
+      //      r.register(new ItemRemote(properties).setRegistryName("shortrange_remote"));
       //      r.register(new ItemUpgrade(properties).setRegistryName("dimension_remote"));
       //      r.register(new ItemUpgrade(properties).setRegistryName("inventory_remote"));
-      //      r.register(new ItemUpgrade(properties).setRegistryName("shortrange_remote"));
       //      r.register(new ItemUpgrade(properties).setRegistryName("longrange_remote"));
       //      r.register(new ItemUpgrade(properties).setRegistryName("dimension_craft_remote"));
       //      r.register(new ItemUpgrade(properties).setRegistryName("inventory_craft_remote"));
