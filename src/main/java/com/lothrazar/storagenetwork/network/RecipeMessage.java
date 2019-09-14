@@ -82,38 +82,14 @@ public class RecipeMessage {
          * parse nbt of the slot, whether its ore dict, itemstack, ore empty
          **********/
         boolean isOreDict;
-        //        if (message.nbt.contains("s" + slot, Constants.NBT.TAG_STRING)) {
-        //          //i am 80% sure this ore string branch never hits anymore
-        //          //JEI recipe transfer sends list of items only
-        //          isOreDict = true;
-        //          /*************
-        //           * NEW: each item stack could be in MULTIPLE ore dicts. such as betterthanmods multiblocks
-        //           **/
-        //          //            oreDictKeys = message.nbt.getString("s" + slot).split(",");
-        //          //            List<ItemStack> l = new ArrayList<>();
-        //          //            for (String oreKey : oreDictKeys) {
-        //          //              l.addAll(OreDictionary.getOres(oreKey));
-        //          //            }
-        //          //              List<ItemStack> l = OreDictionary.getOres(oreKey);
-        //          //            for (int i = 0; i < l.size(); i++) {
-        //          //              map.put(i, l.get(i));
-        //          //            }
-        //          //  StorageNetwork.log(message.nbt.getString("s" + slot) + " ore dict keyS found  " + l);
-        //        }
-        //        else { // is not string, so just simple item stacks
         isOreDict = false;
-        System.out.println(""+message.nbt);
-        StorageNetwork.LOGGER.info("test" + message);
-        ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
+         ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < invList.size(); i++) {
           CompoundNBT stackTag = invList.getCompound(i);
           ItemStack s = ItemStack.read(stackTag);
           map.put(i, s);
         }
-        //              StorageNetwork.log(slot + "  slot has potential [ore] matches  " + map.keySet().size());
-        //   StorageNetwork.log(slot + "  slot has potential [ore] matches  " + map.values());
-        //        }
-        /********* end parse nbt of this current slot ******/
+         /********* end parse nbt of this current slot ******/
         /********** now start trying to fill in recipe **/
         for (int i = 0; i < map.size(); i++) {
           ItemStack stackCurrent = map.get(i);
@@ -127,12 +103,10 @@ public class RecipeMessage {
             //its a tool or something with a durability cap so IGNORE metadata 
             //              itemStackMatcher.setMeta(false);
           }
-          //            StorageNetwork.log("CALL exctractItem   " + stackCurrent + " isOreDict " + isOreDict + " DAMAGE " + stackCurrent.getItemDamage()
-          //                + " !!HASMAXDAMG" + stackCurrent.getMaxDamage());
+
           ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, true);
           /*********** First try and use the players inventory **/
-          //              int slot = j ;//- 1;
-          if (ex != null && !ex.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
+           if (ex != null && !ex.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
             UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, false);
             //make sure to add the real item after the nonsimulated withdrawl is complete https://github.com/PrinceOfAmber/Storage-Network/issues/16
             craftMatrix.setInventorySlotContents(slot, ex);
