@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.network;
 import java.util.List;
 import java.util.function.Supplier;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.gui.GuiContainerStorageInventory;
+import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -35,8 +35,8 @@ public class StackRefreshClientMessage {
     ctx.get().enqueueWork(() -> {
       Minecraft mc = Minecraft.getInstance();//StorageNetwork.proxy.getMinecraft();
       // TODO: IStorageInventory API
-      if (mc.currentScreen instanceof GuiContainerStorageInventory) {
-        GuiContainerStorageInventory gui = (GuiContainerStorageInventory) mc.currentScreen;
+      if (mc.currentScreen instanceof IGuiNetwork) {
+        IGuiNetwork gui = (IGuiNetwork) mc.currentScreen;
         gui.setStacks(message.stacks);
 //        gui.setCraftableStacks(message.craftableStacks);
       }

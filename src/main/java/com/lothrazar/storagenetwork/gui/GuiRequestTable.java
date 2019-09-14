@@ -6,6 +6,8 @@ import java.util.List;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.IGuiNetwork;
+import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
@@ -35,7 +37,7 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public   class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> implements IGuiPrivate {
+public   class GuiRequestTable extends ContainerScreen<ContainerRequest> implements IGuiPrivate , IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -49,7 +51,7 @@ public   class GuiContainerStorageInventory extends ContainerScreen<ContainerReq
   final NetworkWidget network;
   private TileRequest tile;
 
-  public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
+  public GuiRequestTable(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
     network = new NetworkWidget();

@@ -1,6 +1,8 @@
 package com.lothrazar.storagenetwork.gui;
 
 import javax.annotation.Nonnull;
+
+import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
