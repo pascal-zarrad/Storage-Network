@@ -99,8 +99,10 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     sortBtn.setHeight(16);
     addButton(sortBtn);
     jeiBtn = new GuiButtonRequest(guiLeft + 35, y, "", (p) -> {
-      StorageNetwork.LOGGER.info("TODOjeiBtn ");
+
+      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
+    jeiBtn.setHeight(16);
     if (JeiSettings.isJeiLoaded()) {
       addButton(jeiBtn);
     }
@@ -326,6 +328,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       break;
     }
     this.sortBtn.setMessage(sort);
+    jeiBtn.setMessage(JeiSettings.isJeiSearchSynced()?"J":"-");
     drawTooltips(mouseX, mouseY);
   }
 
