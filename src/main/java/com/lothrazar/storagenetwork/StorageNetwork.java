@@ -1,7 +1,5 @@
 package com.lothrazar.storagenetwork;
 
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import com.lothrazar.storagenetwork.StorageNetwork.RegistryEvents;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
@@ -50,13 +48,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(StorageNetwork.MODID)
 public class StorageNetwork {
 
   public static final String MODID = "storagenetwork";
   static final String certificateFingerprint = "@FINGERPRINT@";
-  public static final Logger LOGGER = LogManager.getLogManager().getLogger(MODID);
+  public static final Logger LOGGER = LogManager.getLogger();
   static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {

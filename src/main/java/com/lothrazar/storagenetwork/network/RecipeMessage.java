@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -100,6 +102,8 @@ public class RecipeMessage {
         //        }
         //        else { // is not string, so just simple item stacks
         isOreDict = false;
+        System.out.println(""+message.nbt);
+        StorageNetwork.LOGGER.info("test" + message);
         ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < invList.size(); i++) {
           CompoundNBT stackTag = invList.getCompound(i);

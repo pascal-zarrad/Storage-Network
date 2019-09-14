@@ -463,10 +463,11 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     }
     else if (this.stackUnderMouse.isEmpty()) {
       try {
+        System.out.println("jei key "+ mouseKey);
         JeiHooks.testJeiKeybind(mouseKey, this.stackUnderMouse);
       }
       catch (Throwable e) {
-        StorageNetwork.LOGGER.info("JEI compat issue "+e);
+        System.out.println("JEI compat issue "+e);
         //its ok JEI not installed for maybe an addon mod is ok
       }
     }
