@@ -40,7 +40,6 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private int page = 1, maxPage = 1;
-  private List<ItemStack> stacks, craftableStacks;
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
   private TextFieldWidget searchBar;
   private List<ItemSlotNetwork> slots;
@@ -48,12 +47,13 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private boolean forceFocus;
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
 
+  final NetworkWidget network;
+
   public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
+    network = new NetworkWidget();
     xSize = WIDTH;
     ySize = HEIGHT;
-    stacks = Lists.newArrayList();
-    craftableStacks = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
     lastClick = System.currentTimeMillis();
   }
@@ -62,14 +62,12 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     return System.currentTimeMillis() > lastClick + 100L;
   }
 
-  //  @Override
-  public void setStacks(List<ItemStack> stacks) {
-    this.stacks = stacks;
+   public void setStacks(List<ItemStack> stacks) {
+    network.stacks = stacks;
   }
 
-  //  @Override
-  public void setCraftableStacks(List<ItemStack> stacks) {
-    craftableStacks = stacks;
+   public void setCraftableStacks(List<ItemStack> stacks) {
+//    craftableStacks = stacks;
   }
 
   @Override
@@ -210,9 +208,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private List<ItemStack> applySearchTextToSlots() {
     String searchText = searchBar.getText();
     // StorageNetwork.LOGGER.info("asdfasdf   search to slots " +searchText);
-    List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(stacks) : Lists.newArrayList();
+    List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(network.stacks) : Lists.newArrayList();
     if (!searchText.equals("")) {
-      for (ItemStack stack : stacks) {
+      for (ItemStack stack : network.stacks) {
         if (doesStackMatchSearch(stack)) {
           stacksToDisplay.add(stack);
         }
