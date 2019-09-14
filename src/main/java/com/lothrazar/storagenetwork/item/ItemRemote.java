@@ -49,8 +49,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       tag.putBoolean("bound", true);
       tag.putInt("dim", 0); // worldIn.provider.getDimension()
       stack.setTag(tag);
-
-       return ActionResultType.SUCCESS;
+      return ActionResultType.SUCCESS;
     }
     return ActionResultType.PASS;
   }
@@ -70,7 +69,10 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   @Override
   public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
     ItemStack itemStackIn = player.getHeldItem(hand);
-    if (world.isRemote || !itemStackIn.getOrCreateTag().getBoolean("bound")) {
+    if (world.isRemote) {
+      return super.onItemRightClick(world, player, hand);
+    }
+    if (!itemStackIn.getOrCreateTag().getBoolean("bound")) {
       //unbound or invalid data
       StorageNetwork.chatMessage(player, "item.remote.notbound");
       return super.onItemRightClick(world, player, hand);

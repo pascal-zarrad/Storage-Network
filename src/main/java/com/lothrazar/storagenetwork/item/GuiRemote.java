@@ -8,10 +8,14 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiRemote extends ContainerScreen<ContainerRemote> {
 
+  private static final int HEIGHT = 256;
+  private static final int WIDTH = 176;
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
 
   public GuiRemote(ContainerRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
+    this.xSize = WIDTH;
+    this.ySize = HEIGHT;
   }
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
