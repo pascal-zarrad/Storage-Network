@@ -38,7 +38,7 @@ public class StackRefreshClientMessage {
       if (mc.currentScreen instanceof GuiContainerStorageInventory) {
         GuiContainerStorageInventory gui = (GuiContainerStorageInventory) mc.currentScreen;
         gui.setStacks(message.stacks);
-        gui.setCraftableStacks(message.craftableStacks);
+//        gui.setCraftableStacks(message.craftableStacks);
       }
     });
   }

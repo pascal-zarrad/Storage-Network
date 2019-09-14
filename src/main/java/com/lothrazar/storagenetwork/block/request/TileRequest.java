@@ -61,7 +61,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
     return compound;
   }
 
-  boolean isDownwards() {
+  public boolean isDownwards() {
     return downwards;
   }
 
@@ -69,7 +69,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
     this.downwards = downwards;
   }
 
-  EnumSortType getSort() {
+  public EnumSortType getSort() {
     return sort;
   }
 

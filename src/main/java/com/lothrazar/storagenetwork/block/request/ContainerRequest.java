@@ -109,7 +109,7 @@ public class ContainerRequest extends ContainerNetworkBase {
     return getTileRequest().getMaster().getTileEntity(TileMaster.class);
   }
 
-  TileRequest getTileRequest() {
+  public TileRequest getTileRequest() {
     return tileRequest;
   }
 

@@ -1,11 +1,14 @@
 package com.lothrazar.storagenetwork.gui;
 import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.network.RequestMessage;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
 public class NetworkWidget {
 
+    long lastClick;
   int page = 1, maxPage = 1;
   List<ItemStack> stacks;
     List<ItemSlotNetwork> slots;
@@ -13,6 +16,11 @@ public class NetworkWidget {
   public NetworkWidget() {
     stacks = Lists.newArrayList();
     slots = Lists.newArrayList();
+    PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
+    lastClick = System.currentTimeMillis();
+  }
+    boolean canClick() {
+    return System.currentTimeMillis() > lastClick + 100L;
   }
 
   int getLines() {

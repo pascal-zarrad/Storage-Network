@@ -10,6 +10,7 @@ import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
+import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
@@ -34,7 +35,7 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public abstract class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> implements IGuiPrivate {
+public   class GuiContainerStorageInventory extends ContainerScreen<ContainerRequest> implements IGuiPrivate {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -42,31 +43,23 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
   private TextFieldWidget searchBar;
-  private long lastClick;
   private boolean forceFocus;
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
 
   final NetworkWidget network;
+  private TileRequest tile;
 
   public GuiContainerStorageInventory(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
+    tile = container.getTileRequest();
     network = new NetworkWidget();
     xSize = WIDTH;
     ySize = HEIGHT;
-    PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
-    lastClick = System.currentTimeMillis();
   }
 
-  private boolean canClick() {
-    return System.currentTimeMillis() > lastClick + 100L;
-  }
 
    public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
-  }
-
-   public void setCraftableStacks(List<ItemStack> stacks) {
-//    craftableStacks = stacks;
   }
 
   @Override
@@ -115,16 +108,25 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   }
 
 
+   public boolean getDownwards() {
+    return tile.isDownwards();
+  }
 
-  public abstract boolean getDownwards();
+   public void setDownwards(boolean d) {
+    tile.setDownwards(d);
+  }
 
-  public abstract void setDownwards(boolean d);
+   public EnumSortType getSort() {
+    return tile.getSort();
+  }
 
-  public abstract EnumSortType getSort();
+   public void setSort(EnumSortType s) {
+    tile.setSort(s);
+  }
 
-  public abstract void setSort(EnumSortType s);
-
-  public abstract BlockPos getPos();
+   public BlockPos getPos() {
+    return tile.getPos();
+  }
 
   private static int getDim() {
     return 0;//TODO
@@ -382,15 +384,17 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
       if (!stackUnderMouse.isEmpty()
           && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
-          && stackCarriedByMouse.isEmpty() && canClick()) {
+          && stackCarriedByMouse.isEmpty() &&
+          network.canClick()) {
         ItemStack copyNotNegativeAir = new ItemStack(stackUnderMouse.getItem());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
             Screen.hasAltDown() || Screen.hasControlDown()));
-        lastClick = System.currentTimeMillis();
+        network.lastClick = System.currentTimeMillis();
       }
-      else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) && canClick()) {
+      else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) &&
+          network.canClick()) {
         PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton));
-        lastClick = System.currentTimeMillis();
+        network.lastClick = System.currentTimeMillis();
       }
     }
     return true;
