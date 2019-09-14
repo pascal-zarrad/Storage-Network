@@ -244,8 +244,13 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return ItemStack.EMPTY;
   }
 
+  private int countOps(){
+    return 0;// upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
+  }
+
+
   private boolean doesPassOperationFilterLimit(TileMaster master) {
-    if (upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade) < 1) {
+    if (countOps() < 1) {
       return true;
     }
     if (operationStack == null || operationStack.isEmpty()) {
@@ -304,7 +309,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public boolean isStockMode() {
-    return upgrades.getUpgradesOfType(SsnRegistry.stock_upgrade) > 0;
+    return false;//TODO: make this work upgrades.getUpgradesOfType(SsnRegistry.stock_upgrade) > 0;
   }
 
   @Override

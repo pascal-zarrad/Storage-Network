@@ -15,6 +15,7 @@ import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
+import com.lothrazar.storagenetwork.item.ContainerRemote;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
@@ -37,11 +38,7 @@ public class SsnRegistry {
   public static ItemUpgrade speed_upgrade;
   @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
   public static ItemUpgrade stack_upgrade;
-  @ObjectHolder(StorageNetwork.MODID + ":stock_upgrade")
-  public static ItemUpgrade stock_upgrade;
-  @ObjectHolder(StorageNetwork.MODID + ":operation_upgrade")
-  public static ItemUpgrade operation_upgrade;
-  // master
+   // master
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static TileEntityType<TileMaster> mastertile;
   @ObjectHolder(StorageNetwork.MODID + ":master")
@@ -83,4 +80,10 @@ public class SsnRegistry {
   public static TileEntityType<TileCableImportFilter> exportkabeltile;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static ContainerType<ContainerCableExportFilter> filterexportContainer;
+
+
+
+
+  @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
+  public static ContainerType<ContainerRemote> remote;
 }
