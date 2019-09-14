@@ -39,10 +39,9 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
-  private int page = 1, maxPage = 1;
+
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
   private TextFieldWidget searchBar;
-  private List<ItemSlotNetwork> slots;
   private long lastClick;
   private boolean forceFocus;
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
@@ -115,13 +114,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 
-  private int getLines() {
-    return 4;
-  }
 
-  private static int getColumns() {
-    return 9;
-  }
 
   public abstract boolean getDownwards();
 
@@ -184,8 +177,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     renderTextures();
     List<ItemStack> stacksToDisplay = applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
-    applyScrollPaging(stacksToDisplay);
-    rebuildItemSlots(stacksToDisplay);
+    network.applyScrollPaging(stacksToDisplay);
+    network.rebuildItemSlots(stacksToDisplay, this);
     renderItemSlots(mouseX, mouseY);
   }
 
@@ -236,50 +229,14 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
 
   private void renderItemSlots(int mouseX, int mouseY) {
     stackUnderMouse = ItemStack.EMPTY;
-    for (ItemSlotNetwork slot : slots) {
+    for (ItemSlotNetwork slot : network.slots) {
       slot.drawSlot(font, mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
       }
     }
-    if (slots.isEmpty()) {
+    if (network.slots.isEmpty()) {
       stackUnderMouse = ItemStack.EMPTY;
-    }
-  }
-
-  private void rebuildItemSlots(List<ItemStack> stacksToDisplay) {
-    slots = Lists.newArrayList();
-    int index = (page - 1) * (getColumns());
-    for (int row = 0; row < getLines(); row++) {
-      for (int col = 0; col < getColumns(); col++) {
-        if (index >= stacksToDisplay.size()) {
-          break;
-        }
-        int in = index;
-        //        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
-        slots.add(new ItemSlotNetwork(this, stacksToDisplay.get(in),
-            guiLeft + 8 + col * 18,
-            guiTop + 10 + row * 18,
-            stacksToDisplay.get(in).getCount(), guiLeft, guiTop, true));
-        index++;
-      }
-    }
-  }
-
-  private void applyScrollPaging(List<ItemStack> stacksToDisplay) {
-    maxPage = stacksToDisplay.size() / (getColumns());
-    if (stacksToDisplay.size() % (getColumns()) != 0) {
-      maxPage++;
-    }
-    maxPage -= (getLines() - 1);
-    if (maxPage < 1) {
-      maxPage = 1;
-    }
-    if (page < 1) {
-      page = 1;
-    }
-    if (page > maxPage) {
-      page = maxPage;
     }
   }
 
@@ -344,7 +301,7 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
       renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
     }
-    for (ItemSlotNetwork s : slots) {
+    for (ItemSlotNetwork s : network.slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
       }
@@ -393,20 +350,8 @@ public abstract class GuiContainerStorageInventory extends ContainerScreen<Conta
     //<0 going down
     // >0 going up
     if (isScrollable(x, y) && mouseButton != 0) {
-      boolean snd = false;
-      if (mouseButton > 0 && page > 1) {
-        page--;
-        snd = true;
-      }
-      if (mouseButton < 0 && page < maxPage) {
-        page++;
-        snd = true;
-      }
-      if (snd) {
-        //works but idk
-        //        minecraft.player.world.playSound(minecraft.player, minecraft.player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.PLAYERS,
-        //            0.002F, 0.5F);
-      }
+ network.mouseScrolled(mouseButton);
+
     }
     return true;
   }
