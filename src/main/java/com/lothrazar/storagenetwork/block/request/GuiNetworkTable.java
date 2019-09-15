@@ -48,6 +48,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   final NetworkWidget network;
   private TileRequest tile;
 
+  private int scrollHeight = 135;
   public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
@@ -320,7 +321,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
 
    boolean isScrollable(double x, double y) {
     return isPointInRegion(0, 0,
-        this.width - 8, 135,
+        this.width - 8, scrollHeight,
         x, y);
   }
 

@@ -25,7 +25,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   private final NetworkWidget network;
   private ItemStack stackUnderMouse;
-
+private int scrollHeight = 135;
   public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget();
@@ -52,8 +52,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   boolean isScrollable(double x, double y) {
+    scrollHeight=170;
     return isPointInRegion(0, 0,
-        this.width - 8, 135,
+        this.width - 8, scrollHeight,
         x, y);
   }
 
@@ -123,7 +124,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
    * @param mouseY
    */
   private void renderItemSlots(int mouseX, int mouseY) {
-    stackUnderMouse = ItemStack.EMPTY; 
+    stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : network.slots) {
       slot.drawSlot(font, mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
