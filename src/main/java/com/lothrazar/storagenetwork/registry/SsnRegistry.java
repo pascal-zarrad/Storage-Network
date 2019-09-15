@@ -13,9 +13,9 @@ import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
-import com.lothrazar.storagenetwork.block.request.ContainerRequest;
+import com.lothrazar.storagenetwork.block.request.ContainerNetworkTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
-import com.lothrazar.storagenetwork.item.ContainerRemote;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
@@ -49,7 +49,7 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static TileEntityType<TileRequest> requesttile;
   @ObjectHolder(StorageNetwork.MODID + ":request")
-  public static ContainerType<ContainerRequest> requestcontainer;
+  public static ContainerType<ContainerNetworkTable> requestcontainer;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static BlockCable kabel;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
@@ -85,5 +85,5 @@ public class SsnRegistry {
 
 
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
-  public static ContainerType<ContainerRemote> remote;
+  public static ContainerType<ContainerNetworkRemote> remote;
 }

@@ -1,8 +1,9 @@
 package com.lothrazar.storagenetwork.gui;
-
 import java.util.Optional;
 import javax.annotation.Nullable;
+
 import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -21,15 +22,18 @@ import net.minecraft.world.World;
 
 public abstract class ContainerNetwork extends Container {
 
+  public abstract TileMaster getTileMaster();
+
+  public abstract void slotChanged();
+
+  protected final CraftResultInventory resultInventory;
   protected PlayerInventory playerInv;
   protected CraftingResultSlot result;
-  protected final CraftResultInventory resultInventory;//field_75160_f;
-  public InventoryCraftingNetwork matrix;
   protected boolean recipeLocked = false;
-  protected boolean isSimple;
   protected PlayerEntity player;
   protected World world;
   protected ICraftingRecipe recipeCurrent;
+  public InventoryCraftingNetwork matrix;
 
   protected ContainerNetwork(@Nullable ContainerType<?> type, int id) {
     super(type, id);
@@ -39,14 +43,6 @@ public abstract class ContainerNetwork extends Container {
   public CraftingInventory getCraftMatrix() {
     return matrix;
   }
-
-  public abstract TileMaster getTileMaster();
-
-//  public abstract void bindHotbar();
-
-  public abstract void slotChanged();
-
-//  boolean test = false;
 
   protected void bindPlayerInvo(PlayerInventory playerInv) {
     this.player = playerInv.player;
@@ -97,7 +93,7 @@ public abstract class ContainerNetwork extends Container {
   }
 
   //from WorkbenchContainer::func_217066_a
-  protected void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
+  private void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
     if (!world.isRemote) {
       ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
       ItemStack itemstack = ItemStack.EMPTY;
@@ -115,156 +111,4 @@ public abstract class ContainerNetwork extends Container {
       serverplayerentity.connection.sendPacket(new SSetSlotPacket(number, 0, itemstack));
     }
   }
-  /**
-   * A note on the shift-craft delay bug root cause was ANY interaction with matrix (setting contents etc) was causing triggers/events to do a recipe lookup. Meaning during this shift-click action you
-   * can get up to 9x64 FULL recipe scans Solution is just to disable all those triggers but only for duration of this action
-   *
-   */
-  //  private void craftShift(PlayerEntity player, TileMaster tile) {
-  //    if (matrix == null) {
-  //      return;
-  //    }
-  //    IRecipe recipeCurrent = CraftingManager.findMatchingRecipe(matrix, player.world);
-  //    if (recipeCurrent == null) {
-  //      return;
-  //    }
-  //    recipeLocked = true;
-  //    int crafted = 0;
-  //    List<ItemStack> recipeCopy = Lists.newArrayList();
-  //    for (int i = 0; i < matrix.getSizeInventory(); i++) {
-  //      recipeCopy.add(matrix.getStackInSlot(i).copy());
-  //    }
-  //    ItemStack res = recipeCurrent.getCraftingResult(matrix);
-  //    if (res.isEmpty()) {
-  //      //  StorageNetwork.instance.logger.error("Recipe output is an empty stack " + recipeCurrent);
-  //      return;
-  //    }
-  //    int sizePerCraft = res.getCount();
-  //
-  //    while (crafted + sizePerCraft <= res.getMaxStackSize()) {
-  //      res = recipeCurrent.getCraftingResult(matrix);
-  //      //  StorageNetwork.log("[craftShift]  crafted = " + crafted + " ; res.count() = " + res.getCount() + " MAX=" + res.getMaxStackSize());
-  //      if (!ItemHandlerHelper.insertItemStacked(new PlayerMainInvWrapper(playerInv), res, true).isEmpty()) {
-  //        //  StorageNetwork.log("[craftShift] cannot insert more, end");
-  //        break;
-  //      }
-  //      //stop if empty
-  //      if (recipeCurrent.matches(matrix, player.world) == false) {
-  //        //      StorageNetwork.log("[craftShift] recipe doesnt match i quit");
-  //        break;
-  //      }
-  //      //onTake replaced with this handcoded rewrite
-  //      //  StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
-  //      if (!player.inventory.addItemStackToInventory(res)) {
-  //        player.dropItem(res, false);
-  //      }
-  //      NonNullList<ItemStack> remainder = CraftingManager.getRemainingItems(matrix, player.world);
-  //      //  StorageNetwork.log("[craftShift] getRemainingItems ");
-  //      for (int i = 0; i < remainder.size(); ++i) {
-  //        ItemStack remainderCurrent = remainder.get(i);
-  //        ItemStack slot = matrix.getStackInSlot(i);
-  //        if (remainderCurrent.isEmpty()) {
-  //          //     StorageNetwork.log("[craftShift] getRemainingItems  set empty " + i);
-  //          matrix.getStackInSlot(i).shrink(1);
-  //          continue;
-  //        }
-  //        if (remainderCurrent.isItemDamaged() && remainderCurrent.getItemDamage() > remainderCurrent.getMaxDamage()) {
-  //          remainderCurrent = ItemStack.EMPTY;
-  //        }
-  //        if (slot.getItem().getContainerItem() != null) { //is the fix for milk and similar
-  //          slot = new ItemStack(slot.getItem().getContainerItem());
-  //          matrix.setInventorySlotContents(i, slot);
-  //        }
-  //        else if (!slot.getItem().getContainerItem(slot).isEmpty()) { //is the fix for milk and similar
-  //          slot = slot.getItem().getContainerItem(slot);
-  //          matrix.setInventorySlotContents(i, slot);
-  //        }
-  //        else if (!remainderCurrent.isEmpty()) {
-  //          //   StorageNetwork.log("[craftShift] NONEMPTY " + remainderCurrent);
-  //          if (slot.isEmpty()) {
-  //            matrix.setInventorySlotContents(i, remainderCurrent);
-  //          }
-  //          else if (ItemStack.areItemsEqual(slot, remainderCurrent) && ItemStack.areItemStackTagsEqual(slot, remainderCurrent)) {
-  //            remainderCurrent.grow(slot.getCount());
-  //            matrix.setInventorySlotContents(i, remainderCurrent);
-  //          }
-  //          else if (ItemStack.areItemsEqualIgnoreDurability(slot, remainderCurrent)) {
-  //            //crafting that consumes durability
-  //            matrix.setInventorySlotContents(i, remainderCurrent);
-  //          }
-  //          else {
-  //            if (!player.inventory.addItemStackToInventory(remainderCurrent)) {
-  //              player.dropItem(remainderCurrent, false);
-  //            }
-  //          }
-  //        }
-  //        else if (!slot.isEmpty()) {
-  //          matrix.decrStackSize(i, 1);
-  //          slot = matrix.getStackInSlot(i);
-  //        }
-  //      } //end loop on remiainder
-  //      //END onTake redo
-  //      crafted += sizePerCraft;
-  //      ItemStack stackInSlot;
-  //      ItemStack recipeStack;
-  //      ItemStackMatcher itemStackMatcherCurrent;
-  //      for (int i = 0; i < matrix.getSizeInventory(); i++) {
-  //        stackInSlot = matrix.getStackInSlot(i);
-  //        if (stackInSlot.isEmpty()) {
-  //          recipeStack = recipeCopy.get(i);
-  //          //////////////// booleans are meta, ore(?ignored?), nbt
-  //          itemStackMatcherCurrent = !recipeStack.isEmpty() ? new ItemStackMatcher(recipeStack, true, false, false) : null;
-  //          //false here means dont simulate
-  //          ItemStack req = tile.request(itemStackMatcherCurrent, 1, false);
-  //          matrix.setInventorySlotContents(i, req);
-  //        }
-  //      }
-  //      onCraftMatrixChanged(matrix);
-  //    }
-  //    detectAndSendChanges();
-  //    recipeLocked = false;
-  //    //update recipe again in case remnants left : IE hammer and such
-  //    onCraftMatrixChanged(matrix);
-  //  }
-  //  @Override
-  //  public ItemStack transferStackInSlot(EntityPlayer playerIn, int slotIndex) {
-  //    if (playerIn.world.isRemote) {
-  //      return ItemStack.EMPTY;
-  //    }
-  //    ItemStack itemstack = ItemStack.EMPTY;
-  //    Slot slot = inventorySlots.get(slotIndex);
-  //    if (slot != null && slot.getHasStack()) {
-  //      ItemStack itemstack1 = slot.getStack();
-  //      itemstack = itemstack1.copy();
-  //      TileMaster tileMaster = getTileMaster();
-  //      if (slotIndex == 0) {
-  //        craftShift(playerIn, tileMaster);
-  //        return ItemStack.EMPTY;
-  //      }
-  //      else if (tileMaster != null) {
-  //        int rest = tileMaster.insertStack(itemstack1, false);
-  //        ItemStack stack = rest == 0 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(itemstack1, rest);
-  //        slot.putStack(stack);
-  //        detectAndSendChanges();
-  //        List<ItemStack> list = tileMaster.getStacks();
-  //        PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (EntityPlayerMP) playerIn);
-  //        if (stack.isEmpty()) {
-  //          return ItemStack.EMPTY;
-  //        }
-  //        slot.onTake(playerIn, itemstack1);
-  //        return ItemStack.EMPTY;
-  //      }
-  //      if (itemstack1.getCount() == 0) {
-  //        slot.putStack(ItemStack.EMPTY);
-  //      }
-  //      else {
-  //        slot.onSlotChanged();
-  //      }
-  //      if (itemstack1.getCount() == itemstack.getCount()) {
-  //        return ItemStack.EMPTY;
-  //      }
-  //      slot.onTake(playerIn, itemstack1);
-  //    }
-  //    return itemstack;
-  //  }
 }

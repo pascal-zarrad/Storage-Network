@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.gui;
+package com.lothrazar.storagenetwork.block.request;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -10,9 +10,8 @@ import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.block.request.ContainerRequest;
-import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
-import com.lothrazar.storagenetwork.block.request.TileRequest;
+import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
+import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
@@ -37,7 +36,7 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkTable extends ContainerScreen<ContainerRequest> implements IGuiPrivate, IGuiNetwork {
+public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements IGuiPrivate, IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -49,7 +48,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerRequest> implement
   final NetworkWidget network;
   private TileRequest tile;
 
-  public GuiNetworkTable(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
+  public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
     network = new NetworkWidget();

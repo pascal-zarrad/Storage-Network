@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.item;
+package com.lothrazar.storagenetwork.item.remote;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
@@ -9,20 +9,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 
-public class ContainerRemote extends ContainerNetwork {
+public class ContainerNetworkRemote extends ContainerNetwork {
 
   private final TileMaster master;
 
-  public ContainerRemote(int id, PlayerInventory pInv) {
+  public ContainerNetworkRemote(int id, PlayerInventory pInv) {
     super(SsnRegistry.remote, id);
-
-ItemStack remote=    pInv.player.getHeldItem(Hand.MAIN_HAND);
-
-DimPos dp = ItemRemote.getPosStored(remote);
-TileEntity te= pInv.player.world.getTileEntity(dp.getBlockPos());
-
-this.master = (TileMaster)te;
-
+    ItemStack remote = pInv.player.getHeldItem(Hand.MAIN_HAND);
+    DimPos dp = ItemRemote.getPosStored(remote);
+    TileEntity te = pInv.player.world.getTileEntity(dp.getBlockPos());
+    this.master = (TileMaster) te;
   }
 
   @Override public boolean canInteractWith(PlayerEntity playerIn) {
@@ -30,8 +26,6 @@ this.master = (TileMaster)te;
   }
 
   @Override public TileMaster getTileMaster() {
-
-
     return master;
   }
 

@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.gui;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
+import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.item.ItemStack;

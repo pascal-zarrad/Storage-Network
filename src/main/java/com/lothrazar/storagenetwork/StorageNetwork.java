@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork;
-import com.lothrazar.storagenetwork.StorageNetwork.RegistryEvents;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cable.export.BlockCableExport;
@@ -18,12 +17,12 @@ import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
-import com.lothrazar.storagenetwork.block.request.ContainerRequest;
+import com.lothrazar.storagenetwork.block.request.ContainerNetworkTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.item.ContainerRemote;
-import com.lothrazar.storagenetwork.item.ItemRemote;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.item.remote.ItemRemote;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -139,7 +138,7 @@ public class StorageNetwork {
       IForgeRegistry<ContainerType<?>> r = event.getRegistry();
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
-        return new ContainerRequest(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerNetworkTable(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("request"));
       //
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
@@ -156,7 +155,7 @@ public class StorageNetwork {
       }).setRegistryName("export_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
 
-        return new ContainerRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
+        return new ContainerNetworkRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
       }).setRegistryName("inventory_remote"));
     }
   }

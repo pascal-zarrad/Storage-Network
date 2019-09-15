@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork.jei;
-import com.lothrazar.storagenetwork.block.request.ContainerRequest;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import mezz.jei.api.gui.IRecipeLayout;

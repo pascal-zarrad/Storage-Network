@@ -1,7 +1,6 @@
-package com.lothrazar.storagenetwork.item;
+package com.lothrazar.storagenetwork.item.remote;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -115,6 +113,8 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   }
 
   @Nullable @Override public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-    return new ContainerRemote(id, inv);
+
+
+    return new ContainerNetworkRemote(id, inv);
   }
 }

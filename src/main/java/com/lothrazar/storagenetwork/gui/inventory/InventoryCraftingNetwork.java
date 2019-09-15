@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.gui;
+package com.lothrazar.storagenetwork.gui.inventory;
 
 import java.util.List;
 import java.util.Map;

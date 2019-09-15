@@ -1,11 +1,10 @@
-package com.lothrazar.storagenetwork.item;
+package com.lothrazar.storagenetwork.item.remote;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
+import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
-import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -19,7 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class GuiNetworkRemote extends ContainerScreen<ContainerRemote> implements IGuiPrivate, IGuiNetwork {
+public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiPrivate, IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -27,7 +26,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerRemote> implement
   private final NetworkWidget network;
   private ItemStack stackUnderMouse;
 
-  public GuiNetworkRemote(ContainerRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+  public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget();
     this.xSize = WIDTH;
@@ -108,7 +107,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerRemote> implement
     //
 
     List<ItemStack> stacksToDisplay = network.stacks;//applySearchTextToSlots();
-    StorageNetwork.log("renderItemSlots REMOTE " + network.slots.size());
+
+
 //    sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
     network.rebuildItemSlots(stacksToDisplay, this);

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.gui.ContainerCable;
+import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

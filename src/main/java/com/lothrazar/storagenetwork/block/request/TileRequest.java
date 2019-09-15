@@ -84,6 +84,6 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
 
   @Override
   public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-    return new ContainerRequest(i, world, pos, playerInventory, playerEntity);
+    return new ContainerNetworkTable(i, world, pos, playerInventory, playerEntity);
   }
 }

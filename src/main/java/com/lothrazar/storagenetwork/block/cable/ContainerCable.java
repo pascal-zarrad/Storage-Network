@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.gui;
+package com.lothrazar.storagenetwork.block.cable;
 
 import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;

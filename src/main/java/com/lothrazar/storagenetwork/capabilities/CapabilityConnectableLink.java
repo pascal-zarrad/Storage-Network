@@ -10,7 +10,7 @@ import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
-import com.lothrazar.storagenetwork.data.inventory.FilterItemStackHandler;
+import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

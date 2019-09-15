@@ -9,7 +9,7 @@ import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
-import com.lothrazar.storagenetwork.gui.InventoryCraftingNetwork;
+import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -31,11 +31,11 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
-public class ContainerRequest extends ContainerNetwork {
+public class ContainerNetworkTable extends ContainerNetwork {
 
   private final TileRequest tileRequest;
 
-  public ContainerRequest(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+  public ContainerNetworkTable(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.requestcontainer, windowId);
     tileRequest = (TileRequest) world.getTileEntity(pos);
     matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);

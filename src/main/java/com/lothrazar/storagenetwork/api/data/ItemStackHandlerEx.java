@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.data.inventory;
+package com.lothrazar.storagenetwork.api.data;
 
 import java.util.ArrayList;
 import java.util.List;
