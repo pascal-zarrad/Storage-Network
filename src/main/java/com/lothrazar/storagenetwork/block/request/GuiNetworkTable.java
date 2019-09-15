@@ -42,13 +42,13 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
-//  private boolean forceFocus;
+
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   final NetworkWidget network;
   private TileRequest tile;
-
   private int scrollHeight = 135;
   int fieldHeight = 90;
+
   public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
@@ -64,12 +64,12 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void init() {
     super.init();
+    int searchLeft = guiLeft + 81, searchTop = guiTop + 96,
+        width = 85;
     network.searchBar = new TextFieldWidget(font,
-        guiLeft + 81, guiTop + 96,
-        85, font.FONT_HEIGHT, "search");
-
+        searchLeft, searchTop,
+        width, font.FONT_HEIGHT, "search");
     network.searchBar.setMaxStringLength(30);
-
     network.initSearchbar();
     initButtons();
   }
@@ -141,45 +141,17 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
         mouseX, mouseY);
   }
 
-  private boolean doesStackMatchSearch(ItemStack stack) {
-    String searchText = network.searchBar.getText();
-    if (searchText.startsWith("@")) {
-      String name = UtilTileEntity.getModNameForItem(stack.getItem());
-      return name.toLowerCase().contains(searchText.toLowerCase().substring(1));
-    }
-    else if (searchText.startsWith("#")) {
-      String tooltipString;
-      Minecraft mc = Minecraft.getInstance();
-      List<ITextComponent> tooltip = stack.getTooltip(mc.player, TooltipFlags.NORMAL);
-      tooltipString = Joiner.on(' ').join(tooltip).toLowerCase();
-      //      tooltipString = ChatFormatting.stripFormatting(tooltipString);
-      return tooltipString.toLowerCase().contains(searchText.toLowerCase().substring(1));
-    }
-    //TODO : tag search?
-    //    else if (searchText.startsWith("$")) {
-    //      StringBuilder oreDictStringBuilder = new StringBuilder();
-    //      for (int oreId : OreDictionary.getOreIDs(stack)) {
-    //        String oreName = OreDictionary.getOreName(oreId);
-    //        oreDictStringBuilder.append(oreName).append(' ');
-    //      }
-    //      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
-    //    }
-    //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
-    //    }
-    else {
-      return stack.getDisplayName().toString().toLowerCase().contains(searchText.toLowerCase());
-    }
-  }
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     renderTextures();
-    List<ItemStack> stacksToDisplay = applySearchTextToSlots();
+    List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
     network.rebuildItemSlots(stacksToDisplay, this);
     renderItemSlots(mouseX, mouseY);
   }
+
 
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
@@ -195,20 +167,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
-  }
-
-  private List<ItemStack> applySearchTextToSlots() {
-    String searchText = network.searchBar.getText();
-
-    List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(network.stacks) : Lists.newArrayList();
-    if (!searchText.equals("")) {
-      for (ItemStack stack : network.stacks) {
-        if (doesStackMatchSearch(stack)) {
-          stacksToDisplay.add(stack);
-        }
-      }
-    }
-    return stacksToDisplay;
   }
 
   private void renderItemSlots(int mouseX, int mouseY) {
@@ -247,12 +205,12 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-//    if (forceFocus && network.searchBar != null) {
-//      network.searchBar.setFocused2(true);
-//      if (network.searchBar.isFocused()) {
-//        forceFocus = false;
-//      }
-//    }
+    //    if (forceFocus && network.searchBar != null) {
+    //      network.searchBar.setFocused2(true);
+    //      if (network.searchBar.isFocused()) {
+    //        forceFocus = false;
+    //      }
+    //    }
     this.directionBtn.setMessage(this.getDownwards() ? "D" : "U");
     String sort = "";
     switch (this.getSort()) {
@@ -269,7 +227,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     this.sortBtn.setMessage(sort);
     jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
     drawTooltips(mouseX, mouseY);
-
     network.drawGuiContainerForegroundLayer(mouseX, mouseY);
   }
 
@@ -287,7 +244,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
       renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
     }
-
     if (inSearchBar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
@@ -304,8 +260,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     }
   }
 
-
-
   private void clearSearch() {
     if (network.searchBar == null) {
       return;
@@ -316,7 +270,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     }
   }
 
-   boolean isScrollable(double x, double y) {
+  boolean isScrollable(double x, double y) {
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
@@ -408,17 +362,16 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   public boolean charTyped(char typedChar, int keyCode) {
     //    super.keyPressed()
     //func_195363_d
-  if(  network.charTyped(typedChar, keyCode)){
-    return true;
-  }
-
-//    if (network.searchBar.isFocused() && network.searchBar.charTyped(typedChar, keyCode)) {
-//      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-//      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-//        JeiHooks.setFilterText(network.searchBar.getText());
-//      }
-//      return true;
-//    }
+    if (network.charTyped(typedChar, keyCode)) {
+      return true;
+    }
+    //    if (network.searchBar.isFocused() && network.searchBar.charTyped(typedChar, keyCode)) {
+    //      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
+    //      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+    //        JeiHooks.setFilterText(network.searchBar.getText());
+    //      }
+    //      return true;
+    //    }
     else if (stackUnderMouse.isEmpty() == false) {
       try {
         //          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);

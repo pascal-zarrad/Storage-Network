@@ -1,13 +1,18 @@
 package com.lothrazar.storagenetwork.gui;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
+import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -28,6 +33,47 @@ public class NetworkWidget {
     lastClick = System.currentTimeMillis();
   }
 
+  public List<ItemStack> applySearchTextToSlots() {
+    String searchText = searchBar.getText();
+    List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(stacks) : Lists.newArrayList();
+    if (!searchText.equals("")) {
+      for (ItemStack stack : stacks) {
+        if (doesStackMatchSearch(stack)) {
+          stacksToDisplay.add(stack);
+        }
+      }
+    }
+    return stacksToDisplay;
+  }
+  private boolean doesStackMatchSearch(ItemStack stack) {
+    String searchText = searchBar.getText();
+    if (searchText.startsWith("@")) {
+      String name = UtilTileEntity.getModNameForItem(stack.getItem());
+      return name.toLowerCase().contains(searchText.toLowerCase().substring(1));
+    }
+    else if (searchText.startsWith("#")) {
+      String tooltipString;
+      Minecraft mc = Minecraft.getInstance();
+      List<ITextComponent> tooltip = stack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL);
+      tooltipString = Joiner.on(' ').join(tooltip).toLowerCase();
+      //      tooltipString = ChatFormatting.stripFormatting(tooltipString);
+      return tooltipString.toLowerCase().contains(searchText.toLowerCase().substring(1));
+    }
+    //TODO : tag search?
+    //    else if (searchText.startsWith("$")) {
+    //      StringBuilder oreDictStringBuilder = new StringBuilder();
+    //      for (int oreId : OreDictionary.getOreIDs(stack)) {
+    //        String oreName = OreDictionary.getOreName(oreId);
+    //        oreDictStringBuilder.append(oreName).append(' ');
+    //      }
+    //      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
+    //    }
+    //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
+    //    }
+    else {
+      return stack.getDisplayName().toString().toLowerCase().contains(searchText.toLowerCase());
+    }
+  }
   public boolean canClick() {
     return System.currentTimeMillis() > lastClick + 100L;
   }

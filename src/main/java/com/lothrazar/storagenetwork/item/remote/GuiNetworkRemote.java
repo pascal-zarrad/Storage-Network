@@ -40,9 +40,11 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   @Override
   public void init() {
     super.init();
+    int searchLeft = guiLeft + 51, searchTop = guiTop + 160,
+        width = 85 * 2;
     network.searchBar = new TextFieldWidget(font,
-        guiLeft + 81, guiTop + 96,
-        85*2, font.FONT_HEIGHT, "search");
+        searchLeft, searchTop,
+        width, font.FONT_HEIGHT, "search");
     network.searchBar.setMaxStringLength(60);
     network.initSearchbar();
   }
@@ -115,8 +117,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     int l = (this.height - this.ySize) / 2;
     GlStateManager.color3f(1, 1, 1);
     this.blit(k, l, 0, 0, this.xSize, this.ySize);
-    //
-    List<ItemStack> stacksToDisplay = network.stacks;//applySearchTextToSlots();
+
+    List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
     //    sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
     network.rebuildItemSlots(stacksToDisplay, this);

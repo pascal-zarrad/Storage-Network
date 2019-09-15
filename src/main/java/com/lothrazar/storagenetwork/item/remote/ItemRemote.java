@@ -31,7 +31,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
 
   public ItemRemote(Properties properties) {
     super(properties.maxStackSize(1));
-     
+
   }
 
   @Override
