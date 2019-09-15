@@ -29,6 +29,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget();
+    network.setLines(9);
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
   }
@@ -122,8 +123,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
    * @param mouseY
    */
   private void renderItemSlots(int mouseX, int mouseY) {
-    stackUnderMouse = ItemStack.EMPTY;
-    StorageNetwork.log("renderItemSlots REMOTE " + network.slots.size());
+    stackUnderMouse = ItemStack.EMPTY; 
     for (ItemSlotNetwork slot : network.slots) {
       slot.drawSlot(font, mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {

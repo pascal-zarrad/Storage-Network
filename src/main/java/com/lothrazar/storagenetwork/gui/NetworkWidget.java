@@ -14,6 +14,8 @@ public class NetworkWidget {
   int page = 1, maxPage = 1;
   public List<ItemStack> stacks;
   public List<ItemSlotNetwork> slots;
+  private int lines = 4;
+  private int columns = 9;
 
   public NetworkWidget() {
     stacks = Lists.newArrayList();
@@ -27,11 +29,17 @@ public class NetworkWidget {
   }
 
   int getLines() {
-    return 4;
+    return lines;
   }
 
-  static int getColumns() {
-    return 9;
+  int getColumns() {
+    return columns;
+  }
+  public void setLines(int v) {
+    lines = v;
+  }
+  void setColumns(int v) {
+    columns = v;
   }
 
   public void applyScrollPaging(List<ItemStack> stacksToDisplay) {
