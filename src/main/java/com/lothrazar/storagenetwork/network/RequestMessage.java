@@ -8,7 +8,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -41,8 +41,8 @@ public class RequestMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       TileMaster tileMaster = null;
-      if (player.openContainer instanceof ContainerNetworkBase) {
-        ContainerNetworkBase ctr = (ContainerNetworkBase) player.openContainer;
+      if (player.openContainer instanceof ContainerNetwork) {
+        ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
         tileMaster = ctr.getTileMaster();
       }
       if (tileMaster == null) {

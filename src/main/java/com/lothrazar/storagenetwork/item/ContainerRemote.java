@@ -1,19 +1,15 @@
 package com.lothrazar.storagenetwork.item;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 
-import javax.annotation.Nullable;
-
-public class ContainerRemote extends ContainerNetworkBase {
+public class ContainerRemote extends ContainerNetwork {
 
   private final TileMaster master;
 

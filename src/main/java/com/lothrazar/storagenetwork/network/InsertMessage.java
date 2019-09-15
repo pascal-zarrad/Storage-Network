@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -29,8 +29,8 @@ public class InsertMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       TileMaster tileMaster = null;
-      if (player.openContainer instanceof ContainerNetworkBase) {
-        tileMaster = ((ContainerNetworkBase) player.openContainer).getTileMaster();
+      if (player.openContainer instanceof ContainerNetwork) {
+        tileMaster = ((ContainerNetwork) player.openContainer).getTileMaster();
       }
       int rest;
       ItemStack send = ItemStack.EMPTY;

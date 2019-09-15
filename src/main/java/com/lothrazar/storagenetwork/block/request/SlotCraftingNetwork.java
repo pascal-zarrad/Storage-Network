@@ -4,7 +4,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
@@ -13,9 +13,9 @@ import net.minecraft.item.ItemStack;
 
 public class SlotCraftingNetwork extends CraftingResultSlot {
 
-  private final ContainerNetworkBase parent;
+  private final ContainerNetwork parent;
 
-  public SlotCraftingNetwork(ContainerNetworkBase parent, PlayerEntity player,
+  public SlotCraftingNetwork(ContainerNetwork parent, PlayerEntity player,
       CraftingInventory craftingInventory, IInventory inventoryIn,
       int slotIndex, int xPosition, int yPosition) {
     super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);

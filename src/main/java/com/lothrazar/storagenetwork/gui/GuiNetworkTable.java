@@ -37,7 +37,7 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiRequestTable extends ContainerScreen<ContainerRequest> implements IGuiPrivate, IGuiNetwork {
+public class GuiNetworkTable extends ContainerScreen<ContainerRequest> implements IGuiPrivate, IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -49,7 +49,7 @@ public class GuiRequestTable extends ContainerScreen<ContainerRequest> implement
   final NetworkWidget network;
   private TileRequest tile;
 
-  public GuiRequestTable(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
+  public GuiNetworkTable(ContainerRequest container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
     network = new NetworkWidget();
@@ -307,7 +307,7 @@ public class GuiRequestTable extends ContainerScreen<ContainerRequest> implement
     }
   }
 
-   
+
 
   private void clearSearch() {
     if (searchBar == null) {

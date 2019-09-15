@@ -85,7 +85,7 @@ public class GuiHandler {//implements IGuiHandler
   //        return new GuiFastRemote(player, world, hand);
   //      }
   //      else {
-  //        return new GuiRemote(new ContainerRemote(player.inventory, hand));
+  //        return new GuiNetworkRemote(new ContainerRemote(player.inventory, hand));
   //      }
   //    }
   //    return null;

@@ -19,7 +19,7 @@ import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
 
-public abstract class ContainerNetworkBase extends Container {
+public abstract class ContainerNetwork extends Container {
 
   protected PlayerInventory playerInv;
   protected CraftingResultSlot result;
@@ -31,7 +31,7 @@ public abstract class ContainerNetworkBase extends Container {
   protected World world;
   protected ICraftingRecipe recipeCurrent;
 
-  protected ContainerNetworkBase(@Nullable ContainerType<?> type, int id) {
+  protected ContainerNetwork(@Nullable ContainerType<?> type, int id) {
     super(type, id);
     this.resultInventory = new CraftResultInventory();
   }

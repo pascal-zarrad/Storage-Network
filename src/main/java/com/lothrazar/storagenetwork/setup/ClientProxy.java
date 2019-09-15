@@ -2,8 +2,8 @@ package com.lothrazar.storagenetwork.setup;
 import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
 import com.lothrazar.storagenetwork.block.cable.storagefilter.GuiCableFilter;
-import com.lothrazar.storagenetwork.gui.GuiRequestTable;
-import com.lothrazar.storagenetwork.item.GuiRemote;
+import com.lothrazar.storagenetwork.gui.GuiNetworkTable;
+import com.lothrazar.storagenetwork.item.GuiNetworkRemote;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -14,11 +14,11 @@ public class ClientProxy implements IProxy {
 
   @Override
   public void init() {
-    ScreenManager.registerFactory(SsnRegistry.requestcontainer, GuiRequestTable::new);
+    ScreenManager.registerFactory(SsnRegistry.requestcontainer, GuiNetworkTable::new);
     ScreenManager.registerFactory(SsnRegistry.filterContainer, GuiCableFilter::new);
     ScreenManager.registerFactory(SsnRegistry.filterimportContainer, GuiCableImportFilter::new);
     ScreenManager.registerFactory(SsnRegistry.filterexportContainer, GuiCableExportFilter::new);
-    ScreenManager.registerFactory(SsnRegistry.remote, GuiRemote::new);
+    ScreenManager.registerFactory(SsnRegistry.remote, GuiNetworkRemote::new);
   }
 
   @Override

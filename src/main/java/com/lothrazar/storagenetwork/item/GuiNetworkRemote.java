@@ -19,7 +19,7 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class GuiRemote extends ContainerScreen<ContainerRemote> implements IGuiPrivate, IGuiNetwork {
+public class GuiNetworkRemote extends ContainerScreen<ContainerRemote> implements IGuiPrivate, IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
@@ -27,7 +27,7 @@ public class GuiRemote extends ContainerScreen<ContainerRemote> implements IGuiP
   private final NetworkWidget network;
   private ItemStack stackUnderMouse;
 
-  public GuiRemote(ContainerRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+  public GuiNetworkRemote(ContainerRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget();
     this.xSize = WIDTH;

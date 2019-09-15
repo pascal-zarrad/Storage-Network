@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
-import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -29,8 +29,8 @@ public class SortMessage {
   public static void handle(SortMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      if (player.openContainer instanceof ContainerNetworkBase) {
-        //          if (((ContainerNetworkBase) player.openContainer).isRequest()) {
+      if (player.openContainer instanceof ContainerNetwork) {
+        //          if (((ContainerNetwork) player.openContainer).isRequest()) {
         TileEntity tileEntity = player.world.getTileEntity(message.pos);
         if (tileEntity instanceof TileRequest) {
           TileRequest tile = (TileRequest) tileEntity;

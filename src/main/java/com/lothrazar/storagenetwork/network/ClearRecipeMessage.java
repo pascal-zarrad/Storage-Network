@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.gui.ContainerNetworkBase;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -40,8 +40,8 @@ public class ClearRecipeMessage {
    * @param doRefresh
    */
   static void clearContainerRecipe(ServerPlayerEntity player, boolean doRefresh) {
-    if (player.openContainer instanceof ContainerNetworkBase) {
-      ContainerNetworkBase container = (ContainerNetworkBase) player.openContainer;
+    if (player.openContainer instanceof ContainerNetwork) {
+      ContainerNetwork container = (ContainerNetwork) player.openContainer;
       CraftingInventory craftMatrix = container.getCraftMatrix();
       TileMaster tileMaster = container.getTileMaster();
       for (int i = 0; i < 9; i++) {
