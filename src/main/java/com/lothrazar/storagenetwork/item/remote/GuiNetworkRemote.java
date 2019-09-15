@@ -1,10 +1,13 @@
 package com.lothrazar.storagenetwork.item.remote;
+import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
+import com.lothrazar.storagenetwork.jei.JeiHooks;
+import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -12,6 +15,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -25,7 +30,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   private static final int WIDTH = 176;
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   private final NetworkWidget network;
-  private ItemStack stackUnderMouse;
+  private ItemStack stackUnderMouse=ItemStack.EMPTY;
   private int scrollHeight = 135;
   int fieldHeight = 180;
 
@@ -37,11 +42,14 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.ySize = HEIGHT;
   }
 
+  @Override public void setStacks(List<ItemStack> stacks) {
+    network.stacks = stacks;
+  }
+
   @Override
   public void init() {
     super.init();
-    int searchLeft = guiLeft + 51, searchTop = guiTop + 160,
-        width = 85 * 2;
+    int searchLeft = guiLeft + 21, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
         width, font.FONT_HEIGHT, "search");
@@ -56,19 +64,82 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(mouseX, mouseY, partialTicks);
   }
+  private static int getDim() {
+    return 0;//TODO
+  }
+//TODO: COPIED
+  private boolean inField(int mouseX, int mouseY) {
+    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) &&
+        mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
+  }
+  //TODO COPIED
+
+  private boolean inSearchBar(double mouseX, double mouseY) {
+    return isPointInRegion(network.searchBar.x - guiLeft + 14,
+        network.searchBar.y - guiTop,
+        network.searchBar.getWidth(), font.FONT_HEIGHT + 6,
+        mouseX, mouseY);
+  }
+
+
+  @Override
+  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+    this.minecraft.getTextureManager().bindTexture(texture);
+    int k = (this.width - this.xSize) / 2;
+    int l = (this.height - this.ySize) / 2;
+    GlStateManager.color3f(1, 1, 1);
+    this.blit(k, l, 0, 0, this.xSize, this.ySize);
+    List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
+    //    sortStackWrappers(stacksToDisplay);
+    network.applyScrollPaging(stacksToDisplay);
+    network.rebuildItemSlots(stacksToDisplay, this);
+    network.renderItemSlots(mouseX, mouseY, font);
+  }
+
 
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(mouseX, mouseY);
+    drawTooltips(mouseX, mouseY);
+  }
+
+  private void drawTooltips(final int mouseX, final int mouseY) {
+//    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
+//      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX - guiLeft, mouseY - this.guiTop);
+//    }
+//    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
+//      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY - this.guiTop);
+//    }
+//    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
+//      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY - this.guiTop);
+//    }
+//    if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+//      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+//      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
+//    }
+    if (inSearchBar(mouseX, mouseY)) {
+      List<String> lis = Lists.newArrayList();
+      if (!Screen.hasShiftDown()) {
+        lis.add(I18n.format("gui.storagenetwork.shift"));
+      }
+      else {
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
+        //TODO: tag search
+        //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
+      }
+      renderTooltip(lis, mouseX - this.guiLeft, mouseY - this.guiTop);
+    }
   }
 
   boolean isScrollable(double x, double y) {
-    scrollHeight = 170;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
   }
+
 
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
@@ -84,6 +155,14 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
+    network.searchBar.setFocused2(false);
+    if (inSearchBar(mouseX, mouseY)) {
+      network.searchBar.setFocused2(true);
+      if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
+        network.clearSearch();
+      }
+    }
+    //
     ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
     if (!stackUnderMouse.isEmpty()
         && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
@@ -102,50 +181,43 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     return true;
   }
 
-  private static int getDim() {
-    return 0;//TODO
-  }
-
-  private boolean inField(int mouseX, int mouseY) {
-    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
-  }
-
   @Override
-  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    this.minecraft.getTextureManager().bindTexture(texture);
-    int k = (this.width - this.xSize) / 2;
-    int l = (this.height - this.ySize) / 2;
-    GlStateManager.color3f(1, 1, 1);
-    this.blit(k, l, 0, 0, this.xSize, this.ySize);
-
-    List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
-    //    sortStackWrappers(stacksToDisplay);
-    network.applyScrollPaging(stacksToDisplay);
-    network.rebuildItemSlots(stacksToDisplay, this);
-    renderItemSlots(mouseX, mouseY);
-  }
-
-  /**
-   * copied
-   *
-   * @param mouseX
-   * @param mouseY
-   */
-  private void renderItemSlots(int mouseX, int mouseY) {
-    stackUnderMouse = ItemStack.EMPTY;
-    for (ItemSlotNetwork slot : network.slots) {
-      slot.drawSlot(font, mouseX, mouseY);
-      if (slot.isMouseOverSlot(mouseX, mouseY)) {
-        stackUnderMouse = slot.getStack();
+  public boolean keyPressed(int keyCode, int scanCode, int b) {
+    InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
+    if (keyCode == 256) {
+      minecraft.player.closeScreen();
+      return true; // Forge MC-146650: Needs to return true when the key is handled.
+    }
+    if (network.searchBar.isFocused()) {
+      network.searchBar.keyPressed(keyCode, scanCode, b);
+      return true;
+    }
+    else if (network.stackUnderMouse.isEmpty()) {
+      try {
+        System.out.println("jei key " + mouseKey);
+        JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
+      }
+      catch (Throwable e) {
+        System.out.println("JEI compat issue " + e);
+        //its ok JEI not installed for maybe an addon mod is ok
       }
     }
-    if (network.slots.isEmpty()) {
-      stackUnderMouse = ItemStack.EMPTY;
+    //regardles of above branch, also check this
+    if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
+      minecraft.player.closeScreen();
+      return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
+    return super.keyPressed(keyCode, scanCode, b);
   }
 
-  @Override public void setStacks(List<ItemStack> stacks) {
-    network.stacks = stacks;
+
+
+  @Override
+  public boolean charTyped(char typedChar, int keyCode) {
+    if (network.charTyped(typedChar, keyCode)) {
+      return true;
+    }
+    return false;// super.charTyped(typedChar, keyCode);
   }
 
   @Override

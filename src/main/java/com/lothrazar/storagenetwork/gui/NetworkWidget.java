@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,8 @@ public class NetworkWidget {
   public List<ItemSlotNetwork> slots;
   private int lines = 4;
   private int columns = 9;
+ public ItemStack stackUnderMouse = ItemStack.EMPTY;
+
 
   public NetworkWidget() {
     stacks = Lists.newArrayList();
@@ -45,6 +48,17 @@ public class NetworkWidget {
     }
     return stacksToDisplay;
   }
+
+  public void clearSearch() {
+    if (searchBar == null) {
+      return;
+    }
+    searchBar.setText("");
+    if (JeiSettings.isJeiSearchSynced()) {
+      JeiHooks.setFilterText("");
+    }
+  }
+
   private boolean doesStackMatchSearch(ItemStack stack) {
     String searchText = searchBar.getText();
     if (searchText.startsWith("@")) {
@@ -156,6 +170,19 @@ public class NetworkWidget {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
       }
+    }
+  }
+
+  public void renderItemSlots(int mouseX, int mouseY, FontRenderer font) {
+    stackUnderMouse = ItemStack.EMPTY;
+    for (ItemSlotNetwork slot : slots) {
+      slot.drawSlot(font, mouseX, mouseY);
+      if (slot.isMouseOverSlot(mouseX, mouseY)) {
+        stackUnderMouse = slot.getStack();
+      }
+    }
+    if (slots.isEmpty()) {
+      stackUnderMouse = ItemStack.EMPTY;
     }
   }
 

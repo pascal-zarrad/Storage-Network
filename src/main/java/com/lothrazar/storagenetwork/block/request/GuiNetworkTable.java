@@ -41,8 +41,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
-  private ItemStack stackUnderMouse = ItemStack.EMPTY;
-
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   final NetworkWidget network;
   private TileRequest tile;
@@ -64,8 +62,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void init() {
     super.init();
-    int searchLeft = guiLeft + 81, searchTop = guiTop + 96,
-        width = 85;
+    int searchLeft = guiLeft + 81, searchTop = guiTop + 96, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
         width, font.FONT_HEIGHT, "search");
@@ -96,7 +93,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       addButton(jeiBtn);
     }
     clearTextBtn = new GuiButtonRequest(guiLeft + 64, y, "X", (p) -> {
-      this.clearSearch();
+      network.clearSearch();
     });
     clearTextBtn.setHeight(16);
     addButton(clearTextBtn);
@@ -141,17 +138,21 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
         mouseX, mouseY);
   }
 
-
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    renderTextures();
+
+    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    minecraft.getTextureManager().bindTexture(texture);
+    int xCenter = (width - xSize) / 2;
+    int yCenter = (height - ySize) / 2;
+    blit(xCenter, yCenter, 0, 0, xSize, ySize);
+    //good stuff
     List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
     network.rebuildItemSlots(stacksToDisplay, this);
-    renderItemSlots(mouseX, mouseY);
+    network.renderItemSlots(mouseX, mouseY, font);
   }
-
 
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
@@ -161,26 +162,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     network.searchBar.render(mouseX, mouseY, partialTicks);
   }
 
-  private void renderTextures() {
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    minecraft.getTextureManager().bindTexture(texture);
-    int xCenter = (width - xSize) / 2;
-    int yCenter = (height - ySize) / 2;
-    blit(xCenter, yCenter, 0, 0, xSize, ySize);
-  }
-
-  private void renderItemSlots(int mouseX, int mouseY) {
-    stackUnderMouse = ItemStack.EMPTY;
-    for (ItemSlotNetwork slot : network.slots) {
-      slot.drawSlot(font, mouseX, mouseY);
-      if (slot.isMouseOverSlot(mouseX, mouseY)) {
-        stackUnderMouse = slot.getStack();
-      }
-    }
-    if (network.slots.isEmpty()) {
-      stackUnderMouse = ItemStack.EMPTY;
-    }
-  }
 
   private void sortStackWrappers(List<ItemStack> stacksToDisplay) {
     Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
@@ -260,16 +241,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     }
   }
 
-  private void clearSearch() {
-    if (network.searchBar == null) {
-      return;
-    }
-    network.searchBar.setText("");
-    if (JeiSettings.isJeiSearchSynced()) {
-      JeiHooks.setFilterText("");
-    }
-  }
-
   boolean isScrollable(double x, double y) {
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
@@ -296,7 +267,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     if (inSearchBar(mouseX, mouseY)) {
       network.searchBar.setFocused2(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        clearSearch();
+        network.clearSearch();
       }
     }
     else if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
@@ -305,17 +276,17 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     }
     else if (network.searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        this.clearSearch();
+        network.clearSearch();
       }
       return true;
     }
     else {
       ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
-      if (!stackUnderMouse.isEmpty()
+      if (!network.stackUnderMouse.isEmpty()
           && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
           && stackCarriedByMouse.isEmpty() &&
           network.canClick()) {
-        ItemStack copyNotNegativeAir = new ItemStack(stackUnderMouse.getItem());
+        ItemStack copyNotNegativeAir = new ItemStack(network.stackUnderMouse.getItem());
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
             Screen.hasAltDown() || Screen.hasControlDown()));
         network.lastClick = System.currentTimeMillis();
@@ -340,10 +311,10 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       network.searchBar.keyPressed(keyCode, scanCode, b);
       return true;
     }
-    else if (this.stackUnderMouse.isEmpty()) {
+    else if (network.stackUnderMouse.isEmpty()) {
       try {
         System.out.println("jei key " + mouseKey);
-        JeiHooks.testJeiKeybind(mouseKey, this.stackUnderMouse);
+        JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
         System.out.println("JEI compat issue " + e);
@@ -360,30 +331,9 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
 
   @Override
   public boolean charTyped(char typedChar, int keyCode) {
-    //    super.keyPressed()
-    //func_195363_d
     if (network.charTyped(typedChar, keyCode)) {
       return true;
     }
-    //    if (network.searchBar.isFocused() && network.searchBar.charTyped(typedChar, keyCode)) {
-    //      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-    //      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-    //        JeiHooks.setFilterText(network.searchBar.getText());
-    //      }
-    //      return true;
-    //    }
-    else if (stackUnderMouse.isEmpty() == false) {
-      try {
-        //          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
-      }
-      catch (Throwable e) {
-        //its ok JEI not installed for maybe an addon mod is ok
-      }
-    }
-    else {
-      //      super.keyPressed(typedChar, keyCode, whatami);
-    }
-    //    }
     return false;// super.charTyped(typedChar, keyCode);
   }
 
