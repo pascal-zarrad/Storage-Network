@@ -42,11 +42,11 @@ public abstract class ContainerNetworkBase extends Container {
 
   public abstract TileMaster getTileMaster();
 
-  public abstract void bindHotbar();
+//  public abstract void bindHotbar();
 
   public abstract void slotChanged();
 
-  boolean test = false;
+//  boolean test = false;
 
   protected void bindPlayerInvo(PlayerInventory playerInv) {
     this.player = playerInv.player;

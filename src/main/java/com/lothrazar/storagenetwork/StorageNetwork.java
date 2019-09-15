@@ -155,6 +155,7 @@ public class StorageNetwork {
         return new ContainerCableExportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("export_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
+
         return new ContainerRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
       }).setRegistryName("inventory_remote"));
     }

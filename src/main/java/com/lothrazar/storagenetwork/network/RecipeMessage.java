@@ -70,6 +70,7 @@ public class RecipeMessage {
       ContainerNetworkBase ctr = (ContainerNetworkBase) player.openContainer;
       TileMaster master = ctr.getTileMaster();
       if (master == null) {
+        StorageNetwork.log("Recipe message cancelled, null tile");
         return;
       }
       ClearRecipeMessage.clearContainerRecipe(player, false);

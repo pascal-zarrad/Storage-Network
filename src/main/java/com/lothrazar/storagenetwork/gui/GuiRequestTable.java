@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.gui;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
@@ -37,17 +37,15 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public   class GuiRequestTable extends ContainerScreen<ContainerRequest> implements IGuiPrivate , IGuiNetwork {
+public class GuiRequestTable extends ContainerScreen<ContainerRequest> implements IGuiPrivate, IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
-
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
   private TextFieldWidget searchBar;
   private boolean forceFocus;
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
-
   final NetworkWidget network;
   private TileRequest tile;
 
@@ -59,8 +57,7 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     ySize = HEIGHT;
   }
 
-
-   public void setStacks(List<ItemStack> stacks) {
+  @Override public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
   }
 
@@ -91,7 +88,6 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     sortBtn.setHeight(16);
     addButton(sortBtn);
     jeiBtn = new GuiButtonRequest(guiLeft + 35, y, "", (p) -> {
-
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
     jeiBtn.setHeight(16);
@@ -109,24 +105,23 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 
-
-   public boolean getDownwards() {
+  public boolean getDownwards() {
     return tile.isDownwards();
   }
 
-   public void setDownwards(boolean d) {
+  public void setDownwards(boolean d) {
     tile.setDownwards(d);
   }
 
-   public EnumSortType getSort() {
+  public EnumSortType getSort() {
     return tile.getSort();
   }
 
-   public void setSort(EnumSortType s) {
+  public void setSort(EnumSortType s) {
     tile.setSort(s);
   }
 
-   public BlockPos getPos() {
+  public BlockPos getPos() {
     return tile.getPos();
   }
 
@@ -204,7 +199,7 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
 
   private List<ItemStack> applySearchTextToSlots() {
     String searchText = searchBar.getText();
-    // StorageNetwork.LOGGER.info("asdfasdf   search to slots " +searchText);
+
     List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(network.stacks) : Lists.newArrayList();
     if (!searchText.equals("")) {
       for (ItemStack stack : network.stacks) {
@@ -214,21 +209,6 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
       }
     }
     return stacksToDisplay;
-  }
-
-  @Override
-  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
-    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
-  }
-
-  @Override
-  public void renderStackToolTip(ItemStack stack, int x, int y) {
-    super.renderTooltip(stack, x, y);
-  }
-
-  @Override
-  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-    super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
   private void renderItemSlots(int mouseX, int mouseY) {
@@ -278,17 +258,22 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     switch (this.getSort()) {
       case NAME:
         sort = "N";
-      break;
+        break;
       case MOD:
         sort = "@";
-      break;
+        break;
       case AMOUNT:
         sort = "#";
-      break;
+        break;
     }
     this.sortBtn.setMessage(sort);
-    jeiBtn.setMessage(JeiSettings.isJeiSearchSynced()?"J":"-");
+    jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
     drawTooltips(mouseX, mouseY);
+    for (ItemSlotNetwork s : network.slots) {
+      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
+        s.drawTooltip(mouseX, mouseY);
+      }
+    }
   }
 
   private void drawTooltips(final int mouseX, final int mouseY) {
@@ -305,11 +290,7 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
       renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
     }
-    for (ItemSlotNetwork s : network.slots) {
-      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
-        s.drawTooltip(mouseX, mouseY);
-      }
-    }
+
     if (inSearchbar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
@@ -326,11 +307,7 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     }
   }
 
-  @Override
-  public void onClose() {
-    super.onClose();
-    //    Keyboard.enableRepeatEvents(false);
-  }
+   
 
   private void clearSearch() {
     if (searchBar == null) {
@@ -342,7 +319,7 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     }
   }
 
-  public boolean isScrollable(double x, double y) {
+   boolean isScrollable(double x, double y) {
     return isPointInRegion(0, 0,
         this.width - 8, 135,
         x, y);
@@ -354,8 +331,7 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     //<0 going down
     // >0 going up
     if (isScrollable(x, y) && mouseButton != 0) {
- network.mouseScrolled(mouseButton);
-
+      network.mouseScrolled(mouseButton);
     }
     return true;
   }
@@ -415,11 +391,11 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     }
     else if (this.stackUnderMouse.isEmpty()) {
       try {
-        System.out.println("jei key "+ mouseKey);
+        System.out.println("jei key " + mouseKey);
         JeiHooks.testJeiKeybind(mouseKey, this.stackUnderMouse);
       }
       catch (Throwable e) {
-        System.out.println("JEI compat issue "+e);
+        System.out.println("JEI compat issue " + e);
         //its ok JEI not installed for maybe an addon mod is ok
       }
     }
@@ -455,5 +431,20 @@ public   class GuiRequestTable extends ContainerScreen<ContainerRequest> impleme
     }
     //    }
     return false;// super.charTyped(typedChar, keyCode);
+  }
+
+  @Override
+  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
+    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
+  }
+
+  @Override
+  public void renderStackToolTip(ItemStack stack, int x, int y) {
+    super.renderTooltip(stack, x, y);
+  }
+
+  @Override
+  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+    super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 }

@@ -3,6 +3,8 @@ package com.lothrazar.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -45,6 +47,7 @@ public class RequestMessage {
       }
       if (tileMaster == null) {
         //maybe the table broke after doing this, rare case
+        StorageNetwork.log("Request message cancelled, null tile");
         return;
       }
       int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, false, true));

@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.item;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.client.util.ITooltipFlag;
@@ -64,6 +65,19 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
     tooltip.add(new TranslationTextComponent("[ x: " + x + ", y: " + y + ", z: " + z + " ]"));
+  }
+
+  public static DimPos getPosStored(ItemStack itemStackIn) {
+    if (!itemStackIn.getOrCreateTag().getBoolean("bound")) {
+      return null;
+    }
+    CompoundNBT tag = itemStackIn.getOrCreateTag();
+    int x = tag.getInt("x");
+    int y = tag.getInt("y");
+    int z = tag.getInt("z");
+    int dim = tag.getInt("dim");
+    BlockPos posTarget = new BlockPos(x, y, z);
+    return new DimPos(dim, posTarget);
   }
 
   @Override

@@ -9,10 +9,10 @@ import java.util.List;
 
 public class NetworkWidget {
 
-    long lastClick;
+  public long lastClick;
   int page = 1, maxPage = 1;
-  List<ItemStack> stacks;
-    List<ItemSlotNetwork> slots;
+  public List<ItemStack> stacks;
+  public List<ItemSlotNetwork> slots;
 
   public NetworkWidget() {
     stacks = Lists.newArrayList();
@@ -20,21 +20,20 @@ public class NetworkWidget {
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
     lastClick = System.currentTimeMillis();
   }
-    boolean canClick() {
+
+  public boolean canClick() {
     return System.currentTimeMillis() > lastClick + 100L;
   }
 
   int getLines() {
     return 4;
-
   }
 
   static int getColumns() {
-
     return 9;
   }
 
-  void applyScrollPaging(List<ItemStack> stacksToDisplay) {
+  public void applyScrollPaging(List<ItemStack> stacksToDisplay) {
     maxPage = stacksToDisplay.size() / (getColumns());
     if (stacksToDisplay.size() % (getColumns()) != 0) {
       maxPage++;
@@ -62,7 +61,7 @@ public class NetworkWidget {
     }
   }
 
-    void rebuildItemSlots(List<ItemStack> stacksToDisplay, IGuiPrivate gui) {
+  public void rebuildItemSlots(List<ItemStack> stacksToDisplay, IGuiPrivate gui) {
     slots = Lists.newArrayList();
     int index = (page - 1) * (getColumns());
     for (int row = 0; row < getLines(); row++) {

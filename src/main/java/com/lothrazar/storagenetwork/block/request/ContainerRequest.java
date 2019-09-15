@@ -54,8 +54,7 @@ public class ContainerRequest extends ContainerNetworkBase {
     onCraftMatrixChanged(matrix);
   }
 
-  @Override
-  public void bindHotbar() {
+    void bindHotbar() {
     //player hotbar
     for (int i = 0; i < 9; ++i) {
       addSlot(new Slot(playerInv, i, 8 + i * 18, 232));

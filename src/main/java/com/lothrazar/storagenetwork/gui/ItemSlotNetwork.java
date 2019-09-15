@@ -82,7 +82,7 @@ public class ItemSlotNetwork {
     GlStateManager.popMatrix();
   }
 
-  void drawTooltip(int mx, int my) {
+  public void drawTooltip(int mx, int my) {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
       parent.renderStackToolTip(getStack(),
           mx - parent.getGuiLeft(),
