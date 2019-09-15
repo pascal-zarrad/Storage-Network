@@ -11,6 +11,7 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -25,7 +26,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   private final NetworkWidget network;
   private ItemStack stackUnderMouse;
-private int scrollHeight = 135;
+  private int scrollHeight = 135;
+  int fieldHeight = 180;
+
   public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget();
@@ -35,24 +38,31 @@ private int scrollHeight = 135;
   }
 
   @Override
+  public void init() {
+    super.init();
+    network.searchBar = new TextFieldWidget(font,
+        guiLeft + 81, guiTop + 96,
+        85*2, font.FONT_HEIGHT, "search");
+    network.searchBar.setMaxStringLength(60);
+    network.initSearchbar();
+  }
+
+  @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
     this.renderBackground();
     super.render(mouseX, mouseY, partialTicks);
     this.renderHoveredToolTip(mouseX, mouseY);
+    network.searchBar.render(mouseX, mouseY, partialTicks);
   }
 
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    for (ItemSlotNetwork s : network.slots) {
-      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
-        s.drawTooltip(mouseX, mouseY);
-      }
-    }
+    network.drawGuiContainerForegroundLayer(mouseX, mouseY);
   }
 
   boolean isScrollable(double x, double y) {
-    scrollHeight=170;
+    scrollHeight = 170;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
@@ -95,8 +105,7 @@ private int scrollHeight = 135;
   }
 
   private boolean inField(int mouseX, int mouseY) {
-    int h = 90;
-    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + h);
+    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
   }
 
   @Override
@@ -107,11 +116,8 @@ private int scrollHeight = 135;
     GlStateManager.color3f(1, 1, 1);
     this.blit(k, l, 0, 0, this.xSize, this.ySize);
     //
-
     List<ItemStack> stacksToDisplay = network.stacks;//applySearchTextToSlots();
-
-
-//    sortStackWrappers(stacksToDisplay);
+    //    sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
     network.rebuildItemSlots(stacksToDisplay, this);
     renderItemSlots(mouseX, mouseY);

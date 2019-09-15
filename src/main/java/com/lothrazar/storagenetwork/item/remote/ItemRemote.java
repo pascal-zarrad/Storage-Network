@@ -30,7 +30,8 @@ import java.util.List;
 public class ItemRemote extends Item implements INamedContainerProvider {
 
   public ItemRemote(Properties properties) {
-    super(properties);
+    super(properties.maxStackSize(1));
+     
   }
 
   @Override

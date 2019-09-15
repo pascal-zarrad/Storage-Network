@@ -42,13 +42,13 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   private static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private ItemStack stackUnderMouse = ItemStack.EMPTY;
-  private TextFieldWidget searchBar;
-  private boolean forceFocus;
+//  private boolean forceFocus;
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   final NetworkWidget network;
   private TileRequest tile;
 
   private int scrollHeight = 135;
+  int fieldHeight = 90;
   public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
@@ -64,17 +64,18 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void init() {
     super.init();
-    //    Keyboard.enableRepeatEvents(true);
-    searchBar = new TextFieldWidget(font, guiLeft + 81, guiTop + 96, 85, font.FONT_HEIGHT, "search");
-    searchBar.setMaxStringLength(30);
-    searchBar.setEnableBackgroundDrawing(false);
-    searchBar.setVisible(true);
-    searchBar.setTextColor(16777215);
-    searchBar.setFocused2(true);
-    if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-      searchBar.setText(JeiHooks.getFilterText());
-    }
-    int y = searchBar.y - 3;
+    network.searchBar = new TextFieldWidget(font,
+        guiLeft + 81, guiTop + 96,
+        85, font.FONT_HEIGHT, "search");
+
+    network.searchBar.setMaxStringLength(30);
+
+    network.initSearchbar();
+    initButtons();
+  }
+
+  private void initButtons() {
+    int y = network.searchBar.y - 3;
     directionBtn = new GuiButtonRequest(guiLeft + 7, y, "", (p) -> {
       this.setDownwards(!this.getDownwards());
       this.syncData();
@@ -130,19 +131,18 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   }
 
   private boolean inField(int mouseX, int mouseY) {
-    int h = 90;
-    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + h);
+    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
   }
 
-  private boolean inSearchbar(double mouseX, double mouseY) {
-    return isPointInRegion(searchBar.x - guiLeft + 14,
-        searchBar.y - guiTop,
-        searchBar.getWidth(), font.FONT_HEIGHT + 6,
+  private boolean inSearchBar(double mouseX, double mouseY) {
+    return isPointInRegion(network.searchBar.x - guiLeft + 14,
+        network.searchBar.y - guiTop,
+        network.searchBar.getWidth(), font.FONT_HEIGHT + 6,
         mouseX, mouseY);
   }
 
   private boolean doesStackMatchSearch(ItemStack stack) {
-    String searchText = searchBar.getText();
+    String searchText = network.searchBar.getText();
     if (searchText.startsWith("@")) {
       String name = UtilTileEntity.getModNameForItem(stack.getItem());
       return name.toLowerCase().contains(searchText.toLowerCase().substring(1));
@@ -186,7 +186,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     renderBackground();
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
-    searchBar.render(mouseX, mouseY, partialTicks);
+    network.searchBar.render(mouseX, mouseY, partialTicks);
   }
 
   private void renderTextures() {
@@ -198,7 +198,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   }
 
   private List<ItemStack> applySearchTextToSlots() {
-    String searchText = searchBar.getText();
+    String searchText = network.searchBar.getText();
 
     List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(network.stacks) : Lists.newArrayList();
     if (!searchText.equals("")) {
@@ -247,12 +247,12 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    if (forceFocus && searchBar != null) {
-      searchBar.setFocused2(true);
-      if (searchBar.isFocused()) {
-        forceFocus = false;
-      }
-    }
+//    if (forceFocus && network.searchBar != null) {
+//      network.searchBar.setFocused2(true);
+//      if (network.searchBar.isFocused()) {
+//        forceFocus = false;
+//      }
+//    }
     this.directionBtn.setMessage(this.getDownwards() ? "D" : "U");
     String sort = "";
     switch (this.getSort()) {
@@ -269,11 +269,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     this.sortBtn.setMessage(sort);
     jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
     drawTooltips(mouseX, mouseY);
-    for (ItemSlotNetwork s : network.slots) {
-      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
-        s.drawTooltip(mouseX, mouseY);
-      }
-    }
+
+    network.drawGuiContainerForegroundLayer(mouseX, mouseY);
   }
 
   private void drawTooltips(final int mouseX, final int mouseY) {
@@ -291,7 +288,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
     }
 
-    if (inSearchbar(mouseX, mouseY)) {
+    if (inSearchBar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
         lis.add(I18n.format("gui.storagenetwork.shift"));
@@ -310,10 +307,10 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
 
 
   private void clearSearch() {
-    if (searchBar == null) {
+    if (network.searchBar == null) {
       return;
     }
-    searchBar.setText("");
+    network.searchBar.setText("");
     if (JeiSettings.isJeiSearchSynced()) {
       JeiHooks.setFilterText("");
     }
@@ -339,11 +336,11 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    searchBar.setFocused2(false);
+    network.searchBar.setFocused2(false);
     int rectX = 63;
     int rectY = 110;
-    if (inSearchbar(mouseX, mouseY)) {
-      searchBar.setFocused2(true);
+    if (inSearchBar(mouseX, mouseY)) {
+      network.searchBar.setFocused2(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         clearSearch();
       }
@@ -352,7 +349,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
     }
-    else if (searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
+    else if (network.searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         this.clearSearch();
       }
@@ -385,8 +382,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       minecraft.player.closeScreen();
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
-    if (searchBar.isFocused()) {
-      searchBar.keyPressed(keyCode, scanCode, b);
+    if (network.searchBar.isFocused()) {
+      network.searchBar.keyPressed(keyCode, scanCode, b);
       return true;
     }
     else if (this.stackUnderMouse.isEmpty()) {
@@ -411,13 +408,17 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   public boolean charTyped(char typedChar, int keyCode) {
     //    super.keyPressed()
     //func_195363_d
-    if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
-      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-        JeiHooks.setFilterText(searchBar.getText());
-      }
-      return true;
-    }
+  if(  network.charTyped(typedChar, keyCode)){
+    return true;
+  }
+
+//    if (network.searchBar.isFocused() && network.searchBar.charTyped(typedChar, keyCode)) {
+//      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
+//      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+//        JeiHooks.setFilterText(network.searchBar.getText());
+//      }
+//      return true;
+//    }
     else if (stackUnderMouse.isEmpty() == false) {
       try {
         //          JeiHooks.testJeiKeybind(keyCode, stackUnderMouse);
