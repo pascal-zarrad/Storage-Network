@@ -113,7 +113,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   boolean isScrollable(double x, double y) {
-    int scrollHeight = 135;
+    int scrollHeight = 152 ;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
@@ -124,10 +124,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     super.mouseScrolled(x, y, mouseButton);
     //<0 going down
     // >0 going up
-    System.out.println("remote mousCrolled");
-    if (isScrollable(x, y) && mouseButton != 0) {
-      System.out.println("remote mousCrolled yes "+ mouseButton);
-      network.mouseScrolled(mouseButton);
+     if (isScrollable(x, y) && mouseButton != 0) {
+       network.mouseScrolled(mouseButton);
     }
     return true;
   }
