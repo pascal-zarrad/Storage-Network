@@ -38,6 +38,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.setLines(8);
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
+    network.fieldHeight = 180;
   }
 
   @Override public void setStacks(List<ItemStack> stacks) {
@@ -65,13 +66,6 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   private static int getDim() {
     return 0;//TODO
-  }
-
-  //TODO: COPIED
-  private boolean inField(int mouseX, int mouseY) {
-    int fieldHeight = 180;
-    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) &&
-        mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
   }
 
   @Override
@@ -133,29 +127,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    network.searchBar.setFocused2(false);
-    if (network.inSearchBar(mouseX, mouseY)) {
-      network.searchBar.setFocused2(true);
-      if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        network.clearSearch();
-      }
-    }
-    //
-    ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
-    if (!stackUnderMouse.isEmpty()
-        && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
-        && stackCarriedByMouse.isEmpty() &&
-        network.canClick()) {
-      ItemStack copyNotNegativeAir = new ItemStack(stackUnderMouse.getItem());
-      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
-          Screen.hasAltDown() || Screen.hasControlDown()));
-      network.lastClick = System.currentTimeMillis();
-    }
-    else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) &&
-        network.canClick()) {
-      PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton));
-      network.lastClick = System.currentTimeMillis();
-    }
+    network.mouseClicked(mouseX,mouseY,mouseButton);
+
+
     return true;
   }
 

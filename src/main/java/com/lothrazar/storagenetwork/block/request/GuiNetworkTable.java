@@ -39,7 +39,7 @@ import net.minecraft.util.text.ITextComponent;
 public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements IGuiPrivate, IGuiNetwork {
 
   private static final int HEIGHT = 256;
-  private static final int WIDTH = 176;
+  public static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   final NetworkWidget network;
@@ -97,7 +97,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     addButton(clearTextBtn);
   }
 
-
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
     renderBackground();
@@ -134,11 +133,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     return 0;//TODO
   }
 
-  private boolean inField(int mouseX, int mouseY) {
-    int fieldHeight = 90;
-    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7)
-        && mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
-  }
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -154,6 +148,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     network.rebuildItemSlots(stacksToDisplay);
     network.renderItemSlots(mouseX, mouseY, font);
   }
+
   private void sortStackWrappers(List<ItemStack> stacksToDisplay) {
     Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
 
@@ -233,8 +228,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   }
 
   boolean isScrollable(double x, double y) {
-
-     int scrollHeight = 135;
+    int scrollHeight = 135;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
@@ -254,42 +248,17 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    network.searchBar.setFocused2(false);
+    network.mouseClicked(mouseX,mouseY,mouseButton);
+
+    //recipe clear thingy
     int rectX = 63;
     int rectY = 110;
-    if (network.inSearchBar(mouseX, mouseY)) {
-      network.searchBar.setFocused2(true);
-      if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        network.clearSearch();
-      }
-    }
-    else if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
+    if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
       PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-    }
-    else if (network.searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
-      if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        network.clearSearch();
-      }
       return true;
     }
-    else {
-      ItemStack stackCarriedByMouse = minecraft.player.inventory.getItemStack();
-      if (!network.stackUnderMouse.isEmpty()
-          && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
-          && stackCarriedByMouse.isEmpty() &&
-          network.canClick()) {
-        ItemStack copyNotNegativeAir = new ItemStack(network.stackUnderMouse.getItem());
-        PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
-            Screen.hasAltDown() || Screen.hasControlDown()));
-        network.lastClick = System.currentTimeMillis();
-      }
-      else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) &&
-          network.canClick()) {
-        PacketRegistry.INSTANCE.sendToServer(new InsertMessage(getDim(), mouseButton));
-        network.lastClick = System.currentTimeMillis();
-      }
-    }
+
     return true;
   }
 
@@ -306,7 +275,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     }
     else if (network.stackUnderMouse.isEmpty()) {
       try {
-
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {

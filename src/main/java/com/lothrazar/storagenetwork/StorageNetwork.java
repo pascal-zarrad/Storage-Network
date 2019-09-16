@@ -57,7 +57,7 @@ public class StorageNetwork {
   public static final String MODID = "storagenetwork";
   static final String certificateFingerprint = "@FINGERPRINT@";
   public static final Logger LOGGER = LogManager.getLogger();
-  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
