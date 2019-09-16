@@ -36,7 +36,7 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements IGuiPrivate, IGuiNetwork {
+public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements  IGuiNetwork {
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
@@ -66,6 +66,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
         width, font.FONT_HEIGHT, "search");
     network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
+    network.initButtons();
     initButtons();
   }
 
@@ -109,18 +110,22 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 
+  @Override
   public boolean getDownwards() {
     return tile.isDownwards();
   }
 
+  @Override
   public void setDownwards(boolean d) {
     tile.setDownwards(d);
   }
 
+  @Override
   public EnumSortType getSort() {
     return tile.getSort();
   }
 
+  @Override
   public void setSort(EnumSortType s) {
     tile.setSort(s);
   }
@@ -132,7 +137,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   private static int getDim() {
     return 0;//TODO
   }
-
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -248,8 +252,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    network.mouseClicked(mouseX,mouseY,mouseButton);
-
+    network.mouseClicked(mouseX, mouseY, mouseButton);
     //recipe clear thingy
     int rectX = 63;
     int rectY = 110;
@@ -258,7 +261,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
       return true;
     }
-
     return true;
   }
 

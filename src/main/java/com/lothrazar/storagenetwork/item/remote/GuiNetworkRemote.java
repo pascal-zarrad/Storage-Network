@@ -3,6 +3,8 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
+import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
@@ -19,19 +21,19 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiPrivate, IGuiNetwork {
+public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements  IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   private final NetworkWidget network;
-  private ItemStack stackUnderMouse = ItemStack.EMPTY;
-
+   
   public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget(this);
@@ -39,10 +41,27 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
     network.fieldHeight = 180;
+
+
+//    ItemStack remote = pInv.player.getHeldItem(H
   }
 
   @Override public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
+  }
+
+  @Override public boolean getDownwards() {
+    return false;
+  }
+
+  @Override public void setDownwards(boolean val) {
+  }
+
+  @Override public EnumSortType getSort() {
+    return null;
+  }
+
+  @Override public void setSort(EnumSortType val) {
   }
 
   @Override
@@ -52,8 +71,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
         width, font.FONT_HEIGHT, "search");
-    network.searchBar.setMaxStringLength(60);
+    network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
+    network.initButtons();
   }
 
   @Override
@@ -145,7 +165,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
       return true;
     }
     else if (network.stackUnderMouse.isEmpty()) {
-      try { 
+      try {
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {

@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.gui;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
@@ -23,20 +24,19 @@ import java.util.List;
 
 public class NetworkWidget {
 
-  private final IGuiPrivate gui;
+  private final IGuiNetwork gui;
   public TextFieldWidget searchBar;
-  public long lastClick;
+  long lastClick;
   int page = 1, maxPage = 1;
   public List<ItemStack> stacks;
-  public List<ItemSlotNetwork> slots;
+  List<ItemSlotNetwork> slots;
   private int lines = 4;
   private int columns = 9;
- public ItemStack stackUnderMouse = ItemStack.EMPTY;
+  public ItemStack stackUnderMouse = ItemStack.EMPTY;
   public int fieldHeight = 90;
 
-
-  public NetworkWidget(IGuiPrivate gui) {
-    this.gui=gui;
+  public NetworkWidget(IGuiNetwork gui) {
+    this.gui = gui;
     stacks = Lists.newArrayList();
     slots = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
@@ -95,6 +95,7 @@ public class NetworkWidget {
       return stack.getDisplayName().toString().toLowerCase().contains(searchText.toLowerCase());
     }
   }
+
   public boolean canClick() {
     return System.currentTimeMillis() > lastClick + 100L;
   }
@@ -106,9 +107,11 @@ public class NetworkWidget {
   int getColumns() {
     return columns;
   }
+
   public void setLines(int v) {
     lines = v;
   }
+
   void setColumns(int v) {
     columns = v;
   }
@@ -167,8 +170,8 @@ public class NetworkWidget {
         searchBar.getWidth(), 9 + 6,
         mouseX, mouseY);
   }
-  public void initSearchbar() {
 
+  public void initSearchbar() {
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
@@ -212,15 +215,13 @@ public class NetworkWidget {
 
   public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
     searchBar.setFocused2(false);
-
-
     if (inSearchBar(mouseX, mouseY)) {
       searchBar.setFocused2(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         clearSearch();
-        return;}
+        return;
+      }
     }
-
     if (searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         clearSearch();
@@ -244,8 +245,12 @@ public class NetworkWidget {
       this.lastClick = System.currentTimeMillis();
     }
   }
+
   private boolean inField(int mouseX, int mouseY) {
     return mouseX > (gui.getGuiLeft() + 7) && mouseX < (gui.getGuiLeft() + GuiNetworkTable.WIDTH - 7)
-        && mouseY > (gui.getGuiTop() + 7) && mouseY < (gui.getGuiTop()+ fieldHeight);
+        && mouseY > (gui.getGuiTop() + 7) && mouseY < (gui.getGuiTop() + fieldHeight);
+  }
+
+  public void initButtons() {
   }
 }
