@@ -30,14 +30,12 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   private static final int WIDTH = 176;
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   private final NetworkWidget network;
-  private ItemStack stackUnderMouse=ItemStack.EMPTY;
-  private int scrollHeight = 135;
-  int fieldHeight = 180;
+  private ItemStack stackUnderMouse = ItemStack.EMPTY;
 
   public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
-    network = new NetworkWidget();
-    network.setLines(9);
+    network = new NetworkWidget(this);
+    network.setLines(8);
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
   }
@@ -49,7 +47,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   @Override
   public void init() {
     super.init();
-    int searchLeft = guiLeft + 21, searchTop = guiTop + 160, width = 85;
+    int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
         width, font.FONT_HEIGHT, "search");
@@ -64,23 +62,17 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(mouseX, mouseY, partialTicks);
   }
+
   private static int getDim() {
     return 0;//TODO
   }
-//TODO: COPIED
+
+  //TODO: COPIED
   private boolean inField(int mouseX, int mouseY) {
+    int fieldHeight = 180;
     return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) &&
         mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
   }
-  //TODO COPIED
-
-  private boolean inSearchBar(double mouseX, double mouseY) {
-    return isPointInRegion(network.searchBar.x - guiLeft + 14,
-        network.searchBar.y - guiTop,
-        network.searchBar.getWidth(), font.FONT_HEIGHT + 6,
-        mouseX, mouseY);
-  }
-
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -92,10 +84,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
     //    sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
-    network.rebuildItemSlots(stacksToDisplay, this);
+    network.rebuildItemSlots(stacksToDisplay);
     network.renderItemSlots(mouseX, mouseY, font);
   }
-
 
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
@@ -105,20 +96,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   private void drawTooltips(final int mouseX, final int mouseY) {
-//    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
-//      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX - guiLeft, mouseY - this.guiTop);
-//    }
-//    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-//      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY - this.guiTop);
-//    }
-//    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-//      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY - this.guiTop);
-//    }
-//    if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-//      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-//      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
-//    }
-    if (inSearchBar(mouseX, mouseY)) {
+    if (network.inSearchBar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
         lis.add(I18n.format("gui.storagenetwork.shift"));
@@ -135,18 +113,20 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   boolean isScrollable(double x, double y) {
+    int scrollHeight = 135;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
   }
-
 
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);
     //<0 going down
     // >0 going up
+    System.out.println("remote mousCrolled");
     if (isScrollable(x, y) && mouseButton != 0) {
+      System.out.println("remote mousCrolled yes "+ mouseButton);
       network.mouseScrolled(mouseButton);
     }
     return true;
@@ -156,7 +136,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
     network.searchBar.setFocused2(false);
-    if (inSearchBar(mouseX, mouseY)) {
+    if (network.inSearchBar(mouseX, mouseY)) {
       network.searchBar.setFocused2(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         network.clearSearch();
@@ -210,8 +190,6 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     return super.keyPressed(keyCode, scanCode, b);
   }
 
-
-
   @Override
   public boolean charTyped(char typedChar, int keyCode) {
     if (network.charTyped(typedChar, keyCode)) {
@@ -233,5 +211,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   @Override
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
+  }
+
+  @Override public boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

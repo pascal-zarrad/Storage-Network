@@ -19,6 +19,7 @@ import java.util.List;
 
 public class NetworkWidget {
 
+  private final IGuiPrivate gui;
   public TextFieldWidget searchBar;
   public long lastClick;
   int page = 1, maxPage = 1;
@@ -29,7 +30,8 @@ public class NetworkWidget {
  public ItemStack stackUnderMouse = ItemStack.EMPTY;
 
 
-  public NetworkWidget() {
+  public NetworkWidget(IGuiPrivate gui) {
+    this.gui=gui;
     stacks = Lists.newArrayList();
     slots = Lists.newArrayList();
     PacketRegistry.INSTANCE.sendToServer(new RequestMessage());
@@ -134,7 +136,7 @@ public class NetworkWidget {
     }
   }
 
-  public void rebuildItemSlots(List<ItemStack> stacksToDisplay, IGuiPrivate gui) {
+  public void rebuildItemSlots(List<ItemStack> stacksToDisplay) {
     slots = Lists.newArrayList();
     int index = (page - 1) * (getColumns());
     for (int row = 0; row < getLines(); row++) {
@@ -154,6 +156,12 @@ public class NetworkWidget {
     }
   }
 
+  public boolean inSearchBar(double mouseX, double mouseY) {
+    return gui.isPointInRegion(searchBar.x - gui.getGuiLeft() + 14,
+        searchBar.y - gui.getGuiTop(),
+        searchBar.getWidth(), 9 + 6,
+        mouseX, mouseY);
+  }
   public void initSearchbar() {
 
     searchBar.setEnableBackgroundDrawing(false);

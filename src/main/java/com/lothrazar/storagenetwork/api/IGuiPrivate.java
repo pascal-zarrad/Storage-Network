@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork.api;
-
 import net.minecraft.item.ItemStack;
 
 public interface IGuiPrivate {
@@ -14,4 +13,6 @@ public interface IGuiPrivate {
   int getGuiTop();
 
   int getGuiLeft();
+
+  boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY);
 }

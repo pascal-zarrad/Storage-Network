@@ -44,13 +44,11 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   final NetworkWidget network;
   private TileRequest tile;
-  private int scrollHeight = 135;
-  int fieldHeight = 90;
 
   public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
-    network = new NetworkWidget();
+    network = new NetworkWidget(this);
     xSize = WIDTH;
     ySize = HEIGHT;
   }
@@ -99,6 +97,15 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     addButton(clearTextBtn);
   }
 
+
+  @Override
+  public void render(int mouseX, int mouseY, float partialTicks) {
+    renderBackground();
+    super.render(mouseX, mouseY, partialTicks);
+    renderHoveredToolTip(mouseX, mouseY);
+    network.searchBar.render(mouseX, mouseY, partialTicks);
+  }
+
   private void syncData() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
@@ -128,19 +135,13 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   }
 
   private boolean inField(int mouseX, int mouseY) {
-    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7) && mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
-  }
-
-  private boolean inSearchBar(double mouseX, double mouseY) {
-    return isPointInRegion(network.searchBar.x - guiLeft + 14,
-        network.searchBar.y - guiTop,
-        network.searchBar.getWidth(), font.FONT_HEIGHT + 6,
-        mouseX, mouseY);
+    int fieldHeight = 90;
+    return mouseX > (guiLeft + 7) && mouseX < (guiLeft + xSize - 7)
+        && mouseY > (guiTop + 7) && mouseY < (guiTop + fieldHeight);
   }
 
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
@@ -150,19 +151,9 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
     sortStackWrappers(stacksToDisplay);
     network.applyScrollPaging(stacksToDisplay);
-    network.rebuildItemSlots(stacksToDisplay, this);
+    network.rebuildItemSlots(stacksToDisplay);
     network.renderItemSlots(mouseX, mouseY, font);
   }
-
-  @Override
-  public void render(int mouseX, int mouseY, float partialTicks) {
-    renderBackground();
-    super.render(mouseX, mouseY, partialTicks);
-    renderHoveredToolTip(mouseX, mouseY);
-    network.searchBar.render(mouseX, mouseY, partialTicks);
-  }
-
-
   private void sortStackWrappers(List<ItemStack> stacksToDisplay) {
     Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
 
@@ -225,7 +216,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
       renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
     }
-    if (inSearchBar(mouseX, mouseY)) {
+    if (network.inSearchBar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
         lis.add(I18n.format("gui.storagenetwork.shift"));
@@ -242,6 +233,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   }
 
   boolean isScrollable(double x, double y) {
+
+     int scrollHeight = 135;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
@@ -264,7 +257,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     network.searchBar.setFocused2(false);
     int rectX = 63;
     int rectY = 110;
-    if (inSearchBar(mouseX, mouseY)) {
+    if (network.inSearchBar(mouseX, mouseY)) {
       network.searchBar.setFocused2(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         network.clearSearch();
@@ -313,7 +306,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     }
     else if (network.stackUnderMouse.isEmpty()) {
       try {
-        System.out.println("jei key " + mouseKey);
+
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
@@ -350,5 +343,9 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
+  }
+
+  @Override public boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

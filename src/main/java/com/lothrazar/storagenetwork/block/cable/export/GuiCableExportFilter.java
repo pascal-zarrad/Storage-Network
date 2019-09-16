@@ -198,4 +198,9 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
+
+
+  @Override public  boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+    return super.isPointInRegion(x,y,width,height,mouseX,mouseY);
+  }
 }
