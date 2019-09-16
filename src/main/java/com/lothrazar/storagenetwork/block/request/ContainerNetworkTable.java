@@ -40,25 +40,14 @@ public class ContainerNetworkTable extends ContainerNetwork {
     tileRequest = (TileRequest) world.getTileEntity(pos);
     matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
     this.playerInv = playerInv;
-    //    result = new CraftingResultSlot();
-    //        public SlotCraftingNetwork(PlayerEntity player,
-    //        CraftingInventory craftingInventory, IInventory inventoryIn,
-    //    int slotIndex, int xPosition, int yPosition) {
-    //temporary
+
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
     slotCraftOutput.setTileMaster(getTileMaster());
     addSlot(slotCraftOutput);
     bindGrid();
-    bindPlayerInvo(playerInv);
+    bindPlayerInvo(this.playerInv);
     bindHotbar();
     onCraftMatrixChanged(matrix);
-  }
-
-    void bindHotbar() {
-    //player hotbar
-    for (int i = 0; i < 9; ++i) {
-      addSlot(new Slot(playerInv, i, 8 + i * 18, 232));
-    }
   }
 
   @Override
@@ -112,72 +101,7 @@ public class ContainerNetworkTable extends ContainerNetwork {
     return tileRequest;
   }
 
-  public static boolean isRequest() {
-    return true;
-  }
 
-  @Override
-  public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {
-    if (playerIn.world.isRemote) {
-      return ItemStack.EMPTY;
-    }
-    ItemStack itemstack = ItemStack.EMPTY;
-    Slot slot = this.inventorySlots.get(slotIndex);
-    if (slot != null && slot.getHasStack()) {
-      ItemStack itemstack1 = slot.getStack();
-      itemstack = itemstack1.copy();
-      TileMaster tileMaster = this.getTileMaster();
-      if (slotIndex == 0) {
-        craftShift(playerIn, tileMaster);
-        return ItemStack.EMPTY;
-      }
-      else if (tileMaster != null) {
-        int rest = tileMaster.insertStack(itemstack1, false);
-        ItemStack stack = rest == 0 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(itemstack1, rest);
-        slot.putStack(stack);
-        detectAndSendChanges();
-        List<ItemStack> list = tileMaster.getStacks();
-        if (playerIn instanceof ServerPlayerEntity) {
-          ServerPlayerEntity sp = (ServerPlayerEntity) playerIn;
-          PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-              sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-        }
-        if (stack.isEmpty()) {
-          return ItemStack.EMPTY;
-        }
-        slot.onTake(playerIn, itemstack1);
-        return ItemStack.EMPTY;
-      }
-      if (itemstack1.getCount() == 0) {
-        slot.putStack(ItemStack.EMPTY);
-      }
-      else {
-        slot.onSlotChanged();
-      }
-      if (itemstack1.getCount() == itemstack.getCount()) {
-        return ItemStack.EMPTY;
-      }
-      slot.onTake(playerIn, itemstack1);
-    }
-    return itemstack;
-  }
-
-  //STEAL FROM WORKBENCH CONTAINER
-  protected static void func_217066_a(int p_217066_0_, World p_217066_1_, PlayerEntity p_217066_2_, CraftingInventory p_217066_3_, CraftResultInventory p_217066_4_) {
-    if (!p_217066_1_.isRemote) {
-      ServerPlayerEntity lvt_5_1_ = (ServerPlayerEntity) p_217066_2_;
-      ItemStack lvt_6_1_ = ItemStack.EMPTY;
-      Optional<ICraftingRecipe> lvt_7_1_ = p_217066_1_.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, p_217066_3_, p_217066_1_);
-      if (lvt_7_1_.isPresent()) {
-        ICraftingRecipe lvt_8_1_ = (ICraftingRecipe) lvt_7_1_.get();
-        if (p_217066_4_.canUseRecipe(p_217066_1_, lvt_5_1_, lvt_8_1_)) {
-          lvt_6_1_ = lvt_8_1_.getCraftingResult(p_217066_3_);
-        }
-      }
-      p_217066_4_.setInventorySlotContents(0, lvt_6_1_);
-      lvt_5_1_.connection.sendPacket(new SSetSlotPacket(p_217066_0_, 0, lvt_6_1_));
-    }
-  }
 
   /**
    * A note on the shift-craft delay bug root cause was ANY interaction with matrix (setting contents etc) was causing triggers/events to do a recipe lookup. Meaning during this shift-click action you
@@ -186,6 +110,7 @@ public class ContainerNetworkTable extends ContainerNetwork {
    * @param player
    * @param tile
    */
+  @Override
   protected void craftShift(PlayerEntity player, TileMaster tile) {
     if (matrix == null) {
       return;

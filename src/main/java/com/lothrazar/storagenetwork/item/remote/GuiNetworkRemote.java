@@ -145,8 +145,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
       return true;
     }
     else if (network.stackUnderMouse.isEmpty()) {
-      try {
-        System.out.println("jei key " + mouseKey);
+      try { 
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {

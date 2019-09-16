@@ -1,9 +1,13 @@
 package com.lothrazar.storagenetwork.gui;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
+import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -19,6 +23,8 @@ import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public abstract class ContainerNetwork extends Container {
 
@@ -52,6 +58,13 @@ public abstract class ContainerNetwork extends Container {
       for (int j = 0; j < 9; ++j) {
         addSlot(new Slot(playerInv, j + i * 9 + 9, 8 + j * 18, 174 + i * 18));
       }
+    }
+  }
+
+ public void bindHotbar() {
+    //player hotbar
+    for (int i = 0; i < 9; ++i) {
+      addSlot(new Slot(playerInv, i, 8 + i * 18, 232));
     }
   }
 
@@ -110,5 +123,56 @@ public abstract class ContainerNetwork extends Container {
       result.setInventorySlotContents(0, itemstack);
       serverplayerentity.connection.sendPacket(new SSetSlotPacket(number, 0, itemstack));
     }
+  }
+  protected void craftShift(PlayerEntity player, TileMaster tile) {
+    if (matrix == null) {
+      return;
+    }
+  }
+
+  @Override
+  public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {
+    if (playerIn.world.isRemote) {
+      return ItemStack.EMPTY;
+    }
+    ItemStack itemstack = ItemStack.EMPTY;
+    Slot slot = this.inventorySlots.get(slotIndex);
+    if (slot != null && slot.getHasStack()) {
+      ItemStack itemstack1 = slot.getStack();
+      itemstack = itemstack1.copy();
+      TileMaster tileMaster = this.getTileMaster();
+      if (slotIndex == 0) {
+        craftShift(playerIn, tileMaster);
+        return ItemStack.EMPTY;
+      }
+      else if (tileMaster != null) {
+        int rest = tileMaster.insertStack(itemstack1, false);
+        ItemStack stack = rest == 0 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(itemstack1, rest);
+        slot.putStack(stack);
+        detectAndSendChanges();
+        List<ItemStack> list = tileMaster.getStacks();
+        if (playerIn instanceof ServerPlayerEntity) {
+          ServerPlayerEntity sp = (ServerPlayerEntity) playerIn;
+          PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
+              sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        }
+        if (stack.isEmpty()) {
+          return ItemStack.EMPTY;
+        }
+        slot.onTake(playerIn, itemstack1);
+        return ItemStack.EMPTY;
+      }
+      if (itemstack1.getCount() == 0) {
+        slot.putStack(ItemStack.EMPTY);
+      }
+      else {
+        slot.onSlotChanged();
+      }
+      if (itemstack1.getCount() == itemstack.getCount()) {
+        return ItemStack.EMPTY;
+      }
+      slot.onTake(playerIn, itemstack1);
+    }
+    return itemstack;
   }
 }
