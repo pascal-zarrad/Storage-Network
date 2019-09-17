@@ -195,7 +195,6 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   public void syncData() {
-    //TODO: ITEMSTACK VAR
-    //    PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
+      PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
   }
 }

@@ -82,6 +82,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     network.searchBar.render(mouseX, mouseY, partialTicks);
   }
 
+  @Override
   public void syncData() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }

@@ -1,10 +1,11 @@
 package com.lothrazar.storagenetwork.network;
-
 import java.util.function.Supplier;
+
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
+import com.lothrazar.storagenetwork.item.remote.ItemRemote;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -17,6 +18,7 @@ public class SortMessage {
   private BlockPos pos;
   private boolean direction;
   private EnumSortType sort;
+  private boolean targetTileEntity;
 
   private SortMessage() {}
 
@@ -29,55 +31,45 @@ public class SortMessage {
   public static void handle(SortMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      if (player.openContainer instanceof ContainerNetwork) {
-        //          if (((ContainerNetwork) player.openContainer).isRequest()) {
+      if (message.targetTileEntity) {
         TileEntity tileEntity = player.world.getTileEntity(message.pos);
         if (tileEntity instanceof TileRequest) {
           TileRequest tile = (TileRequest) tileEntity;
           tile.setSort(message.sort);
           tile.setDownwards(message.direction);
+          tileEntity.markDirty();
         }
-        tileEntity.markDirty();
       }
       else {
         ItemStack stackPlayerHeld = player.inventory.getCurrentItem();
-        NBTHelper.setBoolean(stackPlayerHeld, "down", message.direction);
-        NBTHelper.setString(stackPlayerHeld, "sort", message.sort.toString());
-        return;
+        if (stackPlayerHeld.getItem() instanceof ItemRemote) {
+          ItemRemote.setSort(stackPlayerHeld, message.sort);
+          ItemRemote.setDownwards(stackPlayerHeld, message.direction);
+        }
       }
-      //      }
     });
-    //    return null;
   }
 
   public static SortMessage decode(PacketBuffer buf) {
     SortMessage message = new SortMessage();
-    message.pos = buf.readBlockPos();
     message.direction = buf.readBoolean();
     int sort = buf.readInt();
     message.sort = EnumSortType.values()[sort];
+    message.targetTileEntity = buf.readBoolean();
+    message.pos = buf.readBlockPos();
     return message;
   }
 
   public static void encode(SortMessage msg, PacketBuffer buf) {
-    buf.writeBlockPos(msg.pos);
     buf.writeBoolean(msg.direction);
     buf.writeInt(msg.sort.ordinal());
-    //    ByteBufUtils.writeItemStack(buf, stack);
-    //    buf.writeCompoundTag(msg.stack.serializeNBT());
-    //    buf.writeInt(msg.mouseButton);
+    if (msg.pos != null) {
+      buf.writeBoolean(true);
+      buf.writeBlockPos(msg.pos);
+    }
+    else { // to avoid null values // inconsistent buffer size
+      buf.writeBoolean(false);
+      buf.writeBlockPos(BlockPos.ZERO);
+    }
   }
-  //  @Override
-  //  public void fromBytes(ByteBuf buf) {
-  //    pos = BlockPos.fromLong(buf.readLong());
-  //    direction = buf.readBoolean();
-  //    sort = EnumSortType.valueOf(ByteBufUtils.readUTF8String(buf));
-  //  }
-  //
-  //  @Override
-  //  public void toBytes(ByteBuf buf) {
-  //    buf.writeLong(pos.toLong());
-  //    buf.writeBoolean(direction);
-  //    ByteBufUtils.writeUTF8String(buf, sort.toString());
-  //  }
 }
