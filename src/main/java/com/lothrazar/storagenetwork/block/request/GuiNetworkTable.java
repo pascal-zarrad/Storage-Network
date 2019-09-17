@@ -36,12 +36,11 @@ import net.minecraft.util.text.ITextComponent;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements  IGuiNetwork {
+public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
-  private GuiButtonRequest directionBtn, sortBtn, jeiBtn, clearTextBtn;
   final NetworkWidget network;
   private TileRequest tile;
 
@@ -67,35 +66,12 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
     network.initButtons();
-    initButtons();
-  }
-
-  private void initButtons() {
-    int y = network.searchBar.y - 3;
-    directionBtn = new GuiButtonRequest(guiLeft + 7, y, "", (p) -> {
-      this.setDownwards(!this.getDownwards());
-      this.syncData();
-    });
-    directionBtn.setHeight(16);
-    addButton(directionBtn);
-    sortBtn = new GuiButtonRequest(guiLeft + 21, y, "", (p) -> {
-      this.setSort(this.getSort().next());
-      this.syncData();
-    });
-    sortBtn.setHeight(16);
-    addButton(sortBtn);
-    jeiBtn = new GuiButtonRequest(guiLeft + 35, y, "", (p) -> {
-      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
-    });
-    jeiBtn.setHeight(16);
+    this.addButton(network.directionBtn);
+    this.addButton(network.sortBtn);
     if (JeiSettings.isJeiLoaded()) {
-      addButton(jeiBtn);
+      addButton(network.jeiBtn);
     }
-    clearTextBtn = new GuiButtonRequest(guiLeft + 64, y, "X", (p) -> {
-      network.clearSearch();
-    });
-    clearTextBtn.setHeight(16);
-    addButton(clearTextBtn);
+    addButton(network.clearTextBtn);
   }
 
   @Override
@@ -106,7 +82,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     network.searchBar.render(mouseX, mouseY, partialTicks);
   }
 
-  private void syncData() {
+  public void syncData() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 
@@ -176,59 +152,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    //    if (forceFocus && network.searchBar != null) {
-    //      network.searchBar.setFocused2(true);
-    //      if (network.searchBar.isFocused()) {
-    //        forceFocus = false;
-    //      }
-    //    }
-    this.directionBtn.setMessage(this.getDownwards() ? "D" : "U");
-    String sort = "";
-    switch (this.getSort()) {
-      case NAME:
-        sort = "N";
-        break;
-      case MOD:
-        sort = "@";
-        break;
-      case AMOUNT:
-        sort = "#";
-        break;
-    }
-    this.sortBtn.setMessage(sort);
-    jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
-    drawTooltips(mouseX, mouseY);
-    network.drawGuiContainerForegroundLayer(mouseX, mouseY);
-  }
 
-  private void drawTooltips(final int mouseX, final int mouseY) {
-    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.tooltip_clear")), mouseX - guiLeft, mouseY - this.guiTop);
-    }
-    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.req.tooltip_" + getSort())), mouseX - this.guiLeft, mouseY - this.guiTop);
-    }
-    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")), mouseX - this.guiLeft, mouseY - this.guiTop);
-    }
-    if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      renderTooltip(Lists.newArrayList(s), mouseX - guiLeft, mouseY - this.guiTop);
-    }
-    if (network.inSearchBar(mouseX, mouseY)) {
-      List<String> lis = Lists.newArrayList();
-      if (!Screen.hasShiftDown()) {
-        lis.add(I18n.format("gui.storagenetwork.shift"));
-      }
-      else {
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
-        //TODO: tag search
-        //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
-      }
-      renderTooltip(lis, mouseX - this.guiLeft, mouseY - this.guiTop);
-    }
+    network.drawGuiContainerForegroundLayer(mouseX, mouseY);
   }
 
   boolean isScrollable(double x, double y) {
@@ -238,6 +163,13 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
         x, y);
   }
 
+  /**
+   * Negative is down; positive is up.
+   * @param x
+   * @param y
+   * @param mouseButton
+   * @return
+   */
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);

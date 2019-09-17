@@ -5,6 +5,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
+import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
@@ -16,6 +17,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
@@ -34,6 +37,10 @@ public class NetworkWidget {
   private int columns = 9;
   public ItemStack stackUnderMouse = ItemStack.EMPTY;
   public int fieldHeight = 90;
+  public GuiButtonRequest directionBtn;
+  public GuiButtonRequest sortBtn;
+  public GuiButtonRequest jeiBtn;
+  public GuiButtonRequest clearTextBtn;
 
   public NetworkWidget(IGuiNetwork gui) {
     this.gui = gui;
@@ -187,6 +194,58 @@ public class NetworkWidget {
         s.drawTooltip(mouseX, mouseY);
       }
     }
+    this.directionBtn.setMessage(gui.getDownwards() ? "D" : "U");
+    if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
+      gui.renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    }
+    String sort = "";
+    switch (gui.getSort()) {
+      case NAME:
+        sort = "N";
+        break;
+      case MOD:
+        sort = "@";
+        break;
+      case AMOUNT:
+        sort = "#";
+        break;
+    }
+    this.sortBtn.setMessage(sort);
+    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
+      gui.renderTooltip(Lists.newArrayList(
+          I18n.format("gui.storagenetwork.req.tooltip_" + gui.getSort())),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    }
+
+    jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
+    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
+      gui.renderTooltip(Lists.newArrayList(
+          I18n.format("gui.storagenetwork.tooltip_clear")),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    }
+    if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+      gui.renderTooltip(Lists.newArrayList(s),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    }
+
+
+    if (this.inSearchBar(mouseX, mouseY)) {
+      List<String> lis = Lists.newArrayList();
+      if (!Screen.hasShiftDown()) {
+        lis.add(I18n.format("gui.storagenetwork.shift"));
+      }
+      else {
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
+        //TODO: tag search
+        //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
+      }
+      gui.renderTooltip(lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    }
+
   }
 
   public void renderItemSlots(int mouseX, int mouseY, FontRenderer font) {
@@ -252,5 +311,25 @@ public class NetworkWidget {
   }
 
   public void initButtons() {
+    int y = this.searchBar.y - 3;
+    this.directionBtn = new GuiButtonRequest(
+        gui.getGuiLeft() + 7, y, "", (p) -> {
+      gui.setDownwards(!gui.getDownwards());
+      gui.syncData();
+    });
+    directionBtn.setHeight(16);
+    this.sortBtn = new GuiButtonRequest(gui.getGuiLeft() + 21, y, "", (p) -> {
+      gui.setSort(gui.getSort().next());
+      gui.syncData();
+    });
+    sortBtn.setHeight(16);
+    jeiBtn = new GuiButtonRequest(gui.getGuiLeft() + 35, y, "", (p) -> {
+      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
+    });
+    jeiBtn.setHeight(16);
+    clearTextBtn = new GuiButtonRequest(gui.getGuiLeft()+ 64, y, "X", (p) -> {
+      this.clearSearch();
+    });
+    clearTextBtn.setHeight(16);
   }
 }

@@ -12,6 +12,7 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
+import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.Screen;
@@ -27,13 +28,14 @@ import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
-public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements  IGuiNetwork {
+public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   private final NetworkWidget network;
-   
+  private final ItemStack remote;
+
   public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     network = new NetworkWidget(this);
@@ -41,9 +43,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
     network.fieldHeight = 180;
-
-
-//    ItemStack remote = pInv.player.getHeldItem(H
+    //since the rightclick action forces only MAIN_HAND openings, is ok
+    this.remote = inv.player.getHeldItem(Hand.MAIN_HAND);
   }
 
   @Override public void setStacks(List<ItemStack> stacks) {
@@ -51,17 +52,19 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   @Override public boolean getDownwards() {
-    return false;
+    return ItemRemote.getDownwards(remote);
   }
 
   @Override public void setDownwards(boolean val) {
+    ItemRemote.setDownwards(remote, val);
   }
 
   @Override public EnumSortType getSort() {
-    return null;
+    return ItemRemote.getSort(remote);
   }
 
   @Override public void setSort(EnumSortType val) {
+    ItemRemote.setSort(remote, val);
   }
 
   @Override
@@ -74,6 +77,12 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
     network.initButtons();
+    this.addButton(network.directionBtn);
+    this.addButton(network.sortBtn);
+    if (JeiSettings.isJeiLoaded()) {
+      addButton(network.jeiBtn);
+    }
+    addButton(network.clearTextBtn);
   }
 
   @Override
@@ -106,28 +115,10 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    drawTooltips(mouseX, mouseY);
-  }
-
-  private void drawTooltips(final int mouseX, final int mouseY) {
-    if (network.inSearchBar(mouseX, mouseY)) {
-      List<String> lis = Lists.newArrayList();
-      if (!Screen.hasShiftDown()) {
-        lis.add(I18n.format("gui.storagenetwork.shift"));
-      }
-      else {
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
-        //TODO: tag search
-        //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
-      }
-      renderTooltip(lis, mouseX - this.guiLeft, mouseY - this.guiTop);
-    }
   }
 
   boolean isScrollable(double x, double y) {
-    int scrollHeight = 152 ;
+    int scrollHeight = 152;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
@@ -138,8 +129,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     super.mouseScrolled(x, y, mouseButton);
     //<0 going down
     // >0 going up
-     if (isScrollable(x, y) && mouseButton != 0) {
-       network.mouseScrolled(mouseButton);
+    if (isScrollable(x, y) && mouseButton != 0) {
+      network.mouseScrolled(mouseButton);
     }
     return true;
   }
@@ -147,9 +138,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
-    network.mouseClicked(mouseX,mouseY,mouseButton);
-
-
+    network.mouseClicked(mouseX, mouseY, mouseButton);
     return true;
   }
 
@@ -206,5 +195,10 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   @Override public boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
+  }
+
+  public void syncData() {
+    //TODO: ITEMSTACK VAR
+    //    PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 }

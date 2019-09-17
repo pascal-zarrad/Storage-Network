@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,6 +33,33 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   public ItemRemote(Properties properties) {
     super(properties.maxStackSize(1));
 
+  }
+
+  public static boolean getDownwards(ItemStack stack) {
+
+    CompoundNBT tag = stack.getOrCreateTag();
+    if(tag.contains("down")){
+      return tag.getBoolean("down");
+    }
+    return false;
+  }
+
+  public static void setDownwards(ItemStack stack, boolean val) {
+    stack.getOrCreateTag().putBoolean("down",val);
+  }
+
+  public static EnumSortType getSort(ItemStack stack) {
+
+    CompoundNBT tag = stack.getOrCreateTag();
+    if(tag.contains("sort")){
+      int sort= tag.getInt("sort");
+      return EnumSortType.values()[sort];
+    }
+    return EnumSortType.NAME;
+
+  }
+
+  public static void setSort(ItemStack stack, EnumSortType val) {
   }
 
   @Override
@@ -75,6 +103,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int y = tag.getInt("y");
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
+
     BlockPos posTarget = new BlockPos(x, y, z);
     return new DimPos(dim, posTarget);
   }
@@ -82,7 +111,8 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   @Override
   public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
     ItemStack itemStackIn = player.getHeldItem(hand);
-    if (world.isRemote) {
+    if (world.isRemote || hand != Hand.MAIN_HAND) {
+      //no offhand openings
       return super.onItemRightClick(world, player, hand);
     }
     if (!itemStackIn.getOrCreateTag().getBoolean("bound")) {

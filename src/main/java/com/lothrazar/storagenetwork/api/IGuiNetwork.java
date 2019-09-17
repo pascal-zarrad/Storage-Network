@@ -14,5 +14,7 @@ public interface IGuiNetwork extends IGuiPrivate {
 
   EnumSortType getSort();
 
+  void syncData();
+
   void setSort(EnumSortType val);
 }
