@@ -122,37 +122,13 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
     //good stuff
-    List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
-    sortStackWrappers(stacksToDisplay);
-    network.applyScrollPaging(stacksToDisplay);
-    network.rebuildItemSlots(stacksToDisplay);
+    network.applySearchTextToSlots();
     network.renderItemSlots(mouseX, mouseY, font);
-  }
-
-  private void sortStackWrappers(List<ItemStack> stacksToDisplay) {
-    Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
-
-      final int mul = getDownwards() ? -1 : 1;
-
-      @Override
-      public int compare(ItemStack o2, ItemStack o1) {
-        switch (getSort()) {
-          case AMOUNT:
-            return Integer.compare(o1.getCount(), o2.getCount()) * mul;
-          case NAME:
-            return o2.getDisplayName().toString().compareToIgnoreCase(o1.getDisplayName().toString()) * mul;
-          case MOD:
-            return UtilTileEntity.getModNameForItem(o2.getItem()).compareToIgnoreCase(UtilTileEntity.getModNameForItem(o1.getItem())) * mul;
-        }
-        return 0;
-      }
-    });
   }
 
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
     network.drawGuiContainerForegroundLayer(mouseX, mouseY);
   }
 
@@ -165,6 +141,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
 
   /**
    * Negative is down; positive is up.
+   *
    * @param x
    * @param y
    * @param mouseButton
@@ -173,8 +150,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);
-    //<0 going down
-    // >0 going up
+
     if (isScrollable(x, y) && mouseButton != 0) {
       network.mouseScrolled(mouseButton);
     }

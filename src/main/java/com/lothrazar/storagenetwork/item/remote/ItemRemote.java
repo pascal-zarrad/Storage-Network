@@ -32,34 +32,31 @@ public class ItemRemote extends Item implements INamedContainerProvider {
 
   public ItemRemote(Properties properties) {
     super(properties.maxStackSize(1));
-
   }
 
   public static boolean getDownwards(ItemStack stack) {
-
     CompoundNBT tag = stack.getOrCreateTag();
-    if(tag.contains("down")){
+    if (tag.contains("down")) {
       return tag.getBoolean("down");
     }
     return false;
   }
 
   public static void setDownwards(ItemStack stack, boolean val) {
-    stack.getOrCreateTag().putBoolean("down",val);
+    stack.getOrCreateTag().putBoolean("down", val);
   }
 
   public static EnumSortType getSort(ItemStack stack) {
-
     CompoundNBT tag = stack.getOrCreateTag();
-    if(tag.contains("sort")){
-      int sort= tag.getInt("sort");
+    if (tag.contains("sort")) {
+      int sort = tag.getInt("sort");
       return EnumSortType.values()[sort];
     }
     return EnumSortType.NAME;
-
   }
 
   public static void setSort(ItemStack stack, EnumSortType val) {
+    stack.getOrCreateTag().putInt("sort", val.ordinal());
   }
 
   @Override
@@ -103,7 +100,6 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int y = tag.getInt("y");
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
-
     BlockPos posTarget = new BlockPos(x, y, z);
     return new DimPos(dim, posTarget);
   }
@@ -144,8 +140,6 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   }
 
   @Nullable @Override public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-
-
     return new ContainerNetworkRemote(id, inv);
   }
 }

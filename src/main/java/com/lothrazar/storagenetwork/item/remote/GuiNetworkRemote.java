@@ -104,10 +104,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     int l = (this.height - this.ySize) / 2;
     GlStateManager.color3f(1, 1, 1);
     this.blit(k, l, 0, 0, this.xSize, this.ySize);
-    List<ItemStack> stacksToDisplay = network.applySearchTextToSlots();
-    //    sortStackWrappers(stacksToDisplay);
-    network.applyScrollPaging(stacksToDisplay);
-    network.rebuildItemSlots(stacksToDisplay);
+    network.applySearchTextToSlots();
     network.renderItemSlots(mouseX, mouseY, font);
   }
 

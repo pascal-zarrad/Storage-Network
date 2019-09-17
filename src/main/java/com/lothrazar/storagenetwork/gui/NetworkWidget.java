@@ -23,6 +23,8 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class NetworkWidget {
@@ -50,7 +52,7 @@ public class NetworkWidget {
     lastClick = System.currentTimeMillis();
   }
 
-  public List<ItemStack> applySearchTextToSlots() {
+  public void applySearchTextToSlots() {
     String searchText = searchBar.getText();
     List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(stacks) : Lists.newArrayList();
     if (!searchText.equals("")) {
@@ -60,7 +62,9 @@ public class NetworkWidget {
         }
       }
     }
-    return stacksToDisplay;
+    this.sortStackWrappers(stacksToDisplay);
+    this.applyScrollPaging(stacksToDisplay);
+    this.rebuildItemSlots(stacksToDisplay);
   }
 
   public void clearSearch() {
@@ -331,5 +335,26 @@ public class NetworkWidget {
       this.clearSearch();
     });
     clearTextBtn.setHeight(16);
+  }
+
+
+  public void sortStackWrappers(List<ItemStack> stacksToDisplay) {
+    Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
+
+      final int mul = gui.getDownwards() ? -1 : 1;
+
+      @Override
+      public int compare(ItemStack o2, ItemStack o1) {
+        switch (gui.getSort()) {
+          case AMOUNT:
+            return Integer.compare(o1.getCount(), o2.getCount()) * mul;
+          case NAME:
+            return o2.getDisplayName().toString().compareToIgnoreCase(o1.getDisplayName().toString()) * mul;
+          case MOD:
+            return UtilTileEntity.getModNameForItem(o2.getItem()).compareToIgnoreCase(UtilTileEntity.getModNameForItem(o1.getItem())) * mul;
+        }
+        return 0;
+      }
+    });
   }
 }
