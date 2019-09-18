@@ -23,7 +23,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
-  private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
+  private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID,
+      "textures/gui/inventory.png");
   private final NetworkWidget network;
   private final ItemStack remote;
 

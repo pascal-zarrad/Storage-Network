@@ -33,7 +33,7 @@ public class SortMessage {
       if (message.targetTileEntity) {
         TileEntity tileEntity = player.world.getTileEntity(message.pos);
         if (tileEntity instanceof ITileSortable) {
-          ITileSortable tile = (TileRequest) tileEntity;
+          ITileSortable tile = (ITileSortable) tileEntity;
           tile.setSort(message.sort);
           tile.setDownwards(message.direction);
           tileEntity.markDirty();

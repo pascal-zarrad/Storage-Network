@@ -28,7 +28,8 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
-  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID,
+      "textures/gui/inventory.png");
   final NetworkWidget network;
   private TileInventory tile;
 
@@ -36,8 +37,10 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     super(container, inv, name);
     tile = container.tile;
     network = new NetworkWidget(this);
+    network.setLines(8);
     xSize = WIDTH;
     ySize = HEIGHT;
+    network.fieldHeight = 180;
   }
 
   @Override public void setStacks(List<ItemStack> stacks) {
