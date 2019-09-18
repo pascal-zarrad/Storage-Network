@@ -49,8 +49,8 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
 
   @Override
   public void init() {
-    super.init();
-    int searchLeft = guiLeft + 81, searchTop = guiTop + 96, width = 85;
+    super.init(); 
+    int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
         width, font.FONT_HEIGHT, "search");
