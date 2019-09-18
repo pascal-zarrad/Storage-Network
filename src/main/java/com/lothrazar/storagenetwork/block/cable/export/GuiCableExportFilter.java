@@ -1,11 +1,9 @@
 package com.lothrazar.storagenetwork.block.cable.export;
-
-import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
 import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
-import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -16,6 +14,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+
+import java.util.List;
 
 public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFilter> implements IGuiPrivate {
 

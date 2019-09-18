@@ -1,6 +1,4 @@
 package com.lothrazar.storagenetwork.block.cable.storagefilter;
-
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,9 +18,8 @@ public class BlockCableFilter extends BlockCable {
     super(registryName);
   }
 
-  @Nullable
   @Override
-  public TileEntity createNewTileEntity(IBlockReader worldIn) {
+  public TileEntity createTileEntity(BlockState state, IBlockReader world){
     return new TileCableFilter();
   }
 

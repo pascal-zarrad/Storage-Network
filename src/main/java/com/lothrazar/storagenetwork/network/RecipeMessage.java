@@ -1,11 +1,4 @@
 package com.lothrazar.storagenetwork.network;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
-
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
@@ -22,6 +15,12 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class RecipeMessage {
 

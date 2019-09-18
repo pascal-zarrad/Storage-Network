@@ -1,9 +1,7 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
-
-import javax.annotation.Nullable;
+import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+
+import javax.annotation.Nullable;
 
 public class ContainerCableImportFilter extends ContainerCable {
 

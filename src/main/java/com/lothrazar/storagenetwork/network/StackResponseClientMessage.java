@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.network;
-
-import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * Used by InsertMessage and RequestMessage as a response back to the client

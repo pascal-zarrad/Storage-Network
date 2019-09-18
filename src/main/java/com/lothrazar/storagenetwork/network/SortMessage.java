@@ -1,10 +1,7 @@
 package com.lothrazar.storagenetwork.network;
-import java.util.function.Supplier;
-
+import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
-import com.lothrazar.storagenetwork.api.util.NBTHelper;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
-import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.item.remote.ItemRemote;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -12,6 +9,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 public class SortMessage {
 
@@ -33,8 +32,8 @@ public class SortMessage {
       ServerPlayerEntity player = ctx.get().getSender();
       if (message.targetTileEntity) {
         TileEntity tileEntity = player.world.getTileEntity(message.pos);
-        if (tileEntity instanceof TileRequest) {
-          TileRequest tile = (TileRequest) tileEntity;
+        if (tileEntity instanceof ITileSortable) {
+          ITileSortable tile = (TileRequest) tileEntity;
           tile.setSort(message.sort);
           tile.setDownwards(message.direction);
           tileEntity.markDirty();

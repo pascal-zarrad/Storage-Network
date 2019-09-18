@@ -1,7 +1,4 @@
 package com.lothrazar.storagenetwork.gui.inventory;
-
-import javax.annotation.Nonnull;
-
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -10,6 +7,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 /**
  * used as the MAIN grid in the network item display

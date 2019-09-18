@@ -1,10 +1,4 @@
 package com.lothrazar.storagenetwork.capabilities;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
 import com.lothrazar.storagenetwork.api.data.DimPos;
@@ -22,6 +16,12 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 // TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
 public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<CompoundNBT> {

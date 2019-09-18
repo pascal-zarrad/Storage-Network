@@ -1,6 +1,4 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
-
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -21,6 +19,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+
+import javax.annotation.Nullable;
 
 public class TileCableImportFilter extends TileCableWithFacing implements ITickableTileEntity, INamedContainerProvider {
 

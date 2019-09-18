@@ -1,9 +1,8 @@
 package com.lothrazar.storagenetwork.jei;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.config.KeyBindings;
 import mezz.jei.gui.Focus;
-
-import com.lothrazar.storagenetwork.StorageNetwork;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
 //import net.minecraftforge.fml.common.Optional;

@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.request;
+package com.lothrazar.storagenetwork.block.inventory;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -24,17 +24,17 @@ import java.util.List;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements IGuiNetwork {
+public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInventory> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   final NetworkWidget network;
-  private TileRequest tile;
+  private TileInventory tile;
 
-  public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
+  public GuiNetworkInventory(ContainerNetworkInventory container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
-    tile = container.getTileRequest();
+    tile = container.tile;
     network = new NetworkWidget(this);
     xSize = WIDTH;
     ySize = HEIGHT;

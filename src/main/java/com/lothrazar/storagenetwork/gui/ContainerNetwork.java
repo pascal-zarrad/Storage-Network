@@ -1,9 +1,4 @@
 package com.lothrazar.storagenetwork.gui;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
-
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
@@ -26,6 +21,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 public abstract class ContainerNetwork extends Container {
 
   public abstract TileMaster getTileMaster();
@@ -46,6 +46,7 @@ public abstract class ContainerNetwork extends Container {
     this.resultInventory = new CraftResultInventory();
   }
 
+  @Nullable
   public CraftingInventory getCraftMatrix() {
     return matrix;
   }
@@ -125,9 +126,7 @@ public abstract class ContainerNetwork extends Container {
     }
   }
   protected void craftShift(PlayerEntity player, TileMaster tile) {
-    if (matrix == null) {
-      return;
-    }
+
   }
 
   @Override

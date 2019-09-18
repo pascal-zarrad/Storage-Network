@@ -1,21 +1,19 @@
 package com.lothrazar.storagenetwork.api.data;
-
-import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
+
+import javax.annotation.Nullable;
 
 public class DimPos implements INBTSerializable<CompoundNBT> {
 
@@ -40,9 +38,10 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   public DimPos(World world, BlockPos pos) {
-    this.world = world;
-    dimension = world.getDimension().getType().getId();
     this.pos = pos;
+    this.world = world;
+    if (world != null && world.getDimension() != null && world.getDimension().getType() != null)
+      dimension = world.getDimension().getType().getId();
   }
 
   @Nullable
@@ -50,8 +49,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     //    if (world != null) {
     return world;
     //    }
-//    MinecraftServer x
-//    DimensionManager.getWorld(MinecraftServer.)
+    //    MinecraftServer x
+    //    DimensionManager.getWorld(MinecraftServer.)
     //    return DimensionManager.getWorld(dimension);
   }
 

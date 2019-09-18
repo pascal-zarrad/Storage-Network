@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.gui.inventory;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 

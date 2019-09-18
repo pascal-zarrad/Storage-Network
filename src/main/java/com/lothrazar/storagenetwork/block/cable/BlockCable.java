@@ -1,7 +1,4 @@
 package com.lothrazar.storagenetwork.block.cable;
-
-import java.util.Map;
-import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -9,7 +6,6 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -26,7 +22,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class BlockCable extends ContainerBlock {
+import java.util.Map;
+
+public class BlockCable extends Block {
 
   public BlockCable(String registryName) {
     super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
@@ -133,9 +131,8 @@ public class BlockCable extends ContainerBlock {
     return true;
   }
 
-  @Nullable
   @Override
-  public TileEntity createNewTileEntity(IBlockReader worldIn) {
+  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return new TileCable();
   }
 

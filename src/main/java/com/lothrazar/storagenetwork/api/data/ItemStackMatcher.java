@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api.data;
-
-import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+
+import javax.annotation.Nonnull;
 
 public class ItemStackMatcher implements IItemStackMatcher {
 

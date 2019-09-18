@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork.registry;
-
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
@@ -10,13 +9,15 @@ import com.lothrazar.storagenetwork.block.cable.inputfilter.TileCableImportFilte
 import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cable.storagefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
+import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
+import com.lothrazar.storagenetwork.block.inventory.TileInventory;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
-import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemGroup;
@@ -38,11 +39,17 @@ public class SsnRegistry {
   public static ItemUpgrade speed_upgrade;
   @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
   public static ItemUpgrade stack_upgrade;
-   // master
+  // master
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static TileEntityType<TileMaster> mastertile;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMaster master;
+  @ObjectHolder(StorageNetwork.MODID + ":inventory")
+  public static Block inventory;
+  @ObjectHolder(StorageNetwork.MODID + ":inventory")
+  public static TileEntityType<TileInventory> inventorytile;
+  @ObjectHolder(StorageNetwork.MODID + ":inventory")
+  public static ContainerType<ContainerNetworkInventory> inventorycontainer;
   //request
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static BlockRequest request;
@@ -80,10 +87,6 @@ public class SsnRegistry {
   public static TileEntityType<TileCableImportFilter> exportkabeltile;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static ContainerType<ContainerCableExportFilter> filterexportContainer;
-
-
-
-
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
   public static ContainerType<ContainerNetworkRemote> remote;
 }

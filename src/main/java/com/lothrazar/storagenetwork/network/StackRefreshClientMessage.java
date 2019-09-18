@@ -1,7 +1,4 @@
 package com.lothrazar.storagenetwork.network;
-
-import java.util.List;
-import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import net.minecraft.client.Minecraft;
@@ -9,6 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Refresh the current screen with large data set of stacks.

@@ -1,8 +1,4 @@
 package com.lothrazar.storagenetwork.block.request;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
@@ -10,26 +6,19 @@ import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
-import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
-import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+
+import java.util.List;
 
 public class ContainerNetworkTable extends ContainerNetwork {
 
@@ -76,7 +65,7 @@ public class ContainerNetworkTable extends ContainerNetwork {
     TileRequest table = getTileRequest();
     if (tileMaster != null &&
         !table.getWorld().isRemote && table.getWorld().getGameTime() % 40 == 0) {
-      List<ItemStack> list = tileMaster.getStacks();
+     // List<ItemStack> list = tileMaster.getStacks();
       // TODO: packets
       //   PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (PlayerEntityMP) playerIn);
     }

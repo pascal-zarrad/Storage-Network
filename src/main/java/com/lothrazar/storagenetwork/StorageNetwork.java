@@ -14,14 +14,17 @@ import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilt
 import com.lothrazar.storagenetwork.block.cable.storagefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.cablelink.BlockCableLink;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
+import com.lothrazar.storagenetwork.block.inventory.BlockInventory;
+import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
+import com.lothrazar.storagenetwork.block.inventory.TileInventory;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.remote.ItemRemote;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -98,12 +101,14 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
       r.register(new BlockCableImportFilter("import_filter_kabel"));
       r.register(new BlockCableFilter("filter_kabel"));
       r.register(new BlockCableExport("export_kabel"));
+      r.register(new BlockInventory("inventory"));
     }
 
     @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
       Item.Properties properties = new Item.Properties().group(SsnRegistry.itemGroup);
       IForgeRegistry<Item> r = event.getRegistry();
+      r.register(new BlockItem(SsnRegistry.inventory, properties).setRegistryName("inventory"));
       r.register(new BlockItem(SsnRegistry.master, properties).setRegistryName("master"));
       r.register(new BlockItem(SsnRegistry.request, properties).setRegistryName("request"));
       r.register(new BlockItem(SsnRegistry.kabel, properties).setRegistryName("kabel"));
@@ -124,6 +129,7 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
       IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
       r.register(TileEntityType.Builder.create(TileMaster::new, SsnRegistry.master).build(null).setRegistryName("master"));
+      r.register(TileEntityType.Builder.create(TileInventory::new, SsnRegistry.inventory).build(null).setRegistryName("inventory"));
       r.register(TileEntityType.Builder.create(TileRequest::new, SsnRegistry.request).build(null).setRegistryName("request"));
       r.register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.kabel).build(null).setRegistryName("kabel"));
       r.register(TileEntityType.Builder.create(TileCableLink::new, SsnRegistry.storagekabel).build(null).setRegistryName("storage_kabel"));
@@ -153,6 +159,10 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
         BlockPos pos = data.readBlockPos();
         return new ContainerCableExportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("export_kabel"));
+      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        return new ContainerNetworkInventory(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+      }).setRegistryName("inventory"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
 
         return new ContainerNetworkRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);

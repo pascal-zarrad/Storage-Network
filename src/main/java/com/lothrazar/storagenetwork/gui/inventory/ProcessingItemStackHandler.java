@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.gui.inventory;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.item.ItemStack;
 
 public class ProcessingItemStackHandler extends FilterItemStackHandler {
 
