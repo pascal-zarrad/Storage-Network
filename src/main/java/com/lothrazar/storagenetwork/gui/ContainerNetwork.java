@@ -86,11 +86,6 @@ public abstract class ContainerNetwork extends Container {
   }
 
   @Override
-  public void detectAndSendChanges() {
-    super.detectAndSendChanges();
-  }
-
-  @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     super.onCraftMatrixChanged(inventoryIn);
     this.recipeCurrent = null;

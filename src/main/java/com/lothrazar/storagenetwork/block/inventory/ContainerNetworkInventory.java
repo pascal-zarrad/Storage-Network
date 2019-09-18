@@ -19,7 +19,7 @@ public class ContainerNetworkInventory extends ContainerNetwork {
     super(SsnRegistry.inventorycontainer, windowId);
     tile = (TileInventory) world.getTileEntity(pos);
     this.playerInv = playerInv;
-    bindGrid();
+
     bindPlayerInvo(this.playerInv);
     bindHotbar();
   }
