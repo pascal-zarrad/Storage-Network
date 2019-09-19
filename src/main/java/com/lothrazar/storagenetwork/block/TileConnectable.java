@@ -46,7 +46,7 @@ public class TileConnectable extends TileEntity {
   public void read(CompoundNBT compound) {
     super.read(compound);
     if (compound.contains("connectable")) {
-      connectable.deserializeNBT((CompoundNBT) compound.get("connectable"));
+      connectable.deserializeNBT(compound.getCompound("connectable"));
     }
   }
 

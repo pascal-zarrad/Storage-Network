@@ -10,6 +10,7 @@
 
     "block.storagenetwork.master": "Storage Network Master",
     "block.storagenetwork.request": "Storage Request Table",
+    "block.storagenetwork.inventory": "Storage Inventory",
     "item.storagenetwork.speed_upgrade": "Speed Upgrade",
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
     "item.storagenetwork.stack_upgrade": "Stack Upgrade",

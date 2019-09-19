@@ -152,6 +152,7 @@ public class BlockCable extends Block {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     //TODO: api should come back here
     if (facingState.getBlock() instanceof BlockCable
+        || facingState.getBlock() == SsnRegistry.inventory
         || facingState.getBlock() == SsnRegistry.master
         || facingState.getBlock() == SsnRegistry.request) {
       //dont set self to self
