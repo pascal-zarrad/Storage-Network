@@ -7,16 +7,16 @@
   ],
   "key": {
     "k": {
-      "item": "minecraft:crafting_table"
+      "item": "storagenetwork:kabel"
     },
     "d": {
-      "item": "minecraft:gold_ingot"
+      "item": "minecraft:iron_nugget"
     },
     "c": {
-      "item": "storagenetwork:inventory"
+      "item": "minecraft:dropper"
     }
   },
   "result": {
-    "item": "storagenetwork:request"
+    "item": "storagenetwork:inventory"
   }
 }
