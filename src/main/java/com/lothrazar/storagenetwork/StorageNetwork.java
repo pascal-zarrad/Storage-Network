@@ -79,7 +79,7 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
   @SubscribeEvent
   public static void onServerStarting(FMLServerStartingEvent event) {}
 
-  static boolean logspam = true;
+  static boolean logspam = false;
 
   public static void log(String s) {
     if (logspam) {
