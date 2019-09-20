@@ -123,7 +123,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
 
   boolean isScrollable(double x, double y) {
     int scrollHeight = 135;
-    return isPointInRegion(0, 0,
+    return this.isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);
   }
@@ -212,7 +212,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-  @Override public boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+  @Override
+  public boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

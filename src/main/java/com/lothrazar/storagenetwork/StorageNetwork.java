@@ -72,6 +72,9 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
     PacketRegistry.init();
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
+//    event.
+
+
     //TOOD: how
     JeiSettings.setJeiLoaded(true);
   }
