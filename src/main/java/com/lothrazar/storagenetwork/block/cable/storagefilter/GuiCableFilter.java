@@ -187,11 +187,6 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   }
 
   @Override
-  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
-    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
-  }
-
-  @Override
   public void renderStackToolTip(ItemStack stack, int x, int y) {
     super.renderTooltip(stack, x, y);
   }
@@ -201,7 +196,9 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-  @Override public  boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+  @Override public  boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY)
+
+  {
     return super.isPointInRegion(x,y,width,height,mouseX,mouseY);
   }
 

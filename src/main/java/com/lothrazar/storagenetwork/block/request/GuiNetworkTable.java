@@ -197,10 +197,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     return false;// super.charTyped(typedChar, keyCode);
   }
 
-  @Override
-  public boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY) {
-    return super.isPointInRegion(rectX, rectY, rectWidth, rectHeight, pointX, pointY);
-  }
+
 
   @Override
   public void renderStackToolTip(ItemStack stack, int x, int y) {
@@ -213,7 +210,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   }
 
   @Override
-  public boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+  public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+// because its protected and apparently sometimes abstract when compiled
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

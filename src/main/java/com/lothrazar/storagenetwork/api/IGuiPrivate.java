@@ -4,9 +4,6 @@ import net.minecraft.item.ItemStack;
 import java.util.List;
 
 public interface IGuiPrivate {
-  //force expose public methods
-
-  boolean isInRegion(int rectX, int rectY, int rectWidth, int rectHeight, int pointX, int pointY);
 
   void renderStackToolTip(ItemStack stack, int x, int y);
 
@@ -18,5 +15,5 @@ public interface IGuiPrivate {
 
   int getGuiLeft();
 
-  boolean isPointInRegion(int x, int y, int width, int height, double mouseX, double mouseY);
+  boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY);
 }

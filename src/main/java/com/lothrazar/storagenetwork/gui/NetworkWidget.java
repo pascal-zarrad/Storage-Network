@@ -174,7 +174,7 @@ public class NetworkWidget {
   }
 
   public boolean inSearchBar(double mouseX, double mouseY) {
-    return gui.isPointInRegion(searchBar.x - gui.getGuiLeft() + 14,
+    return gui.isInRegion(searchBar.x - gui.getGuiLeft() + 14,
         searchBar.y - gui.getGuiTop(),
         searchBar.getWidth(), 9 + 6,
         mouseX, mouseY);
