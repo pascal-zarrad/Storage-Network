@@ -55,7 +55,7 @@ public class BlockCable extends Block {
 
     @Override
     public String getName() {
-      return name().toLowerCase();
+      return name().toLowerCase(Locale.ENGLISH);
     }
   }
 
