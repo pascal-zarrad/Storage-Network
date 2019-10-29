@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork.block.cable;
+
+import java.util.Locale;
+import java.util.Map;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -21,8 +24,6 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraftforge.items.CapabilityItemHandler;
-
-import java.util.Map;
 
 public class BlockCable extends Block {
 
@@ -47,6 +48,7 @@ public class BlockCable extends Block {
   }
 
   public enum EnumConnectType implements IStringSerializable {
+
     NONE, CABLE, INVENTORY, BLOCKED;
 
     public boolean isHollow() {
