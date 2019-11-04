@@ -190,7 +190,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
       StringBuilder creativeTabStringBuilder = new StringBuilder();
       for (CreativeTabs creativeTab : stack.getItem().getCreativeTabs()) {
         if (creativeTab != null) {
-          String creativeTabName = creativeTab.getTranslatedTabLabel();
+          String creativeTabName = creativeTab.getTabLabel();
           creativeTabStringBuilder.append(creativeTabName).append(' ');
         }
       }

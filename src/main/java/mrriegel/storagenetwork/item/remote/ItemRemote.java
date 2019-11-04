@@ -34,7 +34,7 @@ public class ItemRemote extends Item {
     super();
     this.setCreativeTab(CreativeTab.tab);
     this.setRegistryName("remote");
-    this.setUnlocalizedName(getRegistryName().toString());
+    this.setTranslationKey(getRegistryName().toString());
     this.setHasSubtypes(true);
     this.setMaxStackSize(1);
   }
@@ -50,8 +50,8 @@ public class ItemRemote extends Item {
   }
 
   @Override
-  public String getUnlocalizedName(ItemStack stack) {
-    return this.getUnlocalizedName() + "_" + stack.getItemDamage();
+  public String getTranslationKey(ItemStack stack) {
+    return this.getTranslationKey() + "_" + stack.getItemDamage();
   }
 
   @Override
@@ -93,7 +93,7 @@ public class ItemRemote extends Item {
       StorageNetwork.instance.logger.error("Invalid remote data " + itemStackIn.getTagCompound(), e);
       return super.onItemRightClick(world, player, hand);
     }
-    if (!serverTargetWorld.getChunkFromBlockCoords(targetPos).isLoaded()) {
+    if (!serverTargetWorld.getChunk(targetPos).isLoaded()) {
       StorageNetwork.chatMessage(player, "item.remote.notloaded");
       return super.onItemRightClick(world, player, hand);
     }

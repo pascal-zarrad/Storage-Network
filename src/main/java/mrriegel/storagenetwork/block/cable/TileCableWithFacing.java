@@ -92,7 +92,7 @@ public class TileCableWithFacing extends TileCable {
   public void readFromNBT(NBTTagCompound compound) {
     super.readFromNBT(compound);
     if (compound.hasKey("direction")) {
-      this.direction = EnumFacing.getFront(compound.getInteger("direction"));
+      this.direction = EnumFacing.byIndex(compound.getInteger("direction"));
     }
     else {
       this.direction = null;

@@ -52,7 +52,7 @@ public class UtilTileEntity {
     else {
       return null;
     }
-    String modId = itemResourceLocation.getResourceDomain();
+    String modId = itemResourceLocation.getNamespace();
     String lowercaseModId = modId.toLowerCase(Locale.ENGLISH);
     String modName = modNamesForIds.get(lowercaseModId);
     if (modName == null) {
@@ -102,8 +102,9 @@ public class UtilTileEntity {
   }
 
   public static void updateTile(World world, BlockPos pos) {
-    if (world == null || world.isRemote || world.getTileEntity(pos) == null || !world.getChunkFromBlockCoords(pos).isLoaded())
+    if (world == null || world.isRemote || world.getTileEntity(pos) == null || !world.getChunk(pos).isLoaded()) {
       return;
+    }
     WorldServer w = (WorldServer) world;
     for (EntityPlayer p : w.playerEntities) {
       if (p.getPosition().getDistance(pos.getX(), pos.getY(), pos.getZ()) < 32) {

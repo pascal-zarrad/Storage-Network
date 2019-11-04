@@ -100,7 +100,7 @@ public abstract class AbstractBlockConnectable extends BaseBlock {
     // myself = worldIn.getTileEntity(pos);
     myself.setMasterPos(null);
     for (BlockPos posBeside : UtilTileEntity.getSides(pos)) {
-      if (!world.getChunkFromBlockCoords(posBeside).isLoaded()) {
+      if (!world.getChunk(posBeside).isLoaded()) {
         continue;
       }
       TileEntity nhbr = world.getTileEntity(posBeside);

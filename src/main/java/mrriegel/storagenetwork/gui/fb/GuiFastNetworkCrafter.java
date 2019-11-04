@@ -186,7 +186,7 @@ public abstract class GuiFastNetworkCrafter extends GuiFastBench implements IPub
       StringBuilder creativeTabStringBuilder = new StringBuilder();
       for (CreativeTabs creativeTab : stack.getItem().getCreativeTabs()) {
         if (creativeTab != null) {
-          String creativeTabName = creativeTab.getTranslatedTabLabel();
+          String creativeTabName = creativeTab.getTabLabel();
           creativeTabStringBuilder.append(creativeTabName).append(' ');
         }
       }

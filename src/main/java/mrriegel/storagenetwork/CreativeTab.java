@@ -9,13 +9,12 @@ public class CreativeTab {
   public static CreativeTabs tab = new CreativeTabs(StorageNetwork.MODID) {
 
     @Override
-    public ItemStack getTabIconItem() {
+    public ItemStack createIcon() {
       return new ItemStack(ModBlocks.request);
     }
-
-    @Override
-    public String getTranslatedTabLabel() {
-      return StorageNetwork.MODNAME;
-    }
+    //    @Override
+    //    public String getTranslatedTabLabel() {
+    //      return StorageNetwork.MODNAME;
+    //    }
   };
 }

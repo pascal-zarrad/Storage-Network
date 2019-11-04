@@ -157,6 +157,6 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
   }
 
   public Chunk getChunk() {
-    return getWorld().getChunkFromBlockCoords(this.pos);
+    return getWorld().getChunk(this.pos);
   }
 }

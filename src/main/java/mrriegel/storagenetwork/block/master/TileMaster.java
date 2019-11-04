@@ -478,7 +478,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         this.connectables = getConnectables(getDimPos());
         this.shouldRefresh = false;
         // addInventorys();
-        world.getChunkFromBlockCoords(pos).setModified(true);//.setChunkModified();
+        world.getChunk(this.pos).setModified(true);//.setChunkModified();
       }
       catch (Throwable e) {
         StorageNetwork.instance.logger.error("Refresh network error ", e);

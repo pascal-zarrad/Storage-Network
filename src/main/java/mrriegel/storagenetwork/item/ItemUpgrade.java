@@ -20,7 +20,7 @@ public class ItemUpgrade extends Item {
     this.setCreativeTab(CreativeTab.tab);
     this.setHasSubtypes(true);
     this.setRegistryName("upgrade");
-    this.setUnlocalizedName(getRegistryName().toString());
+    this.setTranslationKey(getRegistryName().toString());
     this.setMaxStackSize(64);
   }
 
@@ -35,8 +35,8 @@ public class ItemUpgrade extends Item {
   }
 
   @Override
-  public String getUnlocalizedName(ItemStack stack) {
-    return this.getUnlocalizedName() + "_" + stack.getItemDamage();
+  public String getTranslationKey(ItemStack stack) {
+    return this.getTranslationKey() + "_" + stack.getItemDamage();
   }
 
   @Override

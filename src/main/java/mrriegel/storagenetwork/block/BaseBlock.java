@@ -8,6 +8,6 @@ public abstract class BaseBlock extends BlockContainer {
   public BaseBlock(Material materialIn, String registryName) {
     super(materialIn);
     this.setRegistryName(registryName);
-    this.setUnlocalizedName(this.getRegistryName().toString());
+    this.setTranslationKey(this.getRegistryName().toString());
   }
 }
