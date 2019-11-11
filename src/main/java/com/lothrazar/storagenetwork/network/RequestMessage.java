@@ -49,7 +49,6 @@ public class RequestMessage {
         StorageNetwork.log("Request message cancelled, null tile");
         return;
       }
-      StorageNetwork.LOGGER.info("RequestMessage stack tag " + message.stack.getTag());
       int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, false, true));
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
@@ -70,14 +69,12 @@ public class RequestMessage {
       stack = tileMaster.request(
           new ItemStackMatcher(message.stack, ore, nbt),
           sizeRequested, false);
-      StorageNetwork.LOGGER.info("nbt TRUE gave " + stack);
       if (stack.isEmpty()) {
         //try again with NBT as false, ONLY if true didnt work
         nbt = false;
         stack = tileMaster.request(
             new ItemStackMatcher(message.stack, ore, nbt),
             sizeRequested, false);
-        StorageNetwork.LOGGER.info("nbt false gave " + stack);
       }
       if (!stack.isEmpty()) {
         if (message.shift) {

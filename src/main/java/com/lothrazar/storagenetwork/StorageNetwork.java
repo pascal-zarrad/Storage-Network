@@ -1,4 +1,7 @@
 package com.lothrazar.storagenetwork;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cable.export.BlockCableExport;
@@ -51,8 +54,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.IForgeRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Mod(StorageNetwork.MODID)
 public class StorageNetwork {
@@ -60,7 +61,7 @@ public class StorageNetwork {
   public static final String MODID = "storagenetwork";
   static final String certificateFingerprint = "@FINGERPRINT@";
   public static final Logger LOGGER = LogManager.getLogger();
-public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+  public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
@@ -72,9 +73,7 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
     PacketRegistry.init();
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
-//    event.
-
-
+    //    event.
     //TOOD: how
     JeiSettings.setJeiLoaded(true);
   }
@@ -167,7 +166,6 @@ public  static final IProxy proxy = DistExecutor.runForDist(() -> () -> new Clie
         return new ContainerNetworkInventory(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("inventory"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-
         return new ContainerNetworkRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
       }).setRegistryName("inventory_remote"));
     }

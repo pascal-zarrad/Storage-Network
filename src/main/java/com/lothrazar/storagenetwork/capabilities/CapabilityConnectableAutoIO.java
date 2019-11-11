@@ -1,4 +1,10 @@
 package com.lothrazar.storagenetwork.capabilities;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableItemAutoIO;
@@ -21,12 +27,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT>, IConnectableItemAutoIO {
 
@@ -188,7 +188,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     // Test whether the connected block has the IItemHandler capability
     IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
     if (itemHandler == null) {
-      StorageNetwork.LOGGER.info("getStacksForFilter    null itemhandler connection ");
+      StorageNetwork.log("getStacksForFilter    null itemhandler connection ");
       return Collections.emptyList();
     }
     // If it does, iterate its stacks, filter them and add them to the result list
@@ -198,13 +198,10 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
       if (stack == null || stack.isEmpty()) {
         continue;
       }
-      StorageNetwork.LOGGER.info(slot + "getStacksForFilter    " + stack
-          + filters.exactStackAlreadyInList(stack));
       if (filters.exactStackAlreadyInList(stack)) {
         continue;
       }
       result.add(stack.copy());
-      StorageNetwork.LOGGER.info("getStacksForFilter   size up   " + result.size());
       // We can abort after we've found FILTER_SIZE stacks; we don't have more filter slots anyway
       if (result.size() >= FilterItemStackHandler.FILTER_SIZE) {
         return result;
@@ -244,10 +241,9 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return ItemStack.EMPTY;
   }
 
-  private int countOps(){
+  private int countOps() {
     return 0;// upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
   }
-
 
   private boolean doesPassOperationFilterLimit(TileMaster master) {
     if (countOps() < 1) {

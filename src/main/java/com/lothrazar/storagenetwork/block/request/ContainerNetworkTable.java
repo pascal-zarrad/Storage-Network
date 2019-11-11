@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
+
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
@@ -18,8 +20,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
-import java.util.List;
-
 public class ContainerNetworkTable extends ContainerNetwork {
 
   private final TileRequest tileRequest;
@@ -29,7 +29,6 @@ public class ContainerNetworkTable extends ContainerNetwork {
     tileRequest = (TileRequest) world.getTileEntity(pos);
     matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
     this.playerInv = playerInv;
-
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
     slotCraftOutput.setTileMaster(getTileMaster());
     addSlot(slotCraftOutput);
@@ -65,7 +64,7 @@ public class ContainerNetworkTable extends ContainerNetwork {
     TileRequest table = getTileRequest();
     if (tileMaster != null &&
         !table.getWorld().isRemote && table.getWorld().getGameTime() % 40 == 0) {
-     // List<ItemStack> list = tileMaster.getStacks();
+      // List<ItemStack> list = tileMaster.getStacks();
       // TODO: packets
       //   PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (PlayerEntityMP) playerIn);
     }
@@ -89,8 +88,6 @@ public class ContainerNetworkTable extends ContainerNetwork {
   public TileRequest getTileRequest() {
     return tileRequest;
   }
-
-
 
   /**
    * A note on the shift-craft delay bug root cause was ANY interaction with matrix (setting contents etc) was causing triggers/events to do a recipe lookup. Meaning during this shift-click action you
@@ -117,7 +114,7 @@ public class ContainerNetworkTable extends ContainerNetwork {
     }
     ItemStack res = recipeCurrent.getCraftingResult(matrix);
     if (res.isEmpty()) {
-      StorageNetwork.LOGGER.info("err Recipe output is an empty stack " + recipeCurrent);
+      StorageNetwork.LOGGER.error("err Recipe output is an empty stack " + recipeCurrent);
       return;
     }
     int sizePerCraft = res.getCount();

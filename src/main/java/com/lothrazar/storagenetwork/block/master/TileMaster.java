@@ -373,7 +373,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     int alreadyTransferred = 0;
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       int req = size - alreadyTransferred;
-      StorageNetwork.LOGGER.info("request with matcher isNbt= " + matcher.isNbt());
       ItemStack simExtract = storage.extractStack(usedMatcher, req, simulate);
       if (simExtract.isEmpty()) {
         continue;

@@ -11,8 +11,8 @@
     "1.12.2-recommended": "1.7.8",
     "1.14.3-latest": "0.0.7",
     "1.14.3-recommended": "0.0.7",
-    "1.14.4-latest": "0.0.11",
-    "1.14.4-recommended": "0.0.11"
+    "1.14.4-latest": "0.1.0",
+    "1.14.4-recommended": "0.1.0"
   },
   "1.11.2": {
     "1.0.0": "First Release",
@@ -97,6 +97,7 @@
     "0.0.9": "Added Speed and Stack upgrades for cables.  Fix network blocks not connecting to cables visually. ",
     "0.0.10": "Fixed tooltips rendering offset on larger screen sizes. ",
     "0.0.11": "Fixed spam-click bug in inventory.  JEI integration implemented.  Minimum forge 28.1.1 and minimum JEI 6.0.0.11 ",
-    "0.0.12": "Remote added "
+    "0.0.12": "Remote added ",
+    "0.1.0":"Fixed NBT request errors, for example clicking enchanted tools returning the wrong selection.  "
   }
 }
