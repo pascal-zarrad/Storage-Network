@@ -1,14 +1,10 @@
 package com.lothrazar.storagenetwork.block.inventory;
 
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -22,6 +18,11 @@ public class ContainerNetworkInventory extends ContainerNetwork {
     this.playerInv = playerInv;
     bindPlayerInvo(this.playerInv);
     bindHotbar();
+  }
+
+  @Override
+  public boolean isCrafting() {
+    return false;
   }
 
   @Override

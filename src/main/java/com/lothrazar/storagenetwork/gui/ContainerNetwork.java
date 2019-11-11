@@ -1,5 +1,9 @@
 package com.lothrazar.storagenetwork.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
@@ -21,10 +25,6 @@ import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public abstract class ContainerNetwork extends Container {
 
@@ -123,6 +123,8 @@ public abstract class ContainerNetwork extends Container {
 
   protected void craftShift(PlayerEntity player, TileMaster tile) {}
 
+  public abstract boolean isCrafting();
+
   @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {
     if (playerIn.world.isRemote) {
@@ -134,7 +136,7 @@ public abstract class ContainerNetwork extends Container {
       ItemStack itemstack1 = slot.getStack();
       itemstack = itemstack1.copy();
       TileMaster tileMaster = this.getTileMaster();
-      if (slotIndex == 0) {
+      if (this.isCrafting() && slotIndex == 0) {
         craftShift(playerIn, tileMaster);
         return ItemStack.EMPTY;
       }

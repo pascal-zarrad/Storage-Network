@@ -20,11 +20,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
-public class ContainerNetworkTable extends ContainerNetwork {
+public class ContainerNetworkCraftingTable extends ContainerNetwork {
 
   private final TileRequest tileRequest;
 
-  public ContainerNetworkTable(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+  public ContainerNetworkCraftingTable(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.requestcontainer, windowId);
     tileRequest = (TileRequest) world.getTileEntity(pos);
     matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
@@ -36,6 +36,11 @@ public class ContainerNetworkTable extends ContainerNetwork {
     bindPlayerInvo(this.playerInv);
     bindHotbar();
     onCraftMatrixChanged(matrix);
+  }
+
+  @Override
+  public boolean isCrafting() {
+    return true;
   }
 
   @Override

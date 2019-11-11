@@ -37,4 +37,9 @@ public class ContainerNetworkRemote extends ContainerNetwork {
 
   @Override
   public void slotChanged() {}
+
+  @Override
+  public boolean isCrafting() {
+    return false;
+  }
 }

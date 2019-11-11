@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> implements IGuiNetwork {
+public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTable> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
@@ -32,7 +32,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   final NetworkWidget network;
   private TileRequest tile;
 
-  public GuiNetworkTable(ContainerNetworkTable container, PlayerInventory inv, ITextComponent name) {
+  public GuiNetworkTable(ContainerNetworkCraftingTable container, PlayerInventory inv, ITextComponent name) {
     super(container, inv, name);
     tile = container.getTileRequest();
     network = new NetworkWidget(this);

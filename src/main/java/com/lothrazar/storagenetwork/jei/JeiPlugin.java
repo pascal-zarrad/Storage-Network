@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.block.request.ContainerNetworkTable;
+import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
@@ -40,7 +40,7 @@ public class JeiPlugin implements IModPlugin {
 
   @Override
   public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-    registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkTable.class));
+    registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkCraftingTable.class));
     //    registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandlerRemote<>(ContainerNetworkRemote.class));
     //  @Override
     //  public void register(IModRegistry registry) {

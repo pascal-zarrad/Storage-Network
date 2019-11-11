@@ -23,7 +23,7 @@ import com.lothrazar.storagenetwork.block.inventory.TileInventory;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
-import com.lothrazar.storagenetwork.block.request.ContainerNetworkTable;
+import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
@@ -146,7 +146,7 @@ public class StorageNetwork {
       IForgeRegistry<ContainerType<?>> r = event.getRegistry();
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
-        return new ContainerNetworkTable(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerNetworkCraftingTable(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("request"));
       //
       r.register(IForgeContainerType.create((windowId, inv, data) -> {

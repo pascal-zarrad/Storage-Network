@@ -98,6 +98,6 @@
     "0.0.10": "Fixed tooltips rendering offset on larger screen sizes. ",
     "0.0.11": "Fixed spam-click bug in inventory.  JEI integration implemented.  Minimum forge 28.1.1 and minimum JEI 6.0.0.11 ",
     "0.0.12": "Remote added ",
-    "0.1.0":"Fixed NBT request errors, for example clicking enchanted tools returning the wrong selection.  Fixed a cable texture.  "
+    "0.1.0":"Fixed NBT request errors, for example clicking enchanted tools returning the wrong selection.  Fixed a cable texture.  Fixed a shift-click issue in top left of some inventories.  "
   }
 }
