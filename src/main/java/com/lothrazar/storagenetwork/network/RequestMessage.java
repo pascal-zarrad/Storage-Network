@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
@@ -11,10 +15,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class RequestMessage {
 
@@ -29,9 +29,9 @@ public class RequestMessage {
 
   public RequestMessage() {}
 
-  public RequestMessage(int id, ItemStack stack, boolean shift, boolean ctrl) {
+  public RequestMessage(int id, ItemStack stackIn, boolean shift, boolean ctrl) {
     mouseButton = id;
-    this.stack = new ItemStack(stack.getItem());
+    this.stack = stackIn.copy();
     this.shift = shift;
     this.ctrl = ctrl;
   }
@@ -49,6 +49,7 @@ public class RequestMessage {
         StorageNetwork.log("Request message cancelled, null tile");
         return;
       }
+      StorageNetwork.LOGGER.info("RequestMessage stack tag " + message.stack.getTag());
       int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, false, true));
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
@@ -64,14 +65,19 @@ public class RequestMessage {
         sizeRequested = Math.min(message.stack.getMaxStackSize() / 2, in / 2);
       }
       sizeRequested = Math.max(sizeRequested, 1);
+      boolean ore = false;
+      boolean nbt = true;//try NBT first
       stack = tileMaster.request(
-          new ItemStackMatcher(message.stack, false, true),
+          new ItemStackMatcher(message.stack, ore, nbt),
           sizeRequested, false);
+      StorageNetwork.LOGGER.info("nbt TRUE gave " + stack);
       if (stack.isEmpty()) {
-        //try again with NBT as false
+        //try again with NBT as false, ONLY if true didnt work
+        nbt = false;
         stack = tileMaster.request(
-            new ItemStackMatcher(message.stack, false, false),
+            new ItemStackMatcher(message.stack, ore, nbt),
             sizeRequested, false);
+        StorageNetwork.LOGGER.info("nbt false gave " + stack);
       }
       if (!stack.isEmpty()) {
         if (message.shift) {

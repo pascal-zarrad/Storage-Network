@@ -1,4 +1,12 @@
 package com.lothrazar.storagenetwork.block.master;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
@@ -26,14 +34,6 @@ import net.minecraft.world.chunk.IChunk;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class TileMaster extends TileEntity implements ITickableTileEntity {
 
@@ -329,14 +329,14 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
-            StorageNetwork.LOGGER.info("error thrown "+ e);
+            StorageNetwork.LOGGER.info("error thrown " + e);
           }
         }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {
           //  StorageNetwork.log("updateExports: i have empty " +amtToRequest) ;
           continue;
         }
-        ItemStack requestedStack = this.request(matcher, amtToRequest, true);
+        ItemStack requestedStack = this.request((ItemStackMatcher) matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
           //  StorageNetwork.log("updateExports: requestedStack is empty so nothing pushed " + matcher);
           continue;
@@ -364,7 +364,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     }
   }
 
-  public ItemStack request(IItemStackMatcher matcher, int size, boolean simulate) {
+  public ItemStack request(ItemStackMatcher matcher, int size, boolean simulate) {
     if (size == 0 || matcher == null) {
       return ItemStack.EMPTY;
     }
@@ -373,12 +373,13 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     int alreadyTransferred = 0;
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       int req = size - alreadyTransferred;
+      StorageNetwork.LOGGER.info("request with matcher isNbt= " + matcher.isNbt());
       ItemStack simExtract = storage.extractStack(usedMatcher, req, simulate);
       if (simExtract.isEmpty()) {
         continue;
       }
       // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
-      usedMatcher = new ItemStackMatcher(simExtract, false, true);
+      usedMatcher = new ItemStackMatcher(simExtract, matcher.isOre(), matcher.isNbt());
       alreadyTransferred += simExtract.getCount();
       if (alreadyTransferred >= size) {
         break;

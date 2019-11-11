@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api.data;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 
 public class ItemStackMatcher implements IItemStackMatcher {
 
@@ -87,12 +87,13 @@ public class ItemStackMatcher implements IItemStackMatcher {
     //      return true;
     //    }
     if (nbt && !ItemStack.areItemStackTagsEqual(stack, stackIn)) {
+      //      if (nbt) {
+      //        StorageNetwork.LOGGER.info("Tags are not equal ");
+      //        StorageNetwork.LOGGER.info(stack.getTag());
+      //        StorageNetwork.LOGGER.info(stackIn.getTag());
+      //      }
       return false;
     }
-    //meta ded
-    //    if (meta && stackIn.getItemDamage() != stack.getItemDamage()) {
-    //      return false;
-    //    }
     return stackIn.getItem() == stack.getItem();
   }
 }

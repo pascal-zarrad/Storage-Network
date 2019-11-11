@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.gui;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
@@ -20,10 +24,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 public class NetworkWidget {
 
@@ -205,13 +205,13 @@ public class NetworkWidget {
     switch (gui.getSort()) {
       case NAME:
         sort = "N";
-        break;
+      break;
       case MOD:
         sort = "@";
-        break;
+      break;
       case AMOUNT:
         sort = "#";
-        break;
+      break;
     }
     this.sortBtn.setMessage(sort);
     if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
@@ -219,7 +219,6 @@ public class NetworkWidget {
           I18n.format("gui.storagenetwork.req.tooltip_" + gui.getSort())),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-
     jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
     if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
       gui.renderTooltip(Lists.newArrayList(
@@ -231,8 +230,6 @@ public class NetworkWidget {
       gui.renderTooltip(Lists.newArrayList(s),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-
-
     if (this.inSearchBar(mouseX, mouseY)) {
       List<String> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
@@ -247,7 +244,6 @@ public class NetworkWidget {
       }
       gui.renderTooltip(lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-
   }
 
   public void renderItemSlots(int mouseX, int mouseY, FontRenderer font) {
@@ -294,17 +290,16 @@ public class NetworkWidget {
         && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
         && stackCarriedByMouse.isEmpty() &&
         this.canClick()) {
-      ItemStack copyNotNegativeAir = new ItemStack(this.stackUnderMouse.getItem());
-      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, copyNotNegativeAir, Screen.hasShiftDown(),
+      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(mouseButton, this.stackUnderMouse.copy(), Screen.hasShiftDown(),
           Screen.hasAltDown() || Screen.hasControlDown()));
       this.lastClick = System.currentTimeMillis();
     }
     else if (!stackCarriedByMouse.isEmpty() && inField((int) mouseX, (int) mouseY) &&
         this.canClick()) {
-      //0 isd getDim()
-      PacketRegistry.INSTANCE.sendToServer(new InsertMessage(0, mouseButton));
-      this.lastClick = System.currentTimeMillis();
-    }
+          //0 isd getDim()
+          PacketRegistry.INSTANCE.sendToServer(new InsertMessage(0, mouseButton));
+          this.lastClick = System.currentTimeMillis();
+        }
   }
 
   private boolean inField(int mouseX, int mouseY) {
@@ -316,9 +311,9 @@ public class NetworkWidget {
     int y = this.searchBar.y - 3;
     this.directionBtn = new GuiButtonRequest(
         gui.getGuiLeft() + 7, y, "", (p) -> {
-      gui.setDownwards(!gui.getDownwards());
-      gui.syncData();
-    });
+          gui.setDownwards(!gui.getDownwards());
+          gui.syncData();
+        });
     directionBtn.setHeight(16);
     this.sortBtn = new GuiButtonRequest(gui.getGuiLeft() + 21, y, "", (p) -> {
       gui.setSort(gui.getSort().next());
@@ -329,12 +324,11 @@ public class NetworkWidget {
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
     jeiBtn.setHeight(16);
-    clearTextBtn = new GuiButtonRequest(gui.getGuiLeft()+ 64, y, "X", (p) -> {
+    clearTextBtn = new GuiButtonRequest(gui.getGuiLeft() + 64, y, "X", (p) -> {
       this.clearSearch();
     });
     clearTextBtn.setHeight(16);
   }
-
 
   public void sortStackWrappers(List<ItemStack> stacksToDisplay) {
     Collections.sort(stacksToDisplay, new Comparator<ItemStack>() {
