@@ -3,7 +3,6 @@ package com.lothrazar.storagenetwork.block.cable;
 import java.util.Locale;
 import java.util.Map;
 import com.google.common.collect.Maps;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
@@ -161,7 +160,6 @@ public class BlockCable extends Block {
       return stateIn.with(property, EnumConnectType.CABLE);
     }
     else if (isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
-      StorageNetwork.log(" post placement: inventory ");
       return stateIn.with(property, EnumConnectType.INVENTORY);
     }
     else {

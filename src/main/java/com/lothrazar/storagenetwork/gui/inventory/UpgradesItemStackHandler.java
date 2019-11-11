@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.gui.inventory;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -20,10 +19,6 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
   @Override
   protected void validateSlotIndex(int slot) {
     if (stacks.size() == 1) {
-      StorageNetwork.log("ERRROR RESET TO 1");
-      StorageNetwork.log("ERRROR RESET TO 1");
-      StorageNetwork.log("ERRROR RESET TO 1");
-      StorageNetwork.log("ERRROR RESET TO 1");
       this.setSize(SsnRegistry.UPGRADE_COUNT);
     }
     super.validateSlotIndex(slot);

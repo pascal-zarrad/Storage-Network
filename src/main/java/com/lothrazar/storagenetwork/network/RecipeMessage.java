@@ -1,4 +1,10 @@
 package com.lothrazar.storagenetwork.network;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
@@ -15,12 +21,6 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 public class RecipeMessage {
 
@@ -83,13 +83,13 @@ public class RecipeMessage {
          **********/
         boolean isOreDict;
         isOreDict = false;
-         ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
+        ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < invList.size(); i++) {
           CompoundNBT stackTag = invList.getCompound(i);
           ItemStack s = ItemStack.read(stackTag);
           map.put(i, s);
         }
-         /********* end parse nbt of this current slot ******/
+        /********* end parse nbt of this current slot ******/
         /********** now start trying to fill in recipe **/
         for (int i = 0; i < map.size(); i++) {
           ItemStack stackCurrent = map.get(i);
@@ -103,10 +103,9 @@ public class RecipeMessage {
             //its a tool or something with a durability cap so IGNORE metadata 
             //              itemStackMatcher.setMeta(false);
           }
-
           ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, true);
           /*********** First try and use the players inventory **/
-           if (ex != null && !ex.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
+          if (ex != null && !ex.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
             UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, false);
             //make sure to add the real item after the nonsimulated withdrawl is complete https://github.com/PrinceOfAmber/Storage-Network/issues/16
             craftMatrix.setInventorySlotContents(slot, ex);

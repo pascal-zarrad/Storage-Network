@@ -329,7 +329,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
             amtToRequest = Math.min(stillNeeds, amtToRequest);
           }
           catch (Throwable e) {
-            StorageNetwork.LOGGER.info("error thrown " + e);
+            StorageNetwork.LOGGER.error("Error thrown from a connected block" + e);
           }
         }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {

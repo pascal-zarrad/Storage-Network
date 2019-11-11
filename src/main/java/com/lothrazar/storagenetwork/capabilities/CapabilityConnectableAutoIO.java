@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.capability.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.data.DimPos;
@@ -188,7 +187,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     // Test whether the connected block has the IItemHandler capability
     IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
     if (itemHandler == null) {
-      StorageNetwork.log("getStacksForFilter    null itemhandler connection ");
       return Collections.emptyList();
     }
     // If it does, iterate its stacks, filter them and add them to the result list
