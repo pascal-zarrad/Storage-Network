@@ -16,7 +16,7 @@ public class ContainerCableFilter extends ContainerCable {
 
   public final TileCableFilter tile;
   @Nullable
-  public CapabilityConnectableLink link;
+  public CapabilityConnectableLink cap;
 
   public ContainerCableFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.filterContainer, windowId);
@@ -25,7 +25,7 @@ public class ContainerCableFilter extends ContainerCable {
     if (!(rawLink instanceof CapabilityConnectableLink)) {
       return;
     }
-    this.link = (CapabilityConnectableLink) rawLink;
+    this.cap = (CapabilityConnectableLink) rawLink;
     this.bindPlayerInvo(playerInv);
   }
 

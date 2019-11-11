@@ -69,10 +69,10 @@ public class CableDataMessage {
           //  link=link2;//
         }
         ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
-        if (container == null || container.link == null) {
+        if (container == null || container.cap == null) {
           return;
         }
-        link = container.link;
+        link = container.cap;
         TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
         //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
         CableMessageType type = CableMessageType.values()[message.id];

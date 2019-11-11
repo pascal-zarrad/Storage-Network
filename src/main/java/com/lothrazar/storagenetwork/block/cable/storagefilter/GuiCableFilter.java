@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.cable.storagefilter;
+
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -14,8 +16,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.List;
 
 public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
@@ -37,6 +37,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   @Override
   public void init() {
     super.init();
+    this.isWhitelist = containerCableLink.cap.getFilter().isWhitelist;
     int x = guiLeft + 7, y = guiTop + 8;
     btnMinus = addButton(new GuiButtonRequest(x, y, "-", (p) -> {
       this.syncData(-1);
@@ -77,7 +78,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     renderBackground();
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
-    if (containerCableLink == null || containerCableLink.link == null) {
+    if (containerCableLink == null || containerCableLink.cap == null) {
       return;
     }
     btnWhite.setMessage(this.isWhitelist ? "W" : "B");
@@ -86,7 +87,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   @Override
   public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    int priority = containerCableLink.link.getPriority();
+    int priority = containerCableLink.cap.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
         5, // btnMinus.y,
@@ -130,7 +131,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         //
-        ItemStack stack = containerCableLink.link.getFilter().getStackInSlot(index);
+        ItemStack stack = containerCableLink.cap.getFilter().getStackInSlot(index);
         int x = 8 + col * SLOT_SIZE;
         itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));
         index++;
@@ -144,7 +145,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   }
 
   public void setFilterItems(List<ItemStack> stacks) {
-    FilterItemStackHandler filter = this.containerCableLink.link.getFilter();
+    FilterItemStackHandler filter = this.containerCableLink.cap.getFilter();
     for (int i = 0; i < stacks.size(); i++) {
       ItemStack s = stacks.get(i);
       filter.setStackInSlot(i, s);
@@ -196,10 +197,8 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-  @Override public  boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY)
-
-  {
-    return super.isPointInRegion(x,y,width,height,mouseX,mouseY);
+  @Override
+  public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
-
 }
