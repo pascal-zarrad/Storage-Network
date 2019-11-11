@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
+
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
@@ -8,7 +9,6 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.item.ItemStack;
-
 import java.util.List;
 
 public class SlotCraftingNetwork extends CraftingResultSlot {

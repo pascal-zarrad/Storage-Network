@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.network;
+
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -9,7 +10,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;

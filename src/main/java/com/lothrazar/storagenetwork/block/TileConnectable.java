@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
@@ -17,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-
 import javax.annotation.Nullable;
 
 /**
@@ -56,10 +56,9 @@ public class TileConnectable extends TileEntity {
     result.put("connectable", connectable.serializeNBT());
     return result;
   }
-
-//  public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
-//    return oldState.getBlock() != newSate.getBlock();
-//  }
+  //  public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
+  //    return oldState.getBlock() != newSate.getBlock();
+  //  }
 
   @Override
   public SUpdateTileEntityPacket getUpdatePacket() {
@@ -84,7 +83,7 @@ public class TileConnectable extends TileEntity {
         }
       }
       catch (Exception e) {
-        StorageNetwork.LOGGER.info("Error on chunk unload "+ e);
+        StorageNetwork.LOGGER.info("Error on chunk unload " + e);
       }
     }
   }

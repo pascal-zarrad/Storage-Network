@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
+
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,8 +20,7 @@ public class BlockCableImportFilter extends BlockCable {
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world){
-
+  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return new TileCableImportFilter();
   }
 

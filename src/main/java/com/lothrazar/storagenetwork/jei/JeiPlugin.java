@@ -18,29 +18,30 @@ import net.minecraft.util.ResourceLocation;
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin {
 
-  @Override public ResourceLocation getPluginUid() {
-    return new ResourceLocation(StorageNetwork.MODID,"jei");
+  @Override
+  public ResourceLocation getPluginUid() {
+    return new ResourceLocation(StorageNetwork.MODID, "jei");
   }
 
-  @Override public void registerItemSubtypes(ISubtypeRegistration registration) {
-  }
+  @Override
+  public void registerItemSubtypes(ISubtypeRegistration registration) {}
 
-  @Override public void registerIngredients(IModIngredientRegistration registration) {
-  }
+  @Override
+  public void registerIngredients(IModIngredientRegistration registration) {}
 
-  @Override public void registerCategories(IRecipeCategoryRegistration registration) {
-  }
+  @Override
+  public void registerCategories(IRecipeCategoryRegistration registration) {}
 
-  @Override public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-  }
+  @Override
+  public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {}
 
-  @Override public void registerRecipes(IRecipeRegistration registration) {
-  }
+  @Override
+  public void registerRecipes(IRecipeRegistration registration) {}
 
-  @Override public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-     registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkTable.class));
+  @Override
+  public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+    registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkTable.class));
     //    registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandlerRemote<>(ContainerNetworkRemote.class));
-
     //  @Override
     //  public void register(IModRegistry registry) {
     //    registry.addRecipeCatalyst(new ItemStack(SsnRegistry.request), VanillaRecipeCategoryUid.CRAFTING);
@@ -53,15 +54,15 @@ public class JeiPlugin implements IModPlugin {
     //  }
   }
 
-  @Override public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-  }
+  @Override
+  public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {}
 
-  @Override public void registerGuiHandlers(IGuiHandlerRegistration registration) {
-  }
+  @Override
+  public void registerGuiHandlers(IGuiHandlerRegistration registration) {}
 
-  @Override public void registerAdvanced(IAdvancedRegistration registration) {
-  }
+  @Override
+  public void registerAdvanced(IAdvancedRegistration registration) {}
 
-  @Override public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
-  }
+  @Override
+  public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {}
 }

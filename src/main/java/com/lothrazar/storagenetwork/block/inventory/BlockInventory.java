@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.inventory;
+
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -21,8 +22,6 @@ public class BlockInventory extends BaseBlock {
 
   @Override
   public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-
-
     return new TileInventory();
   }
 
@@ -39,6 +38,7 @@ public class BlockInventory extends BaseBlock {
     }
     return true;
   }
+
   @Override
   public boolean hasTileEntity(BlockState state) {
     return true;

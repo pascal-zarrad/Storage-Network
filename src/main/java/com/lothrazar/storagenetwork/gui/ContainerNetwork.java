@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.gui;
+
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
@@ -20,7 +21,6 @@ import net.minecraft.network.play.server.SSetSlotPacket;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +62,7 @@ public abstract class ContainerNetwork extends Container {
     }
   }
 
- public void bindHotbar() {
+  public void bindHotbar() {
     //player hotbar
     for (int i = 0; i < 9; ++i) {
       addSlot(new Slot(playerInv, i, 8 + i * 18, 232));
@@ -120,9 +120,8 @@ public abstract class ContainerNetwork extends Container {
       serverplayerentity.connection.sendPacket(new SSetSlotPacket(number, 0, itemstack));
     }
   }
-  protected void craftShift(PlayerEntity player, TileMaster tile) {
 
-  }
+  protected void craftShift(PlayerEntity player, TileMaster tile) {}
 
   @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {

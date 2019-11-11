@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.storagefilter;
+
 import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
 import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
@@ -9,7 +10,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 
 public class ContainerCableFilter extends ContainerCable {

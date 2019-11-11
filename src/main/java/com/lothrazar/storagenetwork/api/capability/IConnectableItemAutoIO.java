@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.api.capability;
+
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
-
 import java.util.Collections;
 import java.util.List;
 

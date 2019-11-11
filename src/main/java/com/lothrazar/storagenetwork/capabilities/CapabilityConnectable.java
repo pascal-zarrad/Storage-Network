@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.capabilities;
+
 import com.lothrazar.storagenetwork.api.capability.DefaultConnectable;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.data.DimPos;
@@ -7,7 +8,6 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
-
 import javax.annotation.Nullable;
 
 public class CapabilityConnectable extends DefaultConnectable implements INBTSerializable<CompoundNBT> {

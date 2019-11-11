@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block.cable;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 
 public abstract class ContainerCable extends Container {

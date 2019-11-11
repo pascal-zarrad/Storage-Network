@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.api.data;
-import net.minecraft.item.ItemStack;
 
+import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 
 /**

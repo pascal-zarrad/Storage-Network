@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cablelink;
+
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;

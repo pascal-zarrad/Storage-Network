@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.api.data;
 public enum EnumSortType {
+
   AMOUNT, NAME, MOD;
 
   public EnumSortType next() {

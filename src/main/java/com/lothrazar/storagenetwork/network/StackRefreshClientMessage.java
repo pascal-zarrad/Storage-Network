@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.network;
+
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import net.minecraft.client.Minecraft;
@@ -6,7 +7,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -38,7 +38,7 @@ public class StackRefreshClientMessage {
       if (mc.currentScreen instanceof IGuiNetwork) {
         IGuiNetwork gui = (IGuiNetwork) mc.currentScreen;
         gui.setStacks(message.stacks);
-//        gui.setCraftableStacks(message.craftableStacks);
+        //        gui.setCraftableStacks(message.craftableStacks);
       }
     });
   }

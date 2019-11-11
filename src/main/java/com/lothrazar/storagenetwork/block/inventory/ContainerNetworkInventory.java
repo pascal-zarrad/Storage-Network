@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.inventory;
+
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
@@ -19,14 +20,12 @@ public class ContainerNetworkInventory extends ContainerNetwork {
     super(SsnRegistry.inventorycontainer, windowId);
     tile = (TileInventory) world.getTileEntity(pos);
     this.playerInv = playerInv;
-
     bindPlayerInvo(this.playerInv);
     bindHotbar();
   }
 
   @Override
-  public void slotChanged() {
-  }
+  public void slotChanged() {}
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {

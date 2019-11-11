@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.export;
+
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -14,7 +15,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
 import java.util.List;
 
 public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFilter> implements IGuiPrivate {
@@ -186,21 +186,16 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
 
   @Override
   public void renderStackToolTip(ItemStack stack, int x, int y) {
-
-
     super.renderTooltip(stack, x, y);
   }
 
   @Override
-  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor)
-
-  {
+  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-
-  @Override public  boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
-
-    return super.isPointInRegion(x,y,width,height,mouseX,mouseY);
+  @Override
+  public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

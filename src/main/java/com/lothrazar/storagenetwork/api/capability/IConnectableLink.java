@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api.capability;
+
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import net.minecraft.item.ItemStack;
-
 import java.util.List;
 
 /**

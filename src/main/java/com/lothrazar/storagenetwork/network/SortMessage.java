@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.network;
+
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
@@ -9,7 +10,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
-
 import java.util.function.Supplier;
 
 public class SortMessage {

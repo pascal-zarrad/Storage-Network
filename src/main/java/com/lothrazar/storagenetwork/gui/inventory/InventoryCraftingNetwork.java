@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.gui.inventory;
+
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.NonNullList;
-
 import java.util.List;
 import java.util.Map;
 

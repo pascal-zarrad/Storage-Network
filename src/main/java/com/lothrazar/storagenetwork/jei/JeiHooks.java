@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.jei;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.config.KeyBindings;
@@ -12,11 +13,11 @@ public class JeiHooks {
   public static String getFilterText() {
     try {
       if (JeiSettings.isJeiLoaded()) {
-        return   getJeiTextInternal();
+        return getJeiTextInternal();
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found "+ e);
+      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found " + e);
     }
     return "";
   }
@@ -29,31 +30,32 @@ public class JeiHooks {
   public static void setFilterText(String s) {
     try {
       if (JeiSettings.isJeiLoaded()) {
-         setJeiTextInternal(s);
+        setJeiTextInternal(s);
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found "+ e);
+      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found " + e);
     }
   }
+
   //  @Optional.Method(modid = "jei")
-    private static void setJeiTextInternal(String s) {
-      mezz.jei.Internal.getRuntime().getIngredientFilter().setFilterText(s);
-    }
+  private static void setJeiTextInternal(String s) {
+    mezz.jei.Internal.getRuntime().getIngredientFilter().setFilterText(s);
+  }
+
   //
   //  @Optional.Method(modid = "jei")
-    private static String getJeiTextInternal() {
-      return mezz.jei.Internal.getRuntime().getIngredientFilter().getFilterText();
-    }
+  private static String getJeiTextInternal() {
+    return mezz.jei.Internal.getRuntime().getIngredientFilter().getFilterText();
+  }
 
   //  @Optional.Method(modid = "jei")
-    public static void testJeiKeybind(InputMappings.Input  keyCode, ItemStack stackUnderMouse) {
-      final boolean showRecipe = KeyBindings.showRecipe.isActiveAndMatches(keyCode);
-      final boolean showUses = KeyBindings.showUses.isActiveAndMatches(keyCode);
-      if (showRecipe || showUses) {
-         IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;
-        mezz.jei.Internal.getRuntime().getRecipesGui().show(new Focus<ItemStack>(mode, stackUnderMouse));
-
-      }
+  public static void testJeiKeybind(InputMappings.Input keyCode, ItemStack stackUnderMouse) {
+    final boolean showRecipe = KeyBindings.showRecipe.isActiveAndMatches(keyCode);
+    final boolean showUses = KeyBindings.showUses.isActiveAndMatches(keyCode);
+    if (showRecipe || showUses) {
+      IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;
+      mezz.jei.Internal.getRuntime().getRecipesGui().show(new Focus<ItemStack>(mode, stackUnderMouse));
     }
+  }
 }

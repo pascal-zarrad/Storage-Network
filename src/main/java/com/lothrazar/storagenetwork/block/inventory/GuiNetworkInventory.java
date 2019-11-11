@@ -1,4 +1,6 @@
 package com.lothrazar.storagenetwork.block.inventory;
+
+import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -18,8 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-
-import java.util.List;
 
 /**
  * Base class for Request table inventory and Remote inventory
@@ -43,13 +43,14 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     network.fieldHeight = 180;
   }
 
-  @Override public void setStacks(List<ItemStack> stacks) {
+  @Override
+  public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
   }
 
   @Override
   public void init() {
-    super.init(); 
+    super.init();
     int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
@@ -142,7 +143,6 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);
-
     if (isScrollable(x, y) && mouseButton != 0) {
       network.mouseScrolled(mouseButton);
     }
@@ -180,7 +180,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
-        System.out.println("JEI compat issue " + e);
+        StorageNetwork.log("JEI compat issue " + e);
         //its ok JEI not installed for maybe an addon mod is ok
       }
     }
@@ -210,9 +210,8 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-  @Override public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
-
-
+  @Override
+  public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

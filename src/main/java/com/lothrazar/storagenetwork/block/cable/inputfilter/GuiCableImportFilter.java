@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
+
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -14,7 +15,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
 import java.util.List;
 
 public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
@@ -192,14 +192,11 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
 
   @Override
   public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-
-
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-  @Override public  boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY)
-
-  {
-    return super.isPointInRegion(x,y,width,height,mouseX,mouseY);
+  @Override
+  public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
+    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }

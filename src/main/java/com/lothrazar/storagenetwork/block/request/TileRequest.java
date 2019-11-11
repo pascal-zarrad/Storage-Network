@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
+
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -13,11 +14,10 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.Constants;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class TileRequest extends TileConnectable implements INamedContainerProvider , ITileSortable {
+public class TileRequest extends TileConnectable implements INamedContainerProvider, ITileSortable {
 
   Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;

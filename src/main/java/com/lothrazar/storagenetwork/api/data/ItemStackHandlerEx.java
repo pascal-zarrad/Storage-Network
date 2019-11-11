@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.api.data;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 

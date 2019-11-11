@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.export;
+
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,9 +19,8 @@ public class BlockCableExport extends BlockCable {
     super(registryName);
   }
 
-   @Override
-   public TileEntity createTileEntity(BlockState state, IBlockReader world){
-
+  @Override
+  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return new TileCableExport();
   }
 

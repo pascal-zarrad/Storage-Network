@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.item.remote;
+
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
@@ -24,14 +25,16 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     bindHotbar();
   }
 
-  @Override public boolean canInteractWith(PlayerEntity playerIn) {
+  @Override
+  public boolean canInteractWith(PlayerEntity playerIn) {
     return true;
   }
 
-  @Override public TileMaster getTileMaster() {
+  @Override
+  public TileMaster getTileMaster() {
     return master;
   }
 
-  @Override public void slotChanged() {
-  }
+  @Override
+  public void slotChanged() {}
 }

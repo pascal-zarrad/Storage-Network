@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.api.data;
+
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import io.netty.buffer.ByteBuf;
@@ -12,7 +13,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
-
 import javax.annotation.Nullable;
 
 public class DimPos implements INBTSerializable<CompoundNBT> {

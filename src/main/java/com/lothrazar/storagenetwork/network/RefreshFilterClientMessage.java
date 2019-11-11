@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.network;
+
 import com.lothrazar.storagenetwork.block.cable.storagefilter.GuiCableFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;

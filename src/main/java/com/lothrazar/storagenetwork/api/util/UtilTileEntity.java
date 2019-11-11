@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.api.util;
+
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
@@ -13,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Comparator;

@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.item.remote;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -16,7 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-
 import java.util.List;
 
 public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiNetwork {
@@ -39,23 +39,28 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.remote = inv.player.getHeldItem(Hand.MAIN_HAND);
   }
 
-  @Override public void setStacks(List<ItemStack> stacks) {
+  @Override
+  public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
   }
 
-  @Override public boolean getDownwards() {
+  @Override
+  public boolean getDownwards() {
     return ItemRemote.getDownwards(remote);
   }
 
-  @Override public void setDownwards(boolean val) {
+  @Override
+  public void setDownwards(boolean val) {
     ItemRemote.setDownwards(remote, val);
   }
 
-  @Override public EnumSortType getSort() {
+  @Override
+  public EnumSortType getSort() {
     return ItemRemote.getSort(remote);
   }
 
-  @Override public void setSort(EnumSortType val) {
+  @Override
+  public void setSort(EnumSortType val) {
     ItemRemote.setSort(remote, val);
   }
 
@@ -177,13 +182,12 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     super.fillGradient(left, top, right, bottom, startColor, endColor);
   }
 
-  @Override public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY)
-
-  {
+  @Override
+  public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 
   public void syncData() {
-      PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
+    PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
   }
 }

@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.inventory;
+
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -27,7 +28,6 @@ public class TileInventory extends TileConnectable implements INamedContainerPro
 
   @Override
   public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-
     return new ContainerNetworkInventory(i, world, pos, playerInventory, playerEntity);
   }
 

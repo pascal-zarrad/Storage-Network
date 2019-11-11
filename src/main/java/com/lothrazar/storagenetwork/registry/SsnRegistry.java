@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.registry;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;

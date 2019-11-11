@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.item.remote;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -24,7 +25,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
-
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -135,11 +135,14 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     return super.onItemRightClick(world, player, hand);
   }
 
-  @Override public ITextComponent getDisplayName() {
+  @Override
+  public ITextComponent getDisplayName() {
     return new TranslationTextComponent(this.getTranslationKey());
   }
 
-  @Nullable @Override public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+  @Nullable
+  @Override
+  public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
     return new ContainerNetworkRemote(id, inv);
   }
 }

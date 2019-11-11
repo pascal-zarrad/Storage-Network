@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.gui.inventory;
-import net.minecraft.item.ItemStack;
 
+import net.minecraft.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.input;
+
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
@@ -11,8 +12,7 @@ public class BlockCableIO extends BlockCable {
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world){
-
+  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return new TileCableIO();
   }
 }

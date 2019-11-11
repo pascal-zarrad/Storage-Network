@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.network;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
@@ -13,7 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
-
 import java.util.function.Supplier;
 
 public class CableDataMessage {

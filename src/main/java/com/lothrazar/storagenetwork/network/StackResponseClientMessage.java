@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.network;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-
 import java.util.function.Supplier;
 
 /**

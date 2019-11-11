@@ -1,4 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
+
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -18,7 +19,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-
 import java.util.List;
 
 /**
@@ -40,7 +40,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     ySize = HEIGHT;
   }
 
-  @Override public void setStacks(List<ItemStack> stacks) {
+  @Override
+  public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
   }
 
@@ -139,7 +140,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);
-
     if (isScrollable(x, y) && mouseButton != 0) {
       network.mouseScrolled(mouseButton);
     }
@@ -197,8 +197,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
     return false;// super.charTyped(typedChar, keyCode);
   }
 
-
-
   @Override
   public void renderStackToolTip(ItemStack stack, int x, int y) {
     super.renderTooltip(stack, x, y);
@@ -211,7 +209,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkTable> impl
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
-// because its protected and apparently sometimes abstract when compiled
+    // because its protected and apparently sometimes abstract when compiled
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 }
