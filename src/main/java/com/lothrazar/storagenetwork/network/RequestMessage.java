@@ -32,6 +32,9 @@ public class RequestMessage {
   public RequestMessage(int id, ItemStack stackIn, boolean shift, boolean ctrl) {
     mouseButton = id;
     this.stack = stackIn.copy();
+    if (this.stack.getCount() > 64) {
+      this.stack.setCount(64);//important or it will be killed by a filter
+    }
     this.shift = shift;
     this.ctrl = ctrl;
   }
