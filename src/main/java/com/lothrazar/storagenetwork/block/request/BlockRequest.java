@@ -1,5 +1,7 @@
 package com.lothrazar.storagenetwork.block.request;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -17,8 +19,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockRequest extends BaseBlock {
 

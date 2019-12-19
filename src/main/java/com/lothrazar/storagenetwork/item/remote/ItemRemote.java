@@ -1,5 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -25,8 +27,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ItemRemote extends Item implements INamedContainerProvider {
 
@@ -72,7 +72,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       tag.putInt("y", pos.getY());
       tag.putInt("z", pos.getZ());
       tag.putBoolean("bound", true);
-      tag.putInt("dim", 0); // worldIn.provider.getDimension()
+      tag.putInt("dim", world.getDimension().getType().getId());
       stack.setTag(tag);
       return ActionResultType.SUCCESS;
     }
@@ -121,8 +121,11 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int y = tag.getInt("y");
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
+    //    DimensionType type = DimensionManager.getRegistry().getByValue(dim);
     //   World serverTargetWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
     World serverTargetWorld = world;//for now
+    //    serverTargetWorld = Minecraft.getInstance().getIntegratedServer().getWorld(type);
+    //    System.out.println(type + "?" + serverTargetWorld);
     BlockPos posTarget = new BlockPos(x, y, z);
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
       StorageNetwork.chatMessage(player, "item.remote.notloaded");
