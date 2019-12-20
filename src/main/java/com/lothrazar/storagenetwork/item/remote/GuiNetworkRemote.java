@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.item.remote;
 
+import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -8,7 +9,7 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputMappings;
@@ -17,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import java.util.List;
 
 public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiNetwork {
 
@@ -99,7 +99,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.minecraft.getTextureManager().bindTexture(texture);
     int k = (this.width - this.xSize) / 2;
     int l = (this.height - this.ySize) / 2;
-    GlStateManager.color3f(1, 1, 1);
+    RenderSystem.color3f(1, 1, 1);
     this.blit(k, l, 0, 0, this.xSize, this.ySize);
     network.applySearchTextToSlots();
     network.renderItemSlots(mouseX, mouseY, font);
@@ -187,6 +187,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 
+  @Override
   public void syncData() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
   }

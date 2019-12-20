@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.request;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -38,11 +39,11 @@ public class GuiButtonRequest extends GuiButtonExt {
     Minecraft minecraft = Minecraft.getInstance();
     FontRenderer fontrenderer = minecraft.fontRenderer;
     minecraft.getTextureManager().bindTexture(getTexture());
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, this.alpha);
+    RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
     int i = this.getYImage(this.isHovered());
-    GlStateManager.enableBlend();
-    GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-    GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+    RenderSystem.enableBlend();
+    RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
     this.blit(this.x, this.y,
         width / 2, 16 + 0 + i * 16, //46 + ,
         width, height);

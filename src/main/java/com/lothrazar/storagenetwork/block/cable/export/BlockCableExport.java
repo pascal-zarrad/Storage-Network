@@ -6,6 +6,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -25,7 +26,7 @@ public class BlockCableExport extends BlockCable {
   }
 
   @Override
-  public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult result) {
+  public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
       TileEntity tile = world.getTileEntity(pos);
       if (tile instanceof INamedContainerProvider) {
@@ -38,6 +39,6 @@ public class BlockCableExport extends BlockCable {
         throw new IllegalStateException("Our named container provider is missing!" + tile);
       }
     }
-    return true;
+    return ActionResultType.SUCCESS;
   }
 }

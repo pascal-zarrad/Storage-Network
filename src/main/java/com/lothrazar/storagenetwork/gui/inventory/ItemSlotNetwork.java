@@ -1,14 +1,13 @@
 package com.lothrazar.storagenetwork.gui.inventory;
 
+import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
-import javax.annotation.Nonnull;
 
 /**
  * used as the MAIN grid in the network item display
@@ -44,9 +43,9 @@ public class ItemSlotNetwork {
 
   public void drawSlot(FontRenderer font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
-    GlStateManager.pushMatrix();
+    RenderSystem.pushMatrix();
     if (!getStack().isEmpty()) {
-      RenderHelper.enableGUIStandardItemLighting();
+      RenderSystem.setupGuiFlatDiffuseLighting();// .enableGUIStandardItemLighting();
       Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
       String amount;
       //cant sneak in gui
@@ -58,27 +57,27 @@ public class ItemSlotNetwork {
         amount = UtilInventory.formatLargeNumber(size);
       }
       if (isShowNumbers()) {
-        GlStateManager.pushMatrix();
-        GlStateManager.scalef(.5f, .5f, .5f);
+        RenderSystem.pushMatrix();
+        RenderSystem.scalef(.5f, .5f, .5f);
         Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack,
             x * 2 + 16,
             y * 2 + 16, amount);
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
       }
     }
     if (isMouseOverSlot(mx, my)) {
-      GlStateManager.disableLighting();
-      GlStateManager.disableDepthTest();
+      RenderSystem.disableLighting();
+      RenderSystem.disableDepthTest();
       //GlStateManager.disableDepth();
       int j1 = x;
       int k1 = y;
-      GlStateManager.colorMask(true, true, true, false);
+      RenderSystem.colorMask(true, true, true, false);
       parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-      GlStateManager.colorMask(true, true, true, true);
-      GlStateManager.enableLighting();
+      RenderSystem.colorMask(true, true, true, true);
+      RenderSystem.enableLighting();
       // GlStateManager.enableDepth();
     }
-    GlStateManager.popMatrix();
+    RenderSystem.popMatrix();
   }
 
   public void drawTooltip(int mx, int my) {
