@@ -160,7 +160,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
   }
 
   private static void nukeAndDrop(DimPos lookPos) {
-    StorageNetwork.log("nuke drop " + lookPos);
     lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
     lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
   }

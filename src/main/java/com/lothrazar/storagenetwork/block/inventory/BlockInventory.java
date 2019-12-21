@@ -2,6 +2,8 @@ package com.lothrazar.storagenetwork.block.inventory;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.network.SortClientMessage;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockInventory extends BaseBlock {
@@ -37,9 +40,14 @@ public class BlockInventory extends BaseBlock {
   @Override
   public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
-      TileEntity tileEntity = world.getTileEntity(pos);
-      if (tileEntity instanceof INamedContainerProvider) {
-        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
+      TileInventory tile = (TileInventory) world.getTileEntity(pos);
+      //sync
+      ServerPlayerEntity sp = (ServerPlayerEntity) player;
+      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()),
+          sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+      //end sync
+      if (tile instanceof INamedContainerProvider) {
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tile, tile.getPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!");

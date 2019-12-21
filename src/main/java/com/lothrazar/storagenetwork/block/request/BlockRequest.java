@@ -45,14 +45,14 @@ public class BlockRequest extends BaseBlock {
   @Override
   public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
-      TileRequest tileRequest = (TileRequest) world.getTileEntity(pos);
+      TileRequest tile = (TileRequest) world.getTileEntity(pos);
       //sync
       ServerPlayerEntity sp = (ServerPlayerEntity) player;
-      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tileRequest.isDownwards(), tileRequest.getSort()),
+      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()),
           sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       //end sync
-      if (tileRequest instanceof INamedContainerProvider) {
-        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileRequest, tileRequest.getPos());
+      if (tile instanceof INamedContainerProvider) {
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tile, tile.getPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!");
