@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 
+import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -19,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import java.util.List;
 
 /**
  * Base class for Request table inventory and Remote inventory
