@@ -11,7 +11,6 @@ import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
-@SuppressWarnings("serial")
 public class ConfigManager {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
@@ -22,9 +21,6 @@ public class ConfigManager {
   private static ConfigValue<List<String>> BLACKLIST;
   //    rangeWirelessAccessor = config.getInt("StorageRemoteRange", category, 128, 1, 10000, "How far the Remote item can reach (non-advanced)");
   //    allowFastWorkBenchIntegration = config.getBoolean("allowFastWorkBenchIntegration", category, true, "Allow 'fastworkbench' project to integrate into storage network crafting grids.  Turning off lets you disable integration without uninstalling mod.  Client and server should match for best outcome.");
-  //    TileMaster.blacklist = config.getStringList("BlacklistBlocks", category, new String[] {
-  //        "extrautils2:playerchest"
-  //    }, "Disable these blocks from ever being able to connect to the network, they will be treated as a non-inventory.");
   static {
     initConfig();
   }
