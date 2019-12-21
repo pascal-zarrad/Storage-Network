@@ -86,7 +86,7 @@
     
     "tooltip.storagenetwork.kabel_P": "Can automate simple processing transactions.",
          
-    "tooltip.storagenetwork.remote_0": "Used to access the network 64 blocks distance.",
+    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Master for remote inventory access.",
     "tooltip.storagenetwork.remote_1": "Used to access the network from unlimited distance and across dimensions.",
     "tooltip.storagenetwork.remote_2": "Used to access the network from unlimited distance.",
     "tooltip.storagenetwork.remote_3": "Network without crafting from unlimited distance.",
