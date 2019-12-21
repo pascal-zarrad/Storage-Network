@@ -96,10 +96,10 @@
     "block.storagenetwork.controller": "Controller",
     "block.storagenetwork.controller.tooltip": "Manage all Processing Cables in the network",
 
-    "chat.master.emptyslots": "Potential Empty Slots:",
-    "chat.master.connectables": "Connectables:",
+    "chat.master.emptyslots": "Potential Empty Slots: ",
+    "chat.master.connectables": "Connectables: ",
     "processing.alwayson.true": "Active",
-    "processing.alwayson.false": "Remaining:",
+    "processing.alwayson.false": "Remaining: ",
 
     "storagenetwork.process.status0": "Halted or Disabled",
     "storagenetwork.process.status1": "Waiting to import (cached)",

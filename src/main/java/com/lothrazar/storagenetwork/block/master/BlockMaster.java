@@ -34,6 +34,7 @@ public class BlockMaster extends BaseBlock {
   @Override
   public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
     super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    this.updateConnection(worldIn, pos, state);
     if (worldIn.isRemote) {
       return;
     }

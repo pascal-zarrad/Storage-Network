@@ -169,7 +169,10 @@ public class BlockCable extends BaseBlock {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    if (facingState.getBlock() instanceof BlockCable) {
+    if (facingState.getBlock() instanceof BlockCable
+        || facingState.getBlock() == SsnRegistry.inventory
+        || facingState.getBlock() == SsnRegistry.master
+        || facingState.getBlock() == SsnRegistry.request) {
       return stateIn.with(property, EnumConnectType.CABLE);
     }
     else if (isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
