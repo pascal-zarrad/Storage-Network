@@ -1,5 +1,8 @@
 package com.lothrazar.storagenetwork.jei;
 
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -12,9 +15,6 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Map;
 
 public class RequestRecipeTransferHandler<C extends Container> implements IRecipeTransferHandler<C> {
 

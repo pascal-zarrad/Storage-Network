@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
+import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
@@ -28,11 +29,10 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class BlockCable extends Block {
+public class BlockCable extends BaseBlock {
 
   public BlockCable(String registryName) {
-    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
-    setRegistryName(registryName);
+    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F), registryName);
     setDefaultState(stateContainer.getBaseState()
         .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
         .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)

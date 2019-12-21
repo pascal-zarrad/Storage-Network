@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
 
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -15,7 +16,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import java.util.List;
 
 public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 

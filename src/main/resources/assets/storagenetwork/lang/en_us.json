@@ -9,8 +9,14 @@
     "block.storagenetwork.process_kabel": "Processing Cable",
 
     "block.storagenetwork.master": "Storage Network Master",
+    "block.storagenetwork.master.tooltip": "The heart of the network. Only ONE per network.",
+    
     "block.storagenetwork.request": "Storage Request Table",
+    "block.storagenetwork.request.tooltip": "Used to overview and request items from the network.",
+    
     "block.storagenetwork.inventory": "Storage Inventory",
+    "block.storagenetwork.inventory.tooltip": "Inventory access without a crafting grid",
+    
     "item.storagenetwork.speed_upgrade": "Speed Upgrade",
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
     "item.storagenetwork.stack_upgrade": "Stack Upgrade",
@@ -70,14 +76,16 @@
     "gui.storagenetwork.fil.tooltip_jei_on": "JEI search enabled",
     "gui.storagenetwork.fil.tooltip_jei_off": "JEI search disabled",
 
-
-    "tooltip.storagenetwork.kabel_S": "Used to connect inventory to the network.",
-    "tooltip.storagenetwork.kabel_E": "Exports items from the network into attached inventory.",
-    "tooltip.storagenetwork.kabel_I": "Imports items from attached inventory into the network.",
+    "block.storagenetwork.kabel.tooltip": "Basic network cable ",
+    "block.storagenetwork.storage_kabel.tooltip": "Used to connect inventory to the network.",
+    "block.storagenetwork.export_kabel.tooltip": "Exports items from the network into attached inventory.",
+    "block.storagenetwork.import_kabel.tooltip": "Imports all items from attached inventory into the network.",
+    "block.storagenetwork.filter_kabel.tooltip": "Inventory link with filtering options.",
+    "block.storagenetwork.import_filter_kabel.tooltip": "Imports items with filtering options.",
+    
+    
     "tooltip.storagenetwork.kabel_P": "Can automate simple processing transactions.",
-    "tooltip.storagenetwork.kabel_L": "Default cable to connect parts of your network.",
-    "tooltip.storagenetwork.master": "The heart of the network. Only ONE per network.",
-    "tooltip.storagenetwork.request": "Used to overview and request items from the network.",
+         
     "tooltip.storagenetwork.remote_0": "Used to access the network 64 blocks distance.",
     "tooltip.storagenetwork.remote_1": "Used to access the network from unlimited distance and across dimensions.",
     "tooltip.storagenetwork.remote_2": "Used to access the network from unlimited distance.",
@@ -86,7 +94,7 @@
 
 
     "block.storagenetwork.controller": "Controller",
-    "tooltip.storagenetwork.controller": "Manage all Processing Cables in the network",
+    "block.storagenetwork.controller.tooltip": "Manage all Processing Cables in the network",
 
     "chat.master.emptyslots": "Potential Empty Slots:",
     "chat.master.connectables": "Connectables:",

@@ -1,5 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -25,8 +27,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class ItemRemote extends Item implements INamedContainerProvider {
 

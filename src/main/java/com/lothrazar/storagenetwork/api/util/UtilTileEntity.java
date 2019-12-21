@@ -1,5 +1,13 @@
 package com.lothrazar.storagenetwork.api.util;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.apache.commons.lang3.text.WordUtils;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
@@ -13,14 +21,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.text.WordUtils;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class UtilTileEntity {
 
