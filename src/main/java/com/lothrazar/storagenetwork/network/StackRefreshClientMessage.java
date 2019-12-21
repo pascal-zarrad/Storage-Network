@@ -40,6 +40,7 @@ public class StackRefreshClientMessage {
         //        gui.setCraftableStacks(message.craftableStacks);
       }
     });
+    ctx.get().setPacketHandled(true);
   }
 
   public static void encode(StackRefreshClientMessage msg, PacketBuffer buf) {

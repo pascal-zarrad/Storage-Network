@@ -33,8 +33,8 @@ public class PacketRegistry {
   public static void init() {
     //https://gist.github.com/williewillus/353c872bcf1a6ace9921189f6100d09a
     int id = 0;
-    INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
-    INSTANCE.registerMessage(id++, CableIOMessage.class, CableIOMessage::encode, CableIOMessage::decode, CableIOMessage.Handler::handle);
+    INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage::handle);
+    INSTANCE.registerMessage(id++, CableIOMessage.class, CableIOMessage::encode, CableIOMessage::decode, CableIOMessage::handle);
     INSTANCE.registerMessage(id++, StackRefreshClientMessage.class, StackRefreshClientMessage::encode, StackRefreshClientMessage::decode, StackRefreshClientMessage::handle);
     INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
     INSTANCE.registerMessage(id++, RequestMessage.class, RequestMessage::encode, RequestMessage::decode, RequestMessage::handle);

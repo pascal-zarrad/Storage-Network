@@ -95,6 +95,7 @@ public class RequestMessage {
           player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       player.openContainer.detectAndSendChanges();
     });
+    ctx.get().setPacketHandled(true);
   }
 
   public static RequestMessage decode(PacketBuffer buf) {

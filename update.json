@@ -100,6 +100,6 @@
     "0.0.12": "Remote added ",
     "0.0.13":"Fix crash in previous version  Added new inventory block",
     "0.1.0":"Fixed NBT request errors, for example clicking enchanted tools returning the wrong selection.  Fixed a cable texture.  Fixed a shift-click issue in top left of some inventories.  ",
-    "1.0.0":"Cables now correctly connect to master and request blocks on placement.  Fixed sort button data in request table resetting on world reload. "
+    "1.0.0":"Cables now correctly connect to master and request blocks on placement.  Fixed sort button data in request table resetting on world reload.  Cleared out  Unknown custom packet identifier: log spam."
   }
 }

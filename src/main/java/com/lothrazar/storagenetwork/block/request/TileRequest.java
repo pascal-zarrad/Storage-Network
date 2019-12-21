@@ -32,7 +32,6 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
 
   @Override
   public void read(CompoundNBT compound) {
-    System.out.println("READ" + compound);
     setDownwards(compound.getBoolean(NBT_DIR));
     if (compound.contains(NBT_SORT)) {
       setSort(EnumSortType.values()[compound.getInt(NBT_SORT)]);

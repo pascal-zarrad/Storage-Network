@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.network;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.block.cable.storagefilter.GuiCableFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * Refresh the current screen with large data set of stacks.
@@ -34,6 +34,7 @@ public class RefreshFilterClientMessage {
         gui.setFilterItems(message.stacks);
       }
     });
+    ctx.get().setPacketHandled(true);
   }
 
   public static RefreshFilterClientMessage decode(PacketBuffer buf) {
