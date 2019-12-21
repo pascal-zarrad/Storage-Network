@@ -22,7 +22,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -73,11 +72,8 @@ public class BlockMaster extends BaseBlock {
   }
 
   //
-  //  @Override
-  //  public BlockRenderType getRenderType(BlockState state) {
-  //    return BlockRenderType.MODEL;
-  //  }
-  public static boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, Direction side, BlockRayTraceResult hit) {
+  @Override
+  public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult hit) {
     if (worldIn.isRemote) {
       return true;
     }
