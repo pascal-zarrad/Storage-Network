@@ -7,7 +7,6 @@ import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.config.ConfigHandler;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -69,7 +68,7 @@ public class TileConnectable extends TileEntity {
   @Override
   public void onChunkUnloaded() {
     super.onChunkUnloaded();
-    if (ConfigHandler.reloadNetworkWhenUnloadChunk && connectable != null && connectable.getMasterPos() != null) {
+    if (StorageNetwork.config.doReloadOnChunk() && connectable != null && connectable.getMasterPos() != null) {
       try {
         TileMaster maybeMaster = UtilTileEntity.getTileMasterForConnectable(connectable);
         if (maybeMaster != null) {

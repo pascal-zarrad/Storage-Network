@@ -18,7 +18,6 @@ import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.config.ConfigHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -448,7 +447,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getGameTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
+    if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.config.refreshTicks()) == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
