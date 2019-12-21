@@ -38,7 +38,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
-  private static String[] blacklist = new String[0];//TODO
   private boolean shouldRefresh = true;
 
   private DimPos getDimPos() {
@@ -169,9 +168,8 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
 
   public static boolean isTargetAllowed(BlockState BlockState) {
     String blockId = BlockState.getBlock().getRegistryName().toString();
-    for (String s : blacklist) {
+    for (String s : StorageNetwork.config.blacklist()) {
       if (blockId.equals(s)) {
-        StorageNetwork.LOGGER.info(BlockState + " Connection blocked by config ");
         return false;
       }
     }
