@@ -4,7 +4,6 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
@@ -170,12 +169,6 @@ public class BlockCable extends Block {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    //    this.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-    //TODO: api should come back here
-    if (currentPos.getX() == 185) {
-      StorageNetwork.log(facingState.getBlock() + " facingState.getBlock() facing = " + facing);
-      //
-    }
     if (facingState.getBlock() instanceof BlockCable) {
       return stateIn.with(property, EnumConnectType.CABLE);
     }

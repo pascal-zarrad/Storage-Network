@@ -46,7 +46,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     if (recipeLocked) {
-      //StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
+      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
     //    findMatchingRecipe(matrix);

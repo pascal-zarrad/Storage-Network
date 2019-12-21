@@ -23,7 +23,7 @@ import net.minecraftforge.common.util.LazyOptional;
  */
 public class TileConnectable extends TileEntity {
 
-  protected final CapabilityConnectable connectable;
+  private final CapabilityConnectable connectable;
 
   public TileConnectable(TileEntityType<?> tileEntityTypeIn) {
     super(tileEntityTypeIn);

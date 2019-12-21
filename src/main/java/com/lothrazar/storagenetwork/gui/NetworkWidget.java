@@ -312,12 +312,12 @@ public class NetworkWidget {
     this.directionBtn = new GuiButtonRequest(
         gui.getGuiLeft() + 7, y, "", (p) -> {
           gui.setDownwards(!gui.getDownwards());
-          gui.syncData();
+          gui.syncDataToServer();
         });
     directionBtn.setHeight(16);
     this.sortBtn = new GuiButtonRequest(gui.getGuiLeft() + 21, y, "", (p) -> {
       gui.setSort(gui.getSort().next());
-      gui.syncData();
+      gui.syncDataToServer();
     });
     sortBtn.setHeight(16);
     jeiBtn = new GuiButtonRequest(gui.getGuiLeft() + 35, y, "", (p) -> {

@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.item.remote;
 
+import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
@@ -17,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import java.util.List;
 
 public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiNetwork {
 
@@ -187,7 +187,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
   }
 
-  public void syncData() {
+  @Override
+  public void syncDataToServer() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
   }
 }

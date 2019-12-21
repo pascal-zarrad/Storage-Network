@@ -14,8 +14,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.Constants;
@@ -30,18 +28,6 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
 
   public TileRequest() {
     super(SsnRegistry.requesttile);
-  }
-
-  @Override
-  public SUpdateTileEntityPacket getUpdatePacket() {
-    CompoundNBT syncData = new CompoundNBT();
-    write(syncData);
-    return new SUpdateTileEntityPacket(pos, 0, syncData);
-  }
-
-  @Override
-  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    read(pkt.getNbtCompound());
   }
 
   @Override

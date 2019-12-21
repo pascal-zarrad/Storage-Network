@@ -1,6 +1,10 @@
 package com.lothrazar.storagenetwork.block.request;
 
+import java.util.List;
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.network.SortClientMessage;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
@@ -16,9 +20,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkHooks;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class BlockRequest extends BaseBlock {
 
@@ -39,9 +42,14 @@ public class BlockRequest extends BaseBlock {
   @Override
   public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
-      TileEntity tileEntity = world.getTileEntity(pos);
-      if (tileEntity instanceof INamedContainerProvider) {
-        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
+      TileRequest tileRequest = (TileRequest) world.getTileEntity(pos);
+      //sync
+      ServerPlayerEntity sp = (ServerPlayerEntity) player;
+      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tileRequest.isDownwards(), tileRequest.getSort()),
+          sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+      //end sync
+      if (tileRequest instanceof INamedContainerProvider) {
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileRequest, tileRequest.getPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!");
