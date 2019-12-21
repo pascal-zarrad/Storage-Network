@@ -61,7 +61,6 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
       }
     }
     compound.put("matrix", invList);
-    System.out.println("WRITE" + compound);
     return super.write(compound);
   }
 
