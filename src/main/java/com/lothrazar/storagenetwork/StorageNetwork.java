@@ -53,6 +53,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod(StorageNetwork.MODID)
@@ -62,6 +63,7 @@ public class StorageNetwork {
   static final String certificateFingerprint = "@FINGERPRINT@";
   public static final Logger LOGGER = LogManager.getLogger();
   public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
+  public static ConfigManager config;
 
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
@@ -73,18 +75,15 @@ public class StorageNetwork {
     PacketRegistry.init();
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
-    //    event.
-    //TOOD: how
+    config = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     JeiSettings.setJeiLoaded(true);
   }
 
   @SubscribeEvent
   public static void onServerStarting(FMLServerStartingEvent event) {}
 
-  static boolean logspam = false;
-
   public static void log(String s) {
-    if (logspam) {
+    if (config.logspam()) {
       LOGGER.info(s);
     }
   }
