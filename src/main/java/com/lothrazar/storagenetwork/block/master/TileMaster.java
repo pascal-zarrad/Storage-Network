@@ -160,14 +160,16 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
   }
 
   private static void nukeAndDrop(DimPos lookPos) {
-    //    lookPos.getBlockState().drop
-    //    lookPos.getBlockState().getBlock().dropBlockAsItem(lookPos.getWorld(), lookPos.getBlockPos(), lookPos.getBlockState(), 0);
+    StorageNetwork.log("nuke drop " + lookPos);
     lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
     lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
   }
 
-  public static boolean isTargetAllowed(BlockState BlockState) {
-    String blockId = BlockState.getBlock().getRegistryName().toString();
+  public static boolean isTargetAllowed(BlockState state) {
+    if (state.isAir()) {
+      return false;
+    }
+    String blockId = state.getBlock().getRegistryName().toString();
     for (String s : StorageNetwork.config.blacklist()) {
       if (blockId.equals(s)) {
         return false;
