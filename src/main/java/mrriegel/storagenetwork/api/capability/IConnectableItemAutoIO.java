@@ -16,7 +16,17 @@ import net.minecraft.util.EnumFacing;
  * If you indeed want to add another exporting/importing cable in the style of the integrated ones, this might be for you. In all other cases, this is probably not what you want.
  */
 public interface IConnectableItemAutoIO {
-
+  /**
+   * Return the position of this connectable.
+   *
+   * This is used to traverse the network and might be different from the actual block position. For example the Compact Machines mod bridges capabilities across dimensions and we need to continue
+   * traversing the network inside the compact machine and not at the machine block itself.
+   *
+   * You should simply return the position of your block here.
+   *
+   * @return
+   */
+  DimPos getPos();
   /**
    * Return either IN or OUT here, but not BOTH. If you return BOTH expect weird things to happen.
    *

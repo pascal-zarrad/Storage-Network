@@ -263,4 +263,9 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
   public EnumFacing facingInventory() {
     return inventoryFace;
   }
+
+  @Override
+  public DimPos getPos() {
+    return this.connectable.getPos();
+  }
 }

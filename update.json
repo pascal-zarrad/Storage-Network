@@ -79,6 +79,6 @@
 	,"1.7.7":"Fixed Output Only mode in cables. ru_RU.lang updated by kellixon  "
   	,"1.7.8":"Fixed a mod compatibility crash with null buttons or elements from other mods injected into the GUI (quark trash bin for example)."
   	,"1.7.9":"Fixed a spam-clicking when depositing items with InsertMessage.java due to a desync; especially with server timing" 
-	,"1.7.10":""
+	,"1.7.10":"Improved priority sorting on export cables. "
   }
 }

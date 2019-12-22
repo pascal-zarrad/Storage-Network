@@ -248,8 +248,8 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
    * Pull into the network from the relevant linked cables
    */
   private void updateImports() {
-    for (IConnectable connectable : getConnectables()) {
-      IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
+    for (IConnectableItemAutoIO storage : getConnectablesIO()) {
+      //      IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
       if (storage == null) {
         continue;
       }
@@ -259,10 +259,10 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       // Give the storage a chance to have a cooldown or other conditions that prevent it from running
-      if (!storage.runNow(connectable.getPos(), this)) {
+      if (!storage.runNow(storage.getPos(), this)) {
         continue;
       }
-      // Do a simulation first and abort if we got an empty stack,
+       // Do a simulation first and abort if we got an empty stack,
       ItemStack stack = storage.extractNextStack(storage.getTransferRate(), true);
       if (stack.isEmpty()) {
         continue;
@@ -277,7 +277,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       // Alright, simulation says we're good, let's do it!
       // First extract from the storage
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      connectable.getPos().getChunk().markDirty();
+      storage.getPos().getChunk().markDirty();
       // Then insert into our network
       this.insertStack(actuallyExtracted.copy(), false);
     }
@@ -296,10 +296,9 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   /**
    * push OUT of the network to attached export cables
    */
-  private void updateExports() {
-    for (IConnectable connectable : getConnectables()) {
-      IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
-      if (storage == null) {
+  private void updateExports() { 
+    for (IConnectableItemAutoIO storage : getConnectablesIO()) {
+       if (storage == null) {
         continue;
       }
       // We explicitely don't want to check whether this can do BOTH, because we don't
@@ -308,15 +307,15 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       // Give the storage a chance to have a cooldown
-      if (!storage.runNow(connectable.getPos(), this)) {
+      if (!storage.runNow(storage.getPos(), this)) {
         continue;
       }
-      for (IItemStackMatcher matcher : storage.getAutoExportList()) {
+       for (IItemStackMatcher matcher : storage.getAutoExportList()) {
         boolean stockMode = storage.isStockMode();
         int amtToRequest = storage.getTransferRate();
         if (stockMode) {
           try {
-            TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
+            TileEntity tileEntity = world.getTileEntity(storage.getPos().getBlockPos().offset(storage.facingInventory()));
             IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
             //request with false to see how many even exist in there.  
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
@@ -397,12 +396,38 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
+//        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
       result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null));
     }
     return result;
+  }
+
+  private List<IConnectableItemAutoIO> getConnectablesIO() {
+    Set<DimPos> positions = getConnectablePositions();
+    if (positions == null) {
+      return new ArrayList<>();
+    }
+    Set<IConnectableItemAutoIO> result = new HashSet<>();
+    for (DimPos pos : positions) {
+      if (!pos.isLoaded()) {
+        continue;
+      }
+      TileEntity tileEntity = pos.getTileEntity(TileEntity.class);
+      if (tileEntity == null) {
+        continue;
+      }
+      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null)) { 
+        continue;
+      }
+      result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null));
+    }
+    return result.stream().sorted(Comparator.comparingInt(IConnectableItemAutoIO::getPriority)).collect(Collectors.toList());
+  }
+
+  private List<IConnectableLink> getSortedConnectableStorage() {
+    return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
   }
 
   private Set<IConnectableLink> getConnectableStorage() {
@@ -415,8 +440,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (tileEntity == null) {
         continue;
       }
-      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + dimpos);
+      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) { 
         continue;
       }
       if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null)) {
@@ -461,10 +485,6 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       result.add(processor);
     }
     return result;
-  }
-
-  private List<IConnectableLink> getSortedConnectableStorage() {
-    return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
   }
 
   @Override
