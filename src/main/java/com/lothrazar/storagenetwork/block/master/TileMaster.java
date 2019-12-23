@@ -143,20 +143,15 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         continue;
       }
       //
-      StorageNetwork.log(" (addConnectables)  " + tileHere + " AT POS +" + lookPos.getBlockPos());
-      //      boolean isConnectable = tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
       IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
       if (capabilityConnectable == null) {
-        StorageNetwork.log(" (addConnectables) NULL capability  " + tileHere + " AT POS +" + lookPos.getBlockPos());
         continue;
       }
       //
-      StorageNetwork.log(" (addConnectables)  then it MAPS to" + capabilityConnectable + " AT POS +" + capabilityConnectable.getPos());
       if (capabilityConnectable.getPos() == null) {
-        StorageNetwork.log(" HAX");
-        //WTF 1.15 thanks for deleting shit
+        //  1.15 hax
+        //wait what 
         capabilityConnectable.setPos(lookPos);
-        //        capabilityConnectable.setMasterPos(this.);
       }
       //
       if (capabilityConnectable != null) {

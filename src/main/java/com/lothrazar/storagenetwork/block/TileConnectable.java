@@ -33,7 +33,7 @@ public class TileConnectable extends TileEntity {
   @Override
   public void setPos(BlockPos posIn) {
     super.setPos(posIn);
-    StorageNetwork.log("TILE CONNECTABLE :: SET POS on the capability" + posIn + "?" + world);
+    //   StorageNetwork.log("TILE CONNECTABLE :: SET POS on the capability" + posIn + "?" + world);
     connectable.setPos(new DimPos(world, pos));
   }
 
