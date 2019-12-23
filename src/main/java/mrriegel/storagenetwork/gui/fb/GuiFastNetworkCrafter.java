@@ -414,6 +414,12 @@ public abstract class GuiFastNetworkCrafter extends GuiFastBench implements IPub
     }
     else {
       ItemStack stackCarriedByMouse = mc.player.inventory.getItemStack();
+      boolean middleClick = mouseButton == UtilTileEntity.MOUSE_BTN_MIDDLE_CLICK;
+      if(middleClick && !stackCarriedByMouse.isEmpty()) {
+        //weird delete bug 
+        return;
+      }
+      
       if (!stackUnderMouse.isEmpty() &&
           (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT
               || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT
