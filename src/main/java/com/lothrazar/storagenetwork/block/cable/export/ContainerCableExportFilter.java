@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.cable.export;
 
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
@@ -12,7 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
-import javax.annotation.Nullable;
 
 public class ContainerCableExportFilter extends ContainerCable {
 

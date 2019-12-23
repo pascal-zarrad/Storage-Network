@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.cable.input;
 
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -12,7 +13,6 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import javax.annotation.Nullable;
 
 public class TileCableIO extends TileCableWithFacing implements ITickableTileEntity {
 

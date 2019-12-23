@@ -22,6 +22,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -82,13 +83,20 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    //      tooltip.add(new TranslationTextComponent(this.getRegistryName().toString() + ".tooltip"));
-    CompoundNBT tag = stack.getOrCreateTag();
-    int x = tag.getInt("x");
-    int y = tag.getInt("y");
-    int z = tag.getInt("z");
-    int dim = tag.getInt("dim");
-    tooltip.add(new TranslationTextComponent("[ x: " + x + ", y: " + y + ", z: " + z + " ]"));
+    TranslationTextComponent t;
+    if (stack.hasTag()) {
+      CompoundNBT tag = stack.getOrCreateTag();
+      int x = tag.getInt("x");
+      int y = tag.getInt("y");
+      int z = tag.getInt("z");
+      int dim = tag.getInt("dim");
+      t = new TranslationTextComponent("[ x: " + x + ", y: " + y + ", z: " + z + " ]");
+    }
+    else {
+      t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
+    }
+    t.applyTextStyle(TextFormatting.GRAY);
+    tooltip.add(t);
   }
 
   public static DimPos getPosStored(ItemStack itemStackIn) {
@@ -140,7 +148,8 @@ public class ItemRemote extends Item implements INamedContainerProvider {
 
   @Override
   public ITextComponent getDisplayName() {
-    return new TranslationTextComponent(this.getTranslationKey());
+    TranslationTextComponent t = new TranslationTextComponent(this.getTranslationKey());
+    return t;
   }
 
   @Nullable

@@ -1,5 +1,8 @@
 package com.lothrazar.storagenetwork.block.request;
 
+import java.util.HashMap;
+import java.util.Map;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -14,11 +17,11 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.util.Constants;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TileRequest extends TileConnectable implements INamedContainerProvider, ITileSortable {
 
+  private static final String NBT_DIR = StorageNetwork.MODID + "dir";
+  private static final String NBT_SORT = StorageNetwork.MODID + "sort";
   Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;
@@ -29,10 +32,9 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
 
   @Override
   public void read(CompoundNBT compound) {
-    super.read(compound);
-    setDownwards(compound.getBoolean("dir"));
-    if (compound.contains("sort")) {
-      setSort(EnumSortType.values()[compound.getInt("sort")]);
+    setDownwards(compound.getBoolean(NBT_DIR));
+    if (compound.contains(NBT_SORT)) {
+      setSort(EnumSortType.values()[compound.getInt(NBT_SORT)]);
     }
     ListNBT invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
     matrix = new HashMap<>();
@@ -42,13 +44,13 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
       ItemStack s = ItemStack.read(stackTag);
       matrix.put(slot, s);
     }
+    super.read(compound);
   }
 
   @Override
   public CompoundNBT write(CompoundNBT compound) {
-    super.write(compound);
-    compound.putBoolean("dir", isDownwards());
-    compound.putInt("sort", getSort().ordinal());
+    compound.putBoolean(NBT_DIR, isDownwards());
+    compound.putInt(NBT_SORT, getSort().ordinal());
     ListNBT invList = new ListNBT();
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
@@ -59,21 +61,25 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
       }
     }
     compound.put("matrix", invList);
-    return compound;
+    return super.write(compound);
   }
 
+  @Override
   public boolean isDownwards() {
     return downwards;
   }
 
+  @Override
   public void setDownwards(boolean downwards) {
     this.downwards = downwards;
   }
 
+  @Override
   public EnumSortType getSort() {
     return sort;
   }
 
+  @Override
   public void setSort(EnumSortType sort) {
     this.sort = sort;
   }

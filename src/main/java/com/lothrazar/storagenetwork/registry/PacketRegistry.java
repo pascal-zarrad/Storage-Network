@@ -10,6 +10,7 @@ import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.network.RefreshFilterClientMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
+import com.lothrazar.storagenetwork.network.SortClientMessage;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.network.StackResponseClientMessage;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class PacketRegistry {
 
   private static final String PROTOCOL_VERSION = Integer.toString(1);
+  //??https://wiki.mcjty.eu/modding/index.php?title=Tut14_Ep10
   //  public static final SimpleNetworkWrapper INSTANCE = new SimpleNetworkWrapper(StorageNetwork.MODID);
   public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
       .named(new ResourceLocation(StorageNetwork.MODID, "main_channel"))
@@ -29,12 +31,10 @@ public class PacketRegistry {
       .simpleChannel();
 
   public static void init() {
-    // TODO:
-    //	HANDLER.registerMessage(disc++, KeyPressPKT.class, KeyPressPKT::encode, KeyPressPKT::decode, KeyPressPKT.Handler::handle);
     //https://gist.github.com/williewillus/353c872bcf1a6ace9921189f6100d09a
     int id = 0;
-    INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage.Handler::handle);
-    INSTANCE.registerMessage(id++, CableIOMessage.class, CableIOMessage::encode, CableIOMessage::decode, CableIOMessage.Handler::handle);
+    INSTANCE.registerMessage(id++, CableDataMessage.class, CableDataMessage::encode, CableDataMessage::decode, CableDataMessage::handle);
+    INSTANCE.registerMessage(id++, CableIOMessage.class, CableIOMessage::encode, CableIOMessage::decode, CableIOMessage::handle);
     INSTANCE.registerMessage(id++, StackRefreshClientMessage.class, StackRefreshClientMessage::encode, StackRefreshClientMessage::decode, StackRefreshClientMessage::handle);
     INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
     INSTANCE.registerMessage(id++, RequestMessage.class, RequestMessage::encode, RequestMessage::decode, RequestMessage::handle);
@@ -45,5 +45,6 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, CableLimitMessage.class, CableLimitMessage::encode, CableLimitMessage::decode, CableLimitMessage::handle);
     INSTANCE.registerMessage(id++, StackResponseClientMessage.class, StackResponseClientMessage::encode, StackResponseClientMessage::decode, StackResponseClientMessage::handle);
     INSTANCE.registerMessage(id++, RefreshFilterClientMessage.class, RefreshFilterClientMessage::encode, RefreshFilterClientMessage::decode, RefreshFilterClientMessage::handle);
+    INSTANCE.registerMessage(id++, SortClientMessage.class, SortClientMessage::encode, SortClientMessage::decode, SortClientMessage::handle);
   }
 }

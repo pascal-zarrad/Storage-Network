@@ -1,5 +1,8 @@
 package com.lothrazar.storagenetwork.network;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -10,9 +13,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 public class ClearRecipeMessage {
 
@@ -21,6 +21,7 @@ public class ClearRecipeMessage {
       ServerPlayerEntity player = ctx.get().getSender();
       ClearRecipeMessage.clearContainerRecipe(player, true);
     });
+    ctx.get().setPacketHandled(true);
   }
 
   public static ClearRecipeMessage decode(PacketBuffer buf) {

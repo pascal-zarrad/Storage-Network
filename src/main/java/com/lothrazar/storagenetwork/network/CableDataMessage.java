@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.network;
 
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
@@ -14,7 +15,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
-import java.util.function.Supplier;
 
 public class CableDataMessage {
 
@@ -53,72 +53,70 @@ public class CableDataMessage {
         '}';
   }
 
-  public static class Handler {
-
-    public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
-      ctx.get().enqueueWork(() -> {
-        ServerPlayerEntity player = ctx.get().getSender();
-        CapabilityConnectableLink link = null;
-        ContainerCableImportFilter y; // also must import
-        if (player.openContainer instanceof ContainerCableImportFilter) {
-          //then 
-          ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
-          CapabilityConnectableAutoIO link2 = ctr.cap;
-          ///
-          // //TODO: INHERITACNE FROM
-          //  link=link2;//
-        }
-        ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
-        if (container == null || container.cap == null) {
-          return;
-        }
-        link = container.cap;
-        TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
-        //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
-        CableMessageType type = CableMessageType.values()[message.id];
-        switch (type) {
-          case IMPORT_FILTER:
-            //TODO: Fix this not auto sync to client
-            link.getFilter().clear();
-            int targetSlot = 0;
-            for (ItemStack filterSuggestion : link.getStoredStacks()) {
-              // Ignore stacks that are already filtered
-              if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
+  public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ctx.get().enqueueWork(() -> {
+      ServerPlayerEntity player = ctx.get().getSender();
+      CapabilityConnectableLink link = null;
+      ContainerCableImportFilter y; // also must import
+      if (player.openContainer instanceof ContainerCableImportFilter) {
+        //then 
+        ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
+        CapabilityConnectableAutoIO link2 = ctr.cap;
+        ///
+        // //TODO: INHERITACNE FROM
+        //  link=link2;//
+      }
+      ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
+      if (container == null || container.cap == null) {
+        return;
+      }
+      link = container.cap;
+      TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
+      //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
+      CableMessageType type = CableMessageType.values()[message.id];
+      switch (type) {
+        case IMPORT_FILTER:
+          //TODO: Fix this not auto sync to client
+          link.getFilter().clear();
+          int targetSlot = 0;
+          for (ItemStack filterSuggestion : link.getStoredStacks()) {
+            // Ignore stacks that are already filtered
+            if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
+              continue;
+            }
+            //int over max
+            try {
+              link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
+              targetSlot++;
+              if (targetSlot >= link.getFilter().getSlots()) {
                 continue;
               }
-              //int over max
-              try {
-                link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
-                targetSlot++;
-                if (targetSlot >= link.getFilter().getSlots()) {
-                  continue;
-                }
-              }
-              catch (RuntimeException ex) {
-                //fail slot
-                StorageNetwork.log("Exception saving slot " + message);
-              }
             }
-            PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
-                player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-          break;
-          case SYNC_DATA:
-            link.setPriority(link.getPriority() + message.value);
-            link.getFilter().setIsWhitelist(message.whitelist);
-            if (master != null) {
-              master.clearCache();
+            catch (RuntimeException ex) {
+              //fail slot
+              StorageNetwork.log("Exception saving slot " + message);
             }
-          break;
-          case SAVE_FITLER:
-            //            FilterItemStackHandler list = con.link.getFilter();
-            link.setFilter(message.value, message.stack.copy());
-          break;
-        }
-        //
-        player.connection.sendPacket(container.tile.getUpdatePacket());
-        //
-      });
-    }
+          }
+          PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
+              player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+        break;
+        case SYNC_DATA:
+          link.setPriority(link.getPriority() + message.value);
+          link.getFilter().setIsWhitelist(message.whitelist);
+          if (master != null) {
+            master.clearCache();
+          }
+        break;
+        case SAVE_FITLER:
+          //            FilterItemStackHandler list = con.link.getFilter();
+          link.setFilter(message.value, message.stack.copy());
+        break;
+      }
+      //
+      player.connection.sendPacket(container.tile.getUpdatePacket());
+      //
+    });
+    ctx.get().setPacketHandled(true);
   }
 
   public static void encode(CableDataMessage msg, PacketBuffer buffer) {

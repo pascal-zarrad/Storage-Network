@@ -1,6 +1,8 @@
 package com.lothrazar.storagenetwork.block.inventory;
 
 import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.network.SortClientMessage;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockInventory extends BaseBlock {
@@ -27,11 +30,26 @@ public class BlockInventory extends BaseBlock {
   }
 
   @Override
+  //<<<<<<< HEAD
   public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+    //=======
+    //  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState stateIn, @Nullable LivingEntity placer, ItemStack stack) {
+    //    super.onBlockPlacedBy(worldIn, pos, stateIn, placer, stack);
+    //    this.updateConnection(worldIn, pos, stateIn);
+    //  }
+    //
+    //  @Override
+    //  public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+    //>>>>>>> 5182679bf6cce31730681035cc0940dd768e3ed8
     if (!world.isRemote) {
-      TileEntity tileEntity = world.getTileEntity(pos);
-      if (tileEntity instanceof INamedContainerProvider) {
-        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
+      TileInventory tile = (TileInventory) world.getTileEntity(pos);
+      //sync
+      ServerPlayerEntity sp = (ServerPlayerEntity) player;
+      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()),
+          sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+      //end sync
+      if (tile instanceof INamedContainerProvider) {
+        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tile, tile.getPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!");

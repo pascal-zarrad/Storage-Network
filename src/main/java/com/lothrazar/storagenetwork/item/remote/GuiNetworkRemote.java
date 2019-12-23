@@ -188,7 +188,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   @Override
-  public void syncData() {
+  public void syncDataToServer() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
   }
 }

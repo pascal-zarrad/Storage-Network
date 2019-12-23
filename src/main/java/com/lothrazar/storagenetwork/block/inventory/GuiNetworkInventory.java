@@ -75,7 +75,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   }
 
   @Override
-  public void syncData() {
+  public void syncDataToServer() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 

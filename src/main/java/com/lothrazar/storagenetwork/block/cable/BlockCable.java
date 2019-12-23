@@ -2,13 +2,17 @@ package com.lothrazar.storagenetwork.block.cable;
 
 import java.util.Locale;
 import java.util.Map;
+import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
+import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -22,13 +26,13 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class BlockCable extends Block {
+public class BlockCable extends BaseBlock {
 
   public BlockCable(String registryName) {
-    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F));
-    setRegistryName(registryName);
+    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F), registryName);
     setDefaultState(stateContainer.getBaseState()
         .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
         .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
@@ -143,6 +147,20 @@ public class BlockCable extends Block {
   }
 
   @Override
+  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState stateIn, @Nullable LivingEntity placer, ItemStack stack) {
+    BlockState facingState;
+    for (Direction d : Direction.values()) {
+      facingState = worldIn.getBlockState(pos.offset(d));
+      if (facingState.getBlock() == SsnRegistry.inventory
+          || facingState.getBlock() == SsnRegistry.master
+          || facingState.getBlock() == SsnRegistry.request) {
+        stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
+        worldIn.setBlockState(pos, stateIn);
+      }
+    }
+  }
+
+  @Override
   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
     super.fillStateContainer(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
@@ -151,12 +169,10 @@ public class BlockCable extends Block {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    //TODO: api should come back here
     if (facingState.getBlock() instanceof BlockCable
         || facingState.getBlock() == SsnRegistry.inventory
         || facingState.getBlock() == SsnRegistry.master
         || facingState.getBlock() == SsnRegistry.request) {
-      //dont set self to self
       return stateIn.with(property, EnumConnectType.CABLE);
     }
     else if (isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {

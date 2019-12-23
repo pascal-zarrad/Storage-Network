@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.network;
 
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-import java.util.function.Supplier;
 
 public class CableFilterMessage {
 
@@ -77,6 +77,7 @@ public class CableFilterMessage {
       //      }
     });
     //    return null;
+    ctx.get().setPacketHandled(true);
   }
 
   public static CableFilterMessage decode(PacketBuffer buf) {

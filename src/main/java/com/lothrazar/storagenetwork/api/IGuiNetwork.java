@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api;
 
+import java.util.List;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import net.minecraft.item.ItemStack;
-import java.util.List;
 
 public interface IGuiNetwork extends IGuiPrivate {
 
@@ -14,7 +14,7 @@ public interface IGuiNetwork extends IGuiPrivate {
 
   EnumSortType getSort();
 
-  void syncData();
+  void syncDataToServer();
 
   void setSort(EnumSortType val);
 }

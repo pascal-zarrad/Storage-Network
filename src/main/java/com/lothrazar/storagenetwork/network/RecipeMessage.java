@@ -127,5 +127,6 @@ public class RecipeMessage {
             player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       } //end run
     });
+    ctx.get().setPacketHandled(true);
   }
 }

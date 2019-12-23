@@ -72,7 +72,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
   }
 
   @Override
-  public void syncData() {
+  public void syncDataToServer() {
     PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
   }
 

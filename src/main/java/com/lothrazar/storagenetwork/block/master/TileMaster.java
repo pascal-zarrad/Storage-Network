@@ -18,7 +18,6 @@ import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.config.ConfigHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -39,7 +38,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
-  private static String[] blacklist = new String[0];//TODO
   private boolean shouldRefresh = true;
 
   private DimPos getDimPos() {
@@ -171,17 +169,17 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
   }
 
   private static void nukeAndDrop(DimPos lookPos) {
-    //    lookPos.getBlockState().drop
-    //    lookPos.getBlockState().getBlock().dropBlockAsItem(lookPos.getWorld(), lookPos.getBlockPos(), lookPos.getBlockState(), 0);
     lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
     lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
   }
 
-  public static boolean isTargetAllowed(BlockState BlockState) {
-    String blockId = BlockState.getBlock().getRegistryName().toString();
-    for (String s : blacklist) {
+  public static boolean isTargetAllowed(BlockState state) {
+    if (state.isAir()) {
+      return false;
+    }
+    String blockId = state.getBlock().getRegistryName().toString();
+    for (String s : StorageNetwork.config.blacklist()) {
       if (blockId.equals(s)) {
-        StorageNetwork.LOGGER.info(BlockState + " Connection blocked by config ");
         return false;
       }
     }
@@ -457,7 +455,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getGameTime() % (ConfigHandler.refreshTicks) == 0) || shouldRefresh) {
+    if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.config.refreshTicks()) == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
