@@ -35,4 +35,13 @@ public interface IConnectable {
    * @param masterPos
    */
   void setMasterPos(DimPos masterPos);
+
+  /**
+   * Set data used in getPos
+   * 
+   * 1.14 and earlier did not teed this lol
+   * 
+   * @param lookPos
+   */
+  void setPos(DimPos lookPos);
 }

@@ -23,4 +23,7 @@ public class ConnectableNullHandler implements IConnectable {
 
   @Override
   public void setMasterPos(DimPos masterPos) {}
+
+  @Override
+  public void setPos(DimPos lookPos) {}
 }

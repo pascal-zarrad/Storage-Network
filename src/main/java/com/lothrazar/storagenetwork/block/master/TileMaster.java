@@ -142,9 +142,22 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       if (tileHere == null) {
         continue;
       }
-      //               StorageNetwork.LOGGER.info("111TILEHERE "+ tileHere + " AT POS +"+lookPos);
+      //
+      StorageNetwork.log(" (addConnectables)  " + tileHere + " AT POS +" + lookPos.getBlockPos());
       //      boolean isConnectable = tileHere.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
       IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
+      if (capabilityConnectable == null) {
+        StorageNetwork.log(" (addConnectables) NULL capability  " + tileHere + " AT POS +" + lookPos.getBlockPos());
+        continue;
+      }
+      //
+      StorageNetwork.log(" (addConnectables)  then it MAPS to" + capabilityConnectable + " AT POS +" + capabilityConnectable.getPos());
+      if (capabilityConnectable.getPos() == null) {
+        //WTF 1.15 thanks for deleting shit
+        capabilityConnectable.setPos(lookPos);
+        capabilityConnectable.setMasterPos(this.);
+      }
+      //
       if (capabilityConnectable != null) {
         //        IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
         capabilityConnectable.setMasterPos(getDimPos());

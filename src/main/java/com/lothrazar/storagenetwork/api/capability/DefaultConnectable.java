@@ -22,6 +22,7 @@ public class DefaultConnectable implements IConnectable {
     this.master = masterPos;
   }
 
+  @Override
   public void setPos(DimPos pos) {
     this.self = pos;
   }

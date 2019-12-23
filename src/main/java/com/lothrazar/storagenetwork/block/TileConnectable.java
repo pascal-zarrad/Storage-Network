@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block;
 
+import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
@@ -7,7 +8,6 @@ import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.config.ConfigHandler;
-import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -15,10 +15,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import javax.annotation.Nullable;
 
 /**
  * Base class for Cable, Control, Request
@@ -32,14 +30,11 @@ public class TileConnectable extends TileEntity {
     connectable = new CapabilityConnectable();
   }
 
-  private DimPos getDimPos() {
-    return new DimPos(world, pos);
-  }
-
   @Override
   public void setPos(BlockPos posIn) {
     super.setPos(posIn);
-    connectable.setPos(getDimPos());
+    StorageNetwork.log("TILE CONNECTABLE :: SET POS on the capability" + posIn + "?" + world);
+    connectable.setPos(new DimPos(world, pos));
   }
 
   @Override

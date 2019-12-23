@@ -81,7 +81,7 @@ public class StorageNetwork {
   @SubscribeEvent
   public static void onServerStarting(FMLServerStartingEvent event) {}
 
-  static boolean logspam = false;
+  static boolean logspam = true;
 
   public static void log(String s) {
     if (logspam) {

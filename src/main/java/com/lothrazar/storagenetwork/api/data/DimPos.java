@@ -70,7 +70,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     }
     TileEntity tileEntity = world.getTileEntity(getBlockPos());
     if (tileEntity == null) {
-      StorageNetwork.LOGGER.info("Null master tile for valid pos " + getBlockPos() + "::" + world.getBlockState(getBlockPos()));
+      //  StorageNetwork.LOGGER.info("Null master tile for valid pos " + getBlockPos() + "::" + world.getBlockState(getBlockPos()));
       return null;
     }
     if (!tileEntityClassOrInterface.isAssignableFrom(tileEntity.getClass())) {
