@@ -153,9 +153,10 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       //
       StorageNetwork.log(" (addConnectables)  then it MAPS to" + capabilityConnectable + " AT POS +" + capabilityConnectable.getPos());
       if (capabilityConnectable.getPos() == null) {
+        StorageNetwork.log(" HAX");
         //WTF 1.15 thanks for deleting shit
         capabilityConnectable.setPos(lookPos);
-        capabilityConnectable.setMasterPos(this.);
+        //        capabilityConnectable.setMasterPos(this.);
       }
       //
       if (capabilityConnectable != null) {
