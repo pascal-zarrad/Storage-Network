@@ -140,7 +140,6 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       if (tileHere == null) {
         continue;
       }
-      //
       IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
       if (capabilityConnectable == null) {
         continue;
@@ -148,8 +147,10 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       //
       if (capabilityConnectable.getPos() == null) {
         //  1.15 hax
+        // StorageNetwork.LOGGER.info("1.15 HAX NULL POS !! " + lookPos + "has tile " + tileHere);
         //wait what 
         capabilityConnectable.setPos(lookPos);
+        capabilityConnectable.setMasterPos(this.getDimPos());
       }
       //
       if (capabilityConnectable != null) {
@@ -159,6 +160,10 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         boolean beenHereBefore = set.contains(realConnectablePos);
         if (beenHereBefore) {
           continue;
+        }
+        if (realConnectablePos.getWorld() == null) {
+          // StorageNetwork.LOGGER.info("1.15 realConnectablePos HAX NULL WORLD  " + realConnectablePos);
+          realConnectablePos.setWorld(sourcePos.getWorld());
         }
         set.add(realConnectablePos);
         addConnectables(realConnectablePos, set);
@@ -459,7 +464,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
-        // addInventorys();
+        // StorageNetwork.LOGGER.info("refreshed " + connectables.size());
         world.getChunk(pos).setModified(true);//.setChunkModified();
       }
       catch (Throwable e) {

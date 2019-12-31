@@ -39,7 +39,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   public DimPos(World world, BlockPos pos) {
     this.pos = pos;
-    this.world = world;
+    this.setWorld(world);
     if (world != null && world.getDimension() != null && world.getDimension().getType() != null)
       dimension = world.getDimension().getType().getId();
   }
@@ -132,6 +132,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return "[" +
         "dimension=" + dimension +
         ", pos=" + pos +
+        ", world=" + getWorld() +
         ']';
   }
 
@@ -163,10 +164,14 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       StorageNetwork.LOGGER.info("Error: null offset in DimPos " + direction);
       return null;
     }
-    return new DimPos(world, pos.offset(direction));
+    return new DimPos(getWorld(), pos.offset(direction));
   }
 
   public IChunk getChunk() {
     return getWorld().getChunk(pos);
+  }
+
+  public void setWorld(World world) {
+    this.world = world;
   }
 }
