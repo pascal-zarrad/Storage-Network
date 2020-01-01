@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
+import com.lothrazar.storagenetwork.block.request.GuiButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
@@ -80,7 +81,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     if (containerCableLink == null || containerCableLink.cap == null) {
       return;
     }
-    btnWhite.setMessage(this.isWhitelist ? "W" : "B");
+    btnWhite.setTextureId(this.isWhitelist ? TextureEnum.WHITELIST : TextureEnum.BLACKLIST);
   }
 
   @Override

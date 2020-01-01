@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
+import com.lothrazar.storagenetwork.block.request.GuiButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
@@ -45,7 +46,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     x += 30;
     btnPlus = addButton(new GuiButtonRequest(x, y, "+", (p) -> {
       this.syncData(+1);
-    }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button.png"));
+    }));
     x += 20;
     btnWhite = addButton(new GuiButtonRequest(x, y, "", (p) -> {
       this.isWhitelist = !this.isWhitelist;
@@ -54,7 +55,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     x += 20;
     btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
       importFilterSlots();
-    }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button_full.png"));
+    }));
     btnImport.setMessage("I");
   }
 
@@ -81,7 +82,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
     if (containerCableLink == null || containerCableLink.cap == null) {
       return;
     }
-    btnWhite.setMessage(this.isWhitelist ? "W" : "B");
+    btnWhite.setTextureId(this.isWhitelist ? TextureEnum.WHITELIST : TextureEnum.BLACKLIST);
   }
 
   @Override
