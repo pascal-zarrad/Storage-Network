@@ -88,7 +88,7 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     int priority = containerCableLink.cap.getPriority();
     font.drawString(String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
-        5, // btnMinus.y,
+        14,
         4210752);
     this.drawTooltips(mouseX, mouseY);
   }
