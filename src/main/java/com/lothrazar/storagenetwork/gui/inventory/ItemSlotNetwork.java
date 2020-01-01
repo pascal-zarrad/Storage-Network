@@ -45,8 +45,7 @@ public class ItemSlotNetwork {
     //     TODO: renderItem and keyboard isKeyDown issues
     RenderSystem.pushMatrix();
     if (!getStack().isEmpty()) {
-      RenderSystem.setupGuiFlatDiffuseLighting();// .enableGUIStandardItemLighting();
-      Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
+      //      RenderSystem.setupGuiFlatDiffuseLighting();// .enableGUIStandardItemLighting();
       String amount;
       //cant sneak in gui
       //default to short form, show full amount if sneak
@@ -59,23 +58,29 @@ public class ItemSlotNetwork {
       if (isShowNumbers()) {
         RenderSystem.pushMatrix();
         RenderSystem.scalef(.5f, .5f, .5f);
+        //z level important to get numbers on top of items
+        Minecraft.getInstance().getItemRenderer().zLevel = -0.1F;
         Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack,
             x * 2 + 16,
             y * 2 + 16, amount);
         RenderSystem.popMatrix();
       }
-    }
-    if (isMouseOverSlot(mx, my)) {
-      RenderSystem.disableLighting();
-      RenderSystem.disableDepthTest();
-      //GlStateManager.disableDepth();
-      int j1 = x;
-      int k1 = y;
-      RenderSystem.colorMask(true, true, true, false);
-      parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
-      RenderSystem.colorMask(true, true, true, true);
-      RenderSystem.enableLighting();
-      // GlStateManager.enableDepth();
+      RenderSystem.pushMatrix();
+      //z level important to get numbers on top of items
+      Minecraft.getInstance().getItemRenderer().zLevel = -100F;
+      Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
+      RenderSystem.popMatrix();
+      if (isMouseOverSlot(mx, my)) {
+        //      RenderSystem.disableLighting();
+        //      RenderSystem.disableDepthTest();
+        int j1 = x;
+        int k1 = y;
+        RenderSystem.colorMask(true, true, true, false);
+        parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+        RenderSystem.colorMask(true, true, true, true);
+        //       RenderSystem.enableDepthTest();
+        //      RenderSystem.enableLighting(); 
+      }
     }
     RenderSystem.popMatrix();
   }
