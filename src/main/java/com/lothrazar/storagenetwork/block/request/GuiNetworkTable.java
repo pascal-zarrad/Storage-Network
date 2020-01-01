@@ -4,6 +4,7 @@ import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
+import com.lothrazar.storagenetwork.gui.GuiButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
@@ -69,6 +70,17 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(mouseX, mouseY, partialTicks);
+    switch (this.getSort()) {
+      case AMOUNT:
+        network.sortBtn.setTextureId(TextureEnum.SORT_AMT);
+      break;
+      case MOD:
+        network.sortBtn.setTextureId(TextureEnum.SORT_MOD);
+      break;
+      case NAME:
+        network.sortBtn.setTextureId(TextureEnum.SORT_NAME);
+      break;
+    }
   }
 
   @Override

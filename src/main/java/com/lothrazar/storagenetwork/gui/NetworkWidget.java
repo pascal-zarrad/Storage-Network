@@ -200,19 +200,19 @@ public class NetworkWidget {
       gui.renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-    String sort = "";
-    switch (gui.getSort()) {
-      case NAME:
-        sort = "N";
-      break;
-      case MOD:
-        sort = "@";
-      break;
-      case AMOUNT:
-        sort = "#";
-      break;
-    }
-    this.sortBtn.setMessage(sort);
+    //    String sort = "";
+    //    switch (gui.getSort()) {
+    //      case NAME:
+    //        sort = "N";
+    //      break;
+    //      case MOD:
+    //        sort = "@";
+    //      break;
+    //      case AMOUNT:
+    //        sort = "#";
+    //      break;
+    //    }
+    //    this.sortBtn.setMessage(sort);
     if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
       gui.renderTooltip(Lists.newArrayList(
           I18n.format("gui.storagenetwork.req.tooltip_" + gui.getSort())),
@@ -307,19 +307,19 @@ public class NetworkWidget {
   }
 
   public void initButtons() {
-    int y = this.searchBar.y - 3;
+    int y = this.searchBar.y - 4;
     this.directionBtn = new GuiButtonRequest(
-        gui.getGuiLeft() + 7, y, "", (p) -> {
+        gui.getGuiLeft() + 6, y, "", (p) -> {
           gui.setDownwards(!gui.getDownwards());
           gui.syncDataToServer();
         });
     directionBtn.setHeight(16);
-    this.sortBtn = new GuiButtonRequest(gui.getGuiLeft() + 21, y, "", (p) -> {
+    this.sortBtn = new GuiButtonRequest(gui.getGuiLeft() + 22, y, "", (p) -> {
       gui.setSort(gui.getSort().next());
       gui.syncDataToServer();
     });
     sortBtn.setHeight(16);
-    jeiBtn = new GuiButtonRequest(gui.getGuiLeft() + 35, y, "", (p) -> {
+    jeiBtn = new GuiButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
     jeiBtn.setHeight(16);
