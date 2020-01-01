@@ -72,6 +72,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(mouseX, mouseY, partialTicks);
+    network.render();
   }
 
   @Override

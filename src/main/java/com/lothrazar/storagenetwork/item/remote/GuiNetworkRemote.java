@@ -88,6 +88,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     super.render(mouseX, mouseY, partialTicks);
     this.renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(mouseX, mouseY, partialTicks);
+    network.render();
   }
 
   private static int getDim() {

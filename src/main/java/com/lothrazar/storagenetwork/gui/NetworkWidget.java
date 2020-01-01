@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
+import com.lothrazar.storagenetwork.gui.GuiButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
@@ -195,30 +196,15 @@ public class NetworkWidget {
         s.drawTooltip(mouseX, mouseY);
       }
     }
-    this.directionBtn.setMessage(gui.getDownwards() ? "D" : "U");
     if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
       gui.renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-    //    String sort = "";
-    //    switch (gui.getSort()) {
-    //      case NAME:
-    //        sort = "N";
-    //      break;
-    //      case MOD:
-    //        sort = "@";
-    //      break;
-    //      case AMOUNT:
-    //        sort = "#";
-    //      break;
-    //    }
-    //    this.sortBtn.setMessage(sort);
     if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
       gui.renderTooltip(Lists.newArrayList(
           I18n.format("gui.storagenetwork.req.tooltip_" + gui.getSort())),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-    jeiBtn.setMessage(JeiSettings.isJeiSearchSynced() ? "J" : "-");
     if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
       gui.renderTooltip(Lists.newArrayList(
           I18n.format("gui.storagenetwork.tooltip_clear")),
@@ -347,5 +333,21 @@ public class NetworkWidget {
         return 0;
       }
     });
+  }
+
+  public void render() {
+    switch (gui.getSort()) {
+      case AMOUNT:
+        sortBtn.setTextureId(TextureEnum.SORT_AMT);
+      break;
+      case MOD:
+        sortBtn.setTextureId(TextureEnum.SORT_MOD);
+      break;
+      case NAME:
+        sortBtn.setTextureId(TextureEnum.SORT_NAME);
+      break;
+    }
+    directionBtn.setTextureId(gui.getDownwards() ? TextureEnum.SORT_DOWN : TextureEnum.SORT_UP);
+    jeiBtn.setTextureId(JeiSettings.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
   }
 }

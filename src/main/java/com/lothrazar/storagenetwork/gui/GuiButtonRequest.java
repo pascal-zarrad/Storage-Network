@@ -13,7 +13,7 @@ public class GuiButtonRequest extends GuiButtonExt {
 
   public static enum TextureEnum {
 
-    WHITELIST, BLACKLIST, SORT_AMT, SORT_MOD, SORT_NAME;
+    WHITELIST, BLACKLIST, SORT_AMT, SORT_MOD, SORT_NAME, SORT_UP, SORT_DOWN, JEI_RED, JEI_GREEN;
 
     public int getX() {
       switch (this) {
@@ -27,6 +27,14 @@ public class GuiButtonRequest extends GuiButtonExt {
           return 209;
         case SORT_MOD:
           return 221;
+        case JEI_RED:
+          return 187;
+        case JEI_GREEN:
+          return 175;
+        case SORT_UP:
+          return 187;
+        case SORT_DOWN:
+          return 175;
         default:
           return 0;
       }
@@ -37,10 +45,15 @@ public class GuiButtonRequest extends GuiButtonExt {
         case BLACKLIST:
         case WHITELIST:
           return 80;
+        case SORT_UP:
+        case SORT_DOWN:
         case SORT_AMT:
         case SORT_MOD:
         case SORT_NAME:
           return 127;
+        case JEI_RED:
+        case JEI_GREEN:
+          return 140;
         default:
           return 0;
       }
