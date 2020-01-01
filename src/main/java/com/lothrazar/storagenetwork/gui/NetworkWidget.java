@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.block.request.GuiButtonRequest;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.jei.JeiHooks;

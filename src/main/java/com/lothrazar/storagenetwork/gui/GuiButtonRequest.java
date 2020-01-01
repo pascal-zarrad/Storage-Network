@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.request;
+package com.lothrazar.storagenetwork.gui;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.mojang.blaze3d.platform.GlStateManager;
