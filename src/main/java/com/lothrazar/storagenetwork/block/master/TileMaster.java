@@ -262,6 +262,10 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
    */
   private void updateImports() {
     for (IConnectable connectable : getConnectables()) {
+      if (connectable == null || connectable.getPos() == null) {
+        //        StorageNetwork.log("null connectable or pos : updateImports() ");
+        continue;
+      }
       IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
       if (storage == null) {
         continue;
@@ -298,6 +302,10 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
 
   private void updateProcess() {
     //    for (IConnectable connectable : getConnectables()) {
+    //    if (connectable == null || connectable.getPos() == null) {
+    //      //        StorageNetwork.log("null connectable or pos : updateProcess() ");
+    //      continue;
+    //    }
     //      TileCableProcess cableProcess = connectable.getPos().getTileEntity(TileCableProcess.class);
     //      if (cableProcess == null) {
     //        continue;
@@ -311,6 +319,10 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
    */
   private void updateExports() {
     for (IConnectable connectable : getConnectables()) {
+      if (connectable == null || connectable.getPos() == null) {
+        //        StorageNetwork.log("null connectable or pos : updateExports() ");
+        continue;
+      }
       IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
       if (storage == null) {
         continue;
