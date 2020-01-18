@@ -174,10 +174,11 @@ public class NetworkWidget {
   }
 
   public boolean inSearchBar(double mouseX, double mouseY) {
-    return gui.isInRegion(searchBar.x - gui.getGuiLeft() + 14,
-        searchBar.y - gui.getGuiTop(),
-        searchBar.getWidth(), 9 + 6,
-        mouseX, mouseY);
+    return gui.isInRegion(
+      searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTop(), // x, y
+      searchBar.getWidth(), searchBar.getHeight(), // width, height
+      mouseX, mouseY
+    );
   }
 
   public void initSearchbar() {
@@ -264,12 +265,6 @@ public class NetworkWidget {
         return;
       }
     }
-    if (searchBar.mouseClicked(mouseX, mouseY, mouseButton)) {
-      if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
-        clearSearch();
-        return;
-      }
-    }
     ItemStack stackCarriedByMouse = StorageNetwork.proxy.getClientPlayer().inventory.getItemStack();
     if (!stackUnderMouse.isEmpty()
         && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
@@ -309,7 +304,7 @@ public class NetworkWidget {
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
     jeiBtn.setHeight(16);
-    clearTextBtn = new GuiButtonRequest(gui.getGuiLeft() + 64, y, "X", (p) -> {
+    clearTextBtn = new GuiButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
       this.clearSearch();
     });
     clearTextBtn.setHeight(16);
