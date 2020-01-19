@@ -145,6 +145,9 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
+      if (keyCode == 259) {// BACKSPACE
+        network.syncTextToJei();
+      }
       network.searchBar.keyPressed(keyCode, scanCode, b);
       return true;
     }
@@ -153,8 +156,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
-        System.out.println("JEI compat issue " + e);
-        //its ok JEI not installed for maybe an addon mod is ok
+        StorageNetwork.LOGGER.error("JEI compat issue ", e);
       }
     }
     //regardles of above branch, also check this

@@ -174,6 +174,9 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     }
     if (network.searchBar.isFocused()) {
       network.searchBar.keyPressed(keyCode, scanCode, b);
+      if (keyCode == 259) {// BACKSPACE
+        network.syncTextToJei();
+      }
       return true;
     }
     else if (network.stackUnderMouse.isEmpty()) {

@@ -165,12 +165,15 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int b) {
     InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
-    if (keyCode == 256) {
+    if (keyCode == 256) {//ESCAPE
       minecraft.player.closeScreen();
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
       network.searchBar.keyPressed(keyCode, scanCode, b);
+      if (keyCode == 259) {// BACKSPACE
+        network.syncTextToJei();
+      }
       return true;
     }
     else if (network.stackUnderMouse.isEmpty()) {
@@ -178,7 +181,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
-        System.out.println("JEI compat issue " + e);
+        StorageNetwork.LOGGER.error("JEI compat issue ", e);
         //its ok JEI not installed for maybe an addon mod is ok
       }
     }
@@ -195,7 +198,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
     if (network.charTyped(typedChar, keyCode)) {
       return true;
     }
-    return false;// super.charTyped(typedChar, keyCode);
+    return false;
   }
 
   @Override

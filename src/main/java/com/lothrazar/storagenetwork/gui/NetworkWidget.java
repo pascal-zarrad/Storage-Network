@@ -247,12 +247,16 @@ public class NetworkWidget {
   public boolean charTyped(char typedChar, int keyCode) {
     if (searchBar.isFocused() && searchBar.charTyped(typedChar, keyCode)) {
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-        JeiHooks.setFilterText(searchBar.getText());
-      }
+      syncTextToJei();
       return true;
     }
     return false;
+  }
+
+  public void syncTextToJei() {
+    if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+      JeiHooks.setFilterText(searchBar.getText());
+    }
   }
 
   public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
