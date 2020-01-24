@@ -3,6 +3,8 @@ package com.lothrazar.storagenetwork.gui;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
@@ -85,9 +87,9 @@ public class NetworkWidget {
       String tooltipString;
       Minecraft mc = Minecraft.getInstance();
       List<ITextComponent> tooltip = stack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL);
-      tooltipString = Joiner.on(' ').join(tooltip).toLowerCase();
-      //      tooltipString = ChatFormatting.stripFormatting(tooltipString);
-      return tooltipString.toLowerCase().contains(searchText.toLowerCase().substring(1));
+      List<String> unformattedTooltip = tooltip.stream().map(ITextComponent::getUnformattedComponentText).collect(Collectors.toList());
+      tooltipString = Joiner.on(' ').join(unformattedTooltip).toLowerCase().trim();
+      return tooltipString.contains(searchText.toLowerCase().substring(1));
     }
     //TODO : tag search?
     //    else if (searchText.startsWith("$")) {
@@ -101,7 +103,7 @@ public class NetworkWidget {
     //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
     //    }
     else {
-      return stack.getDisplayName().toString().toLowerCase().contains(searchText.toLowerCase());
+      return stack.getDisplayName().getUnformattedComponentText().toLowerCase().contains(searchText.toLowerCase());
     }
   }
 
