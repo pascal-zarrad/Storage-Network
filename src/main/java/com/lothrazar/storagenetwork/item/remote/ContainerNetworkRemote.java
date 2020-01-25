@@ -13,10 +13,11 @@ import net.minecraft.util.Hand;
 public class ContainerNetworkRemote extends ContainerNetwork {
 
   private final TileMaster master;
+  private ItemStack remote;
 
   public ContainerNetworkRemote(int id, PlayerInventory pInv) {
     super(SsnRegistry.remote, id);
-    ItemStack remote = pInv.player.getHeldItem(Hand.MAIN_HAND);
+    this.remote = pInv.player.getHeldItem(Hand.MAIN_HAND);
     DimPos dp = ItemRemote.getPosStored(remote);
     TileEntity te = pInv.player.world.getTileEntity(dp.getBlockPos());
     this.master = (TileMaster) te;
@@ -27,7 +28,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
-    return true;
+    return playerIn.getHeldItem(Hand.MAIN_HAND) == remote;
   }
 
   @Override
