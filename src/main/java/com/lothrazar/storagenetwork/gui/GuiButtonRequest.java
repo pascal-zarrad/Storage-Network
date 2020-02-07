@@ -5,11 +5,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.client.config.GuiButtonExt;
 
-public class GuiButtonRequest extends GuiButtonExt {
+public class GuiButtonRequest extends Button {
 
   public static enum TextureEnum {
 

@@ -30,17 +30,7 @@ public class BlockInventory extends BaseBlock {
   }
 
   @Override
-  //<<<<<<< HEAD
-  public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-    //=======
-    //  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState stateIn, @Nullable LivingEntity placer, ItemStack stack) {
-    //    super.onBlockPlacedBy(worldIn, pos, stateIn, placer, stack);
-    //    this.updateConnection(worldIn, pos, stateIn);
-    //  }
-    //
-    //  @Override
-    //  public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-    //>>>>>>> 5182679bf6cce31730681035cc0940dd768e3ed8
+  public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
       TileInventory tile = (TileInventory) world.getTileEntity(pos);
       //sync

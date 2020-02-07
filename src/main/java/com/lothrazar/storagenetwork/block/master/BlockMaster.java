@@ -46,7 +46,7 @@ public class BlockMaster extends BaseBlock {
   }
 
   @Override
-  public ActionResultType func_225533_a_(BlockState state, World worldIn, BlockPos pos,
+  public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
       PlayerEntity playerIn, Hand hand, BlockRayTraceResult result) {
     if (worldIn.isRemote) {
       return ActionResultType.SUCCESS;

@@ -26,7 +26,7 @@ public class BlockCableImportFilter extends BlockCable {
   }
 
   @Override
-  public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult result) {
+  public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerIn, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
       TileEntity tile = world.getTileEntity(pos);
       if (tile instanceof INamedContainerProvider) {
