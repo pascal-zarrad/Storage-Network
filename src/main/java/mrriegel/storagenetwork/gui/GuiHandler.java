@@ -44,7 +44,9 @@ public class GuiHandler implements IGuiHandler {
   @Override
   public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
     BlockPos pos = new BlockPos(x, y, z);
-    UtilTileEntity.updateTile(world, pos);
+    if (ID != GuiIDs.REMOTE.ordinal()) {
+      UtilTileEntity.updateTile(world, pos);
+    }
     if (ID == GuiIDs.LINK.ordinal()) {
       return new ContainerCableLink((TileCable) world.getTileEntity(pos), player.inventory);
     }
