@@ -21,14 +21,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ItemRemote extends Item implements INamedContainerProvider {
@@ -116,7 +119,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
     BlockPos posTarget = new BlockPos(x, y, z);
-    return new DimPos(dim, posTarget);
+    return new DimPos(dim, tag.getString("dimension"), posTarget);
   }
 
   @Override
@@ -136,9 +139,37 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int y = tag.getInt("y");
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
-    //    DimensionType type = DimensionManager.getRegistry().getByValue(dim);
-    //   World serverTargetWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
+    //assume we are in the same world
+    StorageNetwork.log(
+        "itemRemote data :::" +
+            tag + "|" + world.dimension.getType().getId()
+            + "|||"
+            + tag.contains("dimension"));
     World serverTargetWorld = world;//for now
+    if (dim != world.dimension.getType().getId() && tag.contains("dimension")) {
+      try {
+        String dimension = tag.getString("dimension");
+        ResourceLocation res = new ResourceLocation(dimension);
+        // ok 
+        boolean resetUnloadDelay = true;
+        boolean forceLoad = true;
+        DimensionType dimFromRemote = DimensionType.byName(res);
+        if (dimFromRemote != null) {
+          ServerWorld dimWorld = DimensionManager.getWorld(world.getServer(), dimFromRemote, resetUnloadDelay, forceLoad);
+          if (dimWorld != null) {
+            // found it
+            serverTargetWorld = dimWorld.getWorld();
+          }
+        }
+      }
+      catch (Exception e) {
+        //
+        StorageNetwork.log("why is cross dim broken " + e.getLocalizedMessage());
+        return super.onItemRightClick(world, player, hand);
+      }
+    }
+    ////    DimensionType type = DimensionManager.getRegistry().getByValue(dim);
+    //   World serverTargetWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
     //    serverTargetWorld = Minecraft.getInstance().getIntegratedServer().getWorld(type);
     //    System.out.println(type + "?" + serverTargetWorld);
     //

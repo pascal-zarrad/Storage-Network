@@ -2,7 +2,6 @@ package com.lothrazar.storagenetwork.item.remote;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
@@ -14,7 +13,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 
 public class ContainerNetworkCraftingRemote extends ContainerNetwork {
@@ -26,9 +24,10 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   public ContainerNetworkCraftingRemote(int id, PlayerInventory pInv) {
     super(SsnRegistry.craftingremote, id);
     this.remote = pInv.player.getHeldItem(Hand.MAIN_HAND);
+    this.player = pInv.player;
+    this.world = player.world;
     DimPos dp = ItemRemote.getPosStored(remote);
-    TileEntity te = pInv.player.world.getTileEntity(dp.getBlockPos());
-    this.master = (TileMaster) te;
+    this.master = dp.getTileEntity(TileMaster.class, world);
     matrix = new InventoryCraftingNetwork(this, matrixStacks);
     this.playerInv = pInv;
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
@@ -71,7 +70,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     if (recipeLocked) {
-      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
+      //      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
     //    findMatchingRecipe(matrix);

@@ -9,15 +9,20 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class DimPos implements INBTSerializable<CompoundNBT> {
 
-  private int dimension;
+  private int dim;
+  private String dimension;
   private BlockPos pos = new BlockPos(0, 0, 0);
   private World world;
 
@@ -28,30 +33,28 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   public DimPos(ByteBuf buf) {
-    dimension = buf.readInt();
+    dim = buf.readInt();
     pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
   }
 
-  public DimPos(int dimension, BlockPos pos) {
-    this.dimension = dimension;
+  public DimPos(int dimension, String d, BlockPos pos) {
+    this.dim = dimension;
+    this.dimension = d;
     this.pos = pos;
   }
 
   public DimPos(World world, BlockPos pos) {
     this.pos = pos;
     this.setWorld(world);
-    if (world != null && world.getDimension() != null && world.getDimension().getType() != null)
-      dimension = world.getDimension().getType().getId();
+    if (world != null && world.getDimension() != null && world.getDimension().getType() != null) {
+      dim = world.getDimension().getType().getId();
+      dimension = world.getDimension().getType().getRegistryName().toString();
+    }
   }
 
   @Nullable
   public World getWorld() {
-    //    if (world != null) {
     return world;
-    //    }
-    //    MinecraftServer x
-    //    DimensionManager.getWorld(MinecraftServer.)
-    //    return DimensionManager.getWorld(dimension);
   }
 
   public BlockPos getBlockPos() {
@@ -64,10 +67,30 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface) {
-    World world = getWorld();
+    return getTileEntity(tileEntityClassOrInterface, getWorld());
+  }
+
+  @Nullable
+  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
     if (world == null || getBlockPos() == null) {
       return null;
     }
+    //refresh server world
+    if (dimension != null && dim != world.dimension.getType().getId()) {
+      if (world.getServer() == null) {
+        return null;
+      }
+      //reach across to the other dimension
+      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));
+      boolean resetUnloadDelay = true;
+      boolean forceLoad = true;
+      ServerWorld dimWorld = DimensionManager.getWorld(world.getServer(), dimTarget, resetUnloadDelay, forceLoad);
+      if (dimWorld != null) {
+        //        StorageNetwork.log(" Dimworld found " + dimension + dim);
+        world = dimWorld.getWorld();
+      }
+    }
+    //end refresh srever world
     TileEntity tileEntity = world.getTileEntity(getBlockPos());
     if (tileEntity == null) {
       //  StorageNetwork.LOGGER.info("Null master tile for valid pos " + getBlockPos() + "::" + world.getBlockState(getBlockPos()));
@@ -118,26 +141,26 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       return false;
     }
     DimPos dimPos = (DimPos) o;
-    return dimension == dimPos.dimension &&
+    return dim == dimPos.dim &&
         Objects.equal(pos, dimPos.pos);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(dimension, pos);
+    return Objects.hashCode(dim, pos);
   }
 
   @Override
   public String toString() {
     return "[" +
-        "dimension=" + dimension +
+        "dimension=" + dim +
         ", pos=" + pos +
         ", world=" + getWorld() +
         ']';
   }
 
   public void writeToByteBuf(ByteBuf buf) {
-    buf.writeInt(dimension);
+    buf.writeInt(dim);
     buf.writeInt(pos.getX());
     buf.writeInt(pos.getY());
     buf.writeInt(pos.getZ());

@@ -100,7 +100,7 @@ public abstract class ContainerNetwork extends Container {
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     if (recipeLocked) {
-      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
+      //      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
     super.onCraftMatrixChanged(inventoryIn);

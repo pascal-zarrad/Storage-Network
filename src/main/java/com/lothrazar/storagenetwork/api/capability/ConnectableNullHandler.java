@@ -13,12 +13,12 @@ public class ConnectableNullHandler implements IConnectable {
 
   @Override
   public DimPos getMasterPos() {
-    return new DimPos(0, new BlockPos(0, 0, 0));
+    return new DimPos(0, null, new BlockPos(0, 0, 0));
   }
 
   @Override
   public DimPos getPos() {
-    return new DimPos(0, new BlockPos(0, 0, 0));
+    return new DimPos(0, null, new BlockPos(0, 0, 0));
   }
 
   @Override
