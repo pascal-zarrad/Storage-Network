@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
@@ -177,10 +176,9 @@ public class NetworkWidget {
 
   public boolean inSearchBar(double mouseX, double mouseY) {
     return gui.isInRegion(
-      searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTop(), // x, y
-      searchBar.getWidth(), searchBar.getHeight(), // width, height
-      mouseX, mouseY
-    );
+        searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTop(), // x, y
+        searchBar.getWidth(), searchBar.getHeight(), // width, height
+        mouseX, mouseY);
   }
 
   public void initSearchbar() {
