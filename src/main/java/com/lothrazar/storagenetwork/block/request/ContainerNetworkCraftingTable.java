@@ -37,7 +37,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
   public void slotChanged() {
     //parent is abstract
     //seems to not happen from -shiftclick- crafting
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < matrix.getSizeInventory(); i++) {
       getTileRequest().matrix.put(i, matrix.getStackInSlot(i));
     }
     UtilTileEntity.updateTile(getTileRequest().getWorld(), getTileRequest().getPos());

@@ -12,8 +12,8 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 
@@ -37,17 +37,26 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     bindGrid();
     bindPlayerInvo(this.playerInv);
     bindHotbar();
+    for (int i = 0; i < matrix.getSizeInventory(); i++) {
+      //      me = matrix.getStackInSlot(i);
+      //      CompoundNBT here = me.write(new CompoundNBT());
+      if (remote.hasTag() && remote.getTag().contains("matrix" + i)) {
+        CompoundNBT tag = remote.getTag().getCompound("matrix" + i);
+        ItemStack stackSaved = ItemStack.read(tag);
+        if (!stackSaved.isEmpty())
+          matrix.setInventorySlotContents(i, stackSaved);
+      }
+    }
     onCraftMatrixChanged(matrix);
   }
-
-  @Override
-  public Slot getSlot(int slotId) {
-    if (slotId >= this.inventorySlots.size()) {
-      System.out.println("Where are you coming from");
-      return null;
-    }
-    return super.getSlot(slotId);
-  }
+  //  @Override
+  //  public Slot getSlot(int slotId) {
+  //    if (slotId >= this.inventorySlots.size()) {
+  //      System.out.println("Where are you coming from");
+  //      return null;
+  //    }
+  //    return super.getSlot(slotId);
+  //  }
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
@@ -67,6 +76,18 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     }
     //    findMatchingRecipe(matrix);
     super.onCraftMatrixChanged(inventoryIn);
+  }
+
+  @Override
+  public void onContainerClosed(PlayerEntity playerIn) {
+    super.onContainerClosed(playerIn);
+    ItemStack me;
+    //    CompoundNBT tags = new CompoundNBT();
+    for (int i = 0; i < matrix.getSizeInventory(); i++) {
+      me = matrix.getStackInSlot(i);
+      CompoundNBT here = me.write(new CompoundNBT());
+      this.remote.getTag().put("matrix" + i, here);
+    }
   }
 
   @Override
