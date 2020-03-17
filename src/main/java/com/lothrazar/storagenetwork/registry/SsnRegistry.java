@@ -18,9 +18,11 @@ import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
@@ -36,6 +38,11 @@ public class SsnRegistry {
       return new ItemStack(SsnRegistry.request);
     }
   };
+  @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
+  public static Item inventory_remote;
+  @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
+  public static Item crafting_remote;
+  //
   @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade")
   public static ItemUpgrade speed_upgrade;
   @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
@@ -90,4 +97,6 @@ public class SsnRegistry {
   public static ContainerType<ContainerCableExportFilter> filterexportContainer;
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
   public static ContainerType<ContainerNetworkRemote> remote;
+  @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
+  public static ContainerType<ContainerNetworkCraftingRemote> craftingremote;
 }

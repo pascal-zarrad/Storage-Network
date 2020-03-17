@@ -19,24 +19,23 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> implements IGuiNetwork {
+public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCraftingRemote> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
-  private static final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID,
-      "textures/gui/inventory.png");
+  private final ResourceLocation textureCraft = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private final NetworkWidget network;
   private final ItemStack remote;
 
-  public GuiNetworkRemote(ContainerNetworkRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+  public GuiNetworkCraftingRemote(ContainerNetworkCraftingRemote screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     //since the rightclick action forces only MAIN_HAND openings, is ok
     this.remote = inv.player.getHeldItem(Hand.MAIN_HAND);
     network = new NetworkWidget(this);
-    network.setLines(8);
+    network.setLines(4);
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
-    network.fieldHeight = 180;
+    network.fieldHeight = 90;
   }
 
   @Override
@@ -68,6 +67,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   public void init() {
     super.init();
     int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
+    searchTop = guiTop + 96;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
         width, font.FONT_HEIGHT, "search");
@@ -97,7 +97,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    this.minecraft.getTextureManager().bindTexture(texture);
+    this.minecraft.getTextureManager().bindTexture(textureCraft);
     int k = (this.width - this.xSize) / 2;
     int l = (this.height - this.ySize) / 2;
     RenderSystem.color3f(1, 1, 1);
@@ -113,7 +113,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   boolean isScrollable(double x, double y) {
-    int scrollHeight = 152;
+    int scrollHeight = 135;
     return isPointInRegion(0, 0,
         this.width - 8, scrollHeight,
         x, y);

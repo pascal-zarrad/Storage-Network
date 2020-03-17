@@ -6,6 +6,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -134,6 +135,8 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     World serverTargetWorld = world;//for now
     //    serverTargetWorld = Minecraft.getInstance().getIntegratedServer().getWorld(type);
     //    System.out.println(type + "?" + serverTargetWorld);
+    //
+    //
     BlockPos posTarget = new BlockPos(x, y, z);
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
       StorageNetwork.chatMessage(player, "item.remote.notloaded");
@@ -155,6 +158,10 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   @Nullable
   @Override
   public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-    return new ContainerNetworkRemote(id, inv);
+    boolean crafting = (this == SsnRegistry.crafting_remote);
+    if (crafting)
+      return new ContainerNetworkCraftingRemote(id, inv);
+    else
+      return new ContainerNetworkRemote(id, inv);
   }
 }

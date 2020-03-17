@@ -28,6 +28,7 @@ import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.config.ConfigManager;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.remote.ItemRemote;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
@@ -125,6 +126,7 @@ public class StorageNetwork {
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
       r.register(new ItemRemote(properties).setRegistryName("inventory_remote"));
+      r.register(new ItemRemote(properties).setRegistryName("crafting_remote"));
     }
 
     @SubscribeEvent
@@ -168,6 +170,9 @@ public class StorageNetwork {
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
         return new ContainerNetworkRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
       }).setRegistryName("inventory_remote"));
+      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+        return new ContainerNetworkCraftingRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
+      }).setRegistryName("crafting_remote"));
     }
   }
 

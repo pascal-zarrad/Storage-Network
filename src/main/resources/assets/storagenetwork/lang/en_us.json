@@ -27,9 +27,7 @@
     "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
     "item.storagenetwork.inventory_remote": "Storage Remote",
-    "item.storagenetwork.remote_1": "Advanced Storage Remote",
-    "item.storagenetwork.remote_2": "Upgraded Storage Remote",
-    "item.storagenetwork.remote_3": "Simple Storage Remote",
+    "item.storagenetwork.crafting_remote": "Crafting Remote",
 
     "block.storagenetwork.recipe.invalid": "Transaction invalid:",
     "block.storagenetwork.recipe.invalidleft": "Set Input on left",
