@@ -24,6 +24,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 public class NetworkWidget {
@@ -78,11 +79,11 @@ public class NetworkWidget {
 
   private boolean doesStackMatchSearch(ItemStack stack) {
     String searchText = searchBar.getText();
-    if (searchText.startsWith("@")) {
+    if (searchText.startsWith("@")) { // TODO: ENUM //search modname 
       String name = UtilTileEntity.getModNameForItem(stack.getItem());
       return name.toLowerCase().contains(searchText.toLowerCase().substring(1));
     }
-    else if (searchText.startsWith("#")) {
+    else if (searchText.startsWith("#")) { // search tooltips
       String tooltipString;
       Minecraft mc = Minecraft.getInstance();
       List<ITextComponent> tooltip = stack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL);
@@ -90,17 +91,14 @@ public class NetworkWidget {
       tooltipString = Joiner.on(' ').join(unformattedTooltip).toLowerCase().trim();
       return tooltipString.contains(searchText.toLowerCase().substring(1));
     }
-    //TODO : tag search?
-    //    else if (searchText.startsWith("$")) {
-    //      StringBuilder oreDictStringBuilder = new StringBuilder();
-    //      for (int oreId : OreDictionary.getOreIDs(stack)) {
-    //        String oreName = OreDictionary.getOreName(oreId);
-    //        oreDictStringBuilder.append(oreName).append(' ');
-    //      }
-    //      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
-    //    }
-    //      return creativeTabStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
-    //    }
+    else if (searchText.startsWith("$")) { // search tags
+      StringBuilder oreDictStringBuilder = new StringBuilder();
+      for (ResourceLocation oreId : stack.getItem().getTags()) {
+        String oreName = oreId.toString();//OreDictionary.getOreName(oreId);
+        oreDictStringBuilder.append(oreName).append(' ');
+      }
+      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
+    }
     else {
       return stack.getDisplayName().getUnformattedComponentText().toLowerCase().contains(searchText.toLowerCase());
     }
@@ -225,7 +223,7 @@ public class NetworkWidget {
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
         //TODO: tag search
-        //        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
+        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
         lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
       }
       gui.renderTooltip(lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
