@@ -21,10 +21,6 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     this.world = player.world;
     DimPos dp = ItemRemote.getPosStored(remote);
     this.master = dp.getTileEntity(TileMaster.class, world);
-    //    StorageNetwork.log("Container: testmaster ?" + testmaster);
-    //    TileEntity te = pInv.player.world.getTileEntity(dp.getBlockPos());
-    //    StorageNetwork.log("tile entityin remote ?" + te);
-    //    this.master = (TileMaster) te;
     this.playerInv = pInv;
     bindPlayerInvo(this.playerInv);
     bindHotbar();

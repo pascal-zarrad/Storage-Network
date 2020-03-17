@@ -80,8 +80,6 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       tag.putBoolean("bound", true);
       //set the dimension
       DimensionType dimType = world.getDimension().getType();
-      StorageNetwork.log("dim saved " + dimType);
-      StorageNetwork.log("dim saved " + dimType.getRegistryName());
       tag.putInt("dim", dimType.getId());
       tag.putString("dimension", dimType.getRegistryName().toString());
       stack.setTag(tag);
@@ -140,11 +138,6 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int z = tag.getInt("z");
     int dim = tag.getInt("dim");
     //assume we are in the same world
-    StorageNetwork.log(
-        "itemRemote data :::" +
-            tag + "|" + world.dimension.getType().getId()
-            + "|||"
-            + tag.contains("dimension"));
     World serverTargetWorld = world;//for now
     if (dim != world.dimension.getType().getId() && tag.contains("dimension")) {
       try {
