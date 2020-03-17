@@ -19,7 +19,9 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
       return result;
     }
     result.put("master", getMasterPos().serializeNBT());
-    result.put("self", getPos().serializeNBT());
+    if (getPos() != null) {
+      result.put("self", getPos().serializeNBT());
+    }
     return result;
   }
 
