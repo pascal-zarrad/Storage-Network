@@ -26,6 +26,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -74,7 +75,12 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       tag.putInt("y", pos.getY());
       tag.putInt("z", pos.getZ());
       tag.putBoolean("bound", true);
-      tag.putInt("dim", world.getDimension().getType().getId());
+      //set the dimension
+      DimensionType dimType = world.getDimension().getType();
+      StorageNetwork.log("dim saved " + dimType);
+      StorageNetwork.log("dim saved " + dimType.getRegistryName());
+      tag.putInt("dim", dimType.getId());
+      tag.putString("dimension", dimType.getRegistryName().toString());
       stack.setTag(tag);
       return ActionResultType.SUCCESS;
     }
@@ -91,7 +97,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       int y = tag.getInt("y");
       int z = tag.getInt("z");
       int dim = tag.getInt("dim");
-      t = new TranslationTextComponent("[ x: " + x + ", y: " + y + ", z: " + z + " ]");
+      t = new TranslationTextComponent("[ x: " + x + ", y: " + y + ", z: " + z + ", d: " + dim + " ]");
     }
     else {
       t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
