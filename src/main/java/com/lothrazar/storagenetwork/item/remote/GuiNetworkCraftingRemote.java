@@ -7,6 +7,8 @@ import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
+import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
+import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -134,6 +136,16 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
     network.mouseClicked(mouseX, mouseY, mouseButton);
+    //recipe clear thingy
+    //TODO: network needs isCrafting and isPointInRegion access to refactor
+    // OR make real button lol
+    int rectX = 63;
+    int rectY = 110;
+    if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
+      PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
+      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
+      return true;
+    }
     return true;
   }
 

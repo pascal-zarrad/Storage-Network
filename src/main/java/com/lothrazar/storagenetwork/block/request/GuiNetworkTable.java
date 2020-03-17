@@ -152,6 +152,8 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
     super.mouseClicked(mouseX, mouseY, mouseButton);
     network.mouseClicked(mouseX, mouseY, mouseButton);
     //recipe clear thingy
+    //TODO: network needs isCrafting and isPointInRegion access to refactor
+    // OR make real button lol
     int rectX = 63;
     int rectY = 110;
     if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {

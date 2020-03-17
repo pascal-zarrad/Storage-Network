@@ -106,6 +106,6 @@
   },
   "1.15.2": {
     "0.3.0":"Crafting remote added.  Dimension network upgrade.  ",
-    "0.3.1":"JEI recipe transfer fixed for crafting remote.  "
+    "0.3.1":"JEI recipe transfer fixed for crafting remote.  Fixed clear recipe button in crafting remote.  "
   }
 }
