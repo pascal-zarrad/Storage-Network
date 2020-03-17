@@ -12,7 +12,9 @@
     "1.14.3-latest": "0.0.7",
     "1.14.3-recommended": "0.0.7",
     "1.14.4-latest": "0.2.0",
-    "1.14.4-recommended": "0.2.0"
+    "1.14.4-recommended": "0.3.0",
+    "1.15.2-latest": "0.3.1",
+    "1.15.2-recommended": "0.3.1"
   },
   "1.11.2": {
     "1.0.0": "First Release",
@@ -101,5 +103,9 @@
     "0.0.13":"Fix crash in previous version  Added new inventory block",
     "0.1.0":"Fixed NBT request errors, for example clicking enchanted tools returning the wrong selection.  Fixed a cable texture.  Fixed a shift-click issue in top left of some inventories.  ",
     "0.2.0":"Config file added.  Cables now correctly connect to master and request blocks on placement.  Fixed sort button data in request table resetting on world reload.  Cleared out  Unknown custom packet identifier: log spam.  Tooltips added.  Interact with the master tile to get a network summary in chat.  You can now break and replace the Network master in the same place without issue. "
+  },
+  "1.15.2": {
+    "0.3.0":"Crafting remote added.  Dimension network upgrade.  ",
+    "0.3.1":"JEI recipe transfer fixed for crafting remote.  "
   }
 }

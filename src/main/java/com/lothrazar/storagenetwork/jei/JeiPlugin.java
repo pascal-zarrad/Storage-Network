@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
@@ -41,17 +42,7 @@ public class JeiPlugin implements IModPlugin {
   @Override
   public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
     registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkCraftingTable.class));
-    //    registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandlerRemote<>(ContainerNetworkRemote.class));
-    //  @Override
-    //  public void register(IModRegistry registry) {
-    //    registry.addRecipeCatalyst(new ItemStack(SsnRegistry.request), VanillaRecipeCategoryUid.CRAFTING);
-    //    if (GuiHandler.FB_LOADED) {
-    //      registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerFastRequest.class));
-    //      registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandlerRemote<>(ContainerFastRemote.class));
-    //      registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerFastRequest.Client.class));
-    //      registry.getRecipeTransferRegistry().addUniversalRecipeTransferHandler(new RequestRecipeTransferHandlerRemote<>(ContainerFastRemote.Client.class));
-    //    }
-    //  }
+    registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkCraftingRemote.class));
   }
 
   @Override
