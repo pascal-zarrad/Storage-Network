@@ -58,6 +58,10 @@ public class BlockCable extends BaseBlock {
       return this == NONE || this == BLOCKED;
     }
 
+    public boolean isInventory() {
+      return this == INVENTORY;
+    }
+
     @Override
     public String getName() {
       return name().toLowerCase(Locale.ENGLISH);
@@ -176,11 +180,21 @@ public class BlockCable extends BaseBlock {
       return stateIn.with(property, EnumConnectType.CABLE);
     }
     else if (isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
-      return stateIn.with(property, EnumConnectType.INVENTORY);
+      if (!this.hasInventory(stateIn)) {
+        return stateIn.with(property, EnumConnectType.INVENTORY);
+      }
     }
-    else {
-      return stateIn.with(property, EnumConnectType.NONE);
+    return stateIn.with(property, EnumConnectType.NONE);
+  }
+
+  //only one inventory allowed per link cable eh
+  private boolean hasInventory(BlockState stateIn) {
+    for (Direction d : Direction.values()) {
+      if (stateIn.get(FACING_TO_PROPERTY_MAP.get(d)).isInventory()) {
+        return true;
+      }
     }
+    return false;
   }
 
   private static boolean isInventory(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
