@@ -41,7 +41,7 @@ public class BlockCable extends BaseBlock {
 
   public static BlockState cleanBlockState(BlockState state) {
     for (Direction d : Direction.values()) {
-      EnumProperty prop = FACING_TO_PROPERTY_MAP.get(d);
+      EnumProperty<EnumConnectType> prop = FACING_TO_PROPERTY_MAP.get(d);
       if (state.get(prop) == EnumConnectType.INVENTORY) {
         //dont replace cable types only inv types
         state = state.with(prop, EnumConnectType.NONE);

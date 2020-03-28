@@ -85,11 +85,7 @@
     "tooltip.storagenetwork.kabel_P": "Can automate simple processing transactions.",
          
     "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Master for remote inventory access.",
-    "tooltip.storagenetwork.remote_1": "Used to access the network from unlimited distance and across dimensions.",
-    "tooltip.storagenetwork.remote_2": "Used to access the network from unlimited distance.",
-    "tooltip.storagenetwork.remote_3": "Network without crafting from unlimited distance.",
-
-
+    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Master for remote inventory access.",
 
     "block.storagenetwork.controller": "Controller",
     "block.storagenetwork.controller.tooltip": "Manage all Processing Cables in the network",
