@@ -22,7 +22,7 @@ public class CableIOMessage {
     SYNC_DATA, IMPORT_FILTER, SAVE_FITLER;
   }
 
-  private boolean whitelist;
+  private boolean isAllowlist;
   private final int id;
   private int value = 0;
   private ItemStack stack = ItemStack.EMPTY;
@@ -31,22 +31,22 @@ public class CableIOMessage {
     this.id = id;
   }
 
-  public CableIOMessage(int id, int value, boolean whitelist) {
+  public CableIOMessage(int id, int value, boolean isall) {
     this(id);
     this.value = value;
-    this.whitelist = whitelist;
+    this.isAllowlist = isall;
   }
 
-  public CableIOMessage(int id, int value, ItemStack whitelist) {
+  public CableIOMessage(int id, int value, ItemStack stackin) {
     this(id);
     this.value = value;
-    stack = whitelist;
+    stack = stackin;
   }
 
   @Override
   public String toString() {
     return "CableDataMessage{" +
-        "whitelist=" + whitelist +
+        "isAllowlist=" + isAllowlist +
         ", id=" + id +
         ", value=" + value +
         ", stack=" + stack +
@@ -105,7 +105,7 @@ public class CableIOMessage {
         break;
         case SYNC_DATA:
           link.setPriority(link.getPriority() + message.value);
-          link.getFilter().setIsWhitelist(message.whitelist);
+          link.getFilter().setIsAllowlist(message.isAllowlist);
           if (root != null) {
             root.clearCache();
           }
@@ -124,7 +124,7 @@ public class CableIOMessage {
   public static void encode(CableIOMessage msg, PacketBuffer buffer) {
     buffer.writeInt(msg.id);
     buffer.writeInt(msg.value);
-    buffer.writeBoolean(msg.whitelist);
+    buffer.writeBoolean(msg.isAllowlist);
     buffer.writeCompoundTag(msg.stack.write(new CompoundNBT()));
   }
 

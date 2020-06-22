@@ -12,7 +12,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   public static final int FILTER_SIZE = 18;
   public boolean tags = false;
   public boolean nbt = false;
-  public boolean isWhitelist = true;
+  public boolean isAllowList = true;
 
   public FilterItemStackHandler() {
     super(FILTER_SIZE);
@@ -26,8 +26,8 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     this.nbt = nbt;
   }
 
-  public void setIsWhitelist(boolean whitelist) {
-    isWhitelist = whitelist;
+  public void setIsAllowlist(boolean is) {
+    isAllowList = is;
   }
 
   @Override
@@ -52,7 +52,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   public boolean isStackFiltered(ItemStack stack) {
-    if (isWhitelist) {
+    if (isAllowList) {
       return getStackMatchers().stream().noneMatch(matcher -> matcher.match(stack));
     }
     return getStackMatchers().stream().anyMatch(matcher -> matcher.match(stack));
@@ -64,7 +64,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     CompoundNBT rulesTag = nbt.getCompound("rules");
     tags = rulesTag.getBoolean("tags");
     this.nbt = rulesTag.getBoolean("nbt");
-    isWhitelist = rulesTag.getBoolean("whitelist");
+    isAllowList = rulesTag.getBoolean("whitelist");
   }
 
   @Override
@@ -73,7 +73,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     CompoundNBT rulesTag = new CompoundNBT();
     rulesTag.putBoolean("tags", tags);
     rulesTag.putBoolean("nbt", nbt);
-    rulesTag.putBoolean("whitelist", isWhitelist);
+    rulesTag.putBoolean("whitelist", isAllowList);
     result.put("rules", rulesTag);
     return result;
   }

@@ -38,12 +38,12 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
 
   CapabilityConnectableLink() {
     connectable = new CapabilityConnectable();
-    filters.setIsWhitelist(false);
+    filters.setIsAllowlist(false);
   }
 
   public CapabilityConnectableLink(TileEntity tile) {
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
-    filters.setIsWhitelist(false);
+    filters.setIsAllowlist(false);
   }
 
   public FilterItemStackHandler getFilter() {

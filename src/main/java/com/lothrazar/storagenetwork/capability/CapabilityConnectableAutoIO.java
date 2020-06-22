@@ -90,10 +90,10 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     this.direction = direction;
     // Set some defaults
     if (direction == EnumStorageDirection.OUT) {
-      filters.setIsWhitelist(true);
+      filters.setIsAllowlist(true);
     }
     else {
-      filters.setIsWhitelist(false);
+      filters.setIsAllowlist(false);
     }
   }
 

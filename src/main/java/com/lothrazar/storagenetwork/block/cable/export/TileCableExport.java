@@ -29,7 +29,7 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
   public TileCableExport() {
     super(SsnRegistry.exportkabeltile);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.OUT);
-    this.ioStorage.getFilter().isWhitelist = false;
+    this.ioStorage.getFilter().isAllowList = true;
   }
 
   @Override
@@ -53,6 +53,7 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
     super.read(compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
     ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
+    this.ioStorage.getFilter().isAllowList = true;//legacy fix to override
   }
 
   @Override

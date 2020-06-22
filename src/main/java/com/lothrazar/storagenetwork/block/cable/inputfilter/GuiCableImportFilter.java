@@ -27,7 +27,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   private ButtonRequest btnPlus;
   private ButtonRequest btnWhite;
   private ButtonRequest btnImport;
-  private boolean isWhitelist;
+  private boolean isAllowlist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
   public GuiCableImportFilter(ContainerCableImportFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
@@ -38,7 +38,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   @Override
   public void init() {
     super.init();
-    this.isWhitelist = containerCableLink.cap.getFilter().isWhitelist;
+    this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
     int x = guiLeft + 7, y = guiTop + 8;
     btnMinus = addButton(new ButtonRequest(x, y, "-", (p) -> {
       this.syncData(-1);
@@ -49,7 +49,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button.png"));
     x += 20;
     btnWhite = addButton(new ButtonRequest(x, y, "", (p) -> {
-      this.isWhitelist = !this.isWhitelist;
+      this.isAllowlist = !this.isAllowlist;
       this.syncData(0);
     }));
     x += 20;
@@ -69,9 +69,9 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
 
   private void syncData(int priority) {
     //    containerCableLink.link.setPriority(priority);
-    containerCableLink.cap.getFilter().isWhitelist = this.isWhitelist;
+    containerCableLink.cap.getFilter().isAllowList = this.isAllowlist;
     PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_DATA.ordinal(),
-        priority, isWhitelist));
+        priority, isAllowlist));
   }
 
   @Override
@@ -82,7 +82,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     if (containerCableLink == null || containerCableLink.cap == null) {
       return;
     }
-    btnWhite.setTextureId(this.isWhitelist ? TextureEnum.WHITELIST : TextureEnum.BLACKLIST);
+    btnWhite.setTextureId(this.isAllowlist ? TextureEnum.ALLOWLIST : TextureEnum.IGNORELIST);
   }
 
   @Override
@@ -101,7 +101,7 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format(this.isWhitelist ? "gui.storagenetwork.gui.whitelist" : "gui.storagenetwork.gui.blacklist")), mouseX - guiLeft, mouseY - guiTop);
+      renderTooltip(Lists.newArrayList(I18n.format(this.isAllowlist ? "gui.storagenetwork.gui.whitelist" : "gui.storagenetwork.gui.blacklist")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
