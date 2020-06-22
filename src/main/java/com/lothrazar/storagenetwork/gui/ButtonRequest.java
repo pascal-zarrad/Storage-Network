@@ -13,7 +13,7 @@ public class ButtonRequest extends Button {
 
   public static enum TextureEnum {
 
-    ALLOWLIST, IGNORELIST, SORT_AMT, SORT_MOD, SORT_NAME, SORT_UP, SORT_DOWN, JEI_RED, JEI_GREEN;
+    ALLOWLIST, IGNORELIST, SORT_AMT, SORT_MOD, SORT_NAME, SORT_UP, SORT_DOWN, JEI_RED, JEI_GREEN, IMPORT, PLUS, MINUS;
 
     public int getX() {
       switch (this) {
@@ -35,6 +35,12 @@ public class ButtonRequest extends Button {
           return 187;
         case SORT_DOWN:
           return 175;
+        case IMPORT:
+          return 176;
+        case PLUS:
+          return 196;
+        case MINUS:
+          return 177;
         default:
           return 0;
       }
@@ -54,6 +60,12 @@ public class ButtonRequest extends Button {
         case JEI_RED:
         case JEI_GREEN:
           return 140;
+        case IMPORT:
+          return 156;
+        case PLUS:
+          return 13;
+        case MINUS:
+          return 13;
         default:
           return 0;
       }

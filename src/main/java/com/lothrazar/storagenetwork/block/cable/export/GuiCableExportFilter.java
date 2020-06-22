@@ -6,6 +6,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ButtonRequest;
+import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -38,18 +39,20 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     super.init();
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
     int x = guiLeft + 7, y = guiTop + 8;
-    btnMinus = addButton(new ButtonRequest(x, y, "-", (p) -> {
+    btnMinus = addButton(new ButtonRequest(x, y, "", (p) -> {
       this.syncData(-1);
     }));
+    btnMinus.setTextureId(TextureEnum.MINUS);
     x += 30;
-    btnPlus = addButton(new ButtonRequest(x, y, "+", (p) -> {
+    btnPlus = addButton(new ButtonRequest(x, y, "", (p) -> {
       this.syncData(+1);
     }));
+    btnPlus.setTextureId(TextureEnum.PLUS);
     x += 20;
     btnImport = addButton(new ButtonRequest(x, y, "", (p) -> {
       importFilterSlots();
     }));
-    btnImport.setMessage("I");
+    btnImport.setTextureId(TextureEnum.IMPORT);
   }
 
   private void importFilterSlots() {
