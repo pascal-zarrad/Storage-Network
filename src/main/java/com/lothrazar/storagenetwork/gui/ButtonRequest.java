@@ -18,9 +18,9 @@ public class ButtonRequest extends Button {
     public int getX() {
       switch (this) {
         case IGNORELIST:
-          return 189;
+          return 195;
         case ALLOWLIST:
-          return 175;
+          return 177;
         case SORT_NAME:
           return 198;
         case SORT_AMT:

@@ -7,7 +7,6 @@ import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ButtonRequest;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
-import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
@@ -25,7 +24,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   ContainerCableExportFilter containerCableLink;
   private ButtonRequest btnMinus;
   private ButtonRequest btnPlus;
-  private ButtonRequest btnWhite;
   private ButtonRequest btnImport;
   private boolean isAllowlist;
   private List<ItemSlotNetwork> itemSlotsGhost;
@@ -46,11 +44,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     x += 30;
     btnPlus = addButton(new ButtonRequest(x, y, "+", (p) -> {
       this.syncData(+1);
-    }));
-    x += 20;
-    btnWhite = addButton(new ButtonRequest(x, y, "", (p) -> {
-      this.isAllowlist = !this.isAllowlist;
-      this.syncData(0);
     }));
     x += 20;
     btnImport = addButton(new ButtonRequest(x, y, "", (p) -> {
@@ -78,10 +71,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     renderBackground();
     super.render(mouseX, mouseY, partialTicks);
     renderHoveredToolTip(mouseX, mouseY);
-    if (containerCableLink == null || containerCableLink.cap == null) {
-      return;
-    }
-    btnWhite.setTextureId(this.isAllowlist ? TextureEnum.ALLOWLIST : TextureEnum.IGNORELIST);
   }
 
   @Override
@@ -98,9 +87,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   private void drawTooltips(final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY - guiTop);
-    }
-    if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format(this.isAllowlist ? "gui.storagenetwork.gui.whitelist" : "gui.storagenetwork.gui.blacklist")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
       renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
@@ -119,9 +105,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
-    // TODO CHECK BOXES
-    //    checkOreBtn.setIsChecked(containerCableLink.link.filters.ores);
-    //    checkNbtBtn.setIsChecked(containerCableLink.link.filters.nbt);
     itemSlotsGhost = Lists.newArrayList();
     //TODO: shared with GuiCableIO
     int rows = 2;
@@ -157,8 +140,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
-        //
-        //        StorageNetwork.log(mouseButton + " over filter " + slot.getStack() + " MOUSE + " + mouse);
         if (slot.getStack().isEmpty() == false) {
           //i hit non-empty slot, clear it no matter what
           if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
