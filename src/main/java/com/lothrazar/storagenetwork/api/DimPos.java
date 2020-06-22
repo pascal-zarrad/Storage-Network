@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.api.data;
+package com.lothrazar.storagenetwork.api;
 
 import javax.annotation.Nullable;
 import com.google.common.base.Objects;

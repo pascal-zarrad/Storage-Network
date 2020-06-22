@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.api.data;
+package com.lothrazar.storagenetwork.api;
 public enum EnumStorageDirection {
 
   IN, OUT, BOTH;
@@ -17,6 +17,5 @@ public enum EnumStorageDirection {
     else {
       return OUT;
     }
-    //return values()[(this.ordinal() + 1) % values().length];
   }
 }

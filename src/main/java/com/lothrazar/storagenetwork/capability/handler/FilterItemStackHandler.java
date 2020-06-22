@@ -1,11 +1,9 @@
-package com.lothrazar.storagenetwork.gui.inventory;
+package com.lothrazar.storagenetwork.capability.handler;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
-import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
-import com.lothrazar.storagenetwork.api.data.ItemStackHandlerEx;
-import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
+import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 

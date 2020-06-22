@@ -2,11 +2,11 @@ package com.lothrazar.storagenetwork;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
-import com.lothrazar.storagenetwork.config.ConfigManager;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
+import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
@@ -23,7 +23,7 @@ public class StorageNetwork {
   public static final String MODID = "storagenetwork";
   public static final Logger LOGGER = LogManager.getLogger();
   public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
-  public static ConfigManager config;
+  public static ConfigRegistry config;
 
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
@@ -34,7 +34,7 @@ public class StorageNetwork {
     PacketRegistry.init();
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
-    config = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
+    config = new ConfigRegistry(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     JeiSettings.setJeiLoaded(true);
   }
 

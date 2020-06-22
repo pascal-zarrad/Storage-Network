@@ -2,8 +2,8 @@ package com.lothrazar.storagenetwork.block.inventory;
 
 import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
-import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;

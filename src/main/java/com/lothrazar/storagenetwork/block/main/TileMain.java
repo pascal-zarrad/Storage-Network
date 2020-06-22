@@ -9,15 +9,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.api.capability.IConnectable;
-import com.lothrazar.storagenetwork.api.capability.IConnectableItemAutoIO;
-import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
-import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
-import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
-import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.api.DimPos;
+import com.lothrazar.storagenetwork.api.EnumStorageDirection;
+import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
+import com.lothrazar.storagenetwork.api.IConnectableLink;
+import com.lothrazar.storagenetwork.api.IItemStackMatcher;
+import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -184,7 +184,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       return false;
     }
     String blockId = state.getBlock().getRegistryName().toString();
-    for (String s : StorageNetwork.config.blacklist()) {
+    for (String s : StorageNetwork.config.ignorelist()) {
       if (blockId.equals(s)) {
         return false;
       }

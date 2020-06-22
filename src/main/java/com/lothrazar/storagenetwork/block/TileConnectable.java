@@ -2,10 +2,10 @@ package com.lothrazar.storagenetwork.block;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectable;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;

@@ -1,16 +1,17 @@
-package com.lothrazar.storagenetwork.capabilities;
+package com.lothrazar.storagenetwork.capability;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.api.capability.IConnectable;
-import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
-import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
-import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
-import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
+import com.lothrazar.storagenetwork.api.DimPos;
+import com.lothrazar.storagenetwork.api.EnumStorageDirection;
+import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.api.IConnectableLink;
+import com.lothrazar.storagenetwork.api.IItemStackMatcher;
+import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;

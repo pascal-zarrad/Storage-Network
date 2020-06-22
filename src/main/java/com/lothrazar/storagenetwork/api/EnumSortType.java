@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.api.data;
+package com.lothrazar.storagenetwork.api;
 public enum EnumSortType {
 
   AMOUNT, NAME, MOD;

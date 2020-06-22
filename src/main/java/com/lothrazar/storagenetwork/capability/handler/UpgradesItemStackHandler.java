@@ -1,6 +1,5 @@
-package com.lothrazar.storagenetwork.gui.inventory;
+package com.lothrazar.storagenetwork.capability.handler;
 
-import com.lothrazar.storagenetwork.api.data.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.item.ItemStack;

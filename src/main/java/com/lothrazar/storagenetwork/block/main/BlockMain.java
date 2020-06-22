@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.block.BlockState;

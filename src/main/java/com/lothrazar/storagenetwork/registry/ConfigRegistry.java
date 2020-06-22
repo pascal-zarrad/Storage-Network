@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.config;
+package com.lothrazar.storagenetwork.registry;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -11,15 +11,14 @@ import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
-public class ConfigManager {
+public class ConfigRegistry {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
   private static ForgeConfigSpec COMMON_CONFIG;
   private static BooleanValue LOGSPAM;
   private static IntValue REFRESHTICKS;
   private static BooleanValue RELOADONCHUNK;
-  private static ConfigValue<List<String>> BLACKLIST;
-  //    rangeWirelessAccessor = config.getInt("StorageRemoteRange", category, 128, 1, 10000, "How far the Remote item can reach (non-advanced)");
+  private static ConfigValue<List<String>> IGNORELIST;
   //    allowFastWorkBenchIntegration = config.getBoolean("allowFastWorkBenchIntegration", category, true, "Allow 'fastworkbench' project to integrate into storage network crafting grids.  Turning off lets you disable integration without uninstalling mod.  Client and server should match for best outcome.");
   static {
     initConfig();
@@ -34,13 +33,13 @@ public class ConfigManager {
     REFRESHTICKS = COMMON_BUILDER.comment("How often to auto-refresh a network (one second is 20 ticks)").defineInRange("autoRefreshTicks", 20, 2, 4096);
     List<String> list = new ArrayList<String>();
     list.add("extrautils2:playerchest");
-    BLACKLIST = COMMON_BUILDER.comment("Disable these blocks from ever being able to connect to the network, they will be treated as a non-inventory.").define("BlacklistBlocks",
+    IGNORELIST = COMMON_BUILDER.comment("Disable these blocks from ever being able to connect to the network, they will be treated as a non-inventory.").define("BlacklistBlocks",
         list);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
 
-  public ConfigManager(Path path) {
+  public ConfigRegistry(Path path) {
     final CommentedFileConfig configData = CommentedFileConfig.builder(path)
         .sync()
         .autosave()
@@ -62,7 +61,7 @@ public class ConfigManager {
     return REFRESHTICKS.get();
   }
 
-  public List<String> blacklist() {
-    return BLACKLIST.get();
+  public List<String> ignorelist() {
+    return IGNORELIST.get();
   }
 }

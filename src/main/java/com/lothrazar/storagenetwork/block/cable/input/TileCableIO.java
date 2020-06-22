@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork.block.cable.input;
 
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
+import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;

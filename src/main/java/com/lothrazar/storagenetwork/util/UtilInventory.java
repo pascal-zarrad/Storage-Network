@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.util;
 
-import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
+import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;

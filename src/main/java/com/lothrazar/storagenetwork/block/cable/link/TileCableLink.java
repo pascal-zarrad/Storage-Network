@@ -2,9 +2,9 @@ package com.lothrazar.storagenetwork.block.cable.link;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;

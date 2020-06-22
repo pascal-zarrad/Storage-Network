@@ -1,6 +1,7 @@
-package com.lothrazar.storagenetwork.api.capability;
+package com.lothrazar.storagenetwork.capability;
 
-import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.DimPos;
+import com.lothrazar.storagenetwork.api.IConnectable;
 
 public class DefaultConnectable implements IConnectable {
 

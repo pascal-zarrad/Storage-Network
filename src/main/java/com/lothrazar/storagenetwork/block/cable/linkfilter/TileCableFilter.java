@@ -2,9 +2,9 @@ package com.lothrazar.storagenetwork.block.cable.linkfilter;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
-import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;

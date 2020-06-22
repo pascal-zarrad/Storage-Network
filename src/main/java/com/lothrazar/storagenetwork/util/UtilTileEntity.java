@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.api.capability.IConnectable;
+import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

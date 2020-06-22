@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.block.inventory;
 
+import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileSortable;
-import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;

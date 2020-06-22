@@ -1,7 +1,6 @@
 package com.lothrazar.storagenetwork.api;
 
 import java.util.List;
-import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import net.minecraft.item.ItemStack;
 
 public interface IGuiNetwork extends IGuiPrivate {

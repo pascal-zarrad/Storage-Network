@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.item.remote;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.lothrazar.storagenetwork.api.data.DimPos;
+import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;

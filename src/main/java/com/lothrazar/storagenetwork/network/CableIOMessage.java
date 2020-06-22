@@ -6,7 +6,7 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.main.TileMain;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

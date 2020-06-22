@@ -1,9 +1,14 @@
-package com.lothrazar.storagenetwork.capabilities;
+package com.lothrazar.storagenetwork.registry;
 
-import com.lothrazar.storagenetwork.api.capability.DefaultConnectable;
-import com.lothrazar.storagenetwork.api.capability.IConnectable;
-import com.lothrazar.storagenetwork.api.capability.IConnectableItemAutoIO;
-import com.lothrazar.storagenetwork.api.capability.IConnectableLink;
+import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
+import com.lothrazar.storagenetwork.api.IConnectableLink;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
+import com.lothrazar.storagenetwork.capability.DefaultConnectable;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO.Storage;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink.Factory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;

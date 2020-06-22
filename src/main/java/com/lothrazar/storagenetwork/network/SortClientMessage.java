@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
+import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileSortable;
-import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
