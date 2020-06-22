@@ -2,7 +2,6 @@ package com.lothrazar.storagenetwork.registry;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
-import com.lothrazar.storagenetwork.network.CableFilterMessage;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.network.CableLimitMessage;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
@@ -21,8 +20,7 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class PacketRegistry {
 
   private static final String PROTOCOL_VERSION = Integer.toString(1);
-  //??https://wiki.mcjty.eu/modding/index.php?title=Tut14_Ep10
-  //  public static final SimpleNetworkWrapper INSTANCE = new SimpleNetworkWrapper(StorageNetwork.MODID);
+  //??https://wiki.mcjty.eu/modding/index.php?title=Tut14_Ep10 
   public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
       .named(new ResourceLocation(StorageNetwork.MODID, "main_channel"))
       .clientAcceptedVersions(PROTOCOL_VERSION::equals)
@@ -41,7 +39,7 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, ClearRecipeMessage.class, ClearRecipeMessage::encode, ClearRecipeMessage::decode, ClearRecipeMessage::handle);
     INSTANCE.registerMessage(id++, SortMessage.class, SortMessage::encode, SortMessage::decode, SortMessage::handle);
     INSTANCE.registerMessage(id++, RecipeMessage.class, RecipeMessage::encode, RecipeMessage::decode, RecipeMessage::handle);
-    INSTANCE.registerMessage(id++, CableFilterMessage.class, CableFilterMessage::encode, CableFilterMessage::decode, CableFilterMessage::handle);
+    id++;//    INSTANCE.registerMessage(id++, CableFilterMessage.class, CableFilterMessage::encode, CableFilterMessage::decode, CableFilterMessage::handle);
     INSTANCE.registerMessage(id++, CableLimitMessage.class, CableLimitMessage::encode, CableLimitMessage::decode, CableLimitMessage::handle);
     INSTANCE.registerMessage(id++, StackResponseClientMessage.class, StackResponseClientMessage::encode, StackResponseClientMessage::decode, StackResponseClientMessage::handle);
     INSTANCE.registerMessage(id++, RefreshFilterClientMessage.class, RefreshFilterClientMessage::encode, RefreshFilterClientMessage::decode, RefreshFilterClientMessage::handle);

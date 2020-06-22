@@ -97,7 +97,6 @@ public class CableDataMessage {
           }
         break;
         case SAVE_FITLER:
-          //            FilterItemStackHandler list = con.link.getFilter();
           link.setFilter(message.value, message.stack.copy());
         break;
       }
