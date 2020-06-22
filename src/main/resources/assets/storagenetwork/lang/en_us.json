@@ -84,8 +84,8 @@
     
     "tooltip.storagenetwork.kabel_P": "Can automate simple processing transactions.",
          
-    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Main for remote inventory access.",
-    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Main for remote inventory access.",
+    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Root for remote inventory access.",
+    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Root for remote inventory access.",
 
     "block.storagenetwork.controller": "Controller",
     "block.storagenetwork.controller.tooltip": "Manage all Processing Cables in the network",

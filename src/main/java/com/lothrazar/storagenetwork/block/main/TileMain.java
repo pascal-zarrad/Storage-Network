@@ -475,10 +475,9 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     //refresh time in config, default 200 ticks aka 10 seconds
     if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.config.refreshTicks()) == 0) || shouldRefresh) {
       try {
-        StorageNetwork.log("Network refreshing..." + getDimPos());
+        //        StorageNetwork.log("Network refreshing..." + getDimPos());
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
-        // StorageNetwork.LOGGER.info("refreshed " + connectables.size());
         world.getChunk(pos).setModified(true);//.setChunkModified();
       }
       catch (Throwable e) {
