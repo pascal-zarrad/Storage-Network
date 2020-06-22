@@ -12,6 +12,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -28,6 +29,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class BlockCable extends BaseBlock {
 
@@ -37,6 +39,23 @@ public class BlockCable extends BaseBlock {
         .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
         .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
         .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
+  }
+
+  @Override
+  public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    if (state.getBlock() != newState.getBlock()) {
+      TileEntity tileentity = worldIn.getTileEntity(pos);
+      if (tileentity != null) {
+        IItemHandler items = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        if (items != null) {
+          for (int i = 0; i < items.getSlots(); ++i) {
+            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
+          }
+          worldIn.updateComparatorOutputLevel(pos, this);
+        }
+      }
+      super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
   }
 
   public static BlockState cleanBlockState(BlockState state) {
