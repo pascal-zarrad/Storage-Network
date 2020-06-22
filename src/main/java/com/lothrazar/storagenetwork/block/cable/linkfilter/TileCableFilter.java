@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cable.storagefilter;
+package com.lothrazar.storagenetwork.block.cable.linkfilter;
 
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;

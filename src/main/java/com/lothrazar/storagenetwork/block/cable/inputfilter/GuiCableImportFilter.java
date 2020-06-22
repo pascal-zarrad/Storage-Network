@@ -119,9 +119,6 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
     blit(xCenter, yCenter, 0, 0, xSize, ySize);
-    // TODO CHECK BOXES
-    //    checkOreBtn.setIsChecked(containerCableLink.link.filters.ores);
-    //    checkNbtBtn.setIsChecked(containerCableLink.link.filters.nbt);
     itemSlotsGhost = Lists.newArrayList();
     //TODO: shared with GuiCableIO
     int rows = 2;
@@ -157,8 +154,6 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
-        //
-        //        StorageNetwork.log(mouseButton + " over filter " + slot.getStack() + " MOUSE + " + mouse);
         if (slot.getStack().isEmpty() == false) {
           //i hit non-empty slot, clear it no matter what
           if (mouseButton == 1) {

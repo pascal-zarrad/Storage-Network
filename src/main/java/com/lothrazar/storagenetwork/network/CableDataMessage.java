@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;

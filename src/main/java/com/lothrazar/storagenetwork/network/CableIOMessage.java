@@ -100,7 +100,6 @@ public class CableIOMessage {
               StorageNetwork.LOGGER.error("Exception saving filter slot ", message);
             }
           }
-          StorageNetwork.log("IO Filter set " + link.getFilter().getStacks());
           PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
               player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
         break;

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
-import com.lothrazar.storagenetwork.block.cable.storagefilter.GuiCableFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.GuiCableFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;

@@ -14,9 +14,9 @@ import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImport
 import com.lothrazar.storagenetwork.block.cable.inputfilter.TileCableImportFilter;
 import com.lothrazar.storagenetwork.block.cable.link.BlockCableLink;
 import com.lothrazar.storagenetwork.block.cable.link.TileCableLink;
-import com.lothrazar.storagenetwork.block.cable.storagefilter.BlockCableFilter;
-import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilter;
-import com.lothrazar.storagenetwork.block.cable.storagefilter.TileCableFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.BlockCableFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.ContainerCableFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.inventory.BlockInventory;
 import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
 import com.lothrazar.storagenetwork.block.inventory.TileInventory;
