@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.request;
 
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
-import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
+import com.lothrazar.storagenetwork.gui.NetworkCraftingInventory;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -16,7 +16,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
   public ContainerNetworkCraftingTable(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
     super(SsnRegistry.requestcontainer, windowId);
     tileRequest = (TileRequest) world.getTileEntity(pos);
-    matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
+    matrix = new NetworkCraftingInventory(this, tileRequest.matrix);
     this.playerInv = playerInv;
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
     slotCraftOutput.setTileMain(getTileMain());

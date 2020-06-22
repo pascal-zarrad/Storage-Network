@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.gui.inventory;
+package com.lothrazar.storagenetwork.gui;
 
 import java.util.List;
 import java.util.Map;
@@ -9,20 +9,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.NonNullList;
 
-public class InventoryCraftingNetwork extends CraftingInventory {
+public class NetworkCraftingInventory extends CraftingInventory {
 
   /** stupid thing is private with no getter so overwrite */
   private final NonNullList<ItemStack> stackList;
   private final Container eventHandler;
   public boolean skipEvents;
 
-  private InventoryCraftingNetwork(Container eventHandlerIn, int width, int height) {
+  private NetworkCraftingInventory(Container eventHandlerIn, int width, int height) {
     super(eventHandlerIn, width, height);
     eventHandler = eventHandlerIn;
     stackList = NonNullList.<ItemStack> withSize(3 * 3, ItemStack.EMPTY);
   }
 
-  public InventoryCraftingNetwork(Container eventHandlerIn, Map<Integer, ItemStack> matrix) {
+  public NetworkCraftingInventory(Container eventHandlerIn, Map<Integer, ItemStack> matrix) {
     this(eventHandlerIn, 3, 3);
     skipEvents = true;
     for (int i = 0; i < 9; i++) {
@@ -33,7 +33,7 @@ public class InventoryCraftingNetwork extends CraftingInventory {
     skipEvents = false;
   }
 
-  public InventoryCraftingNetwork(Container eventHandlerIn, List<ItemStack> matrix) {
+  public NetworkCraftingInventory(Container eventHandlerIn, List<ItemStack> matrix) {
     this(eventHandlerIn, 3, 3);
     skipEvents = true;
     for (int i = 0; i < 9; i++) {

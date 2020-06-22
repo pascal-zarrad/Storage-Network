@@ -6,7 +6,7 @@ import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
-import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
+import com.lothrazar.storagenetwork.gui.NetworkCraftingInventory;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,7 +28,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     this.world = player.world;
     DimPos dp = ItemRemote.getPosStored(remote);
     this.root = dp.getTileEntity(TileMain.class, world);
-    matrix = new InventoryCraftingNetwork(this, matrixStacks);
+    matrix = new NetworkCraftingInventory(this, matrixStacks);
     this.playerInv = pInv;
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
     slotCraftOutput.setTileMain(getTileMain());

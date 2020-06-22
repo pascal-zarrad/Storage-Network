@@ -9,7 +9,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
-public class GuiButtonRequest extends Button {
+public class ButtonRequest extends Button {
 
   public static enum TextureEnum {
 
@@ -62,7 +62,7 @@ public class GuiButtonRequest extends Button {
 
   private static final int SIZE = 16;
 
-  public GuiButtonRequest setTexture(ResourceLocation texture) {
+  public ButtonRequest setTexture(ResourceLocation texture) {
     this.texture = texture;
     return this;
   }
@@ -74,7 +74,7 @@ public class GuiButtonRequest extends Button {
     return texture;
   }
 
-  public GuiButtonRequest(int xPos, int yPos, String displayString, IPressable handler) {
+  public ButtonRequest(int xPos, int yPos, String displayString, IPressable handler) {
     super(xPos, yPos, SIZE, SIZE, displayString, handler);
     texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
   }

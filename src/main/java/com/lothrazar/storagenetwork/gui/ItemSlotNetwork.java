@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.gui.inventory;
+package com.lothrazar.storagenetwork.gui;
 
 import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;

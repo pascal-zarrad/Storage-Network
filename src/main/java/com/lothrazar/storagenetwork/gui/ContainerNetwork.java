@@ -8,7 +8,6 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
-import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +43,7 @@ public abstract class ContainerNetwork extends Container {
   protected PlayerEntity player;
   protected World world;
   protected ICraftingRecipe recipeCurrent;
-  public InventoryCraftingNetwork matrix;
+  public NetworkCraftingInventory matrix;
 
   protected ContainerNetwork(@Nullable ContainerType<?> type, int id) {
     super(type, id);

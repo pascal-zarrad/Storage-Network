@@ -9,8 +9,7 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
-import com.lothrazar.storagenetwork.gui.GuiButtonRequest.TextureEnum;
-import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
+import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.InsertMessage;
@@ -39,10 +38,10 @@ public class NetworkWidget {
   private int columns = 9;
   public ItemStack stackUnderMouse = ItemStack.EMPTY;
   public int fieldHeight = 90;
-  public GuiButtonRequest directionBtn;
-  public GuiButtonRequest sortBtn;
-  public GuiButtonRequest jeiBtn;
-  public GuiButtonRequest clearTextBtn;
+  public ButtonRequest directionBtn;
+  public ButtonRequest sortBtn;
+  public ButtonRequest jeiBtn;
+  public ButtonRequest clearTextBtn;
 
   public NetworkWidget(IGuiNetwork gui) {
     this.gui = gui;
@@ -291,22 +290,22 @@ public class NetworkWidget {
 
   public void initButtons() {
     int y = this.searchBar.y - 4;
-    this.directionBtn = new GuiButtonRequest(
+    this.directionBtn = new ButtonRequest(
         gui.getGuiLeft() + 6, y, "", (p) -> {
           gui.setDownwards(!gui.getDownwards());
           gui.syncDataToServer();
         });
     directionBtn.setHeight(16);
-    this.sortBtn = new GuiButtonRequest(gui.getGuiLeft() + 22, y, "", (p) -> {
+    this.sortBtn = new ButtonRequest(gui.getGuiLeft() + 22, y, "", (p) -> {
       gui.setSort(gui.getSort().next());
       gui.syncDataToServer();
     });
     sortBtn.setHeight(16);
-    jeiBtn = new GuiButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
+    jeiBtn = new ButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
     jeiBtn.setHeight(16);
-    clearTextBtn = new GuiButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
+    clearTextBtn = new ButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
       this.clearSearch();
     });
     clearTextBtn.setHeight(16);

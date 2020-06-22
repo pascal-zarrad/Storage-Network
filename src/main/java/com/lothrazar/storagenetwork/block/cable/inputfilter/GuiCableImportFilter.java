@@ -5,9 +5,9 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
-import com.lothrazar.storagenetwork.gui.GuiButtonRequest;
-import com.lothrazar.storagenetwork.gui.GuiButtonRequest.TextureEnum;
-import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
+import com.lothrazar.storagenetwork.gui.ButtonRequest;
+import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
+import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
@@ -23,10 +23,10 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable_filter.png");
   ContainerCableImportFilter containerCableLink;
-  private GuiButtonRequest btnMinus;
-  private GuiButtonRequest btnPlus;
-  private GuiButtonRequest btnWhite;
-  private GuiButtonRequest btnImport;
+  private ButtonRequest btnMinus;
+  private ButtonRequest btnPlus;
+  private ButtonRequest btnWhite;
+  private ButtonRequest btnImport;
   private boolean isWhitelist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
@@ -40,20 +40,20 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
     super.init();
     this.isWhitelist = containerCableLink.cap.getFilter().isWhitelist;
     int x = guiLeft + 7, y = guiTop + 8;
-    btnMinus = addButton(new GuiButtonRequest(x, y, "-", (p) -> {
+    btnMinus = addButton(new ButtonRequest(x, y, "-", (p) -> {
       this.syncData(-1);
     }));
     x += 30;
-    btnPlus = addButton(new GuiButtonRequest(x, y, "+", (p) -> {
+    btnPlus = addButton(new ButtonRequest(x, y, "+", (p) -> {
       this.syncData(+1);
     }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button.png"));
     x += 20;
-    btnWhite = addButton(new GuiButtonRequest(x, y, "", (p) -> {
+    btnWhite = addButton(new ButtonRequest(x, y, "", (p) -> {
       this.isWhitelist = !this.isWhitelist;
       this.syncData(0);
     }));
     x += 20;
-    btnImport = addButton(new GuiButtonRequest(x, y, "", (p) -> {
+    btnImport = addButton(new ButtonRequest(x, y, "", (p) -> {
       importFilterSlots();
     }));//.setTexture(new ResourceLocation(StorageNetwork.MODID, "textures/gui/button_full.png"));
     btnImport.setMessage("I");
