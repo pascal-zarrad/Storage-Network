@@ -7,6 +7,7 @@ import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -83,6 +84,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       tag.putInt("dim", dimType.getId());
       tag.putString("dimension", dimType.getRegistryName().toString());
       stack.setTag(tag);
+      UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
     }
     return ActionResultType.PASS;
@@ -122,14 +124,17 @@ public class ItemRemote extends Item implements INamedContainerProvider {
 
   @Override
   public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-    ItemStack itemStackIn = player.getHeldItem(hand);
-    if (world.isRemote || hand != Hand.MAIN_HAND) {
+    if (hand != Hand.MAIN_HAND) {
       //no offhand openings
       return super.onItemRightClick(world, player, hand);
     }
+    ItemStack itemStackIn = player.getHeldItem(hand);
     if (!itemStackIn.getOrCreateTag().getBoolean("bound")) {
       //unbound or invalid data
-      StorageNetwork.chatMessage(player, "item.remote.notbound");
+      UtilTileEntity.statusMessage(player, "item.remote.notconnected");
+      return super.onItemRightClick(world, player, hand);
+    }
+    if (world.isRemote) {
       return super.onItemRightClick(world, player, hand);
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
@@ -161,20 +166,17 @@ public class ItemRemote extends Item implements INamedContainerProvider {
         return super.onItemRightClick(world, player, hand);
       }
     }
-    ////    DimensionType type = DimensionManager.getRegistry().getByValue(dim);
-    //   World serverTargetWorld = FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(dim);
-    //    serverTargetWorld = Minecraft.getInstance().getIntegratedServer().getWorld(type);
-    //    System.out.println(type + "?" + serverTargetWorld);
-    //
-    //
     BlockPos posTarget = new BlockPos(x, y, z);
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
-      StorageNetwork.chatMessage(player, "item.remote.notloaded");
+      UtilTileEntity.chatMessage(player, "item.remote.notloaded");
       return super.onItemRightClick(world, player, hand);
     }
     TileEntity tile = serverTargetWorld.getTileEntity(posTarget);
     if (tile instanceof TileMain) {
       NetworkHooks.openGui((ServerPlayerEntity) player, this);
+    }
+    else {
+      //      UtilTileEntity.statusMessage(player, "item.remote.notconnected");
     }
     return super.onItemRightClick(world, player, hand);
   }

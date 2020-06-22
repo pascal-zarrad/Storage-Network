@@ -7,7 +7,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class UtilTileEntity {
 
@@ -15,6 +17,23 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_LEFT = 0;
   public static final int MOUSE_BTN_RIGHT = 1;
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
+
+  public static void chatMessage(PlayerEntity player, String message) {
+    if (player.world.isRemote) {
+      player.sendMessage(new TranslationTextComponent((message)));
+    }
+  }
+
+  public static void statusMessage(PlayerEntity player, String message) {
+    if (player.world.isRemote) {
+      player.sendStatusMessage(new TranslationTextComponent((message)), true);
+    }
+  }
+
+  public static String lang(String message) {
+    TranslationTextComponent t = new TranslationTextComponent(message);
+    return t.getFormattedText();
+  }
 
   /**
    * This can only be called on the server side! It returns the Main tile entity for the given connectable.

@@ -449,11 +449,6 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (tileEntity == null) {
         continue;
       }
-      //      IConnectable cap = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
-      //      if (cap == null) {
-      //        StorageNetwork.LOGGER.error("Somehow stored a dimpos that is not connectable... Skipping " + dimpos);
-      //        continue;
-      //      }
       IConnectableLink capConnect = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
       if (capConnect == null) {
         continue;

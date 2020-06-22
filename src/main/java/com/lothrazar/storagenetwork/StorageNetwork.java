@@ -38,13 +38,11 @@ import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
@@ -182,22 +180,5 @@ public class StorageNetwork {
     String source = (event.getSource() == null) ? "" : event.getSource().getName() + " ";
     String msg = "Storage Network: Invalid fingerprint detected! The file " + source + "may have been tampered with. This version will NOT be supported by the author!";
     System.out.println(msg);
-  }
-
-  public static void chatMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent((message)));
-    }
-  }
-
-  public static void statusMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendStatusMessage(new TranslationTextComponent((message)), true);
-    }
-  }
-
-  public static String lang(String message) {
-    TranslationTextComponent t = new TranslationTextComponent(message);
-    return t.getFormattedText();
   }
 }

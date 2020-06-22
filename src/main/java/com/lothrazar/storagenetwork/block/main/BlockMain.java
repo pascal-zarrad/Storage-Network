@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -57,8 +57,8 @@ public class BlockMain extends BaseBlock {
     }
     //    float hitX, float hitY, float hitZ;
     TileMain tileMain = (TileMain) tileHere;
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMain.emptySlots()));
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMain.getConnectablePositions().size()));
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + UtilTileEntity.lang("chat.master.emptyslots") + tileMain.emptySlots()));
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + UtilTileEntity.lang("chat.master.connectables") + tileMain.getConnectablePositions().size()));
     Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
     while (iter.hasNext()) {

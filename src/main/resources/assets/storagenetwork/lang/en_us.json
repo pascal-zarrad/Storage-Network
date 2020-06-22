@@ -34,6 +34,8 @@
     "block.storagenetwork.recipe.invalidright": "Set Output on right",
     "block.storagenetwork.recipe.valid": "Transaction valid",
 
+    "item.remote.notconnected": "Remote is not connected, bind it to the Main network node first",
+    "item.remote.connected": "Remote has connected to network",
     "item.remote.outofrange": "Out of range",
     "item.remote.notloaded": "Chunk not loaded",
 

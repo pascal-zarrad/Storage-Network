@@ -108,6 +108,6 @@
     "0.3.0":"Crafting remote added.  Dimension network upgrade.  ",
     "0.3.1":"JEI recipe transfer fixed for crafting remote.  Fixed clear recipe button in crafting remote.  Added block-tag (similar to ore dictionary) search support to the network, for example '$wooden'.  ",
   	"0.3.2":"Tooltip fixed. Fixed visual bug where cables showing connection to 2 chests when in reality only one was connected",
-  	"1.0.0":"Filter cables drop their upgrades when broken.  Import filter button fixed for import and export cables.  " 
+  	"1.0.0":"Filter cables drop their upgrades when broken.  Import filter button fixed for import and export cables.  Player gets a chat status message when connecting a remote to the network, or when using a new remote that is not connected.  " 
   }
 }
