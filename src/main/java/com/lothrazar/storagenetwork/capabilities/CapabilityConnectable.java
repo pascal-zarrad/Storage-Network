@@ -15,10 +15,10 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
   @Override
   public CompoundNBT serializeNBT() {
     CompoundNBT result = new CompoundNBT();
-    if (getMasterPos() == null) {
+    if (getMainPos() == null) {
       return result;
     }
-    result.put("master", getMasterPos().serializeNBT());
+    result.put("master", getMainPos().serializeNBT());
     if (getPos() != null) {
       result.put("self", getPos().serializeNBT());
     }
@@ -27,7 +27,7 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
 
   @Override
   public void deserializeNBT(CompoundNBT nbt) {
-    setMasterPos(new DimPos(nbt.getCompound("master")));
+    setMainPos(new DimPos(nbt.getCompound("master")));
     if (nbt.contains("self")) {
       setPos(new DimPos(nbt.getCompound("self")));
     }

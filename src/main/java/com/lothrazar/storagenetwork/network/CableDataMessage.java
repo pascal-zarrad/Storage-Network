@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilter;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -60,15 +60,13 @@ public class CableDataMessage {
         return;
       }
       link = container.cap;
-      TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
-      //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
+      TileMain master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
       CableMessageType type = CableMessageType.values()[message.id];
       switch (type) {
         case IMPORT_FILTER:
-          //TODO: Fix this not auto sync to client
           link.getFilter().clear();
           int targetSlot = 0;
-          for (ItemStack filterSuggestion : link.getStoredStacks()) {
+          for (ItemStack filterSuggestion : link.getStoredStacks(false)) {
             // Ignore stacks that are already filtered
             if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
               continue;
@@ -81,9 +79,8 @@ public class CableDataMessage {
                 continue;
               }
             }
-            catch (RuntimeException ex) {
-              //fail slot
-              StorageNetwork.log("Exception saving slot " + message);
+            catch (Exception ex) {
+              StorageNetwork.LOGGER.error("Exception saving filter slot ", message);
             }
           }
           PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),

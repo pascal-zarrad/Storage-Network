@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import net.minecraft.item.Item;
 
 public class UtilTileEntity {
@@ -23,11 +23,11 @@ public class UtilTileEntity {
    * @return
    */
   @Nullable
-  public static TileMaster getTileMasterForConnectable(@Nonnull IConnectable connectable) {
-    if (connectable == null || connectable.getMasterPos() == null) {
+  public static TileMain getTileMasterForConnectable(@Nonnull IConnectable connectable) {
+    if (connectable == null || connectable.getMainPos() == null) {
       return null;
     }
-    return connectable.getMasterPos().getTileEntity(TileMaster.class);
+    return connectable.getMainPos().getTileEntity(TileMain.class);
   }
 
   /**

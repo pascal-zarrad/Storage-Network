@@ -41,7 +41,7 @@ public class BlockMaster extends BaseBlock {
     }
     TileEntity tileAtPos = worldIn.getTileEntity(pos);
     if (tileAtPos != null) {
-      ((TileMaster) tileAtPos).refreshNetwork();
+      ((TileMain) tileAtPos).refreshNetwork();
     }
   }
 
@@ -52,11 +52,11 @@ public class BlockMaster extends BaseBlock {
       return ActionResultType.SUCCESS;
     }
     TileEntity tileHere = worldIn.getTileEntity(pos);
-    if (!(tileHere instanceof TileMaster)) {
+    if (!(tileHere instanceof TileMain)) {
       return ActionResultType.PASS;
     }
     //    float hitX, float hitY, float hitZ;
-    TileMaster tileMaster = (TileMaster) tileHere;
+    TileMain tileMaster = (TileMain) tileHere;
     playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMaster.emptySlots()));
     playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMaster.getConnectablePositions().size()));
     Map<String, Integer> mapNamesToCount = new HashMap<>();
@@ -90,6 +90,6 @@ public class BlockMaster extends BaseBlock {
 
   @Override
   public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-    return new TileMaster();
+    return new TileMain();
   }
 }

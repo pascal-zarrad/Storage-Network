@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.inventory;
 
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,7 @@ public class ContainerNetworkInventory extends ContainerNetwork {
   }
 
   @Override
-  public TileMaster getTileMaster() {
-    return tile.getMaster().getTileEntity(TileMaster.class);
+  public TileMain getTileMaster() {
+    return tile.getMaster().getTileEntity(TileMain.class);
   }
 }

@@ -180,7 +180,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
-        StorageNetwork.log("JEI compat issue " + e);
+        StorageNetwork.LOGGER.error("JEI compat issue ", e);
         //its ok JEI not installed for maybe an addon mod is ok
       }
     }

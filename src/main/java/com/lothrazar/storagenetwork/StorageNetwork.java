@@ -21,7 +21,7 @@ import com.lothrazar.storagenetwork.block.inventory.BlockInventory;
 import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
 import com.lothrazar.storagenetwork.block.inventory.TileInventory;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
@@ -132,7 +132,7 @@ public class StorageNetwork {
     @SubscribeEvent
     public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
       IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
-      r.register(TileEntityType.Builder.create(TileMaster::new, SsnRegistry.master).build(null).setRegistryName("master"));
+      r.register(TileEntityType.Builder.create(TileMain::new, SsnRegistry.master).build(null).setRegistryName("master"));
       r.register(TileEntityType.Builder.create(TileInventory::new, SsnRegistry.inventory).build(null).setRegistryName("inventory"));
       r.register(TileEntityType.Builder.create(TileRequest::new, SsnRegistry.request).build(null).setRegistryName("request"));
       r.register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.kabel).build(null).setRegistryName("kabel"));

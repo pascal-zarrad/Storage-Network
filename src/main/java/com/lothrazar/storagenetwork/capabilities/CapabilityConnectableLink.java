@@ -61,7 +61,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   }
 
   @Override
-  public List<ItemStack> getStoredStacks() {
+  public List<ItemStack> getStoredStacks(boolean isFiltered) {
     if (inventoryFace == null) {
       return Collections.emptyList();
     }
@@ -78,7 +78,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       if (stack == null || stack.isEmpty()) {
         continue;
       }
-      if (filters.isStackFiltered(stack)) {
+      if (isFiltered && filters.isStackFiltered(stack)) {
         continue;
       }
       result.add(stack.copy());

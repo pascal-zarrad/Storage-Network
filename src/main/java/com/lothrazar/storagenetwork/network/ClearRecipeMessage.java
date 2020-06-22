@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -44,7 +44,7 @@ public class ClearRecipeMessage {
     if (player.openContainer instanceof ContainerNetwork) {
       ContainerNetwork container = (ContainerNetwork) player.openContainer;
       CraftingInventory craftMatrix = container.getCraftMatrix();
-      TileMaster tileMaster = container.getTileMaster();
+      TileMain tileMaster = container.getTileMaster();
       for (int i = 0; i < 9; i++) {
         if (tileMaster == null) {
           break;

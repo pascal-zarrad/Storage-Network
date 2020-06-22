@@ -6,7 +6,7 @@ import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -53,6 +53,12 @@ public class CableIOMessage {
         '}';
   }
 
+  /**
+   * TODO: mostly duplicate of CableDataMessage, needs merge or refactor
+   * 
+   * @param message
+   * @param ctx
+   */
   public static void handle(CableIOMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
@@ -69,16 +75,16 @@ public class CableIOMessage {
         link = ctr.cap;
         tile = ctr.tile;
       }
-      TileMaster master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
+      TileMain master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
       //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
       CableMessageType type = CableMessageType.values()[message.id];
       switch (type) {
         case IMPORT_FILTER:
-          //TODO: Fix this not auto sync to client
           link.getFilter().clear();
           int targetSlot = 0;
-          for (ItemStack filterSuggestion : link.getStoredStacks()) {
+          for (ItemStack filterSuggestion : link.getStoredStacks(false)) {
             // Ignore stacks that are already filtered
+            StorageNetwork.log("IO filterSuggestion" + filterSuggestion);
             if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
               continue;
             }
@@ -90,11 +96,12 @@ public class CableIOMessage {
                 continue;
               }
             }
-            catch (RuntimeException ex) {
+            catch (Exception ex) {
               //fail slot
-              StorageNetwork.log("Exception saving slot " + message);
+              StorageNetwork.LOGGER.error("Exception saving filter slot ", message);
             }
           }
+          StorageNetwork.log("IO Filter set " + link.getFilter().getStacks());
           PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
               player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
         break;
@@ -106,7 +113,6 @@ public class CableIOMessage {
           }
         break;
         case SAVE_FITLER:
-          //            FilterItemStackHandler list = con.link.getFilter();
           link.setFilter(message.value, message.stack.copy());
         break;
       }

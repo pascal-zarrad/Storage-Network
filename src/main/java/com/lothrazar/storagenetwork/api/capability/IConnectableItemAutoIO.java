@@ -5,12 +5,12 @@ import java.util.List;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 
 /**
- * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks master. You could quite as well just expose {@link IConnectable} and do the
+ * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks main. You could quite as well just expose {@link IConnectable} and do the
  * exporting/importing in your own update() method.
  *
  * If you indeed want to add another exporting/importing cable in the style of the integrated ones, this might be for you. In all other cases, this is probably not what you want.
@@ -86,18 +86,18 @@ public interface IConnectableItemAutoIO {
    *
    * @param connectablePos
    *          The position of your block, including the world
-   * @param master
-   *          The network master. Use this to e.g. query amount of items.
+   * @param main
+   *          The network main. Use this to e.g. query amount of items.
    *
    * @return Whether or not this IConnectableLink should be processed this tick.
    */
-  boolean runNow(DimPos connectablePos, TileMaster master);
+  boolean runNow(DimPos connectablePos, TileMain main);
 
   /**
-   * If this block is used with an ioDirection of OUT and has its getSupportedTransferDirection set to OUT, then this list will be consolidated by the master and available items in the network
-   * matching the {@link IItemStackMatcher}s in the list will be exported via the canTransfer() and transfer() methods above.
+   * If this block is used with an ioDirection of OUT and has its getSupportedTransferDirection set to OUT, then this list will be consolidated by the main and available items in the network matching
+   * the {@link IItemStackMatcher}s in the list will be exported via the canTransfer() and transfer() methods above.
    *
-   * In other words: - Only implement this if you are making a master-controlled export cable (you shouldnt)
+   * In other words: - Only implement this if you are making a main-controlled export cable (you shouldnt)
    *
    * @return
    */

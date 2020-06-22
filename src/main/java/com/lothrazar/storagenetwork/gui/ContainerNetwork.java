@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -33,7 +33,7 @@ import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 public abstract class ContainerNetwork extends Container {
 
-  public abstract TileMaster getTileMaster();
+  public abstract TileMain getTileMaster();
 
   public abstract void slotChanged();
 
@@ -149,7 +149,7 @@ public abstract class ContainerNetwork extends Container {
     if (slot != null && slot.getHasStack()) {
       ItemStack itemstack1 = slot.getStack();
       itemstack = itemstack1.copy();
-      TileMaster tileMaster = this.getTileMaster();
+      TileMain tileMaster = this.getTileMaster();
       if (this.isCrafting() && slotIndex == 0) {
         craftShift(playerIn, tileMaster);
         return ItemStack.EMPTY;
@@ -193,7 +193,7 @@ public abstract class ContainerNetwork extends Container {
    * @param tile
    */
   @SuppressWarnings("deprecation")
-  protected void craftShift(PlayerEntity player, TileMaster tile) {
+  protected void craftShift(PlayerEntity player, TileMain tile) {
     if (!this.isCrafting() || matrix == null) {
       return;
     }

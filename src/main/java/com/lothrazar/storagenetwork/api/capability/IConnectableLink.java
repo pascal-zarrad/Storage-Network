@@ -17,10 +17,12 @@ public interface IConnectableLink {
   /**
    * Use this method to return all stacks that are stored via this {@link IConnectableLink}. This should be a filtered list, i.e. if you offer some sort of item filter for your storage, apply the
    * filters here or players will see the item in their control panel.
+   * 
+   * isFiltered : if true , it does apply the filter. if not it returns all stacks ignoring filter
    *
    * @return
    */
-  List<ItemStack> getStoredStacks();
+  List<ItemStack> getStoredStacks(boolean isFiltered);
 
   /**
    * This is called on your capability every time the network tries to insert a stack into your storage.

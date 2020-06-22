@@ -11,7 +11,7 @@ import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.inventory.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -49,7 +49,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   //TODO: shrae with ConnectableLink  @Override
-  public List<ItemStack> getStoredStacks() {
+  public List<ItemStack> getStoredStacks(boolean isFiltered) {
     if (inventoryFace == null) {
       return Collections.emptyList();
     }
@@ -66,7 +66,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
       if (stack == null || stack.isEmpty()) {
         continue;
       }
-      if (filters.isStackFiltered(stack)) {
+      if (isFiltered && filters.isStackFiltered(stack)) {
         continue;
       }
       result.add(stack.copy());
@@ -243,7 +243,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return 0;// upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
   }
 
-  private boolean doesPassOperationFilterLimit(TileMaster master) {
+  private boolean doesPassOperationFilterLimit(TileMain master) {
     if (countOps() < 1) {
       return true;
     }
@@ -261,7 +261,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   @Override
-  public boolean runNow(DimPos connectablePos, TileMaster master) {
+  public boolean runNow(DimPos connectablePos, TileMain master) {
     int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.speed_upgrade) + 1, 1);
     int speedRatio = (30 / speed);
     if (speedRatio <= 1) {

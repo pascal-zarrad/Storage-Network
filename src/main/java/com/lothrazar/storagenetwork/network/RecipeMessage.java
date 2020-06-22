@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import com.lothrazar.storagenetwork.api.util.UtilInventory;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -67,7 +67,7 @@ public class RecipeMessage {
         return;
       }
       ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
-      TileMaster master = ctr.getTileMaster();
+      TileMain master = ctr.getTileMaster();
       if (master == null) {
         StorageNetwork.log("Recipe message cancelled, null tile");
         return;

@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -71,7 +71,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     World world = context.getWorld();
     BlockPos pos = context.getPos();
     PlayerEntity player = context.getPlayer();
-    if (world.getTileEntity(pos) instanceof TileMaster) {
+    if (world.getTileEntity(pos) instanceof TileMain) {
       ItemStack stack = player.getHeldItem(hand);
       CompoundNBT tag = stack.getOrCreateTag();
       tag.putInt("x", pos.getX());
@@ -157,7 +157,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       }
       catch (Exception e) {
         //
-        StorageNetwork.log("why is cross dim broken " + e.getLocalizedMessage());
+        StorageNetwork.LOGGER.error("why is cross dim broken ", e);
         return super.onItemRightClick(world, player, hand);
       }
     }
@@ -173,7 +173,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       return super.onItemRightClick(world, player, hand);
     }
     TileEntity tile = serverTargetWorld.getTileEntity(posTarget);
-    if (tile instanceof TileMaster) {
+    if (tile instanceof TileMain) {
       NetworkHooks.openGui((ServerPlayerEntity) player, this);
     }
     return super.onItemRightClick(world, player, hand);

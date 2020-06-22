@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.block.BaseBlock;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -221,7 +221,7 @@ public class BlockCable extends BaseBlock {
     if (facing == null) {
       return false;
     }
-    if (!TileMaster.isTargetAllowed(facingState)) {
+    if (!TileMain.isTargetAllowed(facingState)) {
       return false;
     }
     TileEntity neighbor = world.getTileEntity(facingPos);

@@ -18,7 +18,7 @@ public interface IItemStackMatcher {
   ItemStack getStack();
 
   /**
-   * Matches the given rules of the master against the given stack and returns whether it matches.
+   * Matches the given rules against the given stack and returns whether it matches.
    *
    * @param stack
    * @return

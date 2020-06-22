@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
 import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,7 +11,7 @@ import net.minecraft.util.Hand;
 
 public class ContainerNetworkRemote extends ContainerNetwork {
 
-  private final TileMaster master;
+  private final TileMain master;
   private ItemStack remote;
 
   public ContainerNetworkRemote(int id, PlayerInventory pInv) {
@@ -20,7 +20,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     this.player = pInv.player;
     this.world = player.world;
     DimPos dp = ItemRemote.getPosStored(remote);
-    this.master = dp.getTileEntity(TileMaster.class, world);
+    this.master = dp.getTileEntity(TileMain.class, world);
     this.playerInv = pInv;
     bindPlayerInvo(this.playerInv);
     bindHotbar();
@@ -32,7 +32,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   }
 
   @Override
-  public TileMaster getTileMaster() {
+  public TileMain getTileMaster() {
     return master;
   }
 

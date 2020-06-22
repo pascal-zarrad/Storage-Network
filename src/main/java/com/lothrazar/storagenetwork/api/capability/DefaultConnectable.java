@@ -4,12 +4,12 @@ import com.lothrazar.storagenetwork.api.data.DimPos;
 
 public class DefaultConnectable implements IConnectable {
 
-  DimPos master;
+  DimPos main;
   DimPos self;
 
   @Override
-  public DimPos getMasterPos() {
-    return master;
+  public DimPos getMainPos() {
+    return main;
   }
 
   @Override
@@ -18,8 +18,8 @@ public class DefaultConnectable implements IConnectable {
   }
 
   @Override
-  public void setMasterPos(DimPos masterPos) {
-    this.master = masterPos;
+  public void setMainPos(DimPos mainIn) {
+    this.main = mainIn;
   }
 
   @Override

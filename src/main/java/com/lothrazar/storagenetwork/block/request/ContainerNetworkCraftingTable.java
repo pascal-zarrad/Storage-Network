@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -43,7 +43,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
-    TileMaster tileMaster = getTileMaster();
+    TileMain tileMaster = getTileMaster();
     TileRequest table = getTileRequest();
     if (tileMaster != null &&
         !table.getWorld().isRemote && table.getWorld().getGameTime() % 40 == 0) {
@@ -56,11 +56,11 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
   }
 
   @Override
-  public TileMaster getTileMaster() {
+  public TileMain getTileMaster() {
     if (getTileRequest() == null || getTileRequest().getMaster() == null) {
       return null;
     }
-    return getTileRequest().getMaster().getTileEntity(TileMaster.class);
+    return getTileRequest().getMaster().getTileEntity(TileMain.class);
   }
 
   public TileRequest getTileRequest() {

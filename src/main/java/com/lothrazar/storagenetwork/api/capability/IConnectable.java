@@ -11,11 +11,11 @@ import com.lothrazar.storagenetwork.api.data.DimPos;
 public interface IConnectable {
 
   /**
-   * Return the position of the master. For historic reasons each block currently needs to know this.
+   * Return the position of the main. For historic reasons each block currently needs to know this.
    *
    * @return a DimPos with the proper dimension and position
    */
-  DimPos getMasterPos();
+  DimPos getMainPos();
 
   /**
    * Return the position of this connectable.
@@ -30,11 +30,11 @@ public interface IConnectable {
   DimPos getPos();
 
   /**
-   * When your block is placed and a connected network updates, it calls this method to tell your capability where the {@link INetworkMaster} is. Store this value and return it in getMasterPos().
+   * When your block is placed and a connected network updates, it calls this method to tell your capability where the {@link INetworkmain} is. Store this value and return it in getmainPos().
    *
-   * @param masterPos
+   * @param mainPos
    */
-  void setMasterPos(DimPos masterPos);
+  void setMainPos(DimPos mainPos);
 
   /**
    * Set data used in getPos

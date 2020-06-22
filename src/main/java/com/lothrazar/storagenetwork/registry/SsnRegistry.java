@@ -13,7 +13,7 @@ import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
 import com.lothrazar.storagenetwork.block.inventory.TileInventory;
 import com.lothrazar.storagenetwork.block.master.BlockMaster;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
@@ -49,7 +49,7 @@ public class SsnRegistry {
   public static ItemUpgrade stack_upgrade;
   // master
   @ObjectHolder(StorageNetwork.MODID + ":master")
-  public static TileEntityType<TileMaster> mastertile;
+  public static TileEntityType<TileMain> mastertile;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMaster master;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")

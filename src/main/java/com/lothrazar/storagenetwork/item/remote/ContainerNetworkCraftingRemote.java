@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.item.remote;
 import java.util.HashMap;
 import java.util.Map;
 import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
@@ -18,7 +18,7 @@ import net.minecraft.util.Hand;
 public class ContainerNetworkCraftingRemote extends ContainerNetwork {
 
   Map<Integer, ItemStack> matrixStacks = new HashMap<>();
-  private final TileMaster master;
+  private final TileMain master;
   private ItemStack remote;
 
   public ContainerNetworkCraftingRemote(int id, PlayerInventory pInv) {
@@ -27,7 +27,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     this.player = pInv.player;
     this.world = player.world;
     DimPos dp = ItemRemote.getPosStored(remote);
-    this.master = dp.getTileEntity(TileMaster.class, world);
+    this.master = dp.getTileEntity(TileMain.class, world);
     matrix = new InventoryCraftingNetwork(this, matrixStacks);
     this.playerInv = pInv;
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
@@ -63,7 +63,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   }
 
   @Override
-  public TileMaster getTileMaster() {
+  public TileMain getTileMaster() {
     return master;
   }
 

@@ -12,7 +12,7 @@ public class ConnectableNullHandler implements IConnectable {
   }
 
   @Override
-  public DimPos getMasterPos() {
+  public DimPos getMainPos() {
     return new DimPos(0, null, new BlockPos(0, 0, 0));
   }
 
@@ -22,7 +22,7 @@ public class ConnectableNullHandler implements IConnectable {
   }
 
   @Override
-  public void setMasterPos(DimPos masterPos) {}
+  public void setMainPos(DimPos pos) {}
 
   @Override
   public void setPos(DimPos lookPos) {}

@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.block.request;
 import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMaster;
+import com.lothrazar.storagenetwork.block.master.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -22,7 +22,7 @@ public class SlotCraftingNetwork extends CraftingResultSlot {
     this.parent = parent;
   }
 
-  private TileMaster tileMaster;
+  private TileMain tileMaster;
 
   @Override
   public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
@@ -48,11 +48,11 @@ public class SlotCraftingNetwork extends CraftingResultSlot {
     return stack;
   }
 
-  public TileMaster getTileMaster() {
+  public TileMain getTileMaster() {
     return tileMaster;
   }
 
-  public void setTileMaster(TileMaster tileMaster) {
+  public void setTileMaster(TileMain tileMaster) {
     this.tileMaster = tileMaster;
   }
 }

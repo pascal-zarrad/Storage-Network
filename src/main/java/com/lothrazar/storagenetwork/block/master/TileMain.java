@@ -35,7 +35,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class TileMaster extends TileEntity implements ITickableTileEntity {
+public class TileMain extends TileEntity implements ITickableTileEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
@@ -45,7 +45,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     return new DimPos(world, pos);
   }
 
-  public TileMaster() {
+  public TileMain() {
     super(SsnRegistry.mastertile);
   }
 
@@ -55,7 +55,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
       refreshNetwork();
     }
     for (IConnectableLink storage : getSortedConnectableStorage()) {
-      for (ItemStack stack : storage.getStoredStacks()) {
+      for (ItemStack stack : storage.getStoredStacks(true)) {
         if (stack == null || stack.isEmpty()) {
           continue;
         }
@@ -132,7 +132,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         continue;
       }
       // Prevent having multiple masters on a network and break all others.
-      TileMaster maybeMasterTile = lookPos.getTileEntity(TileMaster.class);
+      TileMain maybeMasterTile = lookPos.getTileEntity(TileMain.class);
       if (maybeMasterTile != null && !lookPos.equals(world, pos)) {
         nukeAndDrop(lookPos);
         continue;
@@ -151,12 +151,12 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
         // StorageNetwork.LOGGER.info("1.15 HAX NULL POS !! " + lookPos + "has tile " + tileHere);
         //wait what 
         capabilityConnectable.setPos(lookPos);
-        capabilityConnectable.setMasterPos(this.getDimPos());
+        capabilityConnectable.setMainPos(this.getDimPos());
       }
       //
       if (capabilityConnectable != null) {
         //        IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
-        capabilityConnectable.setMasterPos(getDimPos());
+        capabilityConnectable.setMainPos(getDimPos());
         DimPos realConnectablePos = capabilityConnectable.getPos();
         boolean beenHereBefore = set.contains(realConnectablePos);
         if (beenHereBefore) {
@@ -475,6 +475,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
     //refresh time in config, default 200 ticks aka 10 seconds
     if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.config.refreshTicks()) == 0) || shouldRefresh) {
       try {
+        StorageNetwork.log("Network refreshing..." + getDimPos());
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
         // StorageNetwork.LOGGER.info("refreshed " + connectables.size());
