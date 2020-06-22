@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cablelink;
+package com.lothrazar.storagenetwork.block.cable.link;
 
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.BlockState;
