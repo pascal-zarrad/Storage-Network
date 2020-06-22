@@ -10,6 +10,7 @@ import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.inventory.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
@@ -155,7 +156,7 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
         if (slot.getStack().isEmpty() == false) {
           //i hit non-empty slot, clear it no matter what
-          if (mouseButton == 1) {
+          if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
             int direction = hasShiftDown() ? -1 : 1;
             int newCount = Math.min(64, slot.getStack().getCount() + direction);
             if (newCount < 1) {
