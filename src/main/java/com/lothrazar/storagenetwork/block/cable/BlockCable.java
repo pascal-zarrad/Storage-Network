@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.block.BaseBlock;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -176,7 +176,7 @@ public class BlockCable extends BaseBlock {
     for (Direction d : Direction.values()) {
       facingState = worldIn.getBlockState(pos.offset(d));
       if (facingState.getBlock() == SsnRegistry.inventory
-          || facingState.getBlock() == SsnRegistry.master
+          || facingState.getBlock() == SsnRegistry.main
           || facingState.getBlock() == SsnRegistry.request) {
         stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockState(pos, stateIn);
@@ -195,7 +195,7 @@ public class BlockCable extends BaseBlock {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     if (facingState.getBlock() instanceof BlockCable
         || facingState.getBlock() == SsnRegistry.inventory
-        || facingState.getBlock() == SsnRegistry.master
+        || facingState.getBlock() == SsnRegistry.main
         || facingState.getBlock() == SsnRegistry.request) {
       return stateIn.with(property, EnumConnectType.CABLE);
     }

@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.master;
+package com.lothrazar.storagenetwork.block.main;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;

@@ -2,11 +2,11 @@ package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilter;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -60,7 +60,7 @@ public class CableDataMessage {
         return;
       }
       link = container.cap;
-      TileMain master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
+      TileMain root = UtilTileEntity.getTileMainForConnectable(link.connectable);
       CableMessageType type = CableMessageType.values()[message.id];
       switch (type) {
         case IMPORT_FILTER:
@@ -89,8 +89,8 @@ public class CableDataMessage {
         case SYNC_DATA:
           link.setPriority(link.getPriority() + message.value);
           link.getFilter().setIsWhitelist(message.whitelist);
-          if (master != null) {
-            master.clearCache();
+          if (root != null) {
+            root.clearCache();
           }
         break;
         case SAVE_FITLER:

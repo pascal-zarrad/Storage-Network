@@ -8,8 +8,8 @@
     "block.storagenetwork.filter_kabel": "Filtered Link Cable",
     "block.storagenetwork.process_kabel": "Processing Cable",
 
-    "block.storagenetwork.master": "Storage Network Master",
-    "block.storagenetwork.master.tooltip": "The heart of the network. Only ONE per network.",
+    "block.storagenetwork.master": "Storage Network Root",
+    "block.storagenetwork.master.tooltip": "The main heart of the network. Only ONE per network.",
     
     "block.storagenetwork.request": "Storage Request Table",
     "block.storagenetwork.request.tooltip": "Used to overview and request items from the network.",
@@ -84,8 +84,8 @@
     
     "tooltip.storagenetwork.kabel_P": "Can automate simple processing transactions.",
          
-    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Master for remote inventory access.",
-    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Master for remote inventory access.",
+    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Main for remote inventory access.",
+    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Main for remote inventory access.",
 
     "block.storagenetwork.controller": "Controller",
     "block.storagenetwork.controller.tooltip": "Manage all Processing Cables in the network",

@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.api.util;
+package com.lothrazar.storagenetwork.util;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -6,7 +6,7 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.capability.IConnectable;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.item.Item;
 
 public class UtilTileEntity {
@@ -17,13 +17,13 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
 
   /**
-   * This can only be called on the server side! It returns the TileMaster tile entity for the given connectable.
+   * This can only be called on the server side! It returns the Main tile entity for the given connectable.
    *
    * @param connectable
    * @return
    */
   @Nullable
-  public static TileMain getTileMasterForConnectable(@Nonnull IConnectable connectable) {
+  public static TileMain getTileMainForConnectable(@Nonnull IConnectable connectable) {
     if (connectable == null || connectable.getMainPos() == null) {
       return null;
     }

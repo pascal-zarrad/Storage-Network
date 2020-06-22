@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.block.request;
 import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 
 public class SlotCraftingNetwork extends CraftingResultSlot {
 
+  private TileMain tileMain;
   private final ContainerNetwork parent;
 
   public SlotCraftingNetwork(ContainerNetwork parent, PlayerEntity player,
@@ -21,8 +22,6 @@ public class SlotCraftingNetwork extends CraftingResultSlot {
     super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
     this.parent = parent;
   }
-
-  private TileMain tileMaster;
 
   @Override
   public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
@@ -36,8 +35,8 @@ public class SlotCraftingNetwork extends CraftingResultSlot {
     super.onTake(playerIn, stack);
     parent.detectAndSendChanges();
     for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {
-      if (parent.matrix.getStackInSlot(i).isEmpty() && getTileMaster() != null) {
-        ItemStack req = getTileMaster().request(
+      if (parent.matrix.getStackInSlot(i).isEmpty() && getTileMain() != null) {
+        ItemStack req = getTileMain().request(
             !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i), false, false) : null, 1, false);
         if (!req.isEmpty()) {
           parent.matrix.setInventorySlotContents(i, req);
@@ -48,11 +47,11 @@ public class SlotCraftingNetwork extends CraftingResultSlot {
     return stack;
   }
 
-  public TileMain getTileMaster() {
-    return tileMaster;
+  public TileMain getTileMain() {
+    return tileMain;
   }
 
-  public void setTileMaster(TileMain tileMaster) {
-    this.tileMaster = tileMaster;
+  public void setTileMain(TileMain in) {
+    this.tileMain = in;
   }
 }

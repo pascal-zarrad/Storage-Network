@@ -12,8 +12,8 @@ import com.lothrazar.storagenetwork.block.cable.storagefilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.cablelink.TileCableLink;
 import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
 import com.lothrazar.storagenetwork.block.inventory.TileInventory;
-import com.lothrazar.storagenetwork.block.master.BlockMaster;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.BlockMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
@@ -47,11 +47,10 @@ public class SsnRegistry {
   public static ItemUpgrade speed_upgrade;
   @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
   public static ItemUpgrade stack_upgrade;
-  // master
   @ObjectHolder(StorageNetwork.MODID + ":master")
-  public static TileEntityType<TileMain> mastertile;
+  public static TileEntityType<TileMain> mainTileentity;
   @ObjectHolder(StorageNetwork.MODID + ":master")
-  public static BlockMaster master;
+  public static BlockMain main;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
   public static Block inventory;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")

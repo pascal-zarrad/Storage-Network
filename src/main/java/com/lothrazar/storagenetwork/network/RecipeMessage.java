@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.api.util.UtilInventory;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -67,8 +67,8 @@ public class RecipeMessage {
         return;
       }
       ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
-      TileMain master = ctr.getTileMaster();
-      if (master == null) {
+      TileMain main = ctr.getTileMain();
+      if (main == null) {
         StorageNetwork.log("Recipe message cancelled, null tile");
         return;
       }
@@ -112,7 +112,7 @@ public class RecipeMessage {
             break;
           }
           /********* now find it from the network ***/
-          stackCurrent = master.request(!stackCurrent.isEmpty() ? itemStackMatcher : null, 1, false);
+          stackCurrent = main.request(!stackCurrent.isEmpty() ? itemStackMatcher : null, 1, false);
           if (!stackCurrent.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
             craftMatrix.setInventorySlotContents(slot, stackCurrent);
             break;
@@ -122,7 +122,7 @@ public class RecipeMessage {
         //        }
         //now make sure client sync happens.
         ctr.slotChanged();
-        List<ItemStack> list = master.getStacks();
+        List<ItemStack> list = main.getStacks();
         PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
             player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       } //end run

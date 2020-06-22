@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -44,9 +44,9 @@ public class ClearRecipeMessage {
     if (player.openContainer instanceof ContainerNetwork) {
       ContainerNetwork container = (ContainerNetwork) player.openContainer;
       CraftingInventory craftMatrix = container.getCraftMatrix();
-      TileMain tileMaster = container.getTileMaster();
+      TileMain root = container.getTileMain();
       for (int i = 0; i < 9; i++) {
-        if (tileMaster == null) {
+        if (root == null) {
           break;
         }
         ItemStack stackInSlot = craftMatrix.getStackInSlot(i);
@@ -54,7 +54,7 @@ public class ClearRecipeMessage {
           continue;
         }
         int numBeforeInsert = stackInSlot.getCount();
-        int remainingAfter = tileMaster.insertStack(stackInSlot.copy(), false);
+        int remainingAfter = root.insertStack(stackInSlot.copy(), false);
         if (numBeforeInsert == remainingAfter) {
           continue;
         }
@@ -66,7 +66,7 @@ public class ClearRecipeMessage {
         }
       }
       if (doRefresh) {
-        List<ItemStack> list = tileMaster.getStacks();
+        List<ItemStack> list = root.getStacks();
         PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
             player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
         container.detectAndSendChanges();

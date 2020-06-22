@@ -3,10 +3,10 @@ package com.lothrazar.storagenetwork.block;
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -67,9 +67,9 @@ public class TileConnectable extends TileEntity {
     super.onChunkUnloaded();
     if (StorageNetwork.config.doReloadOnChunk() && connectable != null && connectable.getMainPos() != null) {
       try {
-        TileMain maybeMaster = UtilTileEntity.getTileMasterForConnectable(connectable);
-        if (maybeMaster != null) {
-          maybeMaster.refreshNetwork();
+        TileMain maybe = UtilTileEntity.getTileMainForConnectable(connectable);
+        if (maybe != null) {
+          maybe.refreshNetwork();
         }
       }
       catch (Exception e) {
@@ -88,7 +88,7 @@ public class TileConnectable extends TileEntity {
     return super.getCapability(capability, facing);
   }
 
-  public DimPos getMaster() {
+  public DimPos getMain() {
     return connectable.getMainPos();
   }
 }

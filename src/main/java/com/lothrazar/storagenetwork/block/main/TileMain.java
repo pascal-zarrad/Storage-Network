@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.master;
+package com.lothrazar.storagenetwork.block.main;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,9 +16,9 @@ import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -46,7 +46,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   public TileMain() {
-    super(SsnRegistry.mastertile);
+    super(SsnRegistry.mainTileentity);
   }
 
   public List<ItemStack> getStacks() {
@@ -131,9 +131,9 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (chunk == null) {// || !chunk.isLoaded()) {
         continue;
       }
-      // Prevent having multiple masters on a network and break all others.
-      TileMain maybeMasterTile = lookPos.getTileEntity(TileMain.class);
-      if (maybeMasterTile != null && !lookPos.equals(world, pos)) {
+      // Prevent having multiple  on a network and break all others.
+      TileMain maybeMain = lookPos.getTileEntity(TileMain.class);
+      if (maybeMain != null && !lookPos.equals(world, pos)) {
         nukeAndDrop(lookPos);
         continue;
       }
@@ -285,7 +285,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (stack.isEmpty()) {
         continue;
       }
-      // Then try to insert the stack into this masters network and store the number of remaining items in the stack
+      // Then try to insert the stack into this network and store the number of remaining items in the stack
       int countUnmoved = insertStack(stack.copy(), true);
       // Calculate how many items in the stack actually got moved
       int countMoved = stack.getCount() - countUnmoved;

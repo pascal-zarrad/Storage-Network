@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.master;
+package com.lothrazar.storagenetwork.block.main;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,9 +26,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
-public class BlockMaster extends BaseBlock {
+public class BlockMain extends BaseBlock {
 
-  public BlockMaster() {
+  public BlockMain() {
     super(Material.IRON, "master");
   }
 
@@ -56,11 +56,11 @@ public class BlockMaster extends BaseBlock {
       return ActionResultType.PASS;
     }
     //    float hitX, float hitY, float hitZ;
-    TileMain tileMaster = (TileMain) tileHere;
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMaster.emptySlots()));
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMaster.getConnectablePositions().size()));
+    TileMain tileMain = (TileMain) tileHere;
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + StorageNetwork.lang("chat.master.emptyslots") + tileMain.emptySlots()));
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + StorageNetwork.lang("chat.master.connectables") + tileMain.getConnectablePositions().size()));
     Map<String, Integer> mapNamesToCount = new HashMap<>();
-    Iterator<DimPos> iter = tileMaster.getConnectablePositions().iterator();
+    Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
     while (iter.hasNext()) {
       DimPos p = iter.next();
       String block = p.getBlockState().getBlock().getRegistryName().toString();

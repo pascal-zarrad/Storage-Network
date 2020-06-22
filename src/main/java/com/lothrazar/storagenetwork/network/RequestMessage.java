@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -42,17 +42,17 @@ public class RequestMessage {
   public static void handle(RequestMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      TileMain tileMaster = null;
+      TileMain root = null;
       if (player.openContainer instanceof ContainerNetwork) {
         ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
-        tileMaster = ctr.getTileMaster();
+        root = ctr.getTileMain();
       }
-      if (tileMaster == null) {
+      if (root == null) {
         //maybe the table broke after doing this, rare case
         StorageNetwork.log("Request message cancelled, null tile");
         return;
       }
-      int in = tileMaster.getAmount(new ItemStackMatcher(message.stack, false, true));
+      int in = root.getAmount(new ItemStackMatcher(message.stack, false, true));
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
       boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;
@@ -69,13 +69,13 @@ public class RequestMessage {
       sizeRequested = Math.max(sizeRequested, 1);
       boolean ore = false;
       boolean nbt = true;//try NBT first
-      stack = tileMaster.request(
+      stack = root.request(
           new ItemStackMatcher(message.stack, ore, nbt),
           sizeRequested, false);
       if (stack.isEmpty()) {
         //try again with NBT as false, ONLY if true didnt work
         nbt = false;
-        stack = tileMaster.request(
+        stack = root.request(
             new ItemStackMatcher(message.stack, ore, nbt),
             sizeRequested, false);
       }
@@ -90,7 +90,7 @@ public class RequestMessage {
               player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
         }
       }
-      List<ItemStack> list = tileMaster.getStacks();
+      List<ItemStack> list = root.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       player.openContainer.detectAndSendChanges();

@@ -11,7 +11,7 @@ import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.data.IItemStackMatcher;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.inventory.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.inventory.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -243,7 +243,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return 0;// upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
   }
 
-  private boolean doesPassOperationFilterLimit(TileMain master) {
+  private boolean doesPassOperationFilterLimit(TileMain root) {
     if (countOps() < 1) {
       return true;
     }
@@ -251,7 +251,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
       return true;
     }
     // TODO: Investigate whether the operation limiter should consider the filter toggles
-    int availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
+    int availableStack = root.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
     if (operationMustBeSmaller) {
       return operationLimit >= availableStack;
     }
@@ -261,14 +261,14 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   @Override
-  public boolean runNow(DimPos connectablePos, TileMain master) {
+  public boolean runNow(DimPos connectablePos, TileMain main) {
     int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.speed_upgrade) + 1, 1);
     int speedRatio = (30 / speed);
     if (speedRatio <= 1) {
       speedRatio = 1;
     }
     boolean cooldownOk = (connectablePos.getWorld().getGameTime() % speedRatio == 0);
-    boolean operationLimitOk = doesPassOperationFilterLimit(master);
+    boolean operationLimitOk = doesPassOperationFilterLimit(main);
     return cooldownOk && operationLimitOk;
   }
 

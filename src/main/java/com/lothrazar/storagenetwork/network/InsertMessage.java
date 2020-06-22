@@ -3,10 +3,10 @@ package com.lothrazar.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -28,15 +28,15 @@ public class InsertMessage {
   public static void handle(InsertMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
-      TileMain tileMaster = null;
+      TileMain root = null;
       if (player.openContainer instanceof ContainerNetwork) {
-        tileMaster = ((ContainerNetwork) player.openContainer).getTileMaster();
+        root = ((ContainerNetwork) player.openContainer).getTileMain();
       }
       int rest;
       ItemStack send = ItemStack.EMPTY;
       ItemStack stack = player.inventory.getItemStack();
       if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {//TODO ENUM OR SOMETHING
-        rest = tileMaster.insertStack(stack, false);
+        rest = root.insertStack(stack, false);
         if (rest != 0) {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
@@ -45,7 +45,7 @@ public class InsertMessage {
         ItemStack stack1 = stack.copy();
         stack1.setCount(1);
         stack.shrink(1);
-        rest = tileMaster.insertStack(stack1, false) + stack.getCount();
+        rest = root.insertStack(stack1, false) + stack.getCount();
         if (rest != 0) {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
@@ -54,7 +54,7 @@ public class InsertMessage {
       player.inventory.setItemStack(send);
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
           player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-      List<ItemStack> list = tileMaster.getStacks();
+      List<ItemStack> list = root.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       player.openContainer.detectAndSendChanges();

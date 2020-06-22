@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -74,9 +74,9 @@ public class TileCableWithFacing extends TileConnectable {
         setDirection(facing);
         this.markDirty();
         if (previous != direction) {
-          TileMain master = getTileMaster();
-          if (master != null) {
-            master.refreshNetwork();
+          TileMain mainNode = getTileMain();
+          if (mainNode != null) {
+            mainNode.refreshNetwork();
           }
         }
         return;
@@ -95,11 +95,11 @@ public class TileCableWithFacing extends TileConnectable {
     }
   }
 
-  public TileMain getTileMaster() {
-    if (getMaster() == null) {
+  public TileMain getTileMain() {
+    if (getMain() == null) {
       return null;
     }
-    return getMaster().getTileEntity(TileMain.class);
+    return getMain().getTileEntity(TileMain.class);
   }
 
   @Override

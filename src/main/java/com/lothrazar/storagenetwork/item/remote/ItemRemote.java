@@ -5,7 +5,7 @@ import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.DimPos;
 import com.lothrazar.storagenetwork.api.data.EnumSortType;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;

@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.gui.inventory;
 
 import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
-import com.lothrazar.storagenetwork.api.util.UtilInventory;
+import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

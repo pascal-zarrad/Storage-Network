@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.api.util;
+package com.lothrazar.storagenetwork.util;
 
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
 import net.minecraft.item.ItemStack;

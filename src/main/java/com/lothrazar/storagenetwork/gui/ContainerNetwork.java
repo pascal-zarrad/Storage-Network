@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.data.ItemStackMatcher;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -33,7 +33,7 @@ import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 public abstract class ContainerNetwork extends Container {
 
-  public abstract TileMain getTileMaster();
+  public abstract TileMain getTileMain();
 
   public abstract void slotChanged();
 
@@ -149,17 +149,17 @@ public abstract class ContainerNetwork extends Container {
     if (slot != null && slot.getHasStack()) {
       ItemStack itemstack1 = slot.getStack();
       itemstack = itemstack1.copy();
-      TileMain tileMaster = this.getTileMaster();
+      TileMain tileMain = this.getTileMain();
       if (this.isCrafting() && slotIndex == 0) {
-        craftShift(playerIn, tileMaster);
+        craftShift(playerIn, tileMain);
         return ItemStack.EMPTY;
       }
-      else if (tileMaster != null) {
-        int rest = tileMaster.insertStack(itemstack1, false);
+      else if (tileMain != null) {
+        int rest = tileMain.insertStack(itemstack1, false);
         ItemStack stack = rest == 0 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(itemstack1, rest);
         slot.putStack(stack);
         detectAndSendChanges();
-        List<ItemStack> list = tileMaster.getStacks();
+        List<ItemStack> list = tileMain.getStacks();
         if (playerIn instanceof ServerPlayerEntity) {
           ServerPlayerEntity sp = (ServerPlayerEntity) playerIn;
           PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),

@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -19,7 +19,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
     matrix = new InventoryCraftingNetwork(this, tileRequest.matrix);
     this.playerInv = playerInv;
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
-    slotCraftOutput.setTileMaster(getTileMaster());
+    slotCraftOutput.setTileMain(getTileMain());
     addSlot(slotCraftOutput);
     bindGrid();
     bindPlayerInvo(this.playerInv);
@@ -43,24 +43,18 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
-    TileMain tileMaster = getTileMaster();
+    //    TileMain main = getTileMain();
     TileRequest table = getTileRequest();
-    if (tileMaster != null &&
-        !table.getWorld().isRemote && table.getWorld().getGameTime() % 40 == 0) {
-      // List<ItemStack> list = tileMaster.getStacks();
-      // TODO: packets
-      //   PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (PlayerEntityMP) playerIn);
-    }
     BlockPos pos = table.getPos();
     return playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
   }
 
   @Override
-  public TileMain getTileMaster() {
-    if (getTileRequest() == null || getTileRequest().getMaster() == null) {
+  public TileMain getTileMain() {
+    if (getTileRequest() == null || getTileRequest().getMain() == null) {
       return null;
     }
-    return getTileRequest().getMaster().getTileEntity(TileMain.class);
+    return getTileRequest().getMain().getTileEntity(TileMain.class);
   }
 
   public TileRequest getTileRequest() {

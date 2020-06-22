@@ -2,13 +2,13 @@ package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
-import com.lothrazar.storagenetwork.block.master.TileMain;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -75,16 +75,15 @@ public class CableIOMessage {
         link = ctr.cap;
         tile = ctr.tile;
       }
-      TileMain master = UtilTileEntity.getTileMasterForConnectable(link.connectable);
-      //        INetworkMaster master = StorageNetworkHelpers.getTileMasterForConnectable(con.autoIO.connectable);
+      TileMain root = UtilTileEntity.getTileMainForConnectable(link.connectable);
+      //
       CableMessageType type = CableMessageType.values()[message.id];
       switch (type) {
         case IMPORT_FILTER:
           link.getFilter().clear();
           int targetSlot = 0;
           for (ItemStack filterSuggestion : link.getStoredStacks(false)) {
-            // Ignore stacks that are already filtered
-            StorageNetwork.log("IO filterSuggestion" + filterSuggestion);
+            // Ignore stacks that are already filtered 
             if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
               continue;
             }
@@ -108,8 +107,8 @@ public class CableIOMessage {
         case SYNC_DATA:
           link.setPriority(link.getPriority() + message.value);
           link.getFilter().setIsWhitelist(message.whitelist);
-          if (master != null) {
-            master.clearCache();
+          if (root != null) {
+            root.clearCache();
           }
         break;
         case SAVE_FITLER:
