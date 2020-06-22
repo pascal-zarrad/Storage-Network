@@ -41,6 +41,7 @@ public class BlockCable extends BaseBlock {
         .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
     if (state.getBlock() != newState.getBlock()) {

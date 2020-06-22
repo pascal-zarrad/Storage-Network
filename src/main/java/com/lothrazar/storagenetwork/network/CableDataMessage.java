@@ -3,10 +3,8 @@ package com.lothrazar.storagenetwork.network;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
-import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
 import com.lothrazar.storagenetwork.block.cable.storagefilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
-import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.capabilities.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -57,15 +55,6 @@ public class CableDataMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       CapabilityConnectableLink link = null;
-      ContainerCableImportFilter y; // also must import
-      if (player.openContainer instanceof ContainerCableImportFilter) {
-        //then 
-        ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
-        CapabilityConnectableAutoIO link2 = ctr.cap;
-        ///
-        // //TODO: INHERITACNE FROM
-        //  link=link2;//
-      }
       ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
       if (container == null || container.cap == null) {
         return;

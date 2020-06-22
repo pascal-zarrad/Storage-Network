@@ -83,7 +83,7 @@ public class TileConnectable extends TileEntity {
   public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_CAPABILITY) {
       LazyOptional<CapabilityConnectable> cap = LazyOptional.of(() -> connectable);
-      return (LazyOptional<T>) cap;
+      return cap.cast();
     }
     return super.getCapability(capability, facing);
   }

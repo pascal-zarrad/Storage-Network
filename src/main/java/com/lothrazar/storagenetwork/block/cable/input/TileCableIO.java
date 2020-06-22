@@ -47,7 +47,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_AUTO_IO) {
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
-      return (LazyOptional<T>) cap;
+      return cap.cast();
     }
     return super.getCapability(capability, facing);
   }

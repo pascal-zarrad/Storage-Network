@@ -91,10 +91,6 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.render();
   }
 
-  private static int getDim() {
-    return 0;//TODO
-  }
-
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     this.minecraft.getTextureManager().bindTexture(texture);

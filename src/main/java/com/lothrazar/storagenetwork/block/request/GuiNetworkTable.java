@@ -101,10 +101,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
     return tile.getPos();
   }
 
-  private static int getDim() {
-    return 0;//TODO
-  }
-
   @Override
   public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);

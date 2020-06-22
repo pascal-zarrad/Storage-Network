@@ -20,6 +20,7 @@ import com.lothrazar.storagenetwork.api.util.UtilInventory;
 import com.lothrazar.storagenetwork.capabilities.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -179,7 +180,7 @@ public class TileMaster extends TileEntity implements ITickableTileEntity {
   }
 
   public static boolean isTargetAllowed(BlockState state) {
-    if (state.isAir()) {
+    if (state.getBlock() == Blocks.AIR) {
       return false;
     }
     String blockId = state.getBlock().getRegistryName().toString();

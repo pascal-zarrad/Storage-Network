@@ -44,7 +44,7 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
   public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY) {
       LazyOptional<CapabilityConnectableLink> cap = LazyOptional.of(() -> itemStorage);
-      return (LazyOptional<T>) cap;
+      return cap.cast();
     }
     return super.getCapability(capability, facing);
   }

@@ -7,7 +7,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class ConnectableNullHandler implements IConnectable {
 
-  public Capability getCapability() {
+  public Capability<IConnectable> getCapability() {
     return StorageNetworkCapabilities.CONNECTABLE_CAPABILITY;
   }
 

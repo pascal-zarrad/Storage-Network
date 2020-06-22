@@ -70,6 +70,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return getTileEntity(tileEntityClassOrInterface, getWorld());
   }
 
+  @SuppressWarnings("unchecked")
   @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
     if (world == null || getBlockPos() == null) {
@@ -112,12 +113,10 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     if (tileEntity == null) {
       return null;
     }
-    //    if (!tileEntity.hasCapability(capability, side)) {
-    //      return null;
-    //    }
     return tileEntity.getCapability(capability, side).orElse(null);
   }
 
+  @SuppressWarnings("deprecation")
   public boolean isLoaded() {
     if (getWorld() == null) {
       return false;

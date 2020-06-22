@@ -161,7 +161,7 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
         if (slot.getStack().isEmpty() == false) {
           //i hit non-empty slot, clear it no matter what
           if (mouseButton == 1) {
-            int direction = this.hasShiftDown() ? -1 : 1;
+            int direction = hasShiftDown() ? -1 : 1;
             int newCount = Math.min(64, slot.getStack().getCount() + direction);
             if (newCount < 1) {
               newCount = 1;

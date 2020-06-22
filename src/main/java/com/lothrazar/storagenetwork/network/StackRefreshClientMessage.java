@@ -59,14 +59,14 @@ public class StackRefreshClientMessage {
   public static StackRefreshClientMessage decode(PacketBuffer buf) {
     int size = buf.readInt();
     int csize = buf.readInt();
-    List stacks = Lists.newArrayList();
+    List<ItemStack> stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
       CompoundNBT stacktag = buf.readCompoundTag();
       ItemStack stack = ItemStack.read(stacktag);
       stack.setCount(buf.readInt());
       stacks.add(stack);
     }
-    List craftableStacks = Lists.newArrayList();
+    List<ItemStack> craftableStacks = Lists.newArrayList();
     for (int i = 0; i < csize; i++) {
       ItemStack stack = ItemStack.read(buf.readCompoundTag());
       stack.setCount(buf.readInt());

@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.request;
 
-import com.lothrazar.storagenetwork.api.util.UtilTileEntity;
 import com.lothrazar.storagenetwork.block.master.TileMaster;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.inventory.InventoryCraftingNetwork;
@@ -40,7 +39,6 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
     for (int i = 0; i < matrix.getSizeInventory(); i++) {
       getTileRequest().matrix.put(i, matrix.getStackInSlot(i));
     }
-    UtilTileEntity.updateTile(getTileRequest().getWorld(), getTileRequest().getPos());
   }
 
   @Override

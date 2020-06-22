@@ -192,6 +192,7 @@ public abstract class ContainerNetwork extends Container {
    * @param player
    * @param tile
    */
+  @SuppressWarnings("deprecation")
   protected void craftShift(PlayerEntity player, TileMaster tile) {
     if (!this.isCrafting() || matrix == null) {
       return;
