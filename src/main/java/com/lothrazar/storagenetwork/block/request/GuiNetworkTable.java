@@ -60,7 +60,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
     if (JeiSettings.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
-    addButton(network.clearTextBtn);
+    //    addButton(network.clearTextBtn);
   }
 
   @Override

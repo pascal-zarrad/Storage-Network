@@ -81,7 +81,6 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
     if (JeiSettings.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
-    addButton(network.clearTextBtn);
   }
 
   @Override

@@ -70,7 +70,7 @@
     "gui.storagenetwork.fil.tooltip_0": "Prefix @: Search for mod.",
     "gui.storagenetwork.fil.tooltip_1": "Prefix #: Search for tooltip.",
     "gui.storagenetwork.fil.tooltip_2": "Prefix $: Search for block tags.",
-    "gui.storagenetwork.fil.tooltip_3": "Clear text with right-click or X button",
+    "gui.storagenetwork.fil.tooltip_3": "Clear text with right-click",
 
     "gui.storagenetwork.tooltip_clear": "Clear Search",
     "gui.storagenetwork.fil.tooltip_jei_on": "JEI search enabled",

@@ -41,7 +41,7 @@ public class NetworkWidget {
   public ButtonRequest directionBtn;
   public ButtonRequest sortBtn;
   public ButtonRequest jeiBtn;
-  public ButtonRequest clearTextBtn;
+  //  public ButtonRequest clearTextBtn;
 
   public NetworkWidget(IGuiNetwork gui) {
     this.gui = gui;
@@ -203,11 +203,11 @@ public class NetworkWidget {
           I18n.format("gui.storagenetwork.req.tooltip_" + gui.getSort())),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
-    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
-      gui.renderTooltip(Lists.newArrayList(
-          I18n.format("gui.storagenetwork.tooltip_clear")),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
-    }
+    //    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
+    //      gui.renderTooltip(Lists.newArrayList(
+    //          I18n.format("gui.storagenetwork.tooltip_clear")),
+    //          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    //    }
     if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
       String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
       gui.renderTooltip(Lists.newArrayList(s),
@@ -305,10 +305,10 @@ public class NetworkWidget {
       JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
     });
     jeiBtn.setHeight(16);
-    clearTextBtn = new ButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
-      this.clearSearch();
-    });
-    clearTextBtn.setHeight(16);
+    //    clearTextBtn = new ButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
+    //      this.clearSearch();
+    //    });
+    //    clearTextBtn.setHeight(16);
   }
 
   public void sortStackWrappers(List<ItemStack> stacksToDisplay) {

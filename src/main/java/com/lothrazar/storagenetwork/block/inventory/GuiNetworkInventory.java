@@ -63,7 +63,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     if (JeiSettings.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
-    addButton(network.clearTextBtn);
+    //    addButton(network.clearTextBtn);
   }
 
   @Override
