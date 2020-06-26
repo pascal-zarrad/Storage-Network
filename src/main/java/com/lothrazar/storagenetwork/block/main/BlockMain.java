@@ -57,8 +57,11 @@ public class BlockMain extends BaseBlock {
     }
     //    float hitX, float hitY, float hitZ;
     TileMain tileMain = (TileMain) tileHere;
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.LIGHT_PURPLE + UtilTileEntity.lang("chat.master.emptyslots") + tileMain.emptySlots()));
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA + UtilTileEntity.lang("chat.master.connectables") + tileMain.getConnectablePositions().size()));
+    playerIn.sendMessage(
+        new TranslationTextComponent(TextFormatting.LIGHT_PURPLE +
+            UtilTileEntity.lang("chat.master.emptyslots") + tileMain.emptySlots()),playerIn.getUniqueID());
+    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA +
+        UtilTileEntity.lang("chat.master.connectables") + tileMain.getConnectablePositions().size()),playerIn.getUniqueID());
     Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
     while (iter.hasNext()) {
@@ -78,7 +81,8 @@ public class BlockMain extends BaseBlock {
       }
     });
     for (Entry<String, Integer> e : listDisplayStrings) {
-      playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getKey() + ": " + e.getValue()));
+      playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getKey() + ": " + e.getValue())
+          ,playerIn.getUniqueID() );
     }
     return ActionResultType.SUCCESS;
   }

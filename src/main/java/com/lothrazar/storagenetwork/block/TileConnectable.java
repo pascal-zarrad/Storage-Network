@@ -7,6 +7,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -37,11 +38,12 @@ public class TileConnectable extends TileEntity {
   }
 
   @Override
-  public void read(CompoundNBT compound) {
+  public void func_230337_a_(BlockState bs,CompoundNBT compound) {
+    
     if (compound.contains("connectable")) {
       connectable.deserializeNBT(compound.getCompound("connectable"));
     }
-    super.read(compound);
+    super.func_230337_a_(bs,compound);
   }
 
   @Override
@@ -59,7 +61,8 @@ public class TileConnectable extends TileEntity {
 
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    read(pkt.getNbtCompound());
+    
+    func_230337_a_(this.getBlockState(),pkt.getNbtCompound());
   }
 
   @Override

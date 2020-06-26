@@ -19,8 +19,8 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
 
   public static void chatMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent((message)));
+    if (player.world.isRemote) { 
+      player.sendMessage(new TranslationTextComponent(message), player.getUniqueID());
     }
   }
 
@@ -32,7 +32,7 @@ public class UtilTileEntity {
 
   public static String lang(String message) {
     TranslationTextComponent t = new TranslationTextComponent(message);
-    return t.getFormattedText();
+    return t.getUnformattedComponentText();
   }
 
   /**

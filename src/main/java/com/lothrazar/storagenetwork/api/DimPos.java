@@ -11,11 +11,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -45,10 +44,10 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   public DimPos(World world, BlockPos pos) {
     this.pos = pos;
-    this.setWorld(world);
-    if (world != null && world.getDimension() != null && world.getDimension().getType() != null) {
-      dim = world.getDimension().getType().getId();
-      dimension = world.getDimension().getType().getRegistryName().toString();
+    this.setWorld(world); 
+    if (world != null &&   world.func_230315_m_() != null) {
+      dim = world.func_230315_m_().getId();
+      dimension = world.func_230315_m_().getRegistryName().toString();
     }
   }
 
