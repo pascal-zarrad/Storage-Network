@@ -12,9 +12,5 @@ public class CreativeTab {
     public ItemStack createIcon() {
       return new ItemStack(ModBlocks.request);
     }
-    //    @Override
-    //    public String getTranslatedTabLabel() {
-    //      return StorageNetwork.MODNAME;
-    //    }
   };
 }

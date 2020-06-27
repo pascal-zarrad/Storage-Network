@@ -1,6 +1,5 @@
 package mrriegel.storagenetwork.util;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -72,13 +71,6 @@ public class UtilTileEntity {
       for (int j = 0; j < br.length; j++)
         if (ar[i] == br[j])
           return true;
-    return false;
-  }
-
-  public static <E> boolean contains(List<E> list, E e, Comparator<? super E> c) {
-    for (E a : list)
-      if (c.compare(a, e) == 0)
-        return true;
     return false;
   }
 
