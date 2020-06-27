@@ -32,9 +32,6 @@ public class ProcessWrapper {
     name = compound.getString("sname");
     blockId = new ResourceLocation(compound.getString("blockId"));
     alwaysOn = compound.getBoolean("aon");
-    int x = compound.getInteger("xx");
-    int y = compound.getInteger("yy");
-    int z = compound.getInteger("zz");
     pos = new DimPos(compound.getCompoundTag("pos"));
     output = new ItemStack(compound);
     this.count = compound.getInteger("cou");
@@ -62,6 +59,4 @@ public class ProcessWrapper {
     compound.setTag("Items", nbttaglist);
     return compound;
   }
-
-  public void init() {}
 }

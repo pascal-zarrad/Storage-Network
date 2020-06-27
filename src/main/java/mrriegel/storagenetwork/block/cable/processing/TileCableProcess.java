@@ -141,12 +141,8 @@ public class TileCableProcess extends TileCableWithFacing {
         if (countNotInserted == 0 && targetStillNeeds == 0) { //extracted.getCount() == out.getSize() && countNotInserted == extracted.getCount()) {
           //success
           simulate = false;
-          //            InventoryHelper.
           //new extract item using capabilityies
-          //            StorageNetwork.log("importing acutally a success. send to face " + tileCable.getFacingBottomRow() + "?" + inventoryLinked + "?" + stackToMove.getDisplayName());
-          //            StorageNetwork.log("-> IMPORTING: out =  " + out.toString());
-          //            StorageNetwork.log("IMPORTING: stackToMove= " + stackToMove.toString());
-          ItemStack extracted = UtilInventory.extractItem(inventoryLinked, new ItemStackMatcher(out), out.getCount(), simulate);
+          UtilInventory.extractItem(inventoryLinked, new ItemStackMatcher(out), out.getCount(), simulate);
           countNotInserted = master.insertStack(stackToMove, simulate);
           // IF all found
           //then complete extraction (and insert into network)
@@ -161,10 +157,6 @@ public class TileCableProcess extends TileCableWithFacing {
         }
       }
     }
-    //      else {
-    //        ModCyclic.logger.error("Status was halted or other " + request.getStatus());
-    //        request.setStatus(ProcessStatus.IMPORTING);//?? i dont know
-    //      }
     this.setRequest(processRequest);
     this.markDirty();
   }

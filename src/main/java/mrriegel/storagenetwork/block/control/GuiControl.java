@@ -38,14 +38,12 @@ public class GuiControl extends GuiContainer {
   //private TileControl tile;
   protected GuiTextField searchBar;
   //list includes search bar
-  //private List<GuiTextField> textBoxes = new ArrayList<>();
   private List<ProcessWrapper> processors = null;
   Map<Integer, CableRow> allRows = new HashMap<>();
-  //  List<CableRow> visibleRows = new ArrayList<>();
   private boolean rowsCreated;
   //how many rows to skip over
   private int page = 0;
-  private int maxPage = 0;//TODO
+  private int maxPage = 0;
   private GuiSliderInteger slider;
 
   public GuiControl(ContainerControl inventorySlotsIn) {
@@ -53,7 +51,6 @@ public class GuiControl extends GuiContainer {
     processors = new ArrayList<>();
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
-    //tile = inventorySlotsIn.getTileControl();
     //  request the list of tiles
     rowsCreated = false;
     refreshData();
@@ -77,7 +74,6 @@ public class GuiControl extends GuiContainer {
     //mock data only
     slider = new GuiSliderInteger(this, 777,
         guiLeft + 169, guiTop + 16, 6, 130, 0, 0);
-    //    slider.setTooltip("dropper.delay");
     this.addButton(slider);
   }
 
@@ -103,7 +99,6 @@ public class GuiControl extends GuiContainer {
       else {
         for (ItemStack s : p.ingredients) {
           tooltips.add(s.getCount() + " : " + s.getDisplayName());
-          // s.getTooltip(Minecraft.getMinecraft().player, ITooltipFlag.TooltipFlags.NORMAL);
         }
       }
       this.tooltips.add(TextFormatting.DARK_GRAY + (p.blockId + ""));
@@ -135,9 +130,7 @@ public class GuiControl extends GuiContainer {
           y < mouseY && mouseY < y + height;
     }
 
-    public void mouseClicked(int mouseX, int mouseY, int btn) {
-      //      StorageNetwork.log("row clicked at " + p.output.getDisplayName());
-    }
+    public void mouseClicked(int mouseX, int mouseY, int btn) {}
 
     public boolean compareSearch() {
       if (gui.searchBar.getText().isEmpty()) {
@@ -154,7 +147,6 @@ public class GuiControl extends GuiContainer {
 
     public void drawScreen() {
       btnOnOff.visible = true;
-      //     row.txtBox.setVisible(!row.p.alwaysOn);
       btnMinus.visible = (!p.alwaysOn);
       btnPlus.visible = (!p.alwaysOn);
     }
@@ -184,7 +176,6 @@ public class GuiControl extends GuiContainer {
     if (rowsCreated) {
       return;
     }
-    final int spacer = 22;
     int row = 0;
     int btnid = 1;
     Map<Integer, CableRow> rows = new HashMap<>();
@@ -205,15 +196,6 @@ public class GuiControl extends GuiContainer {
       btnOnOff.visible = false;
       rowModel.btnOnOff = btnOnOff;
       this.addButton(rowModel.btnOnOff);
-      //      GuiTextFieldProcCable txt = new GuiTextFieldProcCable(btnid++, fontRenderer,
-      //          x + 64, y + 4);
-      //      txt.setMaxStringLength(4);
-      //      txt.setEnableBackgroundDrawing(false);
-      //      txt.setVisible(true);
-      //      txt.setTextColor(16777215);
-      //      //mock data only
-      //      txt.setText("" + p.count);
-      //  textBoxes.add(txt);
       int offset = 66;
       GuiControlButton btnMinus = new GuiControlButton(btnid++, CableMessageType.P_CTRL_LESS,
           rowModel.x + offset + 74, rowModel.y, 10, 16, "");
@@ -230,13 +212,10 @@ public class GuiControl extends GuiContainer {
       btnPlus.clearAndSetTooltip(StorageNetwork.lang("processing.buttons.plus"));
       this.addButton(btnPlus);
       rowModel.btnPlus = btnPlus;
-      //  rowModel.txtBox = txt;
       rows.put(row, rowModel);
       row++;
-      //      y += rowHeight;
     }
     this.setMaxPage(rows.size() - 1);
-    //  StorageNetwork.log("MP" + maxPage);
     this.allRows = rows;
     rowsCreated = true;
   }
@@ -331,7 +310,6 @@ public class GuiControl extends GuiContainer {
 
   @Override
   public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-    //  drawDefaultBackground();
     super.drawScreen(mouseX, mouseY, partialTicks);
     if (this.searchBar != null) {
       this.searchBar.drawTextBox();
@@ -353,7 +331,6 @@ public class GuiControl extends GuiContainer {
         row.hideComponents();
       }
       else {
-        //        StorageNetwork.log("hidden == false for " + row.p.output);
         row.drawScreen();
       }
       if (row.isInside(mouseX, mouseY)) {
@@ -370,7 +347,6 @@ public class GuiControl extends GuiContainer {
         //TOOLTIP
         GuiControlButton button = (GuiControlButton) btn;
         this.drawHoveringText(button.getTooltips(), mouseX, mouseY);
-        //      this.drawHoveringText(textLines, x, y)oh ;
       }
     }
   }
@@ -383,17 +359,11 @@ public class GuiControl extends GuiContainer {
       if (row.isOffscreen() == false) {
         GlStateManager.pushMatrix();
         RenderHelper.enableGUIStandardItemLighting();
-        //    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        //        GlStateManager.scale(1f, 1f, .3f);
         int x = row.x - guiLeft;
         int y = row.y - guiTop;
         mc.getRenderItem().renderItemAndEffectIntoGUI(row.p.output, x + 20, y);
-        /// TODO target blockname  text
-        //AND OR  recipe ing list as text
-        //TODO maybe tooltip for this
         this.drawString(this.fontRenderer, row.p.name, x + 40, y + 3, FONT);
         if (row.p.alwaysOn == false) {
-          //          GlStateManager.scale(.8f, 1f, 1f);
           this.drawString(this.fontRenderer, row.p.count + "",
               x + 112, y + 3, 14735632);
         }
@@ -425,8 +395,6 @@ public class GuiControl extends GuiContainer {
     super.handleMouseInput();
     int mouseX = Mouse.getX() * this.width / this.mc.displayWidth;
     int mouseY = this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1;
-    //      if (Mouse.getEventDWheel() != 0)
-    //      StorageNetwork.log(page + "/" + maxPage + "  scrol" + mouseX + "?" + mouseY);
     if (inField(mouseX, mouseY)) {
       int mouse = Mouse.getEventDWheel();
       if (mouse > 0 && getPage() > 0) {
@@ -466,8 +434,6 @@ public class GuiControl extends GuiContainer {
         row.mouseClicked(mouseX, mouseY, btn);
       }
     }
-    //    for (GuiTextField txtNew : this.textBoxes)
-    //      txtNew.mouseClicked(x, y, btn);
   }
 
   @Override
@@ -476,12 +442,6 @@ public class GuiControl extends GuiContainer {
     if (this.searchBar != null && this.searchBar.isFocused()) {
       this.searchBar.textboxKeyTyped(typedChar, keyCode);
     }
-    //    for (GuiTextField txt : this.textBoxes) {
-    //      if (txt.isFocused()) {
-    //        txt.textboxKeyTyped(typedChar, keyCode);
-    //        break;
-    //      }
-    //    }
   }
 
   /**

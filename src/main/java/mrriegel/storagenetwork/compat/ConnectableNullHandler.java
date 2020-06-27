@@ -8,6 +8,7 @@ import net.minecraftforge.common.capabilities.Capability;
 
 public class ConnectableNullHandler implements IConnectable {
 
+  @SuppressWarnings("rawtypes")
   public Capability getCapability() {
     return StorageNetworkCapabilities.CONNECTABLE_CAPABILITY;
   }

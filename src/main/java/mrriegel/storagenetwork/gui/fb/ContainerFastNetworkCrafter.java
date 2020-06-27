@@ -64,6 +64,7 @@ public abstract class ContainerFastNetworkCrafter extends ContainerFastBench imp
     }
   }
 
+  @SuppressWarnings("unused")
   @Override
   public ItemStack transferStackInSlot(EntityPlayer player, int index) {
     if (world.isRemote) {

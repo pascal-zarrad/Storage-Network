@@ -53,7 +53,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   @Override
   public List<ItemStack> getStoredStacks() {
     if (inventoryFace == null) {
-      return Collections.EMPTY_LIST;
+      return Collections.emptyList();
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability

@@ -47,6 +47,7 @@ public class BlockCable extends AbstractBlockConnectable {
     this.setCreativeTab(CreativeTab.tab);
   }
 
+  @SuppressWarnings("rawtypes")
   @Override
   protected BlockStateContainer createBlockState() {
     IProperty[] listedProperties = new IProperty[0];
@@ -73,6 +74,7 @@ public class BlockCable extends AbstractBlockConnectable {
     return extendedBlockState.withProperty(BLOCK_NEIGHBORS, getBlockNeighbors(world, pos));
   }
 
+  @SuppressWarnings("unchecked")
   @Nullable
   public <V> V getClientSideTileEntity(IBlockAccess world, BlockPos pos, Class<V> tileEntityClassOrInterface) {
     TileEntity tileEntity = world.getTileEntity(pos);
@@ -178,6 +180,7 @@ public class BlockCable extends AbstractBlockConnectable {
     return false;
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
     TileEntity tileHere = worldIn.getTileEntity(pos);

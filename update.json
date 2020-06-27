@@ -1,5 +1,5 @@
 {
-  "homepage": "https://mods.curse.com/mc-mods/minecraft/268495-simple-storage-network",
+  "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
     "1.11.2-latest": "1.0.5",
     "1.11.2-recommended": "1.0.5",
@@ -7,8 +7,8 @@
     "1.12-recommended": "1.0.15",
     "1.12.1-latest": "1.0.15",
     "1.12.1-recommended": "1.1.1",
-    "1.12.2-latest": "1.7.10",
-    "1.12.2-recommended": "1.7.10"
+    "1.12.2-latest": "1.7.11",
+    "1.12.2-recommended": "1.7.11"
   },
   "1.11.2":{
 	"1.0.0":"First Release"

@@ -67,6 +67,8 @@ public class CableControlMessage implements IMessage, IMessageHandler<CableContr
             m.setCount(message.value);
             processCable.setProcessModel(m);
           break;
+          default:
+          break;
         }
         processCable.markDirty();
         UtilTileEntity.updateTile(processCable.getWorld(), processCable.getPos());

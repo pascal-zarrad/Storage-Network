@@ -78,6 +78,8 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
             tileCable.processingTop = EnumFacing.values()[message.value];
           //                StorageNetwork.log(tileCable.processingTop.name() + " server is ?" + message.value);
           break;
+          default:
+          break;
         }
         tileCable.markDirty();
         UtilTileEntity.updateTile(tileCable.getWorld(), tileCable.getPos());
@@ -128,6 +130,8 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
             PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(con.link.filters.getStacks()), player);
             con.tile.markDirty();
           break;
+          default:
+          break;
         }
       }
 
@@ -171,6 +175,8 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
                 continue;
               }
             }
+          break;
+          default:
           break;
         }
         StorageNetwork.log("Send new refresh client msg");

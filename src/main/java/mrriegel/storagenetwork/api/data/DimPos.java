@@ -60,6 +60,7 @@ public class DimPos implements INBTSerializable<NBTTagCompound> {
     return getWorld().getBlockState(getBlockPos());
   }
 
+  @SuppressWarnings("unchecked")
   @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface) {
     World world = getWorld();
