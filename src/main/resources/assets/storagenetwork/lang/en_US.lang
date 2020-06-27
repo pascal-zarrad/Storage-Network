@@ -36,8 +36,8 @@ gui.storagenetwork.checkbox.ore=OreDict
 gui.storagenetwork.checkbox.nbt=NBT
 
 gui.storagenetwork.gui.import=Import Filter
-gui.storagenetwork.gui.whitelist=Whitelist
-gui.storagenetwork.gui.blacklist=Blacklist
+gui.storagenetwork.gui.whitelist=Allow-list
+gui.storagenetwork.gui.blacklist=Ignore-list
 
 gui.storagenetwork.sort=Sort Direction
 gui.storagenetwork.priority.up=Demote Priority (smaller goes first)
