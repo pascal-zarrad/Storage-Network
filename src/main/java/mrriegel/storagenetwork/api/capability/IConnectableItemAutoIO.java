@@ -16,6 +16,7 @@ import net.minecraft.util.EnumFacing;
  * If you indeed want to add another exporting/importing cable in the style of the integrated ones, this might be for you. In all other cases, this is probably not what you want.
  */
 public interface IConnectableItemAutoIO {
+
   /**
    * Return the position of this connectable.
    *
@@ -27,6 +28,7 @@ public interface IConnectableItemAutoIO {
    * @return
    */
   DimPos getPos();
+
   /**
    * Return either IN or OUT here, but not BOTH. If you return BOTH expect weird things to happen.
    *

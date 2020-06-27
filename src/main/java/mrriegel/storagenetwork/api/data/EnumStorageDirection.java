@@ -1,5 +1,6 @@
 package mrriegel.storagenetwork.api.data;
 public enum EnumStorageDirection {
+
   IN, OUT, BOTH;
 
   public boolean match(EnumStorageDirection way) {

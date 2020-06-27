@@ -161,8 +161,6 @@ public class CableDataMessage implements IMessage, IMessageHandler<CableDataMess
             }
           break;
           case IMPORT_FILTER:
-            //TODO: Fix this not auto sync to client 
-            //TODO: Fix this not auto sync to client 
             int targetSlot = 0;
             for (ItemStack filterSuggestion : con.cap.getStacksForFilter()) {
               // Ignore stacks that are already filtered 

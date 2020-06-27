@@ -262,7 +262,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (!storage.runNow(storage.getPos(), this)) {
         continue;
       }
-       // Do a simulation first and abort if we got an empty stack,
+      // Do a simulation first and abort if we got an empty stack,
       ItemStack stack = storage.extractNextStack(storage.getTransferRate(), true);
       if (stack.isEmpty()) {
         continue;
@@ -296,9 +296,9 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   /**
    * push OUT of the network to attached export cables
    */
-  private void updateExports() { 
+  private void updateExports() {
     for (IConnectableItemAutoIO storage : getConnectablesIO()) {
-       if (storage == null) {
+      if (storage == null) {
         continue;
       }
       // We explicitely don't want to check whether this can do BOTH, because we don't
@@ -310,7 +310,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (!storage.runNow(storage.getPos(), this)) {
         continue;
       }
-       for (IItemStackMatcher matcher : storage.getAutoExportList()) {
+      for (IItemStackMatcher matcher : storage.getAutoExportList()) {
         boolean stockMode = storage.isStockMode();
         int amtToRequest = storage.getTransferRate();
         if (stockMode) {
@@ -396,7 +396,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
-//        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
+        //        StorageNetwork.instance.logger.error("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
       result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null));
@@ -418,7 +418,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (tileEntity == null) {
         continue;
       }
-      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null)) { 
+      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null)) {
         continue;
       }
       result.add(tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null));
@@ -440,7 +440,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       if (tileEntity == null) {
         continue;
       }
-      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) { 
+      if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null)) {
         continue;
       }
       if (!tileEntity.hasCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null)) {
