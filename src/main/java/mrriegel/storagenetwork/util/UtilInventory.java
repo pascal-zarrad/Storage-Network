@@ -69,6 +69,9 @@ public class UtilInventory {
   }
 
   public static int containsAtLeastHowManyNeeded(IItemHandler inv, ItemStack stack, int minimumCount) {
+    if (inv == null) {
+      return 0;
+    }
     int found = 0;
     for (int i = 0; i < inv.getSlots(); i++) {
       if (ItemHandlerHelper.canItemStacksStack(inv.getStackInSlot(i), stack)) {
@@ -76,8 +79,9 @@ public class UtilInventory {
       }
     }
     //do you have all 4? or do you need 2 still
-    if (found >= minimumCount)
+    if (found >= minimumCount) {
       return 0;
+    }
     return minimumCount - found;
   }
 
