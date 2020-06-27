@@ -49,11 +49,17 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
   public void init() {
     super.init();
     int searchLeft = guiLeft + 81, searchTop = guiTop + 96, width = 85;
-    network.searchBar = new TextFieldWidget(font,
-        searchLeft, searchTop,
-        width, font.FONT_HEIGHT, "search");
-    network.searchBar.setMaxStringLength(30);
-    network.initSearchbar();
+    try {
+      network.searchBar = new TextFieldWidget(font,
+          searchLeft, searchTop,
+          width, font.FONT_HEIGHT, "search");
+      network.searchBar.setMaxStringLength(30);
+      network.initSearchbar();
+    }
+    catch (Exception e) {
+      //cannot replicate java.lang.NoClassDefFoundError: mezz/jei/api/recipe/IFocus 
+      StorageNetwork.LOGGER.error("Search bar init error", e);
+    }
     network.initButtons();
     this.addButton(network.directionBtn);
     this.addButton(network.sortBtn);
