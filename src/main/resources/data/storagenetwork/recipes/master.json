@@ -10,11 +10,10 @@
       "item": "storagenetwork:kabel"
     },
     "d": {
-      "item": "minecraft:quartz_block",
-      "data": 0
+      "tag": "forge:storage_blocks/quartz"
     },
     "c": {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     }
   },
   "result": {
