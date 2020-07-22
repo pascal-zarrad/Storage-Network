@@ -5,6 +5,7 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
@@ -21,8 +22,8 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
   }
 
   @Override
-  public void read(CompoundNBT compound) {
-    super.read(compound);
+  public void read(BlockState bs, CompoundNBT compound) {
+    super.read(bs, compound);
     this.itemStorage.deserializeNBT(compound.getCompound("capability"));
   }
 

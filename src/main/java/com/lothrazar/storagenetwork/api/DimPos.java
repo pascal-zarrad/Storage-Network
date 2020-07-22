@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
@@ -44,10 +45,13 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   public DimPos(World world, BlockPos pos) {
     this.pos = pos;
-    this.setWorld(world); 
-    if (world != null &&   world.func_230315_m_() != null) {
-      dim = world.func_230315_m_().getId();
-      dimension = world.func_230315_m_().getRegistryName().toString();
+    this.setWorld(world);
+    if (world != null && world.func_230315_m_() != null) {
+      DimensionType type = world.func_230315_m_();
+      ResourceLocation rt = type.field_241504_y_;
+      //above SHOULD be from access transformer 
+      dim = 0;//world.func_230315_m_().getId();
+      dimension = type.toString();//  world.func_230315_m_().getRegistryName().toString();
     }
   }
 
@@ -76,6 +80,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       return null;
     }
     //refresh server world
+    RegistryKey<DimensionType> mydim = world.func_234922_V_();
+    ResourceLocation mydimKey = mydim.func_240901_a_();
     if (dimension != null && dim != world.dimension.getType().getId()) {
       if (world.getServer() == null) {
         return null;

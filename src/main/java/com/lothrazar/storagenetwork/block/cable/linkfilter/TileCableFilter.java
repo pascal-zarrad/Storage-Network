@@ -5,6 +5,7 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -37,8 +38,8 @@ public class TileCableFilter extends TileCableWithFacing implements ITickableTil
   }
 
   @Override
-  public void read(CompoundNBT compound) {
-    super.read(compound);
+  public void read(BlockState bs, CompoundNBT compound) {
+    super.read(bs, compound);
     this.capability.deserializeNBT(compound.getCompound("capability"));
   }
 

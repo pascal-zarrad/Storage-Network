@@ -16,6 +16,7 @@ import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -25,6 +26,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class NetworkWidget {
 
@@ -188,20 +190,21 @@ public class NetworkWidget {
     }
   }
 
-  public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+  public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY, FontRenderer font) {
     for (ItemSlotNetwork s : slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
         s.drawTooltip(mouseX, mouseY);
       }
     }
+    Screen screen = ((Screen) gui);
     if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      gui.renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.sort")),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+      screen.renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.sort")),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
     if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      gui.renderTooltip(Lists.newArrayList(
-          I18n.format("gui.storagenetwork.req.tooltip_" + gui.getSort())),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+      screen.renderTooltip(ms, Lists.newArrayList(
+          new StringTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort())),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
     //    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
     //      gui.renderTooltip(Lists.newArrayList(
@@ -209,23 +212,23 @@ public class NetworkWidget {
     //          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     //    }
     if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      String s = I18n.format(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      gui.renderTooltip(Lists.newArrayList(s),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+      StringTextComponent s = new StringTextComponent(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+      screen.renderTooltip(ms, Lists.newArrayList(s),
+          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
     if (this.inSearchBar(mouseX, mouseY)) {
-      List<String> lis = Lists.newArrayList();
+      List<StringTextComponent> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
-        lis.add(I18n.format("gui.storagenetwork.shift"));
+        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.shift")));
       }
       else {
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_0"));//@
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_1"));//#
+        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_0")));//@
+        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_1")));//#
         //TODO: tag search
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_2"));//$
-        lis.add(I18n.format("gui.storagenetwork.fil.tooltip_3"));//clear
+        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_2")));//$
+        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_3")));//clear
       }
-      gui.renderTooltip(lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+      screen.renderTooltip(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
   }
 

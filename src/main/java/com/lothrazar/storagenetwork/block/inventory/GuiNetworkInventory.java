@@ -11,6 +11,7 @@ import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -42,6 +43,10 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     ySize = HEIGHT;
     network.fieldHeight = 180;
   }
+  //  @Override
+  //  public void renderTooltip(MatrixStack ms, List<StringTextComponent> newArrayList, int i, int j, FontRenderer font) {
+  //    // TODO Auto-generated method stub
+  //  }
 
   @Override
   public void setStacks(List<ItemStack> stacks) {
@@ -54,7 +59,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
-        width, font.FONT_HEIGHT, "search");
+        width, font.FONT_HEIGHT, null);//"search"
     network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
     network.initButtons();
@@ -67,11 +72,11 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   }
 
   @Override
-  public void render(int mouseX, int mouseY, float partialTicks) {
-    renderBackground();
-    super.render(mouseX, mouseY, partialTicks);
-    renderHoveredToolTip(mouseX, mouseY);
-    network.searchBar.render(mouseX, mouseY, partialTicks);
+  public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+    renderBackground(ms);
+    super.render(ms, mouseX, mouseY, partialTicks);
+    //    renderHoveredToolTip(mouseX, mouseY);
+    network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }
 
@@ -104,22 +109,22 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     return tile.getPos();
   }
 
-  @Override
-  public void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  @Override //drawGuiContainerBackgroundLayer
+  public void func_230450_a_(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
-    blit(xCenter, yCenter, 0, 0, xSize, ySize);
+    blit(ms, xCenter, yCenter, 0, 0, xSize, ySize);
     //good stuff
     network.applySearchTextToSlots();
     network.renderItemSlots(mouseX, mouseY, font);
   }
 
-  @Override
-  public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-    super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    network.drawGuiContainerForegroundLayer(mouseX, mouseY);
+  @Override //drawGuiContainerForegroundLayer
+  public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
+    super.func_230451_b_(ms, mouseX, mouseY);
+    network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, this.font);
   }
 
   boolean isScrollable(double x, double y) {
@@ -199,16 +204,15 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     }
     return false;// super.charTyped(typedChar, keyCode);
   }
-
-  @Override
-  public void renderStackToolTip(ItemStack stack, int x, int y) {
-    super.renderTooltip(stack, x, y);
-  }
-
-  @Override
-  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  }
+  //  @Override
+  //  public void renderStackToolTip(ItemStack stack, int x, int y) {
+  //    super.renderTooltip(stack, x, y);
+  //  }
+  //
+  //  @Override
+  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
+  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

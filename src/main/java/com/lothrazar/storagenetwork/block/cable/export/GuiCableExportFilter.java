@@ -11,13 +11,14 @@ import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFilter> implements IGuiPrivate {
 
@@ -70,44 +71,47 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   }
 
   @Override
-  public void render(int mouseX, int mouseY, float partialTicks) {
-    renderBackground();
-    super.render(mouseX, mouseY, partialTicks);
-    renderHoveredToolTip(mouseX, mouseY);
+  public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+    renderBackground(ms);
+    super.render(ms, mouseX, mouseY, partialTicks);
+    //    renderHoveredToolTip(mouseX, mouseY);
   }
 
-  @Override
-  public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-    super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+  @Override // drawGuiContainerForegroundLayer
+  public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
+    super.func_230451_b_(ms, mouseX, mouseY);
     int priority = containerCableLink.cap.getPriority();
-    font.drawString(String.valueOf(priority),
+    font.drawString(ms, String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
         14,
         4210752);
-    this.drawTooltips(mouseX, mouseY);
+    this.drawTooltips(ms, mouseX, mouseY);
   }
 
-  private void drawTooltips(final int mouseX, final int mouseY) {
+  private void drawTooltips(MatrixStack ms, final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.import")), mouseX - guiLeft, mouseY - guiTop);
+      renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.import")),
+          mouseX - guiLeft, mouseY - guiTop, font);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
+      renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.priority.down")),
+          mouseX - guiLeft, mouseY - guiTop, font);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(Lists.newArrayList(I18n.format("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY - guiTop);
+      renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.priority.up")),
+          mouseX - guiLeft, mouseY - guiTop, font);
     }
   }
 
   public static final int SLOT_SIZE = 18;
 
-  @Override
-  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  @Override // drawGuiContainerBackgroundLayer
+  protected void func_230450_a_(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
-    blit(xCenter, yCenter, 0, 0, xSize, ySize);
+    blit(ms, xCenter, yCenter, 0, 0, xSize, ySize);
     itemSlotsGhost = Lists.newArrayList();
     //TODO: shared with GuiCableIO
     int rows = 2;
@@ -169,16 +173,15 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     }
     return super.mouseClicked(mouseX, mouseY, mouseButton);
   }
-
-  @Override
-  public void renderStackToolTip(ItemStack stack, int x, int y) {
-    super.renderTooltip(stack, x, y);
-  }
-
-  @Override
-  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  }
+  //  @Override
+  //  public void renderStackToolTip(ItemStack stack, int x, int y) { 
+  //    super.renderTooltip(stack, x, y);
+  //  }
+  //
+  //  @Override
+  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
+  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

@@ -30,8 +30,8 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   }
 
   @Override
-  public void read(CompoundNBT compound) {
-    super.read(compound);
+  public void read(BlockState bs, CompoundNBT compound) {
+    super.read(bs, compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
   }
 

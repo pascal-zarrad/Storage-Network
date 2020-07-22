@@ -83,6 +83,10 @@ public class BlockCable extends BaseBlock {
     }
 
     @Override
+    public String getString() {
+      return getName();
+    }
+
     public String getName() {
       return name().toLowerCase(Locale.ENGLISH);
     }
@@ -163,11 +167,6 @@ public class BlockCable extends BaseBlock {
   @Override
   public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return new TileCable();
-  }
-
-  @Override
-  public BlockState getExtendedState(BlockState state, IBlockReader world, BlockPos pos) {
-    return super.getExtendedState(state, world, pos);
   }
 
   @Override

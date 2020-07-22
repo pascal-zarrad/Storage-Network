@@ -4,6 +4,7 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -32,8 +33,8 @@ public class TileInventory extends TileConnectable implements INamedContainerPro
   }
 
   @Override
-  public void read(CompoundNBT compound) {
-    super.read(compound);
+  public void read(BlockState bs, CompoundNBT compound) {
+    super.read(bs, compound);
     setDownwards(compound.getBoolean("dir"));
     setSort(EnumSortType.values()[compound.getInt("sort")]);
   }
@@ -46,18 +47,22 @@ public class TileInventory extends TileConnectable implements INamedContainerPro
     return compound;
   }
 
+  @Override
   public boolean isDownwards() {
     return downwards;
   }
 
+  @Override
   public void setDownwards(boolean downwards) {
     this.downwards = downwards;
   }
 
+  @Override
   public EnumSortType getSort() {
     return sort;
   }
 
+  @Override
   public void setSort(EnumSortType sort) {
     this.sort = sort;
   }

@@ -494,7 +494,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
 
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    read(pkt.getNbtCompound());
+    read(this.getBlockState(), pkt.getNbtCompound());
   }
 
   public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {

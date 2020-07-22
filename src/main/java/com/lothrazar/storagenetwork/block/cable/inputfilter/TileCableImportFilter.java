@@ -48,10 +48,10 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
   }
 
   @Override
-  public void read(CompoundNBT compound) {
+  public void read(BlockState bs, CompoundNBT compound) {
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
     ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
-    super.read(compound);
+    super.read(bs, compound);
   }
 
   @Override

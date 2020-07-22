@@ -49,8 +49,8 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
   }
 
   @Override
-  public void read(CompoundNBT compound) {
-    super.read(compound);
+  public void read(BlockState bs, CompoundNBT compound) {
+    super.read(bs, compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
     ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
     this.ioStorage.getFilter().isAllowList = true;//legacy fix to override

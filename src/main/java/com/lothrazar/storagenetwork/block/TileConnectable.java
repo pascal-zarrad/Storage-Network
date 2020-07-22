@@ -38,12 +38,11 @@ public class TileConnectable extends TileEntity {
   }
 
   @Override
-  public void func_230337_a_(BlockState bs,CompoundNBT compound) {
-    
+  public void read(BlockState bs, CompoundNBT compound) {
     if (compound.contains("connectable")) {
       connectable.deserializeNBT(compound.getCompound("connectable"));
     }
-    super.func_230337_a_(bs,compound);
+    super.read(bs, compound);
   }
 
   @Override
@@ -61,8 +60,7 @@ public class TileConnectable extends TileEntity {
 
   @Override
   public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    
-    func_230337_a_(this.getBlockState(),pkt.getNbtCompound());
+    read(this.getBlockState(), pkt.getNbtCompound());
   }
 
   @Override

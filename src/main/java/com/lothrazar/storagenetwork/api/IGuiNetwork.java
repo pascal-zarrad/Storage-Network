@@ -16,4 +16,5 @@ public interface IGuiNetwork extends IGuiPrivate {
   void syncDataToServer();
 
   void setSort(EnumSortType val);
+  //  void renderTooltip(MatrixStack ms, List<StringTextComponent> newArrayList, int i, int j, FontRenderer font);
 }

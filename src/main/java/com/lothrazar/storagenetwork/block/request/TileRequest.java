@@ -7,6 +7,7 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -31,7 +32,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
   }
 
   @Override
-  public void read(CompoundNBT compound) {
+  public void read(BlockState bs, CompoundNBT compound) {
     setDownwards(compound.getBoolean(NBT_DIR));
     if (compound.contains(NBT_SORT)) {
       setSort(EnumSortType.values()[compound.getInt(NBT_SORT)]);
@@ -44,7 +45,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
       ItemStack s = ItemStack.read(stackTag);
       matrix.put(slot, s);
     }
-    super.read(compound);
+    super.read(bs, compound);
   }
 
   @Override

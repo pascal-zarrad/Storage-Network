@@ -22,17 +22,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ItemRemote extends Item implements INamedContainerProvider {
@@ -144,20 +141,22 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int dim = tag.getInt("dim");
     //assume we are in the same world
     World serverTargetWorld = world;//for now
-    if (dim != world.dimension.getType().getId() && tag.contains("dimension")) {
+    DimensionType test = world.func_230315_m_();
+    if (//dim != world.dimension.getType().getId() && 
+    tag.contains("dimension")) {
       try {
-        String dimension = tag.getString("dimension");
-        ResourceLocation res = new ResourceLocation(dimension);
+        //        String dimension = tag.getString("dimension");
+        //        ResourceLocation res = new ResourceLocation(dimension);
         // ok 
-        boolean resetUnloadDelay = true;
-        boolean forceLoad = true;
-        DimensionType dimFromRemote = DimensionType.byName(res);
+        DimensionType dimFromRemote = null;// DimensionType.byName(res);
         if (dimFromRemote != null) {
-          ServerWorld dimWorld = DimensionManager.getWorld(world.getServer(), dimFromRemote, resetUnloadDelay, forceLoad);
-          if (dimWorld != null) {
-            // found it
-            serverTargetWorld = dimWorld.getWorld();
-          }
+          //          boolean resetUnloadDelay = true;
+          //          boolean forceLoad = true;
+          //          ServerWorld dimWorld = DimensionManager.getWorld(world.getServer(), dimFromRemote, resetUnloadDelay, forceLoad);
+          //          if (dimWorld != null) {
+          //            // found it
+          //            serverTargetWorld = dimWorld.getWorld();
+          //          }
         }
       }
       catch (Exception e) {

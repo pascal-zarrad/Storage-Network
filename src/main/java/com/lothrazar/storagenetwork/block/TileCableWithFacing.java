@@ -103,8 +103,8 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   @Override // read
-  public void func_230337_a_(BlockState bs,CompoundNBT compound) {
-    super.func_230337_a_(bs,compound);
+  public void read(BlockState bs, CompoundNBT compound) {
+    super.read(bs, compound);
     if (compound.contains("direction")) {
       this.direction = Direction.values()[(compound.getInt("direction"))];
     }
