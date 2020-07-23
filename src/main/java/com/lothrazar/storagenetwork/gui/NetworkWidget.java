@@ -26,7 +26,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class NetworkWidget {
 
@@ -193,17 +193,17 @@ public class NetworkWidget {
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY, FontRenderer font) {
     for (ItemSlotNetwork s : slots) {
       if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
-        s.drawTooltip(mouseX, mouseY);
+        s.drawTooltip(ms, mouseX, mouseY);
       }
     }
     Screen screen = ((Screen) gui);
     if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      screen.renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.sort")),
+      screen.renderTooltip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.sort")),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
     if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
       screen.renderTooltip(ms, Lists.newArrayList(
-          new StringTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort())),
+          new TranslationTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase())),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
     //    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
@@ -212,30 +212,30 @@ public class NetworkWidget {
     //          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     //    }
     if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      StringTextComponent s = new StringTextComponent(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+      TranslationTextComponent s = new TranslationTextComponent(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
       screen.renderTooltip(ms, Lists.newArrayList(s),
           mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
     if (this.inSearchBar(mouseX, mouseY)) {
-      List<StringTextComponent> lis = Lists.newArrayList();
+      List<TranslationTextComponent> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
-        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.shift")));
+        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.shift")));
       }
       else {
-        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_0")));//@
-        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_1")));//#
+        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_mod")));//@
+        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_tooltip")));//#
         //TODO: tag search
-        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_2")));//$
-        lis.add(new StringTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_3")));//clear
+        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_tags")));//$
+        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_clear")));//clear
       }
       screen.renderTooltip(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
   }
 
-  public void renderItemSlots(int mouseX, int mouseY, FontRenderer font) {
+  public void renderItemSlots(MatrixStack ms, int mouseX, int mouseY, FontRenderer font) {
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
-      slot.drawSlot(font, mouseX, mouseY);
+      slot.drawSlot(ms, font, mouseX, mouseY);
       if (slot.isMouseOverSlot(mouseX, mouseY)) {
         stackUnderMouse = slot.getStack();
       }

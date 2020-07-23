@@ -43,10 +43,16 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     ySize = HEIGHT;
     network.fieldHeight = 180;
   }
-  //  @Override
-  //  public void renderTooltip(MatrixStack ms, List<StringTextComponent> newArrayList, int i, int j, FontRenderer font) {
-  //    // TODO Auto-generated method stub
-  //  }
+
+  @Override
+  public void renderStackTooltip(MatrixStack ms, ItemStack stack, int mousex, int mousey) {
+    super.renderTooltip(ms, stack, mousex, mousey);
+  }
+
+  @Override
+  public void drawGradient(MatrixStack ms, int x, int y, int x2, int y2, int u, int v) {
+    super.fillGradient(ms, x, y, x2, y2, u, v);
+  }
 
   @Override
   public void setStacks(List<ItemStack> stacks) {
@@ -75,7 +81,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    //    renderHoveredToolTip(mouseX, mouseY);
+    this.func_230459_a_(ms, mouseX, mouseY); //  //    renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }
@@ -118,13 +124,13 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     blit(ms, xCenter, yCenter, 0, 0, xSize, ySize);
     //good stuff
     network.applySearchTextToSlots();
-    network.renderItemSlots(mouseX, mouseY, font);
+    network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
   @Override //drawGuiContainerForegroundLayer
   public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
-    super.func_230451_b_(ms, mouseX, mouseY);
-    network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, this.font);
+    //    super.func_230451_b_(ms, mouseX, mouseY);
+    network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
   boolean isScrollable(double x, double y) {

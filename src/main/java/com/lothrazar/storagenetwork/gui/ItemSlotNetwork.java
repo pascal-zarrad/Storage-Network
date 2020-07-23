@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.gui;
 import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -41,7 +42,7 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  public void drawSlot(FontRenderer font, int mx, int my) {
+  public void drawSlot(MatrixStack ms, FontRenderer font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
     RenderSystem.pushMatrix();
     if (!getStack().isEmpty()) {
@@ -76,7 +77,7 @@ public class ItemSlotNetwork {
         int j1 = x;
         int k1 = y;
         RenderSystem.colorMask(true, true, true, false);
-        parent.drawGradientRect(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+        parent.drawGradient(ms, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
         RenderSystem.colorMask(true, true, true, true);
         //       RenderSystem.enableDepthTest();
         //      RenderSystem.enableLighting(); 
@@ -85,9 +86,9 @@ public class ItemSlotNetwork {
     RenderSystem.popMatrix();
   }
 
-  public void drawTooltip(int mx, int my) {
+  public void drawTooltip(MatrixStack ms, int mx, int my) {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
-      parent.renderStackToolTip(getStack(),
+      parent.renderStackTooltip(ms, getStack(),
           mx - parent.getGuiLeft(),
           my - parent.getGuiTop());
     }

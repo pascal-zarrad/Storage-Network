@@ -26,7 +26,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -72,14 +71,12 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     if (world.getTileEntity(pos) instanceof TileMain) {
       ItemStack stack = player.getHeldItem(hand);
       CompoundNBT tag = stack.getOrCreateTag();
-      tag.putInt("x", pos.getX());
-      tag.putInt("y", pos.getY());
-      tag.putInt("z", pos.getZ());
+      tag.putInt("X", pos.getX());
+      tag.putInt("Y", pos.getY());
+      tag.putInt("Z", pos.getZ());
       tag.putBoolean("bound", true);
-      //set the dimension
-      DimensionType dimType = world.getDimension().getType();
-      tag.putInt("dim", dimType.getId());
-      tag.putString("dimension", dimType.getRegistryName().toString());
+      //set the dimension 
+      tag.putString("dimension", DimPos.dimensionToString(world));
       stack.setTag(tag);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
@@ -93,16 +90,16 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     TranslationTextComponent t;
     if (stack.hasTag()) {
       CompoundNBT tag = stack.getOrCreateTag();
-      int x = tag.getInt("x");
-      int y = tag.getInt("y");
-      int z = tag.getInt("z");
-      int dim = tag.getInt("dim");
-      t = new TranslationTextComponent("[ x: " + x + ", y: " + y + ", z: " + z + ", d: " + dim + " ]");
+      int x = tag.getInt("X");
+      int y = tag.getInt("Y");
+      int z = tag.getInt("Z");
+      String dim = tag.getString("dimension");
+      t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
     }
     else {
       t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     }
-    t.applyTextStyle(TextFormatting.GRAY);
+    t.func_240699_a_(TextFormatting.GRAY);
     tooltip.add(t);
   }
 
@@ -111,12 +108,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       return null;
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
-    int x = tag.getInt("x");
-    int y = tag.getInt("y");
-    int z = tag.getInt("z");
-    int dim = tag.getInt("dim");
-    BlockPos posTarget = new BlockPos(x, y, z);
-    return new DimPos(dim, tag.getString("dimension"), posTarget);
+    return new DimPos(tag);
   }
 
   @Override
@@ -135,28 +127,17 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       return super.onItemRightClick(world, player, hand);
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
-    int x = tag.getInt("x");
-    int y = tag.getInt("y");
-    int z = tag.getInt("z");
-    int dim = tag.getInt("dim");
+    int x = tag.getInt("X");
+    int y = tag.getInt("Y");
+    int z = tag.getInt("Z");
     //assume we are in the same world
-    World serverTargetWorld = world;//for now
-    DimensionType test = world.func_230315_m_();
+    World serverTargetWorld = world;//for now 
     if (//dim != world.dimension.getType().getId() && 
     tag.contains("dimension")) {
       try {
-        //        String dimension = tag.getString("dimension");
-        //        ResourceLocation res = new ResourceLocation(dimension);
-        // ok 
-        DimensionType dimFromRemote = null;// DimensionType.byName(res);
-        if (dimFromRemote != null) {
-          //          boolean resetUnloadDelay = true;
-          //          boolean forceLoad = true;
-          //          ServerWorld dimWorld = DimensionManager.getWorld(world.getServer(), dimFromRemote, resetUnloadDelay, forceLoad);
-          //          if (dimWorld != null) {
-          //            // found it
-          //            serverTargetWorld = dimWorld.getWorld();
-          //          }
+        serverTargetWorld = DimPos.stringDimensionLookup(tag.getString("dimension"), world.getServer());
+        if (serverTargetWorld != null) {
+          serverTargetWorld = world;
         }
       }
       catch (Exception e) {

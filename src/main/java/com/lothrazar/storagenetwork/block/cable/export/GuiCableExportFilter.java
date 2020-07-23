@@ -36,6 +36,16 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   }
 
   @Override
+  public void renderStackTooltip(MatrixStack ms, ItemStack stack, int mousex, int mousey) {
+    super.renderTooltip(ms, stack, mousex, mousey);
+  }
+
+  @Override
+  public void drawGradient(MatrixStack ms, int x, int y, int x2, int y2, int u, int v) {
+    super.fillGradient(ms, x, y, x2, y2, u, v);
+  }
+
+  @Override
   public void init() {
     super.init();
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
@@ -74,12 +84,12 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    //    renderHoveredToolTip(mouseX, mouseY);
+    this.func_230459_a_(ms, mouseX, mouseY); //      renderHoveredToolTip(mouseX, mouseY);
   }
 
   @Override // drawGuiContainerForegroundLayer
   public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
-    super.func_230451_b_(ms, mouseX, mouseY);
+    //    super.func_230451_b_(ms, mouseX, mouseY);
     int priority = containerCableLink.cap.getPriority();
     font.drawString(ms, String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
@@ -129,7 +139,7 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
       y += SLOT_SIZE;
     }
     for (ItemSlotNetwork s : itemSlotsGhost) {
-      s.drawSlot(font, mouseX, mouseY);
+      s.drawSlot(ms, font, mouseX, mouseY);
     }
   }
 

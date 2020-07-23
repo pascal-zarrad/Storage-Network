@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.item.remote;
 
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
@@ -21,6 +22,9 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     this.world = player.world;
     DimPos dp = ItemRemote.getPosStored(remote);
     this.root = dp.getTileEntity(TileMain.class, world);
+    if (root == null) {
+      StorageNetwork.LOGGER.error("Error:getTileentity main for world null: " + dp.toString());
+    }
     this.playerInv = pInv;
     bindPlayerInvo(this.playerInv);
     bindHotbar();

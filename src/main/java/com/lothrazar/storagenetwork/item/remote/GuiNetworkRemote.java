@@ -9,7 +9,7 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputMappings;
@@ -37,6 +37,11 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     this.xSize = WIDTH;
     this.ySize = HEIGHT;
     network.fieldHeight = 180;
+  }
+
+  @Override
+  public void renderStackTooltip(MatrixStack ms, ItemStack stack, int mousex, int mousey) {
+    super.renderTooltip(ms, stack, mousex, mousey);
   }
 
   @Override
@@ -70,7 +75,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
-        width, font.FONT_HEIGHT, "search");
+        width, font.FONT_HEIGHT, null);
     network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
     network.initButtons();
@@ -82,29 +87,28 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   @Override
-  public void render(int mouseX, int mouseY, float partialTicks) {
-    this.renderBackground();
-    super.render(mouseX, mouseY, partialTicks);
-    this.renderHoveredToolTip(mouseX, mouseY);
-    network.searchBar.render(mouseX, mouseY, partialTicks);
+  public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+    this.renderBackground(ms);
+    super.render(ms, mouseX, mouseY, partialTicks);
+    this.func_230459_a_(ms, mouseX, mouseY); //    this.renderHoveredToolTip(mouseX, mouseY);
+    network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }
 
-  @Override
-  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  @Override //drawGuiContainerBackgroundLayer
+  protected void func_230450_a_(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
     this.minecraft.getTextureManager().bindTexture(texture);
     int k = (this.width - this.xSize) / 2;
     int l = (this.height - this.ySize) / 2;
-    RenderSystem.color3f(1, 1, 1);
-    this.blit(k, l, 0, 0, this.xSize, this.ySize);
+    this.blit(ms, k, l, 0, 0, this.xSize, this.ySize);
     network.applySearchTextToSlots();
-    network.renderItemSlots(mouseX, mouseY, font);
+    network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
-  @Override
-  public void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-    super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-    network.drawGuiContainerForegroundLayer(mouseX, mouseY);
+  @Override //drawGuiContainerForegroundLayer
+  public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
+    //    super.func_230451_b_(ms, mouseX, mouseY);
+    network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
   boolean isScrollable(double x, double y) {
@@ -168,17 +172,24 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
       return true;
     }
     return false;// super.charTyped(typedChar, keyCode);
+    //
+    //    this.fillGradient(p_238468_1_, p_238468_2_, p_238468_3_, p_238468_4_, p_238468_5_, p_238468_6_, p_238468_7_);
   }
 
   @Override
-  public void renderStackToolTip(ItemStack stack, int x, int y) {
-    super.renderTooltip(stack, x, y);
+  public void drawGradient(MatrixStack ms, int x, int y, int x2, int y2, int u, int v) {
+    super.fillGradient(ms, x, y, x2, y2, u, v);
   }
-
-  @Override
-  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  }
+  //
+  //  @Override
+  //  public void renderStackToolTip(ItemStack stack, int x, int y) {
+  //    super.renderTooltip(stack, x, y);
+  //  }
+  //
+  //  @Override
+  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
+  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

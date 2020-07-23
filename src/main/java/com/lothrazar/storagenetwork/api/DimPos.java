@@ -3,16 +3,16 @@ package com.lothrazar.storagenetwork.api;
 import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.DimensionType;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.server.ServerWorld;
@@ -21,37 +21,23 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class DimPos implements INBTSerializable<CompoundNBT> {
 
-  private int dim;
   private String dimension;
   private BlockPos pos = new BlockPos(0, 0, 0);
   private World world;
 
-  public DimPos() {}
-
   public DimPos(CompoundNBT tag) {
     deserializeNBT(tag);
   }
-
-  public DimPos(ByteBuf buf) {
-    dim = buf.readInt();
-    pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-  }
-
-  public DimPos(int dimension, String d, BlockPos pos) {
-    this.dim = dimension;
-    this.dimension = d;
-    this.pos = pos;
-  }
+  //  public DimPos(String d, BlockPos pos) {
+  //    this.dimension = d;
+  //    this.pos = pos;
+  //  }
 
   public DimPos(World world, BlockPos pos) {
     this.pos = pos;
     this.setWorld(world);
-    if (world != null && world.func_230315_m_() != null) {
-      DimensionType type = world.func_230315_m_();
-      ResourceLocation rt = type.field_241504_y_;
-      //above SHOULD be from access transformer 
-      dim = 0;//world.func_230315_m_().getId();
-      dimension = type.toString();//  world.func_230315_m_().getRegistryName().toString();
+    if (world != null) {
+      dimension = dimensionToString(world);
     }
   }
 
@@ -73,27 +59,38 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return getTileEntity(tileEntityClassOrInterface, getWorld());
   }
 
+  public static String dimensionToString(World w) {
+    //example: returns "minecraft:overworld" resource location
+    return w.func_234923_W_().func_240901_a_().toString();
+  }
+
+  public static ServerWorld stringDimensionLookup(String s, MinecraftServer serv) {
+    RegistryKey<World> worldKey = RegistryKey.func_240903_a_(Registry.WORLD_KEY, new ResourceLocation(s));
+    if (worldKey == null) {
+      return null;
+    }
+    return serv.getWorld(worldKey);
+  }
+
   @SuppressWarnings("unchecked")
   @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
     if (world == null || getBlockPos() == null) {
       return null;
     }
-    //refresh server world
-    RegistryKey<DimensionType> mydim = world.func_234922_V_();
-    ResourceLocation mydimKey = mydim.func_240901_a_();
-    if (dimension != null && dim != world.dimension.getType().getId()) {
-      if (world.getServer() == null) {
-        return null;
-      }
+    //refresh server world 
+    if (dimension != null && world.getServer() != null) {//&& dim != world.dimension.getType().getId()) {
+      ServerWorld dimWorld = stringDimensionLookup(this.dimension, world.getServer());
       //reach across to the other dimension
-      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));
-      boolean resetUnloadDelay = true;
-      boolean forceLoad = true;
-      ServerWorld dimWorld = DimensionManager.getWorld(world.getServer(), dimTarget, resetUnloadDelay, forceLoad);
+      //      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));
+      //      boolean resetUnloadDelay = true;
+      //      boolean forceLoad = true;
+      //      ServerWorld dimWorld = null;//DimensionManager.getWorld(world.getServer(), dimTarget, resetUnloadDelay, forceLoad);
       if (dimWorld != null) {
-        //        StorageNetwork.log(" Dimworld found " + dimension + dim);
         world = dimWorld.getWorld();
+      }
+      else {
+        StorageNetwork.log(" Dimworld NOT FOUND for " + dimension);
       }
     }
     //end refresh srever world
@@ -144,29 +141,22 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       return false;
     }
     DimPos dimPos = (DimPos) o;
-    return dim == dimPos.dim &&
+    return dimension.equals(dimPos.dimension) &&
         Objects.equal(pos, dimPos.pos);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(dim, pos);
+    return Objects.hashCode(dimension, pos);
   }
 
   @Override
   public String toString() {
     return "[" +
-        "dimension=" + dim +
+        "dimension=" + dimension +
         ", pos=" + pos +
         ", world=" + getWorld() +
         ']';
-  }
-
-  public void writeToByteBuf(ByteBuf buf) {
-    buf.writeInt(dim);
-    buf.writeInt(pos.getX());
-    buf.writeInt(pos.getY());
-    buf.writeInt(pos.getZ());
   }
 
   @Override
@@ -175,14 +165,14 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       pos = new BlockPos(0, 0, 0);
     }
     CompoundNBT result = NBTUtil.writeBlockPos(pos);
-    //    result.setInteger("Dim", dimension);
+    result.putString("dimension", dimension);
     return result;
   }
 
   @Override
   public void deserializeNBT(CompoundNBT nbt) {
     pos = NBTUtil.readBlockPos(nbt);
-    //    dimension = nbt.getInteger("Dim");
+    dimension = nbt.getString("dimension");
   }
 
   public DimPos offset(Direction direction) {

@@ -47,6 +47,6 @@ Storage Network to connect inventories to search and craft
 [[dependencies.storagenetwork]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16]"
+    versionRange="[1.16.1,)"
     ordering="NONE"
     side="BOTH"
