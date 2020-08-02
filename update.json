@@ -5,6 +5,7 @@
     "1.16.1-recommended": "1.0.0"
   },
   "1.16.1": {
-   	"1.0.0":"First port to 1.16+.  " 
+   	"1.0.0":"First port to 1.16+.  " ,
+   	"1.0.1":"Bump for compatibility with forge-32.0.98.  "
   }
 }

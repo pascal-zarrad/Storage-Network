@@ -112,19 +112,19 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
   private void drawTooltips(MatrixStack ms, final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
       renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.import")),
-          mouseX - guiLeft, mouseY - guiTop, font);
+          mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
       renderTooltip(ms, Lists.newArrayList(new StringTextComponent(this.isAllowlist ? "gui.storagenetwork.gui.whitelist" : "gui.storagenetwork.gui.blacklist")),
-          mouseX - guiLeft, mouseY - guiTop, font);
+          mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
       renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.priority.down")),
-          mouseX - guiLeft, mouseY - guiTop, font);
+          mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
       renderTooltip(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.priority.up")),
-          mouseX - guiLeft, mouseY - guiTop, font);
+          mouseX - guiLeft, mouseY - guiTop);
     }
   }
 
