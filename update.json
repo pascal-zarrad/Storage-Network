@@ -1,11 +1,11 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.16.1-latest": "1.0.0",
-    "1.16.1-recommended": "1.0.0"
+    "1.16.2-latest": "1.0.0",
+    "1.16.2-recommended": "1.0.0"
   },
-  "1.16.1": {
+  "1.16.2": {
    	"1.0.0":"First port to 1.16+.  " ,
-   	"1.0.1":"Bump for compatibility with forge-32.0.98.  "
+   	"1.0.1":"Ported"
   }
 }

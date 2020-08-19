@@ -95,8 +95,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.render();
   }
 
-  @Override //drawGuiContainerBackgroundLayer
-  protected void func_230450_a_(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
+  @Override
+  protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
     this.minecraft.getTextureManager().bindTexture(texture);
     int k = (this.width - this.xSize) / 2;
     int l = (this.height - this.ySize) / 2;
@@ -105,8 +105,8 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
-  @Override //drawGuiContainerForegroundLayer
-  public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
+  @Override
+  public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
     //    super.func_230451_b_(ms, mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }

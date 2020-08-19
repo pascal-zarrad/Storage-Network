@@ -99,7 +99,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     else {
       t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     }
-    t.func_240699_a_(TextFormatting.GRAY);
+    t.mergeStyle(TextFormatting.GRAY);
     tooltip.add(t);
   }
 

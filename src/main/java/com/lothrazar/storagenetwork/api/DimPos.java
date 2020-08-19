@@ -28,16 +28,13 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   public DimPos(CompoundNBT tag) {
     deserializeNBT(tag);
   }
-  //  public DimPos(String d, BlockPos pos) {
-  //    this.dimension = d;
-  //    this.pos = pos;
-  //  }
 
   public DimPos(World world, BlockPos pos) {
     this.pos = pos;
     this.setWorld(world);
     if (world != null) {
       dimension = dimensionToString(world);
+      StorageNetwork.log("New dimtostring " + dimension);
     }
   }
 

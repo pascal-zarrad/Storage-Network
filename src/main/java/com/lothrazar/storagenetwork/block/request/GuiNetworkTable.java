@@ -113,7 +113,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
   }
 
   @Override //drawGuiContainerBackgroundLayer
-  public void func_230450_a_(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
+  public void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
@@ -125,7 +125,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
   }
 
   @Override //drawGuiContainerForegroundLayer
-  public void func_230451_b_(MatrixStack ms, int mouseX, int mouseY) {
+  public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
     //    super.func_230451_b_(ms, mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }

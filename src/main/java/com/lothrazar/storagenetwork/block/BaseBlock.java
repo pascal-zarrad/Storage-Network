@@ -33,7 +33,7 @@ public abstract class BaseBlock extends Block {
   public void addInformation(ItemStack stack, @Nullable IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);
     TranslationTextComponent t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    t.func_240699_a_(TextFormatting.GRAY);
+    t.mergeStyle(TextFormatting.GRAY);
     tooltip.add(t);
   }
 
