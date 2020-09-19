@@ -8,7 +8,7 @@
   ],
   "key": {
     "c": {
-      "item": "minecraft:redstone_block"
+      "tag": "forge:storage_blocks/redstone"
     },
     "i":  {
 	  "item": "storagenetwork:kabel"

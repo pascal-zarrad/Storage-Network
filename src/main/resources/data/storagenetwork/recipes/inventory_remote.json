@@ -8,16 +8,16 @@
   ],
   "key": {
     "c": {
-      "item": "minecraft:glowstone"
+      "tag": "forge:dusts/glowstone"
     },
     "i":  {
-	  "item": "minecraft:gold_ingot"
+	  "tag": "forge:ingots/gold"
 	},
     "m":  {
 	  "item": "storagenetwork:master"
 	},
     "p":  {
-	  "item": "minecraft:slime_ball"
+	  "tag": "forge:slimeballs"
 }
   },
   "result": {

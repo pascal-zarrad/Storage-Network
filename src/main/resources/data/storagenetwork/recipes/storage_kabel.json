@@ -10,7 +10,7 @@
       "item": "storagenetwork:kabel"
     },
     "p": {
-      "item": "minecraft:chest"
+      "tag": "forge:chests/wooden"
     }
   },
   "result": {
