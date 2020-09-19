@@ -6,6 +6,6 @@
   },
   "1.16.2": {
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)",
-   	"1.1.0":"Fixed compatiblity crashed caused by breaking changes in the latest forge/JEI (suggested now is forge_version=33.0.61 and jei_version=7.3.2.25).  Patched bug in native VoxelShape class for joining server lag.  "
+   	"1.1.0":"Fixed compatiblity crashed caused by breaking changes in the latest forge/JEI (suggested now is forge_version=33.0.61 and jei_version=7.3.2.25).  Patched bug in native VoxelShape class for joining server lag.  Regular Network Cables no longer visually appear to connect to inventories.   "
   }
 }

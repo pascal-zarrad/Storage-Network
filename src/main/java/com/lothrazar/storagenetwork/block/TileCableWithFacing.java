@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
+import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -89,7 +90,7 @@ public class TileCableWithFacing extends TileConnectable {
       this.findNewDirection();
       if (getDirection() != null) {
         BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
-        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), BlockCable.EnumConnectType.INVENTORY);
+        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.INVENTORY);
         world.setBlockState(pos, newState);
       }
     }

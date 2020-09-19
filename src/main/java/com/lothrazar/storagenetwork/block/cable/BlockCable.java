@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable;
 
-import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
@@ -18,7 +17,6 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -70,28 +68,6 @@ public class BlockCable extends BaseBlock {
     return state;
   }
 
-  public enum EnumConnectType implements IStringSerializable {
-
-    NONE, CABLE, INVENTORY, BLOCKED;
-
-    public boolean isHollow() {
-      return this == NONE || this == BLOCKED;
-    }
-
-    public boolean isInventory() {
-      return this == INVENTORY;
-    }
-
-    @Override
-    public String getString() {
-      return getName();
-    }
-
-    public String getName() {
-      return name().toLowerCase(Locale.ENGLISH);
-    }
-  }
-
   private static final EnumProperty<EnumConnectType> DOWN = EnumProperty.create("down", EnumConnectType.class);
   private static final EnumProperty<EnumConnectType> UP = EnumProperty.create("up", EnumConnectType.class);
   private static final EnumProperty<EnumConnectType> NORTH = EnumProperty.create("north", EnumConnectType.class);
@@ -132,7 +108,7 @@ public class BlockCable extends BaseBlock {
 
   @Override
   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-    return ShapeCache.getOrCreate(state, this::createShape);
+    return createShape(state);// ShapeCache.getOrCreate(state, this::createShape);
   }
 
   private VoxelShape createShape(BlockState state) {
@@ -202,11 +178,12 @@ public class BlockCable extends BaseBlock {
         || facingState.getBlock() == SsnRegistry.request) {
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-    else if (isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
-      if (!this.hasInventory(stateIn)) {
-        return stateIn.with(property, EnumConnectType.INVENTORY);
-      }
-    }
+    else if (stateIn.getBlock() != SsnRegistry.kabel &&
+        isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
+          if (!this.hasInventory(stateIn)) {
+            return stateIn.with(property, EnumConnectType.INVENTORY);
+          }
+        }
     return stateIn.with(property, EnumConnectType.NONE);
   }
 

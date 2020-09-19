@@ -27,6 +27,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -69,6 +70,10 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     BlockPos pos = context.getPos();
     PlayerEntity player = context.getPlayer();
     if (world.getTileEntity(pos) instanceof TileMain) {
+      //      if (DimPos.dimensionToString(world).equalsIgnoreCase("minecraft:dimension")) {
+      //        System.out.println("WTFFFF");
+      //        return ActionResultType.PASS;
+      //      }
       ItemStack stack = player.getHeldItem(hand);
       CompoundNBT tag = stack.getOrCreateTag();
       tag.putInt("X", pos.getX());
@@ -131,25 +136,18 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int y = tag.getInt("Y");
     int z = tag.getInt("Z");
     //assume we are in the same world
-    World serverTargetWorld = world;//for now 
-    if (//dim != world.dimension.getType().getId() && 
-    tag.contains("dimension")) {
+    ServerWorld serverTargetWorld = null;//for now 
+    if (tag.contains("dimension")) {
       try {
         serverTargetWorld = DimPos.stringDimensionLookup(tag.getString("dimension"), world.getServer());
-        if (serverTargetWorld != null) {
-          serverTargetWorld = world;
-        }
-        else {
-          StorageNetwork.LOGGER.error("Missing dimension key ", tag.getString("dimension"));
+        if (serverTargetWorld == null) {
+          StorageNetwork.LOGGER.error("Missing dimension key " + tag.getString("dimension"));
         }
       }
       catch (Exception e) {
         //
-        StorageNetwork.LOGGER.error("why is cross dim broken ", e);
+        StorageNetwork.LOGGER.error("why is cross dim broken for " + tag.getString("dimension"), e);
         return super.onItemRightClick(world, player, hand);
-      }
-      if (serverTargetWorld == null) {
-        serverTargetWorld = world;
       }
     }
     BlockPos posTarget = new BlockPos(x, y, z);
@@ -162,7 +160,9 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       NetworkHooks.openGui((ServerPlayerEntity) player, this);
     }
     else {
-      //      UtilTileEntity.statusMessage(player, "item.remote.notconnected");
+      //      StorageNetwork.LOGGER.error(tag + " Missing network " + tile + " " + posTarget);
+      player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
+      // UtilTileEntity.statusMessage(player, "item.remote.notconnected");
     }
     return super.onItemRightClick(world, player, hand);
   }

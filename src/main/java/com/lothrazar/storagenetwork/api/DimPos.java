@@ -58,8 +58,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   public static String dimensionToString(World w) {
     //example: returns "minecraft:overworld" resource location
-    return w.getDimensionKey().getRegistryName().toString();
-    //w.func_234923_W_().func_240901_a_().toString();
+    return w.getDimensionKey().getLocation().toString();
   }
 
   public static ServerWorld stringDimensionLookup(String s, MinecraftServer serv) {

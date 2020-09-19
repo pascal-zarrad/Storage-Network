@@ -19,14 +19,14 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
 
   public static void chatMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) { 
+    if (player.world.isRemote) {
       player.sendMessage(new TranslationTextComponent(message), player.getUniqueID());
     }
   }
 
   public static void statusMessage(PlayerEntity player, String message) {
     if (player.world.isRemote) {
-      player.sendStatusMessage(new TranslationTextComponent((message)), true);
+      player.sendStatusMessage(new TranslationTextComponent(message), true);
     }
   }
 

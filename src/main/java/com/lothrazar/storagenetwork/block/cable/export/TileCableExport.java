@@ -4,6 +4,7 @@ import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
+import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -84,7 +85,7 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
       this.findNewDirection();
       if (getDirection() != null) {
         BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
-        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), BlockCable.EnumConnectType.CABLE);
+        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.CABLE);
         world.setBlockState(pos, newState);
       }
     }
