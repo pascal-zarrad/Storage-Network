@@ -108,7 +108,7 @@ public class BlockCable extends BaseBlock {
 
   @Override
   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-    return createShape(state);// ShapeCache.getOrCreate(state, this::createShape);
+    return ShapeCache.getOrCreate(state, this::createShape);
   }
 
   private VoxelShape createShape(BlockState state) {
