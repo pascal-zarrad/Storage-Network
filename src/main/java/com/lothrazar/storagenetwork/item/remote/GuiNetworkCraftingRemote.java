@@ -97,7 +97,7 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     this.renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.func_230459_a_(ms, mouseX, mouseY); //      this.renderHoveredToolTip(mouseX, mouseY);
+    this.renderHoveredTooltip(ms, mouseX, mouseY); //      this.renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }

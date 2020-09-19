@@ -81,7 +81,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.func_230459_a_(ms, mouseX, mouseY); //  //    renderHoveredToolTip(mouseX, mouseY);
+    this.renderHoveredTooltip(ms, mouseX, mouseY); //  //    renderHoveredToolTip(mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }

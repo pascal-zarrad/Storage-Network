@@ -139,11 +139,17 @@ public class ItemRemote extends Item implements INamedContainerProvider {
         if (serverTargetWorld != null) {
           serverTargetWorld = world;
         }
+        else {
+          StorageNetwork.LOGGER.error("Missing dimension key ", tag.getString("dimension"));
+        }
       }
       catch (Exception e) {
         //
         StorageNetwork.LOGGER.error("why is cross dim broken ", e);
         return super.onItemRightClick(world, player, hand);
+      }
+      if (serverTargetWorld == null) {
+        serverTargetWorld = world;
       }
     }
     BlockPos posTarget = new BlockPos(x, y, z);

@@ -59,15 +59,17 @@ public class BlockMain extends BaseBlock {
     TileMain tileMain = (TileMain) tileHere;
     playerIn.sendMessage(
         new TranslationTextComponent(TextFormatting.LIGHT_PURPLE +
-            UtilTileEntity.lang("chat.master.emptyslots") + tileMain.emptySlots()),playerIn.getUniqueID());
+            UtilTileEntity.lang("chat.main.emptyslots") + tileMain.emptySlots()),
+        playerIn.getUniqueID());
     playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA +
-        UtilTileEntity.lang("chat.master.connectables") + tileMain.getConnectablePositions().size()),playerIn.getUniqueID());
+        UtilTileEntity.lang("chat.main.connectables") + tileMain.getConnectablePositions().size()), playerIn.getUniqueID());
     Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
     while (iter.hasNext()) {
       DimPos p = iter.next();
-      String block = p.getBlockState().getBlock().getRegistryName().toString();
-      mapNamesToCount.put(block, mapNamesToCount.get(block) != null ? (mapNamesToCount.get(block) + 1) : 1);
+      String block = p.getBlockState().getBlock().getTranslatedName().getString(); //p.getBlockState().getBlock().getRegistryName().toString();
+      int count = mapNamesToCount.get(block) != null ? (mapNamesToCount.get(block) + 1) : 1;
+      mapNamesToCount.put(block, count);
     }
     List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
     for (Entry<String, Integer> e : mapNamesToCount.entrySet()) {
@@ -81,8 +83,7 @@ public class BlockMain extends BaseBlock {
       }
     });
     for (Entry<String, Integer> e : listDisplayStrings) {
-      playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getKey() + ": " + e.getValue())
-          ,playerIn.getUniqueID() );
+      playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUniqueID());
     }
     return ActionResultType.SUCCESS;
   }
