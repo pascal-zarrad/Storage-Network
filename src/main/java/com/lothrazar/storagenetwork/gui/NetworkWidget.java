@@ -101,7 +101,7 @@ public class NetworkWidget {
       return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
     }
     else {
-      return stack.getDisplayName().getUnformattedComponentText().toLowerCase().contains(searchText.toLowerCase());
+      return stack.getDisplayName().getString().toLowerCase().contains(searchText.toLowerCase());
     }
   }
 
