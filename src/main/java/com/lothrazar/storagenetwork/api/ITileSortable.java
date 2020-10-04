@@ -1,5 +1,4 @@
 package com.lothrazar.storagenetwork.api;
-
 public interface ITileSortable {
 
   boolean isDownwards();
