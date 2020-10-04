@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -56,20 +57,37 @@ public class BlockMain extends BaseBlock {
       return ActionResultType.PASS;
     }
     //    float hitX, float hitY, float hitZ;
+    if (hand == Hand.MAIN_HAND && playerIn.getHeldItem(hand).isEmpty()) {
+      displayConnections(playerIn, tileHere);
+      return ActionResultType.SUCCESS;
+    }
+    return ActionResultType.PASS;
+  }
+
+  private void displayConnections(PlayerEntity playerIn, TileEntity tileHere) {
     TileMain tileMain = (TileMain) tileHere;
+    int total = tileMain.getConnectablePositions().size();
+    if (total == 0) {
+      return;
+    }
     playerIn.sendMessage(
         new TranslationTextComponent(TextFormatting.LIGHT_PURPLE +
             UtilTileEntity.lang("chat.main.emptyslots") + tileMain.emptySlots()),
         playerIn.getUniqueID());
     playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA +
-        UtilTileEntity.lang("chat.main.connectables") + tileMain.getConnectablePositions().size()), playerIn.getUniqueID());
+        UtilTileEntity.lang("chat.main.connectables") + total), playerIn.getUniqueID());
     Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
+    Block bl;
+    DimPos p;
+    String blockName;
     while (iter.hasNext()) {
-      DimPos p = iter.next();
-      String block = p.getBlockState().getBlock().getTranslatedName().getString(); //p.getBlockState().getBlock().getRegistryName().toString();
-      int count = mapNamesToCount.get(block) != null ? (mapNamesToCount.get(block) + 1) : 1;
-      mapNamesToCount.put(block, count);
+      p = iter.next();
+      bl = p.getBlockState().getBlock();
+      //getTranslatedName client only thanks mojang lol
+      blockName = (new TranslationTextComponent(bl.getTranslationKey())).getString();
+      int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
+      mapNamesToCount.put(blockName, count);
     }
     List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
     for (Entry<String, Integer> e : mapNamesToCount.entrySet()) {
@@ -85,7 +103,6 @@ public class BlockMain extends BaseBlock {
     for (Entry<String, Integer> e : listDisplayStrings) {
       playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUniqueID());
     }
-    return ActionResultType.SUCCESS;
   }
 
   @Override

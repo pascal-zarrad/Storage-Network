@@ -34,33 +34,60 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ItemRemote extends Item implements INamedContainerProvider {
 
+  public static final String NBT_Z = "Z";
+  public static final String NBT_Y = "Y";
+  public static final String NBT_X = "X";
+  public static final String NBT_DIM = "dimension";
+  public static final String NBT_BOUND = "bound";
+  public static final String NBT_SORT = "sort";
+  public static final String NBT_DOWN = "down";
+
   public ItemRemote(Properties properties) {
     super(properties.maxStackSize(1));
   }
 
   public static boolean getDownwards(ItemStack stack) {
     CompoundNBT tag = stack.getOrCreateTag();
-    if (tag.contains("down")) {
-      return tag.getBoolean("down");
+    if (tag.contains(NBT_DOWN)) {
+      return tag.getBoolean(NBT_DOWN);
     }
     return false;
   }
 
   public static void setDownwards(ItemStack stack, boolean val) {
-    stack.getOrCreateTag().putBoolean("down", val);
+    stack.getOrCreateTag().putBoolean(NBT_DOWN, val);
   }
 
   public static EnumSortType getSort(ItemStack stack) {
     CompoundNBT tag = stack.getOrCreateTag();
-    if (tag.contains("sort")) {
-      int sort = tag.getInt("sort");
+    if (tag.contains(NBT_SORT)) {
+      int sort = tag.getInt(NBT_SORT);
       return EnumSortType.values()[sort];
     }
     return EnumSortType.NAME;
   }
 
   public static void setSort(ItemStack stack, EnumSortType val) {
-    stack.getOrCreateTag().putInt("sort", val.ordinal());
+    stack.getOrCreateTag().putInt(NBT_SORT, val.ordinal());
+  }
+
+  public static void putPos(ItemStack stack, BlockPos pos) {
+    CompoundNBT tag = stack.getOrCreateTag();
+    tag.putInt(NBT_X, pos.getX());
+    tag.putInt(NBT_Y, pos.getY());
+    tag.putInt(NBT_Z, pos.getZ());
+  }
+
+  public static BlockPos getPos(ItemStack stack) {
+    return null;
+  }
+
+  public static String getDim(ItemStack stack) {
+    return stack.getOrCreateTag().getString(NBT_DIM);
+  }
+
+  public static void putDim(ItemStack stack, World world) {
+    stack.getOrCreateTag().putString(NBT_DIM, DimPos.dimensionToString(world));
   }
 
   @Override
@@ -70,18 +97,11 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     BlockPos pos = context.getPos();
     PlayerEntity player = context.getPlayer();
     if (world.getTileEntity(pos) instanceof TileMain) {
-      //      if (DimPos.dimensionToString(world).equalsIgnoreCase("minecraft:dimension")) {
-      //        System.out.println("WTFFFF");
-      //        return ActionResultType.PASS;
-      //      }
       ItemStack stack = player.getHeldItem(hand);
       CompoundNBT tag = stack.getOrCreateTag();
-      tag.putInt("X", pos.getX());
-      tag.putInt("Y", pos.getY());
-      tag.putInt("Z", pos.getZ());
-      tag.putBoolean("bound", true);
-      //set the dimension 
-      tag.putString("dimension", DimPos.dimensionToString(world));
+      putPos(stack, pos);
+      tag.putBoolean(NBT_BOUND, true);
+      putDim(stack, world);
       stack.setTag(tag);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
@@ -95,10 +115,10 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     TranslationTextComponent t;
     if (stack.hasTag()) {
       CompoundNBT tag = stack.getOrCreateTag();
-      int x = tag.getInt("X");
-      int y = tag.getInt("Y");
-      int z = tag.getInt("Z");
-      String dim = tag.getString("dimension");
+      int x = tag.getInt(NBT_X);
+      int y = tag.getInt(NBT_Y);
+      int z = tag.getInt(NBT_Z);
+      String dim = tag.getString(NBT_DIM);
       t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
     }
     else {
@@ -109,7 +129,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   }
 
   public static DimPos getPosStored(ItemStack itemStackIn) {
-    if (!itemStackIn.getOrCreateTag().getBoolean("bound")) {
+    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
       return null;
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
@@ -123,7 +143,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       return super.onItemRightClick(world, player, hand);
     }
     ItemStack itemStackIn = player.getHeldItem(hand);
-    if (!itemStackIn.getOrCreateTag().getBoolean("bound")) {
+    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
       //unbound or invalid data
       UtilTileEntity.statusMessage(player, "item.remote.notconnected");
       return super.onItemRightClick(world, player, hand);
@@ -132,21 +152,21 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       return super.onItemRightClick(world, player, hand);
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
-    int x = tag.getInt("X");
-    int y = tag.getInt("Y");
-    int z = tag.getInt("Z");
+    int x = tag.getInt(NBT_X);
+    int y = tag.getInt(NBT_Y);
+    int z = tag.getInt(NBT_Z);
     //assume we are in the same world
     ServerWorld serverTargetWorld = null;//for now 
-    if (tag.contains("dimension")) {
+    if (tag.contains(NBT_DIM)) {
       try {
-        serverTargetWorld = DimPos.stringDimensionLookup(tag.getString("dimension"), world.getServer());
+        serverTargetWorld = DimPos.stringDimensionLookup(tag.getString(NBT_DIM), world.getServer());
         if (serverTargetWorld == null) {
-          StorageNetwork.LOGGER.error("Missing dimension key " + tag.getString("dimension"));
+          StorageNetwork.LOGGER.error("Missing dimension key " + tag.getString(NBT_DIM));
         }
       }
       catch (Exception e) {
         //
-        StorageNetwork.LOGGER.error("why is cross dim broken for " + tag.getString("dimension"), e);
+        StorageNetwork.LOGGER.error("why is cross dim broken for " + tag.getString(NBT_DIM), e);
         return super.onItemRightClick(world, player, hand);
       }
     }

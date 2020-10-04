@@ -27,9 +27,9 @@ updateJSONURL="https://raw.githubusercontent.com/Lothrazar/Storage-Network/trunk
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://minecraft.curseforge.com/projects/simple-storage-network" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+logoFile="logoFile.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks for this example mod goes to Java" #optional
+credits="MrRiegel for the original mod" #optional
 # A text field displayed in the mod UI
 authors="Lothrazar, MrRiegel" #optional
 # The description text for the mod (multi line!) (#mandatory)
