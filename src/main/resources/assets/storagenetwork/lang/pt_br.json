@@ -17,7 +17,7 @@
     "block.storagenetwork.inventory": "Inventário de Armazenamento",
     "block.storagenetwork.inventory.tooltip": "Acesso ao inventário sem uma grade de fabricação",
     
-    "item.storagenetwork.speed_upgrade": "Upgrade de Celocidade",
+    "item.storagenetwork.speed_upgrade": "Upgrade de Velocidade",
     "item.storagenetwork.operation_upgrade": "Operation de Operação",
     "item.storagenetwork.stack_upgrade": "Upgrade de Stack",
     "item.storagenetwork.stock_upgrade": "Upgrade de Estoque",
