@@ -207,6 +207,9 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     return importCache.get(getStackKey(stack));
   }
 
+  /**
+   * returns countUnmoved , the number of items NOT inserted.
+   */
   public int insertStack(ItemStack rawStack, boolean simulate) {
     if (rawStack.isEmpty()) {
       return 0;

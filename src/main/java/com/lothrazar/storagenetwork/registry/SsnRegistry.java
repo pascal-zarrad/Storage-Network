@@ -24,6 +24,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
+import com.lothrazar.storagenetwork.item.ItemCollector;
 import com.lothrazar.storagenetwork.item.ItemPicker;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
@@ -58,6 +59,8 @@ public class SsnRegistry {
   public static Item inventory_remote;
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
   public static Item crafting_remote;
+  @ObjectHolder(StorageNetwork.MODID + ":collector_remote")
+  public static Item collector_remote;
   //
   @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade")
   public static ItemUpgrade speed_upgrade;
@@ -145,14 +148,13 @@ public class SsnRegistry {
       r.register(new BlockItem(SsnRegistry.importfilterkabel, properties).setRegistryName("import_filter_kabel"));
       r.register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
       r.register(new BlockItem(SsnRegistry.exportkabel, properties).setRegistryName("export_kabel"));
-      //up
-      //      r.register(new ItemUpgrade(properties).setRegistryName("operation_upgrade"));
-      //      r.register(new ItemUpgrade(properties).setRegistryName("stock_upgrade"));
+      //
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
       r.register(new ItemRemote(properties).setRegistryName("inventory_remote"));
       r.register(new ItemRemote(properties).setRegistryName("crafting_remote"));
       r.register(new ItemPicker(properties).setRegistryName("picker_remote"));
+      r.register(new ItemCollector(properties).setRegistryName("collector_remote"));
     }
 
     @SubscribeEvent

@@ -5,9 +5,7 @@ import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
-import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -25,8 +23,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ItemPicker extends Item {
+public class ItemCollector extends Item {
 
   public static final String NBT_Z = "Z";
   public static final String NBT_Y = "Y";
@@ -34,8 +34,45 @@ public class ItemPicker extends Item {
   public static final String NBT_DIM = "dimension";
   public static final String NBT_BOUND = "bound";
 
-  public ItemPicker(Properties properties) {
+  public ItemCollector(Properties properties) {
     super(properties.maxStackSize(1));
+  }
+
+  @SubscribeEvent
+  public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
+    if (event.getEntityLiving() instanceof PlayerEntity &&
+        event.getItem() != null &&
+        event.getItem().getItem().isEmpty() == false) {
+      ItemStack item = event.getItem().getItem();
+      StorageNetwork.log(" TODO SEARCH FOR ITEM DONT USE MAIN_HAND pickup" + item);
+      Hand hand = Hand.MAIN_HAND;
+      PlayerEntity player = (PlayerEntity) event.getEntityLiving();
+      World world = player.world;
+      ItemStack stack = player.getHeldItem(hand);
+      DimPos dp = getPosStored(stack);
+      if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
+        ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
+        if (serverTargetWorld == null) {
+          StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
+          return;//ActionResultType.PASS;
+        }
+        TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
+        if (tile instanceof TileMain) {
+          TileMain network = (TileMain) tile;
+          //
+          int countUnmoved = network.insertStack(item, false);
+          if (countUnmoved == 0) {
+            StorageNetwork.log("unmoved is zero so all gone" + item);
+            item.setCount(0);
+            event.getItem().setItem(item);
+            event.getItem().remove();
+          }
+        }
+        else {
+          StorageNetwork.log("item.remote.notfound");
+        }
+      }
+    }
   }
 
   public static void putPos(ItemStack stack, BlockPos pos) {
@@ -72,37 +109,6 @@ public class ItemPicker extends Item {
       stack.setTag(tag);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
-    }
-    else {
-      ItemStack stack = player.getHeldItem(hand);
-      DimPos dp = getPosStored(stack);
-      if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
-        ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
-        if (serverTargetWorld == null) {
-          StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
-          return ActionResultType.PASS;
-        }
-        TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
-        if (tile instanceof TileMain) {
-          TileMain network = (TileMain) tile;
-          BlockState bs = world.getBlockState(pos);
-          StorageNetwork.log("Pick block!!! attemplt" + bs);
-          ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(bs.getBlock()), false, false);
-          int size = player.isCrouching() ? 1 : 64;
-          ItemStack found = network.request(matcher, size, false);
-          if (!found.isEmpty()) {
-            player.sendStatusMessage(new TranslationTextComponent("item.remote.found"), true);
-            player.entityDropItem(found);
-            //            player.dropItem(found, true); 
-          }
-          else {
-            StorageNetwork.log("not found " + bs);
-          }
-        }
-        else {
-          player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
-        }
-      }
     }
     return ActionResultType.PASS;
   }

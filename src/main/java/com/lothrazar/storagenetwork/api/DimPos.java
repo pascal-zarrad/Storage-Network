@@ -34,7 +34,6 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     this.setWorld(world);
     if (world != null) {
       dimension = dimensionToString(world);
-      StorageNetwork.log("New dimtostring " + dimension);
     }
   }
 
@@ -77,7 +76,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       return null;
     }
     //refresh server world 
-    if (dimension != null && world.getServer() != null) {//&& dim != world.dimension.getType().getId()) {
+    if (dimension != null && world.getServer() != null
+        && dimension.isEmpty() == false) {//&& dim != world.dimension.getType().getId()) {
       ServerWorld dimWorld = stringDimensionLookup(this.dimension, world.getServer());
       //reach across to the other dimension
       //      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));
@@ -87,9 +87,9 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       if (dimWorld != null) {
         world = dimWorld.getWorld();
       }
-      else {
-        StorageNetwork.log(" Dimworld NOT FOUND for " + dimension);
-      }
+      //      else {
+      //        StorageNetwork.log(" Dimworld NOT FOUND for " + dimension);
+      //      }
     }
     //end refresh srever world
     TileEntity tileEntity = world.getTileEntity(getBlockPos());

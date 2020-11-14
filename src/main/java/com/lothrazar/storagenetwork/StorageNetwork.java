@@ -36,6 +36,7 @@ public class StorageNetwork {
     proxy.init();
     config = new ConfigRegistry(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     JeiSettings.setJeiLoaded(true);
+    MinecraftForge.EVENT_BUS.register(SsnRegistry.collector_remote);
   }
 
   public static void log(String s) {
