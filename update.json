@@ -8,6 +8,6 @@
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)",
    	"1.1.0":"Fixed compatibility crashe caused by breaking changes in the latest forge/JEI (suggested now is forge_version=33.0.61 and jei_version=7.3.2.25).  Patched bug in native VoxelShape class for joining server lag.  Regular Network Cables no longer visually appear to connect to inventories.  Several recipes updated to use item tags for compatibility.   "
   	,"1.1.2":"Fix server crash when you build on top of the main root block."
-  	,"1.2.0":""
+  	,"1.2.0":"Added new items: Network Picker and Network Collector."
   }
 }

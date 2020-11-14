@@ -86,20 +86,22 @@ public class ItemPicker extends Item {
         if (tile instanceof TileMain) {
           TileMain network = (TileMain) tile;
           BlockState bs = world.getBlockState(pos);
-          StorageNetwork.log("Pick block!!! attemplt" + bs);
           ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(bs.getBlock()), false, false);
           int size = player.isCrouching() ? 1 : 64;
           ItemStack found = network.request(matcher, size, false);
           if (!found.isEmpty()) {
+            StorageNetwork.log("Found " + found);
             player.sendStatusMessage(new TranslationTextComponent("item.remote.found"), true);
-            player.entityDropItem(found);
-            //            player.dropItem(found, true); 
+            //using add will bypass the collector so try if possible
+            if (!player.addItemStackToInventory(found)) {
+              player.entityDropItem(found);
+            }
           }
           else {
-            StorageNetwork.log("not found " + bs);
+            player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
           }
         }
-        else {
+        else {//no main
           player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
         }
       }
@@ -118,10 +120,10 @@ public class ItemPicker extends Item {
       int z = tag.getInt(NBT_Z);
       String dim = tag.getString(NBT_DIM);
       t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
+      t.mergeStyle(TextFormatting.GRAY);
+      tooltip.add(t);
     }
-    else {
-      t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    }
+    t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     t.mergeStyle(TextFormatting.GRAY);
     tooltip.add(t);
   }

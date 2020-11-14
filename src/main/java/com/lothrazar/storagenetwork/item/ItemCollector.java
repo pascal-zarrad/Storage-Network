@@ -38,6 +38,17 @@ public class ItemCollector extends Item {
     super(properties.maxStackSize(1));
   }
 
+  protected ItemStack findAmmo(PlayerEntity player, Item item) {
+    for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+      ItemStack itemstack = player.inventory.getStackInSlot(i);
+      if (itemstack.getItem() == item) {
+        return itemstack;
+      }
+    }
+    return ItemStack.EMPTY;
+  }
+  //
+
   @SubscribeEvent
   public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
     if (event.getEntityLiving() instanceof PlayerEntity &&
@@ -45,12 +56,11 @@ public class ItemCollector extends Item {
         event.getItem().getItem().isEmpty() == false) {
       ItemStack item = event.getItem().getItem();
       StorageNetwork.log(" TODO SEARCH FOR ITEM DONT USE MAIN_HAND pickup" + item);
-      Hand hand = Hand.MAIN_HAND;
       PlayerEntity player = (PlayerEntity) event.getEntityLiving();
       World world = player.world;
-      ItemStack stack = player.getHeldItem(hand);
-      DimPos dp = getPosStored(stack);
-      if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
+      //      ItemStack stackThis = this.findAmmo(player, this);
+      DimPos dp = getPosStored(this.findAmmo(player, this));
+      if (dp != null && !world.isRemote) {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
           StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
@@ -124,19 +134,21 @@ public class ItemCollector extends Item {
       int z = tag.getInt(NBT_Z);
       String dim = tag.getString(NBT_DIM);
       t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
+      t.mergeStyle(TextFormatting.GRAY);
+      tooltip.add(t);
     }
-    else {
-      t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    }
+    t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     t.mergeStyle(TextFormatting.GRAY);
     tooltip.add(t);
   }
 
-  public static DimPos getPosStored(ItemStack itemStackIn) {
-    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
+  public DimPos getPosStored(ItemStack stack) {
+    if (stack.isEmpty() ||
+        stack.getItem() != this ||
+        !stack.getOrCreateTag().getBoolean(NBT_BOUND)) {
       return null;
     }
-    CompoundNBT tag = itemStackIn.getOrCreateTag();
+    CompoundNBT tag = stack.getOrCreateTag();
     return new DimPos(tag);
   }
 }

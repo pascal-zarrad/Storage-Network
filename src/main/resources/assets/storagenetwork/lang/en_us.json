@@ -27,13 +27,23 @@
     "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
     "item.storagenetwork.inventory_remote": "Storage Remote",
+    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Root for remote inventory access.",
+    
     "item.storagenetwork.crafting_remote": "Crafting Remote",
+    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Root for remote inventory access.",
+    
+    "item.storagenetwork.picker_remote": "Network Picker",
+    "item.storagenetwork.picker_remote.tooltip": "Once connected, tapping on a block will pull matching blocks from the inventory",
+    "item.storagenetwork.collector_remote": "Network Collector",
+    "item.storagenetwork.collector_remote.tooltip": "Once connected, will move any items picked up into the network",
 
     "block.storagenetwork.recipe.invalid": "Transaction invalid:",
     "block.storagenetwork.recipe.invalidleft": "Set Input on left",
     "block.storagenetwork.recipe.invalidright": "Set Output on right",
     "block.storagenetwork.recipe.valid": "Transaction valid",
 
+    "item.remote.found": "Item found, extracting...",
+    "item.remote.notfound.item": "Item not found in network",
     "item.remote.notfound": "Network not found, make sure chunk is loaded",
     "item.remote.notconnected": "Remote is not connected, bind it to the Main network node first",
     "item.remote.connected": "Remote has connected to network",
@@ -87,9 +97,6 @@
     
     "tooltip.storagenetwork.kabel_P": "Can automate simple processing transactions.",
          
-    "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Root for remote inventory access.",
-    "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Root for remote inventory access.",
-
     "block.storagenetwork.controller": "Controller",
     "block.storagenetwork.controller.tooltip": "Manage all Processing Cables in the network",
 
