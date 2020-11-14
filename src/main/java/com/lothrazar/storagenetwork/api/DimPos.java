@@ -188,4 +188,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   public void setWorld(World world) {
     this.world = world;
   }
+
+  public String getDimension() {
+    return dimension;
+  }
 }

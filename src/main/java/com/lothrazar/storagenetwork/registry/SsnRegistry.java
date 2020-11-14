@@ -24,6 +24,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.BlockRequest;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
+import com.lothrazar.storagenetwork.item.ItemPicker;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
@@ -151,6 +152,7 @@ public class SsnRegistry {
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
       r.register(new ItemRemote(properties).setRegistryName("inventory_remote"));
       r.register(new ItemRemote(properties).setRegistryName("crafting_remote"));
+      r.register(new ItemPicker(properties).setRegistryName("picker_remote"));
     }
 
     @SubscribeEvent
