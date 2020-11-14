@@ -40,7 +40,6 @@ import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
@@ -198,14 +197,6 @@ public class SsnRegistry {
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
         return new ContainerNetworkCraftingRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
       }).setRegistryName("crafting_remote"));
-    }
-
-    @SubscribeEvent
-    public static void onFingerprintViolation(FMLFingerprintViolationEvent event) {
-      // https://tutorials.darkhax.net/tutorials/jar_signing/
-      String source = (event.getSource() == null) ? "" : event.getSource().getName() + " ";
-      String msg = "Storage Network: Invalid fingerprint detected! The file " + source + "may have been tampered with. This version will NOT be supported by the author!";
-      System.out.println(msg);
     }
   }
 }
