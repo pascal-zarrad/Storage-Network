@@ -24,7 +24,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemCollector extends Item {
 
@@ -47,15 +46,13 @@ public class ItemCollector extends Item {
     }
     return ItemStack.EMPTY;
   }
-  //
 
-  @SubscribeEvent
+  //@SubscribeEvent
   public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
     if (event.getEntityLiving() instanceof PlayerEntity &&
         event.getItem() != null &&
         event.getItem().getItem().isEmpty() == false) {
       ItemStack item = event.getItem().getItem();
-      StorageNetwork.log(" TODO SEARCH FOR ITEM DONT USE MAIN_HAND pickup" + item);
       PlayerEntity player = (PlayerEntity) event.getEntityLiving();
       World world = player.world;
       //      ItemStack stackThis = this.findAmmo(player, this);

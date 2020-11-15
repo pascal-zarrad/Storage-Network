@@ -11,6 +11,8 @@ import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -28,6 +30,12 @@ public class StorageNetwork {
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.RegistryEvents());
+    MinecraftForge.EVENT_BUS.register(this);
+  }
+
+  @SubscribeEvent
+  public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
+    SsnRegistry.collector_remote.onEntityItemPickupEvent(event);
   }
 
   private static void setup(FMLCommonSetupEvent event) {
@@ -36,7 +44,6 @@ public class StorageNetwork {
     proxy.init();
     config = new ConfigRegistry(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
     JeiSettings.setJeiLoaded(true);
-    MinecraftForge.EVENT_BUS.register(SsnRegistry.collector_remote);
   }
 
   public static void log(String s) {

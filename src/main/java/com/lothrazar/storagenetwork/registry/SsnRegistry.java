@@ -60,7 +60,7 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
   public static Item crafting_remote;
   @ObjectHolder(StorageNetwork.MODID + ":collector_remote")
-  public static Item collector_remote;
+  public static ItemCollector collector_remote;
   //
   @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade")
   public static ItemUpgrade speed_upgrade;
