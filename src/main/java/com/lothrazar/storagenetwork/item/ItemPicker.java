@@ -90,7 +90,6 @@ public class ItemPicker extends Item {
           int size = player.isCrouching() ? 1 : 64;
           ItemStack found = network.request(matcher, size, false);
           if (!found.isEmpty()) {
-            StorageNetwork.log("Found " + found);
             player.sendStatusMessage(new TranslationTextComponent("item.remote.found"), true);
             //using add will bypass the collector so try if possible
             if (!player.addItemStackToInventory(found)) {
