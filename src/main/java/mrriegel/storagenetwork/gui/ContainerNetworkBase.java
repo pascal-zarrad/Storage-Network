@@ -109,6 +109,8 @@ public abstract class ContainerNetworkBase extends Container implements IStorage
    * A note on the shift-craft delay bug root cause was ANY interaction with matrix (setting contents etc) was causing triggers/events to do a recipe lookup. Meaning during this shift-click action you
    * can get up to 9x64 FULL recipe scans Solution is just to disable all those triggers but only for duration of this action
    *
+   * WARNING: do not touch without being very careful with much testing of all recipe types. enable logging.
+   *
    * @param player
    * @param tile
    */
@@ -232,7 +234,10 @@ public abstract class ContainerNetworkBase extends Container implements IStorage
       ItemStack itemstack1 = slot.getStack();
       itemstack = itemstack1.copy();
       TileMaster tileMaster = this.getTileMaster();
-      if (slotIndex == 0) {
+      //
+      // zero is crafting slot, simple means no crafting
+      //
+      if (slotIndex == 0 && !this.isSimple) {
         craftShift(playerIn, tileMaster);
         return ItemStack.EMPTY;
       }

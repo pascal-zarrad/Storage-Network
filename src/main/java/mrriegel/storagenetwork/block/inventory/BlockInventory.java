@@ -1,4 +1,4 @@
-package mrriegel.storagenetwork.block.control;
+package mrriegel.storagenetwork.block.inventory;
 
 import java.util.List;
 import javax.annotation.Nullable;
@@ -6,17 +6,12 @@ import mrriegel.storagenetwork.CreativeTab;
 import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.api.capability.IConnectable;
 import mrriegel.storagenetwork.block.AbstractBlockConnectable;
-import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.gui.GuiHandler;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -25,44 +20,17 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockControl extends AbstractBlockConnectable {
+public class BlockInventory extends AbstractBlockConnectable {
 
-  public static final PropertyDirection FACING = PropertyDirection.create("facing");
-
-  public BlockControl(String registryName) {
+  public BlockInventory(String registryName) {
     super(Material.IRON, registryName);
     this.setHardness(3.0F);
     this.setCreativeTab(CreativeTab.tab);
-    this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
   }
 
   @Override
   public TileEntity createNewTileEntity(World worldIn, int meta) {
-    return new TileControl();
-  }
-
-  @Override
-  public IBlockState getStateFromMeta(int meta) {
-    EnumFacing enumfacing = EnumFacing.byIndex(meta);
-    if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
-      enumfacing = EnumFacing.NORTH;
-    }
-    return this.getDefaultState().withProperty(FACING, enumfacing);
-  }
-
-  @Override
-  public int getMetaFromState(IBlockState state) {
-    return state.getValue(FACING).getIndex();
-  }
-
-  @Override
-  protected BlockStateContainer createBlockState() {
-    return new BlockStateContainer(this, new IProperty[] { FACING });
-  }
-
-  @Override
-  public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-    return this.getDefaultState().withProperty(FACING, facing.getOpposite());
+    return new TileInventory();
   }
 
   @Override
@@ -72,9 +40,8 @@ public class BlockControl extends AbstractBlockConnectable {
       return false;
     }
     IConnectable tile = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null);
-    if (!worldIn.isRemote && tile.getMasterPos() != null
-        && tile.getMasterPos().getTileEntity(TileMaster.class) != null) {
-      playerIn.openGui(StorageNetwork.instance, GuiHandler.GuiIDs.CONTROLLER.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
+    if (!worldIn.isRemote && tile.getMasterPos() != null) {
+      playerIn.openGui(StorageNetwork.instance, GuiHandler.GuiIDs.INVENTORY.ordinal(), worldIn, pos.getX(), pos.getY(), pos.getZ());
       return true;
     }
     return true;
@@ -83,6 +50,6 @@ public class BlockControl extends AbstractBlockConnectable {
   @Override
   public void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);
-    tooltip.add(I18n.format("tooltip.storagenetwork.controller"));
+    tooltip.add(I18n.format("tile.storagenetwork:inventory.tooltip"));
   }
 }

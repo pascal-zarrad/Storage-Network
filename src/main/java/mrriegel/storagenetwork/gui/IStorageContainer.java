@@ -15,7 +15,7 @@ public interface IStorageContainer {
 
   InventoryCrafting getCraftMatrix();
 
-  void slotChanged(); //TODO: Remove?  Usages should be onContainerClosed.
+  void slotChanged();
 
   /**
    * @return True if this is an instance of ContainerRequest or ContainerFastRequest, if false it will be assumed to be ContainerRemote or ContainerFastRemote.

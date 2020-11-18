@@ -1,7 +1,7 @@
 package mrriegel.storagenetwork.network;
 
 import io.netty.buffer.ByteBuf;
-import mrriegel.storagenetwork.block.request.TileRequest;
+import mrriegel.storagenetwork.block.TileConnectable;
 import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.gui.IStorageContainer;
 import mrriegel.storagenetwork.util.NBTHelper;
@@ -41,8 +41,8 @@ public class SortMessage implements IMessage, IMessageHandler<SortMessage, IMess
         if (player.openContainer instanceof IStorageContainer) {
           if (((IStorageContainer) player.openContainer).isRequest()) {
             TileEntity tileEntity = player.world.getTileEntity(message.pos);
-            if (tileEntity instanceof TileRequest) {
-              TileRequest tile = (TileRequest) tileEntity;
+            if (tileEntity instanceof TileConnectable) {
+              TileConnectable tile = (TileConnectable) tileEntity;
               tile.setSort(message.sort);
               tile.setDownwards(message.direction);
             }

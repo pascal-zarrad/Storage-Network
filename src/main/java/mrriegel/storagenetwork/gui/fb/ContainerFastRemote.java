@@ -43,7 +43,7 @@ public class ContainerFastRemote extends ContainerFastNetworkCrafter {
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
     if (tileMaster == null) {
-      StorageNetwork.info("Container closing, master tile not found");
+      StorageNetwork.log("Container closing, master tile not found");
       return false;
     }
     if (!playerIn.world.isRemote && (forceSync || playerIn.world.getTotalWorldTime() % 40 == 0)) {

@@ -11,6 +11,9 @@ import mrriegel.storagenetwork.block.cable.processing.TileCableProcess;
 import mrriegel.storagenetwork.block.control.ContainerControl;
 import mrriegel.storagenetwork.block.control.GuiControl;
 import mrriegel.storagenetwork.block.control.TileControl;
+import mrriegel.storagenetwork.block.inventory.ContainerInventory;
+import mrriegel.storagenetwork.block.inventory.GuiInventory;
+import mrriegel.storagenetwork.block.inventory.TileInventory;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.block.request.ContainerRequest;
 import mrriegel.storagenetwork.block.request.GuiRequest;
@@ -36,7 +39,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class GuiHandler implements IGuiHandler {
 
   public enum GuiIDs {
-    LINK, IMPORT, EXPORT, PROCESSING, REQUEST, REMOTE, CONTROLLER
+    LINK, IMPORT, EXPORT, PROCESSING, REQUEST, REMOTE, CONTROLLER, INVENTORY
   }
 
   public static final boolean FB_LOADED = Loader.isModLoaded("fastbench");
@@ -62,6 +65,9 @@ public class GuiHandler implements IGuiHandler {
     if (ID == GuiIDs.CONTROLLER.ordinal()) {
       TileMaster master = ((TileControl) world.getTileEntity(pos)).getMaster().getTileEntity(TileMaster.class);
       return new ContainerControl(master, player.inventory);
+    }
+    if (ID == GuiIDs.INVENTORY.ordinal()) {
+      return new ContainerInventory((TileInventory) world.getTileEntity(pos), player.inventory);
     }
     if (ID == GuiIDs.REQUEST.ordinal()) {
       if (FB_LOADED && ConfigHandler.allowFastWorkBenchIntegration) {
@@ -105,6 +111,9 @@ public class GuiHandler implements IGuiHandler {
     if (ID == GuiIDs.CONTROLLER.ordinal()) {
       TileMaster master = ((TileControl) world.getTileEntity(pos)).getMaster().getTileEntity(TileMaster.class);
       return new GuiControl(new ContainerControl(master, player.inventory));
+    }
+    if (ID == GuiIDs.INVENTORY.ordinal()) {
+      return new GuiInventory(new ContainerInventory((TileInventory) world.getTileEntity(pos), player.inventory));
     }
     //todo new ID similar to CONTROLLER but pass master from itemstack not tile 
     // for button on a gui 

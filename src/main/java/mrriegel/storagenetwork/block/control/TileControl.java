@@ -12,8 +12,6 @@ import net.minecraftforge.common.util.Constants;
 public class TileControl extends TileConnectable {
 
   public Map<Integer, ItemStack> matrix = new HashMap<Integer, ItemStack>();
-  private boolean downwards;
-  private EnumSortType sort = EnumSortType.NAME;
 
   @Override
   public void readFromNBT(NBTTagCompound compound) {
@@ -47,21 +45,5 @@ public class TileControl extends TileConnectable {
     }
     compound.setTag("matrix", invList);
     return compound;
-  }
-
-  public boolean isDownwards() {
-    return downwards;
-  }
-
-  public void setDownwards(boolean downwards) {
-    this.downwards = downwards;
-  }
-
-  public EnumSortType getSort() {
-    return sort;
-  }
-
-  public void setSort(EnumSortType sort) {
-    this.sort = sort;
   }
 }

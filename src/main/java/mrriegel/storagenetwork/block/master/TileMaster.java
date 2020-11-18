@@ -170,7 +170,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
     String blockId = iBlockState.getBlock().getRegistryName().toString();
     for (String s : blacklist) {
       if (blockId.equals(s)) {
-        StorageNetwork.info(iBlockState + " Connection blocked by config ");
+        StorageNetwork.log(iBlockState + " Connection blocked by config ");
         return false;
       }
     }

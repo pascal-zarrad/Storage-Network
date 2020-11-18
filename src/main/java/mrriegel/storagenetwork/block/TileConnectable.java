@@ -7,6 +7,7 @@ import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.capabilities.CapabilityConnectable;
 import mrriegel.storagenetwork.capabilities.StorageNetworkCapabilities;
 import mrriegel.storagenetwork.config.ConfigHandler;
+import mrriegel.storagenetwork.data.EnumSortType;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -23,9 +24,10 @@ import net.minecraftforge.common.capabilities.Capability;
  */
 public class TileConnectable extends TileEntity {
 
-  // TODO: This is only required for backwards compatibility! Remove in 1.13
   private World worldCreate;
   protected CapabilityConnectable connectable;
+  public boolean downwards;
+  public EnumSortType sort = EnumSortType.NAME;
 
   public TileConnectable() {
     connectable = new CapabilityConnectable();
@@ -33,6 +35,22 @@ public class TileConnectable extends TileEntity {
 
   public DimPos getDimPos() {
     return new DimPos(world == null ? worldCreate : world, pos);
+  }
+
+  public boolean isDownwards() {
+    return downwards;
+  }
+
+  public void setDownwards(boolean downwards) {
+    this.downwards = downwards;
+  }
+
+  public EnumSortType getSort() {
+    return sort;
+  }
+
+  public void setSort(EnumSortType sort) {
+    this.sort = sort;
   }
 
   @Override
