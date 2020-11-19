@@ -444,14 +444,18 @@ public abstract class GuiFastNetworkCrafter extends GuiFastBench implements IPub
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
         }
+        return;
       }
       else if (this.stackUnderMouse.isEmpty() == false) {
-        JeiHooks.testJeiKeybind(keyCode, this.stackUnderMouse);
-      }
-      else {
-        super.keyTyped(typedChar, keyCode);
+        try {
+          JeiHooks.testJeiKeybind(keyCode, this.stackUnderMouse);
+        }
+        catch (Throwable e) {
+          //its ok JEI not installed for maybe an addon mod is ok 
+        }
       }
     }
+    super.keyTyped(typedChar, keyCode);
   }
 
   @Override

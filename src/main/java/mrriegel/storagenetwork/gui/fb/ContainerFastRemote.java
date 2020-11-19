@@ -18,8 +18,8 @@ import net.minecraft.world.World;
 
 public class ContainerFastRemote extends ContainerFastNetworkCrafter {
 
-  ItemStack remoteItemStack;
-  protected EnumHand hand;
+  final ItemStack remoteItemStack;
+  private final EnumHand hand;
 
   public ContainerFastRemote(EntityPlayer player, World world, EnumHand hand) {
     super(player, world, BlockPos.ORIGIN);
@@ -43,7 +43,7 @@ public class ContainerFastRemote extends ContainerFastNetworkCrafter {
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
     if (tileMaster == null) {
-      StorageNetwork.log("Container closing, master tile not found");
+      StorageNetwork.log("ContainerFastRemote closing, master tile not found " + remoteItemStack);
       return false;
     }
     if (!playerIn.world.isRemote && (forceSync || playerIn.world.getTotalWorldTime() % 40 == 0)) {
@@ -54,10 +54,20 @@ public class ContainerFastRemote extends ContainerFastNetworkCrafter {
   }
 
   @Override
-  public void onContainerClosed(EntityPlayer player) {
-    for (int i = 0; i < 9; i++) {
-      NBTHelper.setItemStack(remoteItemStack, "c" + i, craftMatrix.getStackInSlot(i));
+  public void slotChanged() {
+    if (craftMatrix != null) {
+      for (int i = 0; i < 9; i++) {
+        NBTHelper.setItemStack(remoteItemStack, "c" + i, craftMatrix.getStackInSlot(i));
+      }
     }
+  }
+
+  @Override
+  public void onContainerClosed(EntityPlayer player) {
+    if (!remoteItemStack.isEmpty())
+      for (int i = 0; i < 9; i++) {
+        NBTHelper.setItemStack(remoteItemStack, "c" + i, craftMatrix.getStackInSlot(i));
+      }
   }
 
   @Override
@@ -68,19 +78,21 @@ public class ContainerFastRemote extends ContainerFastNetworkCrafter {
   @Override
   public void bindHotbar(EntityPlayer player) {
     for (int i = 0; i < 9; ++i) {
-      if (hand == EnumHand.MAIN_HAND && i == player.inventory.currentItem) this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 232) {
+      if (i == player.inventory.currentItem)
+        this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 232) {
 
-        @Override
-        public boolean isItemValid(ItemStack stack) {
-          return false;
-        }
+          @Override
+          public boolean isItemValid(ItemStack stack) {
+            return false;
+          }
 
-        @Override
-        public boolean canTakeStack(EntityPlayer playerIn) {
-          return false;
-        }
-      });
-      else this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 232));
+          @Override
+          public boolean canTakeStack(EntityPlayer playerIn) {
+            return false;
+          }
+        });
+      else
+        this.addSlotToContainer(new Slot(player.inventory, i, 8 + i * 18, 232));
     }
   }
 

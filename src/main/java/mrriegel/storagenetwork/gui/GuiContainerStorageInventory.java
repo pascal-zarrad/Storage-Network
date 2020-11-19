@@ -440,6 +440,9 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     }
   }
 
+  /**
+   * Also see GuiFastRequest & GuiFastNetworkCrafter
+   */
   @Override
   public void keyTyped(char typedChar, int keyCode) throws IOException {
     if (!this.checkHotbarKeys(keyCode)) {
@@ -448,8 +451,8 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
-          return;
         }
+        return;
       }
       else if (this.stackUnderMouse.isEmpty() == false) {
         try {
@@ -459,9 +462,6 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
           //its ok JEI not installed for maybe an addon mod is ok 
         }
       }
-      //      else {
-      //        super.keyTyped(typedChar, keyCode);
-      //      }
     }
     super.keyTyped(typedChar, keyCode);
   }

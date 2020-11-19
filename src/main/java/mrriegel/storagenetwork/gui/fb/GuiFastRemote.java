@@ -40,7 +40,9 @@ public class GuiFastRemote extends GuiFastNetworkCrafter {
 
   public @Nonnull ItemStack getItemRemote() {
     ItemStack remote = ((ContainerFastRemote) this.getContainer()).remoteItemStack;
-    if (remote.getItem() instanceof ItemRemote == false) return ItemStack.EMPTY;
+    if (remote.getItem() instanceof ItemRemote == false) {
+      return ItemStack.EMPTY;
+    }
     return remote;
   }
 

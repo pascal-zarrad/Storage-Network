@@ -3,11 +3,11 @@ package mrriegel.storagenetwork.item.remote;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
+import mrriegel.storagenetwork.StorageNetwork;
 import mrriegel.storagenetwork.block.master.TileMaster;
 import mrriegel.storagenetwork.gui.ContainerNetworkBase;
 import mrriegel.storagenetwork.gui.InventoryCraftingNetwork;
 import mrriegel.storagenetwork.network.StackRefreshClientMessage;
-import mrriegel.storagenetwork.registry.ModItems;
 import mrriegel.storagenetwork.registry.PacketRegistry;
 import mrriegel.storagenetwork.util.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +23,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerRemote extends ContainerNetworkBase {
 
-  private ItemStack remoteItemStack;
+  private final ItemStack remoteItemStack;
+  private final EnumHand hand;
 
   public ContainerRemote(final InventoryPlayer playerInv, EnumHand hand) {
     this.playerInv = playerInv;
@@ -47,6 +48,7 @@ public class ContainerRemote extends ContainerNetworkBase {
     if (this.matrix != null) {
       this.onCraftMatrixChanged(this.matrix);
     }
+    this.hand = hand;
   }
 
   public @Nonnull ItemStack getItemRemote() {
@@ -73,12 +75,15 @@ public class ContainerRemote extends ContainerNetworkBase {
   @Override
   public boolean canInteractWith(EntityPlayer playerIn) {
     TileMaster tileMaster = this.getTileMaster();
-    if (tileMaster != null &&
-        !playerIn.world.isRemote && playerIn.world.getTotalWorldTime() % 40 == 0) {
+    if (tileMaster == null) {
+      StorageNetwork.log("ContainerRemote closing, master tile not found " + remoteItemStack);
+      return false;
+    }
+    if (!playerIn.world.isRemote && playerIn.world.getTotalWorldTime() % 40 == 0) {
       List<ItemStack> list = tileMaster.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()), (EntityPlayerMP) playerIn);
     }
-    return playerIn.inventory.getCurrentItem() != null && playerIn.inventory.getCurrentItem().getItem() == ModItems.remote;
+    return playerIn.getHeldItem(this.hand) == remoteItemStack;
   }
 
   @Override
