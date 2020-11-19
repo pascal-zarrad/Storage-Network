@@ -19,6 +19,8 @@ public class ModBlocks {
   public static BlockRequest request;//the main request table
   @GameRegistry.ObjectHolder("inventory")
   public static Block inventory;
+  @GameRegistry.ObjectHolder("simple_kabel")
+  public static Block simple_kabel;
   @GameRegistry.ObjectHolder("kabel")
   public static BlockCable kabel;
   @GameRegistry.ObjectHolder("storage_kabel")

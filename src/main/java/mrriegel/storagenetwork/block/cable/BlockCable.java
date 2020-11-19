@@ -268,5 +268,7 @@ public class BlockCable extends AbstractBlockConnectable {
       tooltip.add(I18n.format("tooltip.storagenetwork.kabel_L"));
     else if (stack.getItem() == Item.getItemFromBlock(ModBlocks.processKabel))
       tooltip.add(I18n.format("tooltip.storagenetwork.kabel_P"));
+    else if (stack.getItem() == Item.getItemFromBlock(ModBlocks.simple_kabel))
+      tooltip.add(I18n.format("tooltip.storagenetwork.simple_kabel"));
   }
 }

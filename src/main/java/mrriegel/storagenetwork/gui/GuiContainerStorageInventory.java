@@ -85,10 +85,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     searchBar = new GuiTextField(0, fontRenderer, guiLeft + 81, guiTop + 96, 85, fontRenderer.FONT_HEIGHT);
     searchBar.setMaxStringLength(30);
     if (isSimple) {
-      searchBar.x -= 71;
       searchBar.y += 64;
-      searchBar.width += 74;
-      searchBar.setMaxStringLength(60);
     }
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
@@ -97,18 +94,16 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
     if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       searchBar.setText(JeiHooks.getFilterText());
     }
-    if (!isSimple) {
-      directionBtn = new GuiStorageButton(0, guiLeft + 7, searchBar.y - 3, "");
-      this.addButton(directionBtn);
-      sortBtn = new GuiStorageButton(1, guiLeft + 21, searchBar.y - 3, "");
-      this.addButton(sortBtn);
-      jeiBtn = new GuiStorageButton(4, guiLeft + 35, searchBar.y - 3, "");
-      if (JeiSettings.isJeiLoaded()) {
-        this.addButton(jeiBtn);
-      }
-      clearTextBtn = new GuiStorageButton(5, guiLeft + 64, searchBar.y - 3, "X");
-      this.addButton(clearTextBtn);
+    directionBtn = new GuiStorageButton(0, guiLeft + 7, searchBar.y - 3, "");
+    this.addButton(directionBtn);
+    sortBtn = new GuiStorageButton(1, guiLeft + 21, searchBar.y - 3, "");
+    this.addButton(sortBtn);
+    jeiBtn = new GuiStorageButton(4, guiLeft + 35, searchBar.y - 3, "");
+    if (JeiSettings.isJeiLoaded()) {
+      this.addButton(jeiBtn);
     }
+    clearTextBtn = new GuiStorageButton(5, guiLeft + 64, searchBar.y - 3, "X");
+    this.addButton(clearTextBtn);
   }
 
   private int getLines() {
@@ -453,6 +448,7 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
         PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
         if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
           JeiHooks.setFilterText(searchBar.getText());
+          return;
         }
       }
       else if (this.stackUnderMouse.isEmpty() == false) {
@@ -463,10 +459,11 @@ public abstract class GuiContainerStorageInventory extends GuiContainer implemen
           //its ok JEI not installed for maybe an addon mod is ok 
         }
       }
-      else {
-        super.keyTyped(typedChar, keyCode);
-      }
+      //      else {
+      //        super.keyTyped(typedChar, keyCode);
+      //      }
     }
+    super.keyTyped(typedChar, keyCode);
   }
 
   @Override

@@ -20,8 +20,6 @@ public class GuiRemote extends GuiContainerStorageInventory {
     if (isSimple) {
       //set different texture for simple 
       texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request_full.png");
-      this.setSort(EnumSortType.NAME);
-      this.setDownwards(false);
     }
   }
 

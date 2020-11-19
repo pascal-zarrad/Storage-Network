@@ -9,6 +9,8 @@ import mrriegel.storagenetwork.block.cable.io.BlockCableIO;
 import mrriegel.storagenetwork.block.cable.io.TileCableIO;
 import mrriegel.storagenetwork.block.cable.link.BlockCableLink;
 import mrriegel.storagenetwork.block.cable.link.TileCableLink;
+import mrriegel.storagenetwork.block.cable.linksimple.BlockCableLinkSimple;
+import mrriegel.storagenetwork.block.cable.linksimple.TileCableLinkSimple;
 import mrriegel.storagenetwork.block.cable.processing.BlockCableProcessing;
 import mrriegel.storagenetwork.block.cable.processing.TileCableProcess;
 import mrriegel.storagenetwork.block.control.BlockControl;
@@ -50,6 +52,7 @@ public class RegistryEvents {
     reg.register(new BlockCableIO("im_kabel", EnumStorageDirection.IN));
     reg.register(new BlockCableProcessing("process_kabel"));
     reg.register(new BlockControl("controller"));
+    reg.register(new BlockCableLinkSimple("simple_kabel"));
     GameRegistry.registerTileEntity(TileCable.class, new ResourceLocation(StorageNetwork.MODID, "tileKabel"));
     GameRegistry.registerTileEntity(TileCableLink.class, new ResourceLocation(StorageNetwork.MODID, "tileKabelLink"));
     GameRegistry.registerTileEntity(TileCableIO.class, new ResourceLocation(StorageNetwork.MODID, "tileKabelIO"));
@@ -58,6 +61,7 @@ public class RegistryEvents {
     GameRegistry.registerTileEntity(TileRequest.class, new ResourceLocation(StorageNetwork.MODID, "tileRequest"));
     GameRegistry.registerTileEntity(TileInventory.class, new ResourceLocation(StorageNetwork.MODID, "tileInventory"));
     GameRegistry.registerTileEntity(TileControl.class, new ResourceLocation(StorageNetwork.MODID, "tileControl"));
+    GameRegistry.registerTileEntity(TileCableLinkSimple.class, new ResourceLocation(StorageNetwork.MODID, "tileSimple"));
   }
 
   @SubscribeEvent
@@ -67,6 +71,7 @@ public class RegistryEvents {
     registry.register(new ItemBlock(ModBlocks.request).setRegistryName(ModBlocks.request.getRegistryName()));
     registry.register(new ItemBlock(ModBlocks.inventory).setRegistryName(ModBlocks.inventory.getRegistryName()));
     registry.register(new ItemBlock(ModBlocks.kabel).setRegistryName(ModBlocks.kabel.getRegistryName()));
+    registry.register(new ItemBlock(ModBlocks.simple_kabel).setRegistryName(ModBlocks.simple_kabel.getRegistryName()));
     registry.register(new ItemBlock(ModBlocks.storageKabel).setRegistryName(ModBlocks.storageKabel.getRegistryName()));
     registry.register(new ItemBlock(ModBlocks.exKabel).setRegistryName(ModBlocks.exKabel.getRegistryName()));
     registry.register(new ItemBlock(ModBlocks.imKabel).setRegistryName(ModBlocks.imKabel.getRegistryName()));
@@ -81,6 +86,7 @@ public class RegistryEvents {
   @SubscribeEvent
   public void registerModels(ModelRegistryEvent event) {
     ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.kabel), 0, new ModelResourceLocation(StorageNetwork.MODID + ":kabel", "inventory"));
+    ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.simple_kabel), 0, new ModelResourceLocation(StorageNetwork.MODID + ":simple_kabel", "inventory"));
     ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.exKabel), 0, new ModelResourceLocation(StorageNetwork.MODID + ":ex_kabel", "inventory"));
     ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.storageKabel), 0, new ModelResourceLocation(StorageNetwork.MODID + ":storage_kabel", "inventory"));
     ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.imKabel), 0, new ModelResourceLocation(StorageNetwork.MODID + ":im_kabel", "inventory"));

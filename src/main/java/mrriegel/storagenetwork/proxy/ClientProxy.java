@@ -27,15 +27,11 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void init(FMLInitializationEvent event) {
     super.init(event);
-    ResourceLocation link = new ResourceLocation(StorageNetwork.MODID, "textures/tile/link.png");
-    ResourceLocation ex = new ResourceLocation(StorageNetwork.MODID, "textures/tile/ex.png");
-    ResourceLocation im = new ResourceLocation(StorageNetwork.MODID, "textures/tile/im.png");
-    ResourceLocation storage = new ResourceLocation(StorageNetwork.MODID, "textures/tile/storage.png");
-    ResourceLocation process = new ResourceLocation(StorageNetwork.MODID, "textures/tile/process.png");
-    TesrCable.addCableRender(ModBlocks.kabel, link);
-    TesrCable.addCableRender(ModBlocks.exKabel, ex);
-    TesrCable.addCableRender(ModBlocks.imKabel, im);
-    TesrCable.addCableRender(ModBlocks.storageKabel, storage);
-    TesrCable.addCableRender(ModBlocks.processKabel, process);
+    TesrCable.addCableRender(ModBlocks.kabel, new ResourceLocation(StorageNetwork.MODID, "textures/tile/link.png"));
+    TesrCable.addCableRender(ModBlocks.exKabel, new ResourceLocation(StorageNetwork.MODID, "textures/tile/ex.png"));
+    TesrCable.addCableRender(ModBlocks.imKabel, new ResourceLocation(StorageNetwork.MODID, "textures/tile/im.png"));
+    TesrCable.addCableRender(ModBlocks.storageKabel, new ResourceLocation(StorageNetwork.MODID, "textures/tile/storage.png"));
+    TesrCable.addCableRender(ModBlocks.processKabel, new ResourceLocation(StorageNetwork.MODID, "textures/tile/process.png"));
+    TesrCable.addCableRender(ModBlocks.simple_kabel, new ResourceLocation(StorageNetwork.MODID, "textures/tile/simple.png"));
   }
 }
