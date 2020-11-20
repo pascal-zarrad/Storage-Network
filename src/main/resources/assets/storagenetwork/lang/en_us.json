@@ -33,9 +33,9 @@
     "item.storagenetwork.crafting_remote.tooltip": "Use on the Network Root for remote inventory access.",
     
     "item.storagenetwork.picker_remote": "Network Picker",
-    "item.storagenetwork.picker_remote.tooltip": "Once connected, tapping on a block will pull matching blocks from the inventory",
+    "item.storagenetwork.picker_remote.tooltip": "Tapping on a block will pull matching blocks from the network",
     "item.storagenetwork.collector_remote": "Network Collector",
-    "item.storagenetwork.collector_remote.tooltip": "Once connected, will move any items picked up into the network",
+    "item.storagenetwork.collector_remote.tooltip": "Items picked up  are moved into the network",
 
     "block.storagenetwork.recipe.invalid": "Transaction invalid:",
     "block.storagenetwork.recipe.invalidleft": "Set Input on left",

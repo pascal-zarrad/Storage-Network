@@ -10,6 +10,7 @@ import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
+import net.minecraft.block.SlabBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +32,7 @@ public class StorageNetwork {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.RegistryEvents());
     MinecraftForge.EVENT_BUS.register(this);
+    SlabBlock y;
   }
 
   @SubscribeEvent
