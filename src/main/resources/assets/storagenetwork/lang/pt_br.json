@@ -27,13 +27,23 @@
     "tooltip.storagenetwork.upgrade_3": "Mantém uma quantidade específica de itens no estoque anexado (apenas no cabo de exportação).",
 
     "item.storagenetwork.inventory_remote": "Dispodsitivo de Armazenamento Remoto",
+    "item.storagenetwork.inventory_remote.tooltip": "Use no Núcleo da rede para acesso remoto ao inventário.",
+    
     "item.storagenetwork.crafting_remote": "Dispodsitivo de Fabricação Remota",
-
+    "item.storagenetwork.crafting_remote.tooltip": "Use no Núcleo da rede para acesso remoto ao inventário.",
+    
+    "item.storagenetwork.picker_remote": "Selecionador de Rede",
+    "item.storagenetwork.picker_remote.tooltip": "Uma vez conectado, tocar em um bloco irá puxar os blocos correspondentes do inventário",
+    "item.storagenetwork.collector_remote": "Coletor de Rede",
+    "item.storagenetwork.collector_remote.tooltip": "Uma vez conectado, irá mover todos os itens coletados para a rede",
+    
     "block.storagenetwork.recipe.invalid": "Transação inválida:",
     "block.storagenetwork.recipe.invalidleft": "Definir entrada à esquerda",
     "block.storagenetwork.recipe.invalidright": "Definir saída à direita",
     "block.storagenetwork.recipe.valid": "Transação válida",
-
+    
+    "item.remote.found": "Item encontrado, extraindo...",
+    "item.remote.notfound.item": "Item não encontrado na rede",
     "item.remote.notfound": "Rede não encontrada, certifique-se de que a Chunk está carregado",
     "item.remote.notconnected": "O dispodsitivo remoto não está conectado, ligue-o ao nó da rede principal primeiro",
     "item.remote.connected": "O dispodsitivo remoto se conectou à rede",
@@ -83,12 +93,9 @@
     "block.storagenetwork.import_kabel.tooltip": "Importa todos os itens do inventário anexado para a rede.",
     "block.storagenetwork.filter_kabel.tooltip": "Link de inventário com opções de filtragem.",
     "block.storagenetwork.import_filter_kabel.tooltip": "Importa itens com opções de filtragem.",
-    
+   
     
     "tooltip.storagenetwork.kabel_P": "Pode automatizar transações de processamento simples.",
-         
-    "item.storagenetwork.inventory_remote.tooltip": "Use no núcleo da rede para acesso de inventário remoto.",
-    "item.storagenetwork.crafting_remote.tooltip": "Use no núcleo da rede para acesso de inventário remoto.",
 
     "block.storagenetwork.controller": "Controlador",
     "block.storagenetwork.controller.tooltip": "Gerenciar todos os cabos de processamento na rede",
