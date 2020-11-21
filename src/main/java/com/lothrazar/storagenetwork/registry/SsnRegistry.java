@@ -16,6 +16,10 @@ import com.lothrazar.storagenetwork.block.cable.link.TileCableLink;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.TileCableFilter;
+import com.lothrazar.storagenetwork.block.collection.BlockCollection;
+import com.lothrazar.storagenetwork.block.collection.TileCollection;
+import com.lothrazar.storagenetwork.block.exchange.BlockExchange;
+import com.lothrazar.storagenetwork.block.exchange.TileExchange;
 import com.lothrazar.storagenetwork.block.inventory.BlockInventory;
 import com.lothrazar.storagenetwork.block.inventory.ContainerNetworkInventory;
 import com.lothrazar.storagenetwork.block.inventory.TileInventory;
@@ -87,6 +91,14 @@ public class SsnRegistry {
   public static BlockCable kabel;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static TileEntityType<TileCable> kabeltile;
+  @ObjectHolder(StorageNetwork.MODID + ":exchange")
+  public static Block exchange;
+  @ObjectHolder(StorageNetwork.MODID + ":exchange")
+  public static TileEntityType<TileExchange> exchangetile;
+  @ObjectHolder(StorageNetwork.MODID + ":collector")
+  public static Block collector;
+  @ObjectHolder(StorageNetwork.MODID + ":collector")
+  public static TileEntityType<TileCollection> collectortile;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
   public static Block storagekabel;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
@@ -133,6 +145,8 @@ public class SsnRegistry {
       r.register(new BlockCableFilter("filter_kabel"));
       r.register(new BlockCableExport("export_kabel"));
       r.register(new BlockInventory("inventory"));
+      r.register(new BlockExchange());
+      r.register(new BlockCollection());
     }
 
     @SubscribeEvent
@@ -148,6 +162,8 @@ public class SsnRegistry {
       r.register(new BlockItem(SsnRegistry.importfilterkabel, properties).setRegistryName("import_filter_kabel"));
       r.register(new BlockItem(SsnRegistry.filterkabel, properties).setRegistryName("filter_kabel"));
       r.register(new BlockItem(SsnRegistry.exportkabel, properties).setRegistryName("export_kabel"));
+      r.register(new BlockItem(SsnRegistry.exchange, properties).setRegistryName("exchange"));
+      r.register(new BlockItem(SsnRegistry.collector, properties).setRegistryName("collector"));
       //
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
@@ -169,6 +185,8 @@ public class SsnRegistry {
       r.register(TileEntityType.Builder.create(TileCableImportFilter::new, SsnRegistry.importfilterkabel).build(null).setRegistryName("import_filter_kabel"));
       r.register(TileEntityType.Builder.create(TileCableFilter::new, SsnRegistry.filterkabel).build(null).setRegistryName("filter_kabel"));
       r.register(TileEntityType.Builder.create(TileCableExport::new, SsnRegistry.exportkabel).build(null).setRegistryName("export_kabel"));
+      r.register(TileEntityType.Builder.create(TileExchange::new, SsnRegistry.exchange).build(null).setRegistryName("exchange"));
+      r.register(TileEntityType.Builder.create(TileCollection::new, SsnRegistry.collector).build(null).setRegistryName("collector"));
     }
 
     @SubscribeEvent

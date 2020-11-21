@@ -3,9 +3,11 @@ package com.lothrazar.storagenetwork.block.cable;
 import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
+import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -153,10 +155,20 @@ public class BlockCable extends BaseBlock {
   public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState stateIn, @Nullable LivingEntity placer, ItemStack stack) {
     BlockState facingState;
     for (Direction d : Direction.values()) {
-      facingState = worldIn.getBlockState(pos.offset(d));
-      if (facingState.getBlock() == SsnRegistry.inventory
-          || facingState.getBlock() == SsnRegistry.main
-          || facingState.getBlock() == SsnRegistry.request) {
+      BlockPos posoff = pos.offset(d);
+      facingState = worldIn.getBlockState(posoff);
+      TileEntity tileOffset = worldIn.getTileEntity(posoff);
+      IConnectable cap = null;
+      if (tileOffset != null)
+        cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
+      if (
+      //          facingState.getBlock() == SsnRegistry.inventory
+      //          || facingState.getBlock() == SsnRegistry.main
+      //          || facingState.getBlock() == SsnRegistry.request
+      //          || facingState.getBlock() == SsnRegistry.exchange
+      //          ||
+      (cap != null && cap.getMainPos() != null)
+          || facingState.getBlock() == SsnRegistry.main) {
         stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockState(pos, stateIn);
       }
@@ -172,7 +184,13 @@ public class BlockCable extends BaseBlock {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    if (facingState.getBlock() instanceof BlockCable
+    //    facingState.getpo
+    TileEntity tileOffset = world.getTileEntity(facingPos);
+    IConnectable cap = null;
+    if (tileOffset != null)
+      cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
+    if ((cap != null && cap.getMainPos() != null)
+        || facingState.getBlock() instanceof BlockCable
         || facingState.getBlock() == SsnRegistry.inventory
         || facingState.getBlock() == SsnRegistry.main
         || facingState.getBlock() == SsnRegistry.request) {

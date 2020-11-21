@@ -90,6 +90,9 @@ public class TileConnectable extends TileEntity {
   }
 
   public DimPos getMain() {
+    if (connectable == null) {
+      return null;
+    }
     return connectable.getMainPos();
   }
 }
