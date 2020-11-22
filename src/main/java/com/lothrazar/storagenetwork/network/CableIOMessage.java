@@ -2,10 +2,12 @@ package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.lothrazar.storagenetwork.block.TileCableWithFacing;
+import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.ContainerCableImportFilter;
+import com.lothrazar.storagenetwork.block.collection.ContainerCollectionFilter;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
@@ -63,7 +65,8 @@ public class CableIOMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       CapabilityConnectableAutoIO link = null;
-      TileCableWithFacing tile = null;
+      TileConnectable tile = null;
+      CapabilityConnectable connectable = null;
       //super super HACK TODO: this is hacky
       if (player.openContainer instanceof ContainerCableExportFilter) {
         ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.openContainer;
@@ -75,7 +78,14 @@ public class CableIOMessage {
         link = ctr.cap;
         tile = ctr.tile;
       }
-      TileMain root = UtilTileEntity.getTileMainForConnectable(link.connectable);
+      if (player.openContainer instanceof ContainerCollectionFilter) {
+        ContainerCollectionFilter ctr = (ContainerCollectionFilter) player.openContainer;
+        connectable = ctr.cap;
+        tile = ctr.tile;
+      }
+      TileMain root = null;
+      if (link != null)
+        root = UtilTileEntity.getTileMainForConnectable(link.connectable);
       //
       CableMessageType type = CableMessageType.values()[message.id];
       switch (type) {
@@ -111,7 +121,12 @@ public class CableIOMessage {
           }
         break;
         case SAVE_FITLER:
-          link.setFilter(message.value, message.stack.copy());
+          if (link != null) {//double hack
+            link.setFilter(message.value, message.stack.copy());
+          }
+          else if (connectable != null) {
+            connectable.setFilter(message.value, message.stack.copy());
+          }
         break;
       }
       //

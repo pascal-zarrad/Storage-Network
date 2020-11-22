@@ -9,23 +9,19 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileExchange extends TileConnectable implements ITickableTileEntity {
+public class TileExchange extends TileConnectable {
+
+  private ExchangeItemStackHandler itemHandler;
 
   public TileExchange() {
     super(SsnRegistry.exchangetile);
     itemHandler = new ExchangeItemStackHandler();
-  }
-
-  @Override
-  public void tick() {
-    //find master
   }
 
   @Override
@@ -38,8 +34,6 @@ public class TileExchange extends TileConnectable implements ITickableTileEntity
     return super.write(compound);
   }
 
-  private ExchangeItemStackHandler itemHandler;
-
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
@@ -48,7 +42,6 @@ public class TileExchange extends TileConnectable implements ITickableTileEntity
         //        //
         //        DimPos mainpos = capabilityConnectable.getMainPos();// this.getMain();
         TileMain tileMain = getMain().getTileEntity(TileMain.class);
-        StorageNetwork.log("Found cap for exchange");
         itemHandler.setMain(tileMain);
       }
       else {

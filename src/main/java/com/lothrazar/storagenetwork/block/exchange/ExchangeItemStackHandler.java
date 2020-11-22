@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
 import javax.annotation.Nonnull;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -29,26 +30,36 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
    * Updates items in the handler based on outside storage.
    */
   public void update() {
-    this.stacks.clear();
+    if (tileMain == null) {
+      return;
+    }
+    //    this.stacks.clear(); 
     int i = 0;
-    if (tileMain != null)
-      for (ItemStack stack : tileMain.getStacks()) {
-        if (i >= this.stacks.size()) {
-          break;
-        }
-        this.stacks.set(i, stack);
-        i++;
+    for (ItemStack stack : tileMain.getStacks()) {
+      if (i >= this.stacks.size()) {
+        break;
       }
+      this.stacks.set(i, stack);
+      i++;
+    }
   }
 
+  /**
+   * @param slot
+   *          may not end up in the exact slot specified
+   * 
+   * @return The remaining ItemStack that was not inserted (if the entire stack is accepted, then return an empty ItemStack). May be the same as the input ItemStack if unchanged, otherwise a new
+   *         ItemStack. The returned ItemStack can be safely modified after.
+   */
   @Override
   @Nonnull
   public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-    if (stack.isEmpty() || tileMain == null) return ItemStack.EMPTY;
-    //    if (!isItemValid(slot, stack)) return stack;
-    //    validateSlotIndex(slot);
-    //    StorageNetwork.log("insertItem " + stack);
+    if (stack.isEmpty() || tileMain == null || !isItemValid(slot, stack)) {
+      return stack;
+    }
+    validateSlotIndex(slot);
     int remaining = tileMain.insertStack(stack, simulate);
+    StorageNetwork.log("exchange: insertItem " + stack + " remain " + remaining);
     if (remaining > 0) {
       // if failed, refresh whole list
       update();
@@ -66,19 +77,14 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
   @Nonnull
   public ItemStack extractItem(int slot, int amount, boolean simulate) {
     if (tileMain == null) {
-      //      super.extractItem(slot, amount, simulate);
+      //            super.extractItem(slot, amount, simulate);
       return ItemStack.EMPTY;
     }
     ItemStackMatcher matcher = new ItemStackMatcher(getStackInSlot(slot));
     //    StorageNetwork.log("extractItem " + matcher.getStack());
     ItemStack stack = tileMain.request(matcher, amount, simulate);
-    if (stack.isEmpty()) {
-      // if failed, refresh whole list
-      update();
-    }
-    else {
-      update();
-    }
+    update();
+    StorageNetwork.log("exchange: extractItem; after " + stack);
     return stack;
   }
 

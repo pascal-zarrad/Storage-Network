@@ -11,6 +11,10 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class CapabilityConnectable extends DefaultConnectable implements INBTSerializable<CompoundNBT> {
 
+  public CapabilityConnectable() {
+    filters.setIsAllowlist(true);
+  }
+
   @Override
   public CompoundNBT serializeNBT() {
     CompoundNBT result = new CompoundNBT();
@@ -21,6 +25,8 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
     if (getPos() != null) {
       result.put("self", getPos().serializeNBT());
     }
+    CompoundNBT filters = this.filters.serializeNBT();
+    result.put("filters", filters);
     return result;
   }
 
@@ -29,6 +35,10 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
     setMainPos(new DimPos(nbt.getCompound("master")));
     if (nbt.contains("self")) {
       setPos(new DimPos(nbt.getCompound("self")));
+    }
+    if (nbt.contains("filters")) {
+      CompoundNBT filters = nbt.getCompound("filters");
+      this.filters.deserializeNBT(filters);
     }
   }
 

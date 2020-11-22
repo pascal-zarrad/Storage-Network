@@ -17,6 +17,7 @@ import com.lothrazar.storagenetwork.block.cable.linkfilter.BlockCableFilter;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.TileCableFilter;
 import com.lothrazar.storagenetwork.block.collection.BlockCollection;
+import com.lothrazar.storagenetwork.block.collection.ContainerCollectionFilter;
 import com.lothrazar.storagenetwork.block.collection.TileCollection;
 import com.lothrazar.storagenetwork.block.exchange.BlockExchange;
 import com.lothrazar.storagenetwork.block.exchange.TileExchange;
@@ -129,6 +130,8 @@ public class SsnRegistry {
   public static ContainerType<ContainerNetworkRemote> remote;
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
   public static ContainerType<ContainerNetworkCraftingRemote> craftingremote;
+  @ObjectHolder(StorageNetwork.MODID + ":collector")
+  public static ContainerType<ContainerCollectionFilter> collectorCtr;
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class RegistryEvents {
@@ -193,10 +196,11 @@ public class SsnRegistry {
     public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
       IForgeRegistry<ContainerType<?>> r = event.getRegistry();
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        return new ContainerNetworkCraftingTable(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerNetworkCraftingTable(windowId, StorageNetwork.proxy.getClientWorld(), data.readBlockPos(), inv, StorageNetwork.proxy.getClientPlayer());
       }).setRegistryName("request"));
-      //
+      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+        return new ContainerCollectionFilter(windowId, StorageNetwork.proxy.getClientWorld(), data.readBlockPos(), inv, StorageNetwork.proxy.getClientPlayer());
+      }).setRegistryName("collector"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         return new ContainerCableFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());

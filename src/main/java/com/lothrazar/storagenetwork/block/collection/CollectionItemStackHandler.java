@@ -1,8 +1,13 @@
 package com.lothrazar.storagenetwork.block.collection;
 
 import javax.annotation.Nonnull;
+import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
+import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -13,6 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class CollectionItemStackHandler extends ItemStackHandlerEx {
 
   private TileMain tileMain;
+  TileConnectable tile;
 
   public CollectionItemStackHandler() {
     super(1);
@@ -31,12 +37,28 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
     this.stacks.clear();
   }
 
+  /**
+   * @return The remaining ItemStack that was not inserted (if the entire stack is accepted, then return an empty ItemStack). May be the same as the input ItemStack if unchanged, otherwise a new
+   *         ItemStack. The returned ItemStack can be safely modified after.
+   */
   @Override
   @Nonnull
   public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-    if (stack.isEmpty() || tileMain == null) return ItemStack.EMPTY;
-    //    if (!isItemValid(slot, stack)) return stack;
-    //    validateSlotIndex(slot);
+    if (stack.isEmpty() || tileMain == null || !isItemValid(slot, stack)) {
+      return stack;
+    }
+    validateSlotIndex(slot);
+    IConnectable cap = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
+    //
+    FilterItemStackHandler filter = cap.getFilter();
+    if (filter != null
+        && !filter.allAreEmpty()
+        && filter.isStackFiltered(stack)) {
+      // filter is not empty, AND stack does not exist in filter
+      // so refuse this
+      StorageNetwork.log("refuse insertItem " + stack);
+      return stack;
+    }
     //    StorageNetwork.log("insertItem " + stack);
     int remaining = tileMain.insertStack(stack, simulate);
     if (remaining > 0) {
@@ -56,6 +78,7 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
   @Nonnull
   public ItemStack extractItem(int slot, int amount, boolean simulate) {
     //disabled on this feature
+    //    return super.extractItem(slot, 0, true);//disabled
     return ItemStack.EMPTY;
   }
 }
