@@ -17,6 +17,12 @@
     "block.storagenetwork.inventory": "Storage Inventory",
     "block.storagenetwork.inventory.tooltip": "Inventory access without a crafting grid",
     
+    "block.storagenetwork.exchange": "Network Exchange Node",
+    "block.storagenetwork.exchange.tooltip": "exchange",
+    
+    "block.storagenetwork.collector": "Network Collection Node",
+    "block.storagenetwork.collector.tooltip": "c",
+    
     "item.storagenetwork.speed_upgrade": "Speed Upgrade",
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
     "item.storagenetwork.stack_upgrade": "Stack Upgrade",
