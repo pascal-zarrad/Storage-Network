@@ -1,7 +1,6 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
 import javax.annotation.Nonnull;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -15,11 +14,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class ExchangeItemStackHandler extends ItemStackHandlerEx {
 
   private TileMain tileMain;
-  boolean allowExtract = false;
 
-  public ExchangeItemStackHandler(int size, boolean allowExtract) {
-    super(size);
-    this.allowExtract = allowExtract;
+  public ExchangeItemStackHandler() {
+    super(1024 * 1024 * 1024 * 1024);
     update();
   }
 
@@ -50,7 +47,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
     if (stack.isEmpty() || tileMain == null) return ItemStack.EMPTY;
     //    if (!isItemValid(slot, stack)) return stack;
     //    validateSlotIndex(slot);
-    StorageNetwork.log("insertItem " + stack);
+    //    StorageNetwork.log("insertItem " + stack);
     int remaining = tileMain.insertStack(stack, simulate);
     if (remaining > 0) {
       // if failed, refresh whole list
@@ -68,12 +65,12 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
   @Override
   @Nonnull
   public ItemStack extractItem(int slot, int amount, boolean simulate) {
-    if (tileMain == null || !allowExtract) {
+    if (tileMain == null) {
       //      super.extractItem(slot, amount, simulate);
       return ItemStack.EMPTY;
     }
     ItemStackMatcher matcher = new ItemStackMatcher(getStackInSlot(slot));
-    StorageNetwork.log("extractItem " + matcher.getStack());
+    //    StorageNetwork.log("extractItem " + matcher.getStack());
     ItemStack stack = tileMain.request(matcher, amount, simulate);
     if (stack.isEmpty()) {
       // if failed, refresh whole list

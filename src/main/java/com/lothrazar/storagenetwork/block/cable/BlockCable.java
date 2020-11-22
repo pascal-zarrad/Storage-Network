@@ -3,7 +3,6 @@ package com.lothrazar.storagenetwork.block.cable;
 import java.util.Map;
 import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -161,12 +160,8 @@ public class BlockCable extends BaseBlock {
       IConnectable cap = null;
       if (tileOffset != null)
         cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
-      if ((cap != null && cap.getMainPos() != null)
-          || facingState.getBlock() == SsnRegistry.main
-          || facingState.getBlock() == SsnRegistry.exchange
-          || facingState.getBlock() instanceof BlockCable
-          || facingState.getBlock() == SsnRegistry.collector
-          || facingState.getBlock() == SsnRegistry.request) {
+      if (cap != null
+          || facingState.getBlock() == SsnRegistry.main) {
         stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockState(pos, stateIn);
       }
@@ -182,42 +177,33 @@ public class BlockCable extends BaseBlock {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    if (facingState.getBlock() instanceof BlockCable
-        || facingState.getBlock() == SsnRegistry.main
-        || facingState.getBlock() == SsnRegistry.exchange
-        || facingState.getBlock() == SsnRegistry.collector
-        || facingState.getBlock() == SsnRegistry.request) {
-      //
-      TileEntity tileOffset = world.getTileEntity(facingPos);
-      IConnectable cap = null;
-      if (tileOffset != null) {
-        cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
-        StorageNetwork.log("block" + facingState + " has cap " + cap);
-      }
-      //
+    if (facingState.getBlock() == SsnRegistry.main) {
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-    //    facingState.getpo
+    //based on capability you have, edit connection type
     TileEntity tileOffset = world.getTileEntity(facingPos);
     IConnectable cap = null;
     if (tileOffset != null) {
       cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
     }
-    if (cap != null && cap.getMainPos() != null) {
+    if (cap != null) {
+      //      StorageNetwork.log("EARLY EXIT block" + facingState.getBlock() + " has cap " + cap);
+      if (cap.getMainPos() != null) {
+        //its a network bock of some type, knows where network is but not exactly inventory
+        return stateIn.with(property, EnumConnectType.INVENTORY);
+      }
       return stateIn.with(property, EnumConnectType.CABLE);
     }
-    else if (stateIn.getBlock() != SsnRegistry.kabel
-        && isInventory(stateIn, facing, facingState, world, currentPos, facingPos)
-        && !this.hasInventory(stateIn)) {
-          //          if () {
-          return stateIn.with(property, EnumConnectType.INVENTORY);
-          //          }
-        }
+    //if i have zero other inventories, and this is one now, ok go invo
+    if (!this.hasInventoryAlready(stateIn)
+        && isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
+      return stateIn.with(property, EnumConnectType.INVENTORY);
+    }
     return stateIn.with(property, EnumConnectType.NONE);
   }
 
   //only one inventory allowed per link cable eh
-  private boolean hasInventory(BlockState stateIn) {
+  private boolean hasInventoryAlready(BlockState stateIn) {
     for (Direction d : Direction.values()) {
       if (stateIn.get(FACING_TO_PROPERTY_MAP.get(d)).isInventory()) {
         return true;

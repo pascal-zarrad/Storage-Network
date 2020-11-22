@@ -20,7 +20,7 @@ public class TileExchange extends TileConnectable implements ITickableTileEntity
 
   public TileExchange() {
     super(SsnRegistry.exchangetile);
-    itemHandler = new ExchangeItemStackHandler(1024 * 1024, true);
+    itemHandler = new ExchangeItemStackHandler();
   }
 
   @Override

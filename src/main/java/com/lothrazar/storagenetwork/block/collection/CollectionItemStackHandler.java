@@ -1,7 +1,6 @@
 package com.lothrazar.storagenetwork.block.collection;
 
 import javax.annotation.Nonnull;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import net.minecraft.item.ItemStack;
@@ -38,7 +37,7 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
     if (stack.isEmpty() || tileMain == null) return ItemStack.EMPTY;
     //    if (!isItemValid(slot, stack)) return stack;
     //    validateSlotIndex(slot);
-    StorageNetwork.log("insertItem " + stack);
+    //    StorageNetwork.log("insertItem " + stack);
     int remaining = tileMain.insertStack(stack, simulate);
     if (remaining > 0) {
       // if failed, refresh whole list
@@ -56,11 +55,7 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
   @Override
   @Nonnull
   public ItemStack extractItem(int slot, int amount, boolean simulate) {
+    //disabled on this feature
     return ItemStack.EMPTY;
-  }
-
-  @Override
-  protected void onLoad() {
-    update();
   }
 }
