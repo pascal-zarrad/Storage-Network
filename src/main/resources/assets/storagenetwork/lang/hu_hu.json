@@ -50,8 +50,8 @@
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
     "gui.storagenetwork.import": "Importálja a tartalmat szűrőként",
-    "gui.storagenetwork.gui.whitelist": "Engedélyezett lista",
-    "gui.storagenetwork.gui.blacklist": "Mellőzési lista",
+    "gui.storagenetwork.allowlist": "Engedélyezett lista",
+    "gui.storagenetwork.ignorelist": "Mellőzési lista",
 
     "gui.storagenetwork.sort": "Rendezési irány",
     "gui.storagenetwork.priority.up": "Demote Priority (kisebb megy először)",

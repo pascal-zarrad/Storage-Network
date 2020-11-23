@@ -36,9 +36,9 @@
     "gui.storagenetwork.checkbox.ore": "Словарь руды",
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
-    "gui.storagenetwork.gui.import": "Фильтр импорта",
-    "gui.storagenetwork.gui.whitelist": "Белый список",
-    "gui.storagenetwork.gui.blacklist": "Черный список",
+    "gui.storagenetwork.import": "Фильтр импорта",
+    "gui.storagenetwork.allowlist": "Белый список",
+    "gui.storagenetwork.ignorelist": "Черный список",
 
     "gui.storagenetwork.sort": "Направление сортировки",
     "gui.storagenetwork.priority.up": "Приоритет выше (меньшее идет первым)",

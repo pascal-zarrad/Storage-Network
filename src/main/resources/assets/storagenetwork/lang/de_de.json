@@ -38,9 +38,9 @@
     "gui.storagenetwork.checkbox.ore": "OreDict",
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
-    "gui.storagenetwork.gui.import": "Filter importieren",
-    "gui.storagenetwork.gui.whitelist": "Whitelist",
-    "gui.storagenetwork.gui.blacklist": "Blacklist",
+    "gui.storagenetwork.import": "Filter importieren",
+    "gui.storagenetwork.allowlist": "Whitelist",
+    "gui.storagenetwork.ignorelist": "Blacklist",
 
     "gui.storagenetwork.sort": "Sortierrichtung",
     "gui.storagenetwork.priority.up": "Priorität herabstufen (kleiner geht vor)",

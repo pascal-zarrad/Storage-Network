@@ -5,6 +5,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
+import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -17,7 +18,8 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
   private TileMain tileMain;
 
   public ExchangeItemStackHandler() {
-    super(1024 * 1024 * 1024 * 1024);
+    super(ConfigRegistry.EXCHANGEBUFFER.get());
+    System.out.println("ConfigRegistry.EXCHANGEBUFFER.get()" + ConfigRegistry.EXCHANGEBUFFER.get());
     update();
   }
 

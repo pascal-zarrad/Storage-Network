@@ -67,8 +67,8 @@
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
     "gui.storagenetwork.import": "Import contents as Filter",
-    "gui.storagenetwork.gui.whitelist": "Allow List",
-    "gui.storagenetwork.gui.blacklist": "Ignore List",
+    "gui.storagenetwork.allowlist": "Allow List",
+    "gui.storagenetwork.ignorelist": "Ignore List",
 
     "gui.storagenetwork.sort": "Sort Direction",
     "gui.storagenetwork.priority.up": "Demote Priority (smaller goes first)",

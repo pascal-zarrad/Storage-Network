@@ -15,7 +15,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -48,7 +48,7 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
 
   @Override
   public ITextComponent getDisplayName() {
-    return new StringTextComponent(getType().getRegistryName().getPath());
+    return new TranslationTextComponent(getType().getRegistryName().getPath());
   }
 
   @Override

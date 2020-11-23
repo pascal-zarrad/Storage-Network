@@ -11,7 +11,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class TileInventory extends TileConnectable implements INamedContainerProvider, ITileSortable {
 
@@ -24,7 +24,7 @@ public class TileInventory extends TileConnectable implements INamedContainerPro
 
   @Override
   public ITextComponent getDisplayName() {
-    return new StringTextComponent(getType().getRegistryName().getPath());
+    return new TranslationTextComponent(getType().getRegistryName().getPath());
   }
 
   @Override

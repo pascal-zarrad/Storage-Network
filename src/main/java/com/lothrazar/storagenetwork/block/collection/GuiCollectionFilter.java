@@ -21,7 +21,6 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/plain_filter.png");
   ContainerCollectionFilter containerCableLink;
-  private boolean isAllowlist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
   public GuiCollectionFilter(ContainerCollectionFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
@@ -52,7 +51,7 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(ms, mouseX, mouseY); //  //    renderHoveredToolTip(ms, mouseX, mouseY);
+    this.renderHoveredTooltip(ms, mouseX, mouseY);
   }
 
   @Override
@@ -64,7 +63,7 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
 
   @Override //
   protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    //    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;

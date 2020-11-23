@@ -87,7 +87,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
 
   @Override
   public ITextComponent getDisplayName() {
-    return new StringTextComponent(getType().getRegistryName().getPath());
+    return new TranslationTextComponent(getType().getRegistryName().getPath());
   }
 
   @Override

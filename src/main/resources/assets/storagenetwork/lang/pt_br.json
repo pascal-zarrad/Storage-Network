@@ -61,8 +61,8 @@
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
     "gui.storagenetwork.import": "Importar conteúdo como filtro",
-    "gui.storagenetwork.gui.whitelist": "Lista de Permitidos",
-    "gui.storagenetwork.gui.blacklist": "Lista de Ignorados",
+    "gui.storagenetwork.allowlist": "Lista de Permitidos",
+    "gui.storagenetwork.ignorelist": "Lista de Ignorados",
 
     "gui.storagenetwork.sort": "Ordem de classificação",
     "gui.storagenetwork.priority.up": "Rebaixar a prioridade (o menor vai primeiro)",

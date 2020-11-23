@@ -63,7 +63,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
 
   @Override
   public List<ItemStack> getStoredStacks(boolean isFiltered) {
-    if (inventoryFace == null) {
+    if (inventoryFace == null || connectable.getPos() == null) {
       return Collections.emptyList();
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
