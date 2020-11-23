@@ -177,10 +177,12 @@ public class BlockCable extends BaseBlock {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    if (facingState.getBlock() == SsnRegistry.main) {
+    if (facingState.getBlock() == SsnRegistry.main
+        || facingState.getBlock() instanceof BlockCable) {
+      //      StorageNetwork.log("plain cable" + facingState.getBlock());
       return stateIn.with(property, EnumConnectType.CABLE);
-    }
-    //based on capability you have, edit connection type
+    } //
+      //based on capability you have, edit connection type
     TileEntity tileOffset = world.getTileEntity(facingPos);
     IConnectable cap = null;
     if (tileOffset != null) {
