@@ -16,7 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 
 public class TileRequest extends TileConnectable implements INamedContainerProvider, ITileSortable {
@@ -87,7 +87,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
 
   @Override
   public ITextComponent getDisplayName() {
-    return new StringTextComponent(getType().getRegistryName().getPath());
+    return new TranslationTextComponent(getType().getRegistryName().getPath());
   }
 
   @Override

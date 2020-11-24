@@ -17,6 +17,7 @@ public class ConfigRegistry {
   private static ForgeConfigSpec COMMON_CONFIG;
   private static BooleanValue LOGSPAM;
   private static IntValue REFRESHTICKS;
+  public static IntValue EXCHANGEBUFFER;
   private static BooleanValue RELOADONCHUNK;
   private static ConfigValue<List<String>> IGNORELIST;
   //    allowFastWorkBenchIntegration = config.getBoolean("allowFastWorkBenchIntegration", category, true, "Allow 'fastworkbench' project to integrate into storage network crafting grids.  Turning off lets you disable integration without uninstalling mod.  Client and server should match for best outcome.");
@@ -33,8 +34,10 @@ public class ConfigRegistry {
     REFRESHTICKS = COMMON_BUILDER.comment("How often to auto-refresh a network (one second is 20 ticks)").defineInRange("autoRefreshTicks", 20, 2, 4096);
     List<String> list = new ArrayList<String>();
     list.add("extrautils2:playerchest");
-    IGNORELIST = COMMON_BUILDER.comment("Disable these blocks from ever being able to connect to the network, they will be treated as a non-inventory.").define("BlacklistBlocks",
+    IGNORELIST = COMMON_BUILDER.comment("Disable these blocks from ever being able to connect to the network, they will be treated as a non-inventory.").define("NotallowedBlocks",
         list);
+    EXCHANGEBUFFER = COMMON_BUILDER.comment("How many itemstacks from the network are visible to external connections through the storagenetwork:exchange.  Too low and not all items can pass through, too large and there will be packet/buffer overflows.")
+        .defineInRange("exchangeBufferSize", 1024 * 1024 * 1024 * 1024, 1, Integer.MAX_VALUE / 16);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }

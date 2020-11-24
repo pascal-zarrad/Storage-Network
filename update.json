@@ -1,8 +1,8 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.16.3-latest": "1.2.1",
-    "1.16.3-recommended": "1.2.1"
+    "1.16.3-latest": "1.3.0",
+    "1.16.3-recommended": "1.3.0"
   },
   "1.16.3": {
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)",
@@ -10,5 +10,6 @@
   	,"1.1.2":"Fix server crash when you build on top of the main root block."
   	,"1.2.0":"Added new items: Network Picker and Network Collector."
   	,"1.2.1":"Language files pt_br and hu_hu updated "
+  	,"1.3.0":"Refactored cable connectivity to rely more on capabilities insetad of block comparisons.  Fixed some tooltips. Added Network Collection Interface, Network Exchange Interface, and Network Builder.  (textures and functionality subject to change)"
   }
 }

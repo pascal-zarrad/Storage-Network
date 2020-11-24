@@ -58,6 +58,17 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     return getStackMatchers().stream().anyMatch(matcher -> matcher.match(stack));
   }
 
+  public boolean allAreEmpty() {
+    for (int slot = 0; slot < getSlots(); slot++) {
+      if (!this.getStackInSlot(slot).isEmpty()) {
+        //found something not empty. so allAreEmpty is false
+        return false;
+      }
+    }
+    //none found that were !empty. so allempty true
+    return true;
+  }
+
   @Override
   public void deserializeNBT(CompoundNBT nbt) {
     super.deserializeNBT(nbt);

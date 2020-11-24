@@ -17,6 +17,12 @@
     "block.storagenetwork.inventory": "Storage Inventory",
     "block.storagenetwork.inventory.tooltip": "Inventory access without a crafting grid",
     
+    "block.storagenetwork.exchange": "Network Exchange Interface",
+    "block.storagenetwork.exchange.tooltip": "Endpoint of the network for inventory connections",
+
+    "block.storagenetwork.collector": "Network Collection Interface",
+    "block.storagenetwork.collector.tooltip": "Items inserted enter the network",
+    
     "item.storagenetwork.speed_upgrade": "Speed Upgrade",
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
     "item.storagenetwork.stack_upgrade": "Stack Upgrade",
@@ -25,6 +31,9 @@
     "tooltip.storagenetwork.upgrade_1": "Activity of the cable depends on the amount of items.",
     "tooltip.storagenetwork.upgrade_2": "Increases the stack size of task.",
     "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
+
+    "item.storagenetwork.builder_remote": "Network Builder",
+    "item.storagenetwork.builder_remote.tooltip": "Bind to a network and a block to build",
 
     "item.storagenetwork.inventory_remote": "Storage Remote",
     "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Root for remote inventory access.",
@@ -61,8 +70,8 @@
     "gui.storagenetwork.checkbox.nbt": "NBT",
 
     "gui.storagenetwork.import": "Import contents as Filter",
-    "gui.storagenetwork.gui.whitelist": "Allow List",
-    "gui.storagenetwork.gui.blacklist": "Ignore List",
+    "gui.storagenetwork.allowlist": "Allow List",
+    "gui.storagenetwork.ignorelist": "Ignore List",
 
     "gui.storagenetwork.sort": "Sort Direction",
     "gui.storagenetwork.priority.up": "Demote Priority (smaller goes first)",

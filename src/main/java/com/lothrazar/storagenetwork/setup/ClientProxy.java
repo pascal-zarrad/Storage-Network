@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.setup;
 import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.GuiCableFilter;
+import com.lothrazar.storagenetwork.block.collection.GuiCollectionFilter;
 import com.lothrazar.storagenetwork.block.inventory.GuiNetworkInventory;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
 import com.lothrazar.storagenetwork.item.remote.GuiNetworkCraftingRemote;
@@ -24,6 +25,7 @@ public class ClientProxy implements IProxy {
     ScreenManager.registerFactory(SsnRegistry.remote, GuiNetworkRemote::new);
     ScreenManager.registerFactory(SsnRegistry.craftingremote, GuiNetworkCraftingRemote::new);
     ScreenManager.registerFactory(SsnRegistry.inventorycontainer, GuiNetworkInventory::new);
+    ScreenManager.registerFactory(SsnRegistry.collectorCtr, GuiCollectionFilter::new);
   }
 
   @Override

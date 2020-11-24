@@ -1,4 +1,8 @@
 package com.lothrazar.storagenetwork.api;
+
+import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
+import net.minecraft.item.ItemStack;
+
 /**
  * All blocks that can connect to the storage-network need to expose this capability. Because of the way the storage-networking is built up, each connectable needs to expose its own position and
  * dimension, so it can be fully traversed when necessary.
@@ -36,9 +40,11 @@ public interface IConnectable {
   /**
    * Set data used in getPos
    * 
-   * 1.14 and earlier did not teed this lol
-   * 
    * @param lookPos
    */
   void setPos(DimPos lookPos);
+
+  void setFilter(int value, ItemStack copy);
+
+  FilterItemStackHandler getFilter();
 }

@@ -12,13 +12,12 @@ import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
@@ -109,28 +108,28 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
 
   private void drawTooltips(MatrixStack ms, final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.import")),
+      //NOT StringTextComponent
+      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.import")),
           mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new StringTextComponent(this.isAllowlist
-          ? "gui.storagenetwork.gui.whitelist"
-          : "gui.storagenetwork.gui.blacklist")),
+      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent(this.isAllowlist
+          ? "gui.storagenetwork.allowlist"
+          : "gui.storagenetwork.ignorelist")),
           mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
+      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new StringTextComponent("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY - guiTop);
+      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY - guiTop);
     }
   }
 
   public static final int SLOT_SIZE = 18;
 
-  @Override // 
+  @Override
   protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
