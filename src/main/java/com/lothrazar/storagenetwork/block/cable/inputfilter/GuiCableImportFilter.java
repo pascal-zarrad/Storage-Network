@@ -17,7 +17,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
@@ -130,9 +129,8 @@ public class GuiCableImportFilter extends ContainerScreen<ContainerCableImportFi
 
   public static final int SLOT_SIZE = 18;
 
-  @Override //
+  @Override
   protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    //    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;

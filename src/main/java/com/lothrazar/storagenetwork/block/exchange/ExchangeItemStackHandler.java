@@ -19,7 +19,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
 
   public ExchangeItemStackHandler() {
     super(ConfigRegistry.EXCHANGEBUFFER.get());
-    System.out.println("ConfigRegistry.EXCHANGEBUFFER.get()" + ConfigRegistry.EXCHANGEBUFFER.get());
+    StorageNetwork.log("ConfigRegistry.EXCHANGEBUFFER.get()" + ConfigRegistry.EXCHANGEBUFFER.get());
     update();
   }
 

@@ -116,7 +116,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
 
   @Override
   protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    //    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;

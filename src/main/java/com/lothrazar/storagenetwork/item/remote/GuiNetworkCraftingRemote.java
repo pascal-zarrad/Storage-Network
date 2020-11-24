@@ -102,12 +102,11 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
     network.render();
   }
 
-  @Override //
+  @Override
   protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
     this.minecraft.getTextureManager().bindTexture(textureCraft);
     int k = (this.width - this.xSize) / 2;
     int l = (this.height - this.ySize) / 2;
-    //    RenderSystem.color3f(1, 1, 1);
     this.blit(ms, k, l, 0, 0, this.xSize, this.ySize);
     network.applySearchTextToSlots();
     network.renderItemSlots(ms, mouseX, mouseY, font);

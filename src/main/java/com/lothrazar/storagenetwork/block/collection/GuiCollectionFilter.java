@@ -10,7 +10,6 @@ import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -61,9 +60,8 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
 
   public static final int SLOT_SIZE = 18;
 
-  @Override //
+  @Override
   protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    //    RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     minecraft.getTextureManager().bindTexture(texture);
     int xCenter = (width - xSize) / 2;
     int yCenter = (height - ySize) / 2;
