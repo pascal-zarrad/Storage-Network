@@ -32,6 +32,9 @@
     "tooltip.storagenetwork.upgrade_2": "Increases the stack size of task.",
     "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
+    "item.storagenetwork.builder_remote": "Network Builder",
+    "item.storagenetwork.builder_remote.tooltip": "Bind to a network and a block to build",
+
     "item.storagenetwork.inventory_remote": "Storage Remote",
     "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Root for remote inventory access.",
     

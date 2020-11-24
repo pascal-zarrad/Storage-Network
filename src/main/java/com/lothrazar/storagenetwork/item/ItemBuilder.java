@@ -64,6 +64,7 @@ public class ItemBuilder extends Item {
     World world = context.getWorld();
     BlockPos pos = context.getPos();
     PlayerEntity player = context.getPlayer();
+    BlockPos buildAt = pos.offset(context.getFace());
     if (world.getTileEntity(pos) instanceof TileMain) {
       ItemStack stack = player.getHeldItem(hand);
       CompoundNBT tag = stack.getOrCreateTag();
@@ -74,8 +75,9 @@ public class ItemBuilder extends Item {
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
     }
-    else {
-      ItemStack stack = player.getHeldItem(hand);
+    else if (world.isAirBlock(buildAt) || world.getBlockState(buildAt).getMaterial().isLiquid()) {
+      player.swingArm(hand);
+      ItemStack stack = player.getHeldItem(hand);//succeed or fail
       DimPos dp = getPosStored(stack);
       if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
@@ -88,35 +90,24 @@ public class ItemBuilder extends Item {
           TileMain network = (TileMain) tile;
           BlockState bs = world.getBlockState(pos);
           ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(bs.getBlock()), false, false);
-          ItemStack found = network.request(matcher, 1, true);//SIMULATED
+          ItemStack found = network.request(matcher, 1, true);//SIMULATED, see if materials are available
           if (!found.isEmpty()) {
-            //using add will bypass the collector so try if possible
-            //            if (!player.addItemStackToInventory(found)) {
-            //              player.entityDropItem(found);
-            //            }
-            //
-            //
-            BlockPos buildAt = pos.offset(context.getFace());
+            // yes materials are available
             boolean success = placeStateSafe(world, player, buildAt, bs);
             if (success) {
-              //extract for real
-              network.request(matcher, 1, false);
+              network.request(matcher, 1, false);//NOT SIMULATED, extract item from network
             }
-            //BUILD 
-            player.sendStatusMessage(new TranslationTextComponent("item.remote.built" + success), true);
-            //
-            //
-            //
           }
-          //          else {
-          //            player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
-          //          }
+          else {
+            player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
+          }
         }
         else {//no main
           player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
         }
       }
     }
+    //else something non-air and non-liquid is in the way, flower etc
     return ActionResultType.PASS;
   }
 

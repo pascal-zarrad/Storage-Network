@@ -5,14 +5,13 @@ import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.registry.SsnEvents;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.setup.ClientProxy;
 import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -30,12 +29,7 @@ public class StorageNetwork {
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.RegistryEvents());
-    MinecraftForge.EVENT_BUS.register(this);
-  }
-
-  @SubscribeEvent
-  public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
-    SsnRegistry.collector_remote.onEntityItemPickupEvent(event);
+    MinecraftForge.EVENT_BUS.register(new SsnEvents());
   }
 
   private static void setup(FMLCommonSetupEvent event) {
