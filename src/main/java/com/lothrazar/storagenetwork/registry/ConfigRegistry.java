@@ -20,6 +20,7 @@ public class ConfigRegistry {
   public static IntValue EXCHANGEBUFFER;
   private static BooleanValue RELOADONCHUNK;
   private static ConfigValue<List<String>> IGNORELIST;
+  private static BooleanValue ENABLEAUTOSEARCHFOCUS;
   //    allowFastWorkBenchIntegration = config.getBoolean("allowFastWorkBenchIntegration", category, true, "Allow 'fastworkbench' project to integrate into storage network crafting grids.  Turning off lets you disable integration without uninstalling mod.  Client and server should match for best outcome.");
   static {
     initConfig();
@@ -38,6 +39,8 @@ public class ConfigRegistry {
         list);
     EXCHANGEBUFFER = COMMON_BUILDER.comment("How many itemstacks from the network are visible to external connections through the storagenetwork:exchange.  Too low and not all items can pass through, too large and there will be packet/buffer overflows.")
         .defineInRange("exchangeBufferSize", 1024 * 1024 * 1024 * 1024, 1, Integer.MAX_VALUE / 16);
+    ENABLEAUTOSEARCHFOCUS = COMMON_BUILDER.comment("Set to false to disable the automatic focus of the searchbar")
+            .define("enableAutoSearchFocus", true);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
@@ -66,5 +69,9 @@ public class ConfigRegistry {
 
   public List<String> ignorelist() {
     return IGNORELIST.get();
+  }
+
+  public boolean enableAutoSearchFocus() {
+    return ENABLEAUTOSEARCHFOCUS.get();
   }
 }

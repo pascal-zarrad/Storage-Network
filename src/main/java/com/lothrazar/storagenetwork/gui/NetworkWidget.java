@@ -184,7 +184,7 @@ public class NetworkWidget {
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
-    searchBar.setFocused2(true);
+    searchBar.setFocused2(StorageNetwork.config.enableAutoSearchFocus());
     if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       searchBar.setText(JeiHooks.getFilterText());
     }
