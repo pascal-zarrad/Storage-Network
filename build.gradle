@@ -34,6 +34,7 @@ minecraft {
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
+		         properties 'mixin.env.disableRefMap': 'true'
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
@@ -93,26 +94,29 @@ dependencies {
 
     compile fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
   
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+  
+  // only for testing
+  
+//    compileOnly "appeng:appliedenergistics2:8.1.0:api"
+ //   fg.deobf "appeng:appliedenergistics2:8.1.0:api"
+ //   runtime "appeng:appliedenergistics2:8.1.0:api"
+ 
+// compileOnly fg.deobf("appeng:appliedenergistics2:8.1.0")
+// runtimeOnly fg.deobf("appeng:appliedenergistics2:8.1.0")
+    
+    
+    compileOnly fg.deobf("com.refinedmods:refinedstorage:1.9.6+80")
+    runtimeOnly fg.deobf("com.refinedmods:refinedstorage:1.9.6+80")
+  //dead in the water
+  //  fg.deobf "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.16.3-8.2.1:api"
+  //  runtime "com.jaquadro.minecraft.storagedrawers:StorageDrawers:1.16.3-8.2.1"
+    
 
 }
 repositories {
+  maven {
+    url = "https://repo.refinedmods.com/"
+  }
   maven {
     // location of the maven that hosts JEI files
     name = "Progwml6 maven"
@@ -123,6 +127,19 @@ repositories {
     name = "ModMaven"
     url = "https://modmaven.k-4u.nl"
   }
+     maven {
+        name = "storagedrawers"
+        url = "https://dl.bintray.com/jaquadro/dev/"
+    }
+     
+    maven {
+        name "Modmaven"
+        url "https://modmaven.dev/"
+        // For Gradle 5.1 and above, limit it to just AE2
+    //    content {
+    //        includeGroup 'appeng'
+    //    }
+    }
 }
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {

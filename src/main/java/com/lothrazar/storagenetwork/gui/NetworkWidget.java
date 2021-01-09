@@ -21,7 +21,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -73,7 +72,7 @@ public class NetworkWidget {
       return;
     }
     searchBar.setText("");
-    if (JeiSettings.isJeiSearchSynced()) {
+    if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
       JeiHooks.setFilterText("");
     }
   }
@@ -185,8 +184,13 @@ public class NetworkWidget {
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
     searchBar.setFocused2(true);
-    if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-      searchBar.setText(JeiHooks.getFilterText());
+    try {
+      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+        searchBar.setText(JeiHooks.getFilterText());
+      }
+    }
+    catch (Exception e) {
+      StorageNetwork.LOGGER.error("Search bar error ", e);
     }
   }
 
@@ -219,14 +223,14 @@ public class NetworkWidget {
     if (this.inSearchBar(mouseX, mouseY)) {
       List<ITextComponent> lis = Lists.newArrayList();
       if (!Screen.hasShiftDown()) {
-        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.shift")));
+        lis.add(new TranslationTextComponent("gui.storagenetwork.shift"));
       }
       else {
-        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_mod")));//@
-        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_tooltip")));//#
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_mod"));//@
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tooltip"));//#
         //TODO: tag search
-        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_tags")));//$
-        lis.add(new TranslationTextComponent(I18n.format("gui.storagenetwork.fil.tooltip_clear")));//clear
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tags"));//$
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear"));//clear
       }
       screen.func_243308_b(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
@@ -304,10 +308,12 @@ public class NetworkWidget {
       gui.syncDataToServer();
     });
     sortBtn.setHeight(16);
-    jeiBtn = new ButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
-      JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
-    });
-    jeiBtn.setHeight(16);
+    if (JeiSettings.isJeiLoaded()) {
+      jeiBtn = new ButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
+        JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
+      });
+      jeiBtn.setHeight(16);
+    }
     //    clearTextBtn = new ButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
     //      this.clearSearch();
     //    });
@@ -347,6 +353,7 @@ public class NetworkWidget {
       break;
     }
     directionBtn.setTextureId(gui.getDownwards() ? TextureEnum.SORT_DOWN : TextureEnum.SORT_UP);
-    jeiBtn.setTextureId(JeiSettings.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
+    if (jeiBtn != null && JeiSettings.isJeiLoaded())
+      jeiBtn.setTextureId(JeiSettings.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
   }
 }

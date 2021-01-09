@@ -51,16 +51,28 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
 
   public List<ItemStack> getStacks() {
     List<ItemStack> stacks = Lists.newArrayList();
-    if (getConnectablePositions() == null) {
-      refreshNetwork();
-    }
-    for (IConnectableLink storage : getSortedConnectableStorage()) {
-      for (ItemStack stack : storage.getStoredStacks(true)) {
-        if (stack == null || stack.isEmpty()) {
-          continue;
-        }
-        addOrMergeIntoList(stacks, stack.copy());
+    try {
+      if (getConnectablePositions() == null) {
+        refreshNetwork();
       }
+    }
+    catch (Exception e) {
+      //since this has external mod connections, if they break then catch it
+      //      for example, AE2 can break with  Ticking GridNode
+      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
+    }
+    try {
+      for (IConnectableLink storage : getSortedConnectableStorage()) {
+        for (ItemStack stack : storage.getStoredStacks(true)) {
+          if (stack == null || stack.isEmpty()) {
+            continue;
+          }
+          addOrMergeIntoList(stacks, stack.copy());
+        }
+      }
+    }
+    catch (Exception e) {
+      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
     }
     return stacks;
   }

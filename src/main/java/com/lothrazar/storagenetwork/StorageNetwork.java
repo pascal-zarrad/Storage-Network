@@ -13,6 +13,7 @@ import com.lothrazar.storagenetwork.setup.IProxy;
 import com.lothrazar.storagenetwork.setup.ServerProxy;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -37,7 +38,7 @@ public class StorageNetwork {
     StorageNetworkCapabilities.initCapabilities();
     proxy.init();
     config = new ConfigRegistry(FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
-    JeiSettings.setJeiLoaded(true);
+    JeiSettings.setJeiLoaded(ModList.get().isLoaded("jei"));
   }
 
   public static void log(String s) {
