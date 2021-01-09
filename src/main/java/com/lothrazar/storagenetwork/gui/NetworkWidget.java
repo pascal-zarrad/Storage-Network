@@ -183,7 +183,7 @@ public class NetworkWidget {
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
-    searchBar.setFocused2(true);
+    searchBar.setFocused2(StorageNetwork.config.enableAutoSearchFocus());
     try {
       if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
         searchBar.setText(JeiHooks.getFilterText());
@@ -191,6 +191,9 @@ public class NetworkWidget {
     }
     catch (Exception e) {
       StorageNetwork.LOGGER.error("Search bar error ", e);
+      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+        searchBar.setText(JeiHooks.getFilterText());
+      }
     }
   }
 
