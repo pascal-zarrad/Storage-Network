@@ -43,7 +43,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -198,32 +197,28 @@ public class SsnRegistry {
     public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
       IForgeRegistry<ContainerType<?>> r = event.getRegistry();
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkCraftingTable(windowId, StorageNetwork.proxy.getClientWorld(), data.readBlockPos(), inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerNetworkCraftingTable(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("request"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerCollectionFilter(windowId, StorageNetwork.proxy.getClientWorld(), data.readBlockPos(), inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerCollectionFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("collector"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        return new ContainerCableFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerCableFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("filter_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        return new ContainerCableImportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerCableImportFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("import_filter_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        return new ContainerCableExportFilter(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerCableExportFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("export_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        BlockPos pos = data.readBlockPos();
-        return new ContainerNetworkInventory(windowId, StorageNetwork.proxy.getClientWorld(), pos, inv, StorageNetwork.proxy.getClientPlayer());
+        return new ContainerNetworkInventory(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("inventory"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
+        return new ContainerNetworkRemote(windowId, inv.player.inventory);
       }).setRegistryName("inventory_remote"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkCraftingRemote(windowId, StorageNetwork.proxy.getClientPlayer().inventory);
+        return new ContainerNetworkCraftingRemote(windowId, inv.player.inventory);
       }).setRegistryName("crafting_remote"));
     }
   }

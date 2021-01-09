@@ -34,6 +34,7 @@ public class TileExchange extends TileConnectable {
     return super.write(compound);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {

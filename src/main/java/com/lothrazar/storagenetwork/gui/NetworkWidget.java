@@ -18,6 +18,7 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -276,7 +277,11 @@ public class NetworkWidget {
         return;
       }
     }
-    ItemStack stackCarriedByMouse = StorageNetwork.proxy.getClientPlayer().inventory.getItemStack();
+    ClientPlayerEntity player = Minecraft.getInstance().player;
+    if (player == null) {
+      return;//impossible i know
+    }
+    ItemStack stackCarriedByMouse = player.inventory.getItemStack();
     if (!stackUnderMouse.isEmpty()
         && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
         && stackCarriedByMouse.isEmpty() &&

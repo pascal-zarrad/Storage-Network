@@ -51,6 +51,7 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
     return new TranslationTextComponent(getType().getRegistryName().getPath());
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
