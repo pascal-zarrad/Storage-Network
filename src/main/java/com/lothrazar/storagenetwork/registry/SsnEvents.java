@@ -7,6 +7,6 @@ public class SsnEvents {
 
   @SubscribeEvent
   public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
-    SsnRegistry.collector_remote.onEntityItemPickupEvent(event);
+    SsnRegistry.COLLECTOR_REMOTE.onEntityItemPickupEvent(event);
   }
 }

@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -8,6 +7,7 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,7 +28,7 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableImportFilter() {
-    super(SsnRegistry.filterimportkabeltile);
+    super(SsnRegistry.FILTERIMPORTKABELTILE);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 

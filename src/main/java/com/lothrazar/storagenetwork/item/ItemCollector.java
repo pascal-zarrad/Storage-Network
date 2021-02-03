@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.item;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -47,7 +47,7 @@ public class ItemCollector extends Item {
     return ItemStack.EMPTY;
   }
 
-  //@SubscribeEvent
+  // not subscribe, called from SsnEvents.java 
   public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
     if (event.getEntityLiving() instanceof PlayerEntity &&
         event.getItem() != null &&
@@ -61,7 +61,7 @@ public class ItemCollector extends Item {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
           StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
-          return;//ActionResultType.PASS;
+          return;
         }
         TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
         if (tile instanceof TileMain) {

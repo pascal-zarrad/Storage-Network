@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.network;
 
-import java.util.List;
-import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
+import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -33,11 +33,10 @@ public class StackRefreshClientMessage {
 
   public static void handle(StackRefreshClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      Minecraft mc = Minecraft.getInstance();//StorageNetwork.proxy.getMinecraft();
+      Minecraft mc = Minecraft.getInstance();
       if (mc.currentScreen instanceof IGuiNetwork) {
         IGuiNetwork gui = (IGuiNetwork) mc.currentScreen;
         gui.setStacks(message.stacks);
-        //        gui.setCraftableStacks(message.craftableStacks);
       }
     });
     ctx.get().setPacketHandled(true);

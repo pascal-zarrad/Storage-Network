@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
-import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -8,11 +7,10 @@ import net.minecraft.nbt.CompoundNBT;
 public class ItemStackMatcher implements IItemStackMatcher {
 
   private ItemStack stack;
-  private boolean ore, nbt;
+  private boolean ore;
+  private boolean nbt;
 
   public ItemStackMatcher(ItemStack stack) {
-    //so glad meta is ded
-    // stack != null ? stack.getItemDamage() != OreDictionary.WILDCARD_VALUE : true
     this(stack, false, false);
   }
 
@@ -27,7 +25,6 @@ public class ItemStackMatcher implements IItemStackMatcher {
   public void readFromNBT(CompoundNBT compound) {
     CompoundNBT c = (CompoundNBT) compound.get("stack");
     stack = ItemStack.read(c);
-    //    meta = compound.getBoolean("meta");
     ore = compound.getBoolean("ore");
     nbt = compound.getBoolean("nbt");
   }
@@ -36,7 +33,6 @@ public class ItemStackMatcher implements IItemStackMatcher {
     CompoundNBT c = new CompoundNBT();
     stack.write(c);
     compound.put("stack", c);
-    //    compound.putBoolean("meta", meta);
     compound.putBoolean("ore", ore);
     compound.putBoolean("nbt", nbt);
     return c;
@@ -52,7 +48,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     return stack;
   }
 
-  public void setStack(@Nonnull ItemStack stack) {
+  public void setStack(ItemStack stack) {
     this.stack = stack;
   }
 
@@ -79,20 +75,11 @@ public class ItemStackMatcher implements IItemStackMatcher {
   }
 
   @Override
-  public boolean match(@Nonnull ItemStack stackIn) {
+  public boolean match(ItemStack stackIn) {
     if (stackIn.isEmpty()) {
       return false;
     }
-    // TODO: TAGS
-    //    if (ore && UtilTileEntity.equalOreDict(stackIn, stack)) {
-    //      return true;
-    //    }
     if (nbt && !ItemStack.areItemStackTagsEqual(stack, stackIn)) {
-      //      if (nbt) {
-      //        StorageNetwork.LOGGER.info("Tags are not equal ");
-      //        StorageNetwork.LOGGER.info(stack.getTag());
-      //        StorageNetwork.LOGGER.info(stackIn.getTag());
-      //      }
       return false;
     }
     return stackIn.getItem() == stack.getItem();

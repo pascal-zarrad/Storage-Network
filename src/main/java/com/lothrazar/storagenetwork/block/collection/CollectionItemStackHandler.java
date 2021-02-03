@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.collection;
 
-import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -42,7 +41,6 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
    *         ItemStack. The returned ItemStack can be safely modified after.
    */
   @Override
-  @Nonnull
   public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
     if (stack.isEmpty() || tileMain == null || !isItemValid(slot, stack)) {
       return stack;
@@ -60,22 +58,24 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
       return stack;
     }
     //    StorageNetwork.log("insertItem " + stack);
-    int remaining = tileMain.insertStack(stack, simulate);
-    if (remaining > 0) {
-      // if failed, refresh whole list
-      update();
-      return ItemHandlerHelper.copyStackWithSize(stack, remaining);
+    try {
+      int remaining = tileMain.insertStack(stack, simulate);
+      if (remaining > 0) {
+        // if failed, refresh whole list
+        update();
+        return ItemHandlerHelper.copyStackWithSize(stack, remaining);
+      }
     }
-    else {
-      // if succesful, update internal list
-      //      super.insertItem(slot, stack, simulate);
-      update();
-      return ItemStack.EMPTY;
+    catch (Exception e) {
+      StorageNetwork.LOGGER.error("insertStack error ", e);
     }
+    // if succesful, update internal list
+    //      super.insertItem(slot, stack, simulate);
+    update();
+    return ItemStack.EMPTY;
   }
 
   @Override
-  @Nonnull
   public ItemStack extractItem(int slot, int amount, boolean simulate) {
     //disabled on this feature
     //    return super.extractItem(slot, 0, true);//disabled

@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.jei;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
+import net.minecraft.util.ResourceLocation;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
@@ -14,7 +15,6 @@ import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.util.ResourceLocation;
 
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin {

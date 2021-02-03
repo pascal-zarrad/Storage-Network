@@ -10,6 +10,6 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 public class TileCable extends TileConnectable {
 
   public TileCable() {
-    super(SsnRegistry.kabeltile);
+    super(SsnRegistry.KABELTILE);
   }
 }

@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork.item;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
@@ -77,7 +77,8 @@ public class ItemBuilder extends Item {
     }
     else if (world.isAirBlock(buildAt) || world.getBlockState(buildAt).getMaterial().isLiquid()) {
       player.swingArm(hand);
-      ItemStack stack = player.getHeldItem(hand);//succeed or fail
+      ItemStack stack = player.getHeldItem(hand);
+      //succeed or fail
       DimPos dp = getPosStored(stack);
       if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
@@ -90,19 +91,21 @@ public class ItemBuilder extends Item {
           TileMain network = (TileMain) tile;
           BlockState bs = world.getBlockState(pos);
           ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(bs.getBlock()), false, false);
-          ItemStack found = network.request(matcher, 1, true);//SIMULATED, see if materials are available
+          ItemStack found = network.request(matcher, 1, true);
+          //SIMULATED, see if materials are available
           if (!found.isEmpty()) {
             // yes materials are available
             boolean success = placeStateSafe(world, player, buildAt, bs);
             if (success) {
-              network.request(matcher, 1, false);//NOT SIMULATED, extract item from network
+              network.request(matcher, 1, false);
+              //NOT SIMULATED, extract item from network
             }
           }
           else {
             player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
           }
         }
-        else {//no main
+        else {
           player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
         }
       }
@@ -115,7 +118,6 @@ public class ItemBuilder extends Item {
     BlockState stateHere = world.getBlockState(placePos);
     if (stateHere.getBlock() == Blocks.AIR || stateHere.getMaterial().isLiquid()) {
       return world.setBlockState(placePos, placeState, 3);
-      //        }
     }
     return false;
   }

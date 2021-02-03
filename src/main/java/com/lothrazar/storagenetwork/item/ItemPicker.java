@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork.item;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -100,7 +100,8 @@ public class ItemPicker extends Item {
             player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
           }
         }
-        else {//no main
+        else {
+          //no main
           player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
         }
       }

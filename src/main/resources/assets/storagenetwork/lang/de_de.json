@@ -46,13 +46,13 @@
     "gui.storagenetwork.priority.up": "Priorität herabstufen (kleiner geht vor)",
     "gui.storagenetwork.priority.down": "Priorität erhöhen (größer geht vor)",
 
-    "gui.storagenetwork.req.tooltip_NAME": "Nach Name sortieren",
-    "gui.storagenetwork.req.tooltip_MOD": "Nach Mod sortieren",
-    "gui.storagenetwork.req.tooltip_AMOUNT": "Nach Menge sortieren",
+    "gui.storagenetwork.req.tooltip_name": "Nach Name sortieren",
+    "gui.storagenetwork.req.tooltip_mod": "Nach Mod sortieren",
+    "gui.storagenetwork.req.tooltip_amount": "Nach Menge sortieren",
 
-    "gui.storagenetwork.fil.tooltip_IN": "Nur Eingabe",
-    "gui.storagenetwork.fil.tooltip_OUT": "Nur Ausgabe",
-    "gui.storagenetwork.fil.tooltip_BOTH": "Eingabe und Ausgabe",
+    "gui.storagenetwork.fil.tooltip_in": "Nur Eingabe",
+    "gui.storagenetwork.fil.tooltip_out": "Nur Ausgabe",
+    "gui.storagenetwork.fil.tooltip_both": "Eingabe und Ausgabe",
 
     "gui.storagenetwork.shift": "Halten Sie die Umschalttaste gedrückt, um weitere Informationen zu erhalten.",
 

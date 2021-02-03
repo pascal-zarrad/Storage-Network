@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.network;
 
-import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.cable.export.ContainerCableExportFilter;
@@ -11,6 +10,7 @@ import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,7 +21,7 @@ import net.minecraftforge.fml.network.NetworkEvent;
 public class CableIOMessage {
 
   public enum CableMessageType {
-    SYNC_DATA, IMPORT_FILTER, SAVE_FITLER;
+    SYNC_DATA, IMPORT_FILTER, SAVE_FITLER, REDSTONE;
   }
 
   private boolean isAllowlist;
@@ -84,9 +84,9 @@ public class CableIOMessage {
         tile = ctr.tile;
       }
       TileMain root = null;
-      if (link != null)
+      if (link != null) {
         root = UtilTileEntity.getTileMainForConnectable(link.connectable);
-      //
+      }
       CableMessageType type = CableMessageType.values()[message.id];
       switch (type) {
         case IMPORT_FILTER:
@@ -121,7 +121,7 @@ public class CableIOMessage {
           }
         break;
         case SAVE_FITLER:
-          if (link != null) {//double hack
+          if (link != null) {
             link.setFilter(message.value, message.stack.copy());
           }
           else if (connectable != null) {

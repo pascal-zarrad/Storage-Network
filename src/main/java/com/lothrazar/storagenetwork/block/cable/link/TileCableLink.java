@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.block.cable.link;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -17,7 +17,7 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
   protected CapabilityConnectableLink itemStorage;
 
   public TileCableLink() {
-    super(SsnRegistry.storagekabeltile);
+    super(SsnRegistry.STORAGEKABELTILE);
     this.itemStorage = new CapabilityConnectableLink(this);
   }
 

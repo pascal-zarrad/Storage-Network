@@ -1,12 +1,10 @@
 package com.lothrazar.storagenetwork.util;
 
+import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.api.IConnectable;
-import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -41,8 +39,7 @@ public class UtilTileEntity {
    * @param connectable
    * @return
    */
-  @Nullable
-  public static TileMain getTileMainForConnectable(@Nonnull IConnectable connectable) {
+  public static TileMain getTileMainForConnectable(IConnectable connectable) {
     if (connectable == null || connectable.getMainPos() == null) {
       return null;
     }
@@ -55,8 +52,7 @@ public class UtilTileEntity {
    * @param theitem
    * @return
    */
-  @Nonnull
-  public static String getModNameForItem(@Nonnull Item theitem) {
+  public static String getModNameForItem(Item theitem) {
     if (modNamesForIds.containsKey(theitem)) {
       return modNamesForIds.get(theitem);
     }

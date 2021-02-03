@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block.cable.linkfilter;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class ContainerCableFilter extends ContainerCable {
   public CapabilityConnectableLink cap;
 
   public ContainerCableFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
-    super(SsnRegistry.filterContainer, windowId);
+    super(SsnRegistry.FILTERCONTAINER, windowId);
     tile = (TileCableFilter) world.getTileEntity(pos);
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
     if (!(rawLink instanceof CapabilityConnectableLink)) {

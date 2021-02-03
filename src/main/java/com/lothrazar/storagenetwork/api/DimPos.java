@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api;
 
-import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -77,7 +77,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     }
     //refresh server world 
     if (dimension != null && world.getServer() != null
-        && dimension.isEmpty() == false) {//&& dim != world.dimension.getType().getId()) {
+        && dimension.isEmpty() == false) {
+      //&& dim != world.dimension.getType().getId()) {
       ServerWorld dimWorld = stringDimensionLookup(this.dimension, world.getServer());
       //reach across to the other dimension
       //      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));

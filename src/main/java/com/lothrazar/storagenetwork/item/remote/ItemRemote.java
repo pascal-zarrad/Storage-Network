@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.item.remote;
 
-import java.util.List;
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.List;
+import javax.annotation.Nullable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -156,7 +156,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int y = tag.getInt(NBT_Y);
     int z = tag.getInt(NBT_Z);
     //assume we are in the same world
-    ServerWorld serverTargetWorld = null;//for now 
+    ServerWorld serverTargetWorld = null;
     if (tag.contains(NBT_DIM)) {
       try {
         serverTargetWorld = DimPos.stringDimensionLookup(tag.getString(NBT_DIM), world.getServer());
@@ -180,26 +180,25 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       NetworkHooks.openGui((ServerPlayerEntity) player, this);
     }
     else {
-      //      StorageNetwork.LOGGER.error(tag + " Missing network " + tile + " " + posTarget);
       player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
-      // UtilTileEntity.statusMessage(player, "item.remote.notconnected");
     }
     return super.onItemRightClick(world, player, hand);
   }
 
   @Override
   public ITextComponent getDisplayName() {
-    TranslationTextComponent t = new TranslationTextComponent(this.getTranslationKey());
-    return t;
+    return new TranslationTextComponent(this.getTranslationKey());
   }
 
   @Nullable
   @Override
   public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
-    boolean crafting = (this == SsnRegistry.crafting_remote);
-    if (crafting)
+    boolean crafting = (this == SsnRegistry.CRAFTING_REMOTE);
+    if (crafting) {
       return new ContainerNetworkCraftingRemote(id, inv);
-    else
+    }
+    else {
       return new ContainerNetworkRemote(id, inv);
+    }
   }
 }

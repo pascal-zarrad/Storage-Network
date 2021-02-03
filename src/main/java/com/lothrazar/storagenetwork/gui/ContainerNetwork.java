@@ -1,15 +1,15 @@
 package com.lothrazar.storagenetwork.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Nullable;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -68,8 +68,9 @@ public abstract class ContainerNetwork extends Container {
 
   @Override
   public boolean canMergeSlot(ItemStack stack, Slot slot) {
-    if (!this.isCrafting())
+    if (!this.isCrafting()) {
       return super.canMergeSlot(stack, slot);
+    }
     return slot.inventory != result && super.canMergeSlot(stack, slot);
   }
 
@@ -231,7 +232,7 @@ public abstract class ContainerNetwork extends Container {
       if (!player.inventory.addItemStackToInventory(res)) {
         player.dropItem(res, false);
       }
-      NonNullList<ItemStack> remainder = recipeCurrent.getRemainingItems(this.matrix);//raftingManager.getRemainingItems(matrix, player.world);
+      NonNullList<ItemStack> remainder = recipeCurrent.getRemainingItems(this.matrix);
       for (int i = 0; i < remainder.size(); ++i) {
         ItemStack remainderCurrent = remainder.get(i);
         ItemStack slot = this.matrix.getStackInSlot(i);
@@ -239,9 +240,6 @@ public abstract class ContainerNetwork extends Container {
           matrix.getStackInSlot(i).shrink(1);
           continue;
         }
-        //        if (remainderCurrent.isItemDamaged() && remainderCurrent.getItemDamage() > remainderCurrent.getMaxDamage()) {
-        //          remainderCurrent = ItemStack.EMPTY;
-        //        }
         if (slot.getItem().getContainerItem() != null) { //is the fix for milk and similar
           slot = new ItemStack(slot.getItem().getContainerItem());
           matrix.setInventorySlotContents(i, slot);

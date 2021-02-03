@@ -1,14 +1,14 @@
 package com.lothrazar.storagenetwork.network;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -20,7 +20,8 @@ public class RequestMessage {
 
   private int mouseButton = 0;
   private ItemStack stack = ItemStack.EMPTY;
-  private boolean shift, ctrl;
+  private boolean shift;
+  private boolean ctrl;
 
   @Override
   public String toString() {
@@ -33,7 +34,7 @@ public class RequestMessage {
     mouseButton = id;
     this.stack = stackIn.copy();
     if (this.stack.getCount() > 64) {
-      this.stack.setCount(64);//important or it will be killed by a filter
+      this.stack.setCount(64); //important or it will be killed by a filter
     }
     this.shift = shift;
     this.ctrl = ctrl;
@@ -68,7 +69,8 @@ public class RequestMessage {
       }
       sizeRequested = Math.max(sizeRequested, 1);
       boolean ore = false;
-      boolean nbt = true;//try NBT first
+      boolean nbt = true;
+      //try NBT first
       stack = root.request(
           new ItemStackMatcher(message.stack, ore, nbt),
           sizeRequested, false);

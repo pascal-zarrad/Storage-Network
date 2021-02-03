@@ -44,20 +44,20 @@
     "gui.storagenetwork.priority.up": "Приоритет выше (меньшее идет первым)",
     "gui.storagenetwork.priority.down": "Приоритет ниже (меньшее идет первым)",
 
-    "gui.storagenetwork.req.tooltip_NAME": "Сортировать по имени",
-    "gui.storagenetwork.req.tooltip_MOD": "Сортировать по моду",
-    "gui.storagenetwork.req.tooltip_AMOUNT": "Сортировать по кол-ву",
+    "gui.storagenetwork.req.tooltip_name": "Сортировать по имени",
+    "gui.storagenetwork.req.tooltip_mod": "Сортировать по моду",
+    "gui.storagenetwork.req.tooltip_amount": "Сортировать по кол-ву",
 
-    "gui.storagenetwork.fil.tooltip_IN": "Только вход",
-    "gui.storagenetwork.fil.tooltip_OUT": "Только выход",
-    "gui.storagenetwork.fil.tooltip_BOTH": "Вход и выход",
+    "gui.storagenetwork.fil.tooltip_in": "Только вход",
+    "gui.storagenetwork.fil.tooltip_out": "Только выход",
+    "gui.storagenetwork.fil.tooltip_both": "Вход и выход",
 
     "gui.storagenetwork.shift": "Зажмите Shift для большей информации.",
 
-    "gui.storagenetwork.fil.tooltip_0": "Префикс @: Поиск по моду.",
-    "gui.storagenetwork.fil.tooltip_1": "Префикс #: Поиск по подсказке.",
-    "gui.storagenetwork.fil.tooltip_2": "Префикс $: Поиск по словарю руды.",
-    "gui.storagenetwork.fil.tooltip_3": "Очистить текст с помощью ПКМ или кнопки X",
+    "gui.storagenetwork.fil.tooltip_mod": "Префикс @: Поиск по моду.",
+    "gui.storagenetwork.fil.tooltip_tooltip": "Префикс #: Поиск по подсказке.",
+    "gui.storagenetwork.fil.tooltip_tags": "Префикс $: Поиск по словарю руды.",
+    "gui.storagenetwork.fil.tooltip_clear": "Очистить текст с помощью ПКМ или кнопки X",
 
     "gui.storagenetwork.tooltip_clear": "Очистить поиск",
     "gui.storagenetwork.fil.tooltip_jei_on": "Поиск JEI включен",

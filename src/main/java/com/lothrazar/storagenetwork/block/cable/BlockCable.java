@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.block.cable;
 
-import java.util.Map;
-import javax.annotation.Nullable;
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import java.util.Map;
+import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -136,7 +136,7 @@ public class BlockCable extends BaseBlock {
   }
 
   @Override
-  public BlockRenderType getRenderType(BlockState p_149645_1_) {
+  public BlockRenderType getRenderType(BlockState bs) {
     return BlockRenderType.MODEL;
   }
 
@@ -158,10 +158,11 @@ public class BlockCable extends BaseBlock {
       facingState = worldIn.getBlockState(posoff);
       TileEntity tileOffset = worldIn.getTileEntity(posoff);
       IConnectable cap = null;
-      if (tileOffset != null)
+      if (tileOffset != null) {
         cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
+      }
       if (cap != null
-          || facingState.getBlock() == SsnRegistry.main) {
+          || facingState.getBlock() == SsnRegistry.MAIN) {
         stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockState(pos, stateIn);
       }
@@ -177,7 +178,7 @@ public class BlockCable extends BaseBlock {
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
-    if (facingState.getBlock() == SsnRegistry.main
+    if (facingState.getBlock() == SsnRegistry.MAIN
         || facingState.getBlock() instanceof BlockCable) {
       //      StorageNetwork.log("plain cable" + facingState.getBlock());
       return stateIn.with(property, EnumConnectType.CABLE);

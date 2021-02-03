@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.item.remote;
 
-import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
@@ -12,6 +11,7 @@ import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.List;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputMappings;
@@ -114,7 +114,6 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
 
   @Override
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
-    //    super.func_230451_b_(ms, mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
@@ -161,7 +160,7 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
-      if (keyCode == 259) {// BACKSPACE
+      if (keyCode == 259) { // BACKSPACE
         network.syncTextToJei();
       }
       network.searchBar.keyPressed(keyCode, scanCode, b);
@@ -175,7 +174,7 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
         StorageNetwork.LOGGER.error("JEI compat issue ", e);
       }
     }
-    //regardles of above branch, also check this
+    //Regardless of above branch, also check this
     if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
       minecraft.player.closeScreen();
       return true; // Forge MC-146650: Needs to return true when the key is handled.
@@ -188,17 +187,8 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
     if (network.charTyped(typedChar, keyCode)) {
       return true;
     }
-    return false;// super.charTyped(typedChar, keyCode);
+    return false;
   }
-  //  @Override
-  //  public void renderStackToolTip(ItemStack stack, int x, int y) {
-  //    super.renderTooltip(stack, x, y);
-  //  }
-  //
-  //  @Override
-  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

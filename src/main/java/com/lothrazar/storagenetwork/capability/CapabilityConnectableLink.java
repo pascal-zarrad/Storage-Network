@@ -1,10 +1,6 @@
 package com.lothrazar.storagenetwork.capability;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
+import com.lothrazar.cyclic.ModCyclic;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -12,6 +8,11 @@ import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -101,12 +102,18 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return stack;
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
-    // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
-    if (itemHandler == null) {
+    try {
+      // Test whether the connected block has the IItemHandler capability
+      IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+      if (itemHandler == null) {
+        return stack;
+      }
+      return ItemHandlerHelper.insertItemStacked(itemHandler, stack, simulate);
+    }
+    catch (Exception e) {
+      ModCyclic.LOGGER.error("Insert stack error from other block ", e);
       return stack;
     }
-    return ItemHandlerHelper.insertItemStacked(itemHandler, stack, simulate);
   }
 
   @Override
@@ -133,7 +140,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     int remaining = size;
     for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
       //force simulate: allow them to not let me see the stack, also dont extract since it might steal/dupe
-      ItemStack stack = itemHandler.extractItem(slot, remaining, true);//itemHandler.getStackInSlot(slot);
+      ItemStack stack = itemHandler.extractItem(slot, remaining, true);
       if (stack == null || stack.isEmpty()) {
         continue;
       }

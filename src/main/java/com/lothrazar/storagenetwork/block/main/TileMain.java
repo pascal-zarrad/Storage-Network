@@ -1,12 +1,5 @@
 package com.lothrazar.storagenetwork.block.main;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
@@ -19,6 +12,13 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -46,7 +46,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   public TileMain() {
-    super(SsnRegistry.mainTileentity);
+    super(SsnRegistry.MAINTILEENTITY);
   }
 
   public List<ItemStack> getStacks() {
@@ -140,7 +140,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         continue;
       }
       IChunk chunk = lookPos.getChunk();
-      if (chunk == null) {// || !chunk.isLoaded()) {
+      if (chunk == null) {
         continue;
       }
       // Prevent having multiple  on a network and break all others.
@@ -196,7 +196,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       return false;
     }
     String blockId = state.getBlock().getRegistryName().toString();
-    for (String s : StorageNetwork.config.ignorelist()) {
+    for (String s : StorageNetwork.CONFIG.ignorelist()) {
       if (blockId.equals(s)) {
         return false;
       }
@@ -255,22 +255,27 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     // 3. Otherwise try to find a new inventory that can take the remainder of the itemstack
     List<IConnectableLink> storages = getSortedConnectableStorage();
     for (IConnectableLink storage : storages) {
-      // Ignore storages that can not import
-      if (!storage.getSupportedTransferDirection().match(EnumStorageDirection.IN)) {
-        continue;
+      try {
+        // Ignore storages that can not import
+        if (!storage.getSupportedTransferDirection().match(EnumStorageDirection.IN)) {
+          continue;
+        }
+        // The given import-capable storage can not import this particular stack
+        if (storage.insertStack(stack, true).getCount() >= stack.getCount()) {
+          continue;
+        }
+        // If it can we need to know, i.e. store the remainder
+        stack = storage.insertStack(stack, simulate);
       }
-      // The given import-capable storage can not import this particular stack
-      if (storage.insertStack(stack, true).getCount() >= stack.getCount()) {
-        continue;
+      catch (Exception e) {
+        StorageNetwork.LOGGER.error("insertStack container issue", e);
       }
-      // If it can we need to know, i.e. store the remainder
-      stack = storage.insertStack(stack, simulate);
     }
     return stack.getCount();
   }
 
   private static String getStackKey(ItemStack stackInCopy) {
-    return stackInCopy.getItem().getRegistryName().toString();// + "/" + stackInCopy.getItemDamage();
+    return stackInCopy.getItem().getRegistryName().toString();
   }
 
   /**
@@ -478,21 +483,19 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   @Override
-  public void tick() {//was .update(
+  public void tick() {
     if (world == null || world.isRemote) {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.config.refreshTicks()) == 0) || shouldRefresh) {
+    if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.CONFIG.refreshTicks()) == 0) || shouldRefresh) {
       try {
-        //        StorageNetwork.log("Network refreshing..." + getDimPos());
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
-        world.getChunk(pos).setModified(true);//.setChunkModified();
+        world.getChunk(pos).setModified(true);
       }
       catch (Throwable e) {
-        StorageNetwork.LOGGER.info("Refresh network error ");
-        e.printStackTrace();
+        StorageNetwork.LOGGER.info("Refresh network error ", e);
       }
     }
     updateImports();

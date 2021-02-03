@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.block.cable.linkfilter;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,7 +23,7 @@ public class TileCableFilter extends TileCableWithFacing implements ITickableTil
   protected CapabilityConnectableLink capability;
 
   public TileCableFilter() {
-    super(SsnRegistry.filterkabeltile);
+    super(SsnRegistry.FILTERKABELTILE);
     this.capability = new CapabilityConnectableLink(this);
   }
 

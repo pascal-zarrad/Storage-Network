@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.network;
 
-import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileSortable;
 import com.lothrazar.storagenetwork.item.remote.ItemRemote;
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;

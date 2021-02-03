@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api;
 
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.Collections;
 import java.util.List;
-import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 

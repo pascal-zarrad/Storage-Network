@@ -13,7 +13,7 @@ public class UtilInventory {
     }
     else if (size < Math.pow(10, 6)) {
       //      float r = (size) / 1000.0F;
-      int rounded = Math.round(size / 1000.0F);//so 1600 => 1.6 and then rounded to become 2.
+      int rounded = Math.round(size / 1000.0F); //so 1600 => 1.6 and then rounded to become 2.
       return rounded + "K";
     }
     else if (size < Math.pow(10, 9)) {

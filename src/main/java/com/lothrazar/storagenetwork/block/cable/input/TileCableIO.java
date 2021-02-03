@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.input;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
@@ -8,6 +7,7 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -20,7 +20,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableIO() {
-    super(SsnRegistry.importkabeltile);
+    super(SsnRegistry.IMPORTKABELTILE);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 

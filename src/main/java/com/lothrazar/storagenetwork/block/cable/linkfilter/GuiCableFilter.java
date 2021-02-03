@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.linkfilter;
 
-import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -12,6 +11,7 @@ import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.List;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -109,20 +109,20 @@ public class GuiCableFilter extends ContainerScreen<ContainerCableFilter> implem
   private void drawTooltips(MatrixStack ms, final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
       //NOT StringTextComponent
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.import")),
-          mouseX - guiLeft, mouseY - guiTop);
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.import")),
+          mouseX - guiLeft, mouseY - guiTop, font);
     }
     if (btnWhite != null && btnWhite.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent(this.isAllowlist
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent(this.isAllowlist
           ? "gui.storagenetwork.allowlist"
           : "gui.storagenetwork.ignorelist")),
-          mouseX - guiLeft, mouseY - guiTop);
+          mouseX - guiLeft, mouseY - guiTop, font);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop);
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.down")), mouseX - guiLeft, mouseY - guiTop, font);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY - guiTop);
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.up")), mouseX - guiLeft, mouseY - guiTop, font);
     }
   }
 

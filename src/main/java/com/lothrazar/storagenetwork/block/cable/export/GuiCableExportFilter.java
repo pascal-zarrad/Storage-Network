@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable.export;
 
-import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -12,6 +11,7 @@ import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.List;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -83,12 +83,11 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(ms, mouseX, mouseY); //      renderHoveredToolTip(mouseX, mouseY);
+    this.renderHoveredTooltip(ms, mouseX, mouseY);
   }
 
-  @Override // 
+  @Override
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
-    //    super.func_230451_b_(ms, mouseX, mouseY);
     int priority = containerCableLink.cap.getPriority();
     font.drawString(ms, String.valueOf(priority),
         30 - font.getStringWidth(String.valueOf(priority)) / 2,
@@ -99,16 +98,16 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
 
   private void drawTooltips(MatrixStack ms, final int mouseX, final int mouseY) {
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.import")),
-          mouseX - guiLeft, mouseY - guiTop);
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.import")),
+          mouseX - guiLeft, mouseY - guiTop, this.font);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.down")),
-          mouseX - guiLeft, mouseY - guiTop);
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.down")),
+          mouseX - guiLeft, mouseY - guiTop, this.font);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.up")),
-          mouseX - guiLeft, mouseY - guiTop);
+      renderWrappedToolTip(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.priority.up")),
+          mouseX - guiLeft, mouseY - guiTop, this.font);
     }
   }
 
@@ -181,15 +180,6 @@ public class GuiCableExportFilter extends ContainerScreen<ContainerCableExportFi
     }
     return super.mouseClicked(mouseX, mouseY, mouseButton);
   }
-  //  @Override
-  //  public void renderStackToolTip(ItemStack stack, int x, int y) { 
-  //    super.renderTooltip(stack, x, y);
-  //  }
-  //
-  //  @Override
-  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

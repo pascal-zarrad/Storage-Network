@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.block;
 
+import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import java.util.List;
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;

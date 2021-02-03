@@ -1,9 +1,5 @@
 package com.lothrazar.storagenetwork.gui;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
@@ -17,6 +13,10 @@ import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.FontRenderer;
@@ -95,7 +95,8 @@ public class NetworkWidget {
     else if (searchText.startsWith("$")) { // search tags
       StringBuilder oreDictStringBuilder = new StringBuilder();
       for (ResourceLocation oreId : stack.getItem().getTags()) {
-        String oreName = oreId.toString();//OreDictionary.getOreName(oreId);
+        String oreName = oreId.toString();
+        //OreDictionary.getOreName(oreId);
         oreDictStringBuilder.append(oreName).append(' ');
       }
       return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
@@ -184,7 +185,7 @@ public class NetworkWidget {
     searchBar.setEnableBackgroundDrawing(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
-    searchBar.setFocused2(StorageNetwork.config.enableAutoSearchFocus());
+    searchBar.setFocused2(StorageNetwork.CONFIG.enableAutoSearchFocus());
     try {
       if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
         searchBar.setText(JeiHooks.getFilterText());
@@ -199,44 +200,43 @@ public class NetworkWidget {
   }
 
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY, FontRenderer font) {
-    for (ItemSlotNetwork s : slots) {
-      if (s != null && s.isMouseOverSlot(mouseX, mouseY)) {
-        s.drawTooltip(ms, mouseX, mouseY);
+    for (ItemSlotNetwork slot : slots) {
+      if (slot != null && slot.isMouseOverSlot(mouseX, mouseY)) {
+        slot.drawTooltip(ms, mouseX, mouseY);
+        return; // slots and btns do not overlap
       }
     }
-    Screen screen = ((Screen) gui);
+    // 
+    TranslationTextComponent tooltip = null;
     if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      screen.func_243308_b(ms, Lists.newArrayList(new TranslationTextComponent("gui.storagenetwork.sort")),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+      tooltip = new TranslationTextComponent("gui.storagenetwork.sort");
     }
-    if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      screen.func_243308_b(ms, Lists.newArrayList(
-          new TranslationTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase())),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    else if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
+      tooltip = new TranslationTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase());
     }
-    //    if (clearTextBtn != null && clearTextBtn.isMouseOver(mouseX, mouseY)) {
-    //      gui.renderTooltip(Lists.newArrayList(
-    //          I18n.format("gui.storagenetwork.tooltip_clear")),
-    //          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
-    //    }
-    if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      TranslationTextComponent s = new TranslationTextComponent(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
-      screen.func_243308_b(ms, Lists.newArrayList(s),
-          mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    else if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+      tooltip = new TranslationTextComponent(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
     }
-    if (this.inSearchBar(mouseX, mouseY)) {
-      List<ITextComponent> lis = Lists.newArrayList();
+    else if (this.inSearchBar(mouseX, mouseY)) {
+      //tooltip = new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear");
       if (!Screen.hasShiftDown()) {
-        lis.add(new TranslationTextComponent("gui.storagenetwork.shift"));
+        tooltip = new TranslationTextComponent("gui.storagenetwork.shift");
       }
       else {
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_mod"));//@
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tooltip"));//#
-        //TODO: tag search
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tags"));//$
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear"));//clear
+        List<ITextComponent> lis = Lists.newArrayList();
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_mod")); //@
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tooltip")); //#
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tags")); //$
+        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear")); //clear
+        Screen screen = ((Screen) gui);
+        screen.renderWrappedToolTip(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
+        return; // all done, we have our tts rendered
       }
-      screen.func_243308_b(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+    }
+    //do we have a tooltip
+    if (tooltip != null) {
+      Screen screen = ((Screen) gui);
+      screen.renderWrappedToolTip(ms, Lists.newArrayList(tooltip), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
     }
   }
 
@@ -279,7 +279,7 @@ public class NetworkWidget {
     }
     ClientPlayerEntity player = Minecraft.getInstance().player;
     if (player == null) {
-      return;//impossible i know
+      return;
     }
     ItemStack stackCarriedByMouse = player.inventory.getItemStack();
     if (!stackUnderMouse.isEmpty()
@@ -322,10 +322,6 @@ public class NetworkWidget {
       });
       jeiBtn.setHeight(16);
     }
-    //    clearTextBtn = new ButtonRequest(gui.getGuiLeft() + 63, y, "X", (p) -> {
-    //      this.clearSearch();
-    //    });
-    //    clearTextBtn.setHeight(16);
   }
 
   public void sortStackWrappers(List<ItemStack> stacksToDisplay) {
@@ -361,7 +357,8 @@ public class NetworkWidget {
       break;
     }
     directionBtn.setTextureId(gui.getDownwards() ? TextureEnum.SORT_DOWN : TextureEnum.SORT_UP);
-    if (jeiBtn != null && JeiSettings.isJeiLoaded())
+    if (jeiBtn != null && JeiSettings.isJeiLoaded()) {
       jeiBtn.setTextureId(JeiSettings.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
+    }
   }
 }

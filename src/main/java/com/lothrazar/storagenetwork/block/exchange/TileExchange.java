@@ -1,7 +1,5 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
-import javax.annotation.Nonnull;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -20,7 +18,7 @@ public class TileExchange extends TileConnectable {
   private ExchangeItemStackHandler itemHandler;
 
   public TileExchange() {
-    super(SsnRegistry.exchangetile);
+    super(SsnRegistry.EXCHANGETILE);
     itemHandler = new ExchangeItemStackHandler();
   }
 
@@ -40,17 +38,14 @@ public class TileExchange extends TileConnectable {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
       IConnectable capabilityConnectable = this.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
       if (capabilityConnectable != null) {
-        //        //
-        //        DimPos mainpos = capabilityConnectable.getMainPos();// this.getMain();
         TileMain tileMain = getMain().getTileEntity(TileMain.class);
-        itemHandler.setMain(tileMain);
-      }
-      else {
-        StorageNetwork.log("Found NO CAP!!! for exchange");
+        if (itemHandler != null) {
+          itemHandler.setMain(tileMain);
+        }
       }
       return LazyOptional.of(new NonNullSupplier<T>() {
 
-        public @Override @Nonnull T get() {
+        public @Override T get() {
           return (T) itemHandler;
         }
       });

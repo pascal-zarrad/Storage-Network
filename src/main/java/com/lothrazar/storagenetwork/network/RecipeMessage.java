@@ -1,16 +1,16 @@
 package com.lothrazar.storagenetwork.network;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
@@ -74,7 +74,6 @@ public class RecipeMessage {
       }
       ClearRecipeMessage.clearContainerRecipe(player, false);
       CraftingInventory craftMatrix = ctr.getCraftMatrix();
-      //        String[] oreDictKeys;// = oreDictKey.split(",");
       for (int slot = 0; slot < 9; slot++) {
         Map<Integer, ItemStack> map = new HashMap<>();
         //if its a string, then ore dict is allowed
@@ -98,11 +97,7 @@ public class RecipeMessage {
           }
           ItemStackMatcher itemStackMatcher = new ItemStackMatcher(stackCurrent);
           itemStackMatcher.setNbt(true);
-          itemStackMatcher.setOre(isOreDict);//important: set this for correct matching
-          if (stackCurrent.getMaxDamage() > 0) {
-            //its a tool or something with a durability cap so IGNORE metadata 
-            //              itemStackMatcher.setMeta(false);
-          }
+          itemStackMatcher.setOre(isOreDict);
           ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, true);
           /*********** First try and use the players inventory **/
           if (ex != null && !ex.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {

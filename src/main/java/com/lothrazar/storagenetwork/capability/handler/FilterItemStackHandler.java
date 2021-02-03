@@ -1,9 +1,8 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
+import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
-import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -31,7 +30,7 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   @Override
-  protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+  protected int getStackLimit(int slot, ItemStack stack) {
     return 1;
   }
 

@@ -1,20 +1,20 @@
 package com.lothrazar.storagenetwork.jei;
 
+import com.lothrazar.storagenetwork.network.RecipeMessage;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.network.RecipeMessage;
-import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiIngredient;
-import mezz.jei.api.recipe.transfer.IRecipeTransferError;
-import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.ingredient.IGuiIngredient;
+import mezz.jei.api.recipe.transfer.IRecipeTransferError;
+import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 
 public class RequestRecipeTransferHandler<C extends Container> implements IRecipeTransferHandler<C> {
 

@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.collection;
 
-import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -26,7 +25,7 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
   private CollectionItemStackHandler itemHandler;
 
   public TileCollection() {
-    super(SsnRegistry.collectortile);
+    super(SsnRegistry.COLLECTORTILE);
     itemHandler = new CollectionItemStackHandler();
     itemHandler.tile = this;
   }
@@ -67,7 +66,7 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
       }
       return LazyOptional.of(new NonNullSupplier<T>() {
 
-        public @Override @Nonnull T get() {
+        public @Override T get() {
           return (T) itemHandler;
         }
       });

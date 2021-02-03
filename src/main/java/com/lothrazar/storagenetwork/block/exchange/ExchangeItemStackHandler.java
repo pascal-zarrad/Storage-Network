@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
-import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
@@ -54,7 +53,6 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
    *         ItemStack. The returned ItemStack can be safely modified after.
    */
   @Override
-  @Nonnull
   public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
     if (stack.isEmpty() || tileMain == null || !isItemValid(slot, stack)) {
       return stack;
@@ -76,7 +74,6 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
   }
 
   @Override
-  @Nonnull
   public ItemStack extractItem(int slot, int amount, boolean simulate) {
     if (tileMain == null) {
       //            super.extractItem(slot, amount, simulate);

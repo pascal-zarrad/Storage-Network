@@ -1,5 +1,9 @@
 package com.lothrazar.storagenetwork.block.main;
 
+import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.api.DimPos;
+import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -7,10 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.api.DimPos;
-import com.lothrazar.storagenetwork.block.BaseBlock;
-import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;

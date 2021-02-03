@@ -16,7 +16,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   private ItemStack remote;
 
   public ContainerNetworkRemote(int id, PlayerInventory pInv) {
-    super(SsnRegistry.remote, id);
+    super(SsnRegistry.REMOTE, id);
     this.remote = pInv.player.getHeldItem(Hand.MAIN_HAND);
     this.player = pInv.player;
     this.world = player.world;

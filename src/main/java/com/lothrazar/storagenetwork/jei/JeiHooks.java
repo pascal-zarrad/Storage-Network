@@ -1,15 +1,11 @@
 package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
+import net.minecraft.client.util.InputMappings;
+import net.minecraft.item.ItemStack;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.config.KeyBindings;
 import mezz.jei.gui.Focus;
-//import mezz.jei.api.recipe.IFocus;
-//import mezz.jei.config.KeyBindings;
-//import mezz.jei.gui.Focus;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.item.ItemStack;
-//import net.minecraftforge.fml.common.Optional;
 
 public class JeiHooks {
 
@@ -50,6 +46,9 @@ public class JeiHooks {
   }
 
   public static void testJeiKeybind(InputMappings.Input keyCode, ItemStack stackUnderMouse) {
+    if (!JeiSettings.isJeiLoaded()) {
+      return;
+    }
     final boolean showRecipe = KeyBindings.showRecipe.isActiveAndMatches(keyCode);
     final boolean showUses = KeyBindings.showUses.isActiveAndMatches(keyCode);
     if (showRecipe || showUses) {

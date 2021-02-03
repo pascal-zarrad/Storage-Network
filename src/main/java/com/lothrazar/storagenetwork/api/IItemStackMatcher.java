@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.api;
 
-import javax.annotation.Nonnull;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -23,5 +22,5 @@ public interface IItemStackMatcher {
    * @param stack
    * @return
    */
-  boolean match(@Nonnull ItemStack stack);
+  boolean match(ItemStack stack);
 }

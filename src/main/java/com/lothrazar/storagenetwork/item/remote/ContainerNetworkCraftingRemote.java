@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.item.remote;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkCraftingInventory;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -22,7 +22,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   private ItemStack remote;
 
   public ContainerNetworkCraftingRemote(int id, PlayerInventory pInv) {
-    super(SsnRegistry.craftingremote, id);
+    super(SsnRegistry.CRAFTINGREMOTE, id);
     this.remote = pInv.player.getHeldItem(Hand.MAIN_HAND);
     this.player = pInv.player;
     this.world = player.world;
@@ -40,8 +40,9 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
       if (remote.hasTag() && remote.getTag().contains("matrix" + i)) {
         CompoundNBT tag = remote.getTag().getCompound("matrix" + i);
         ItemStack stackSaved = ItemStack.read(tag);
-        if (!stackSaved.isEmpty())
+        if (!stackSaved.isEmpty()) {
           matrix.setInventorySlotContents(i, stackSaved);
+        }
       }
     }
     onCraftMatrixChanged(matrix);

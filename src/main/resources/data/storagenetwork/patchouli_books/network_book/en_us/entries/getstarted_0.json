@@ -1,0 +1,15 @@
+{
+  "name": "page.storagenetwork.getstarted",
+  "icon": "storagenetwork:kabel",
+  "category": "storagenetwork:getstarted",
+  "pages": [
+    {
+      "type": "text",
+      "text": "block.storagenetwork.getstarted.left"
+    },
+    {
+      "type": "text",
+      "text": "block.storagenetwork.getstarted.right"
+    }
+  ]
+}

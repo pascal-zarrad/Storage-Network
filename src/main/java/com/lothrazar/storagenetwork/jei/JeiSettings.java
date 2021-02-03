@@ -1,22 +1,20 @@
 package com.lothrazar.storagenetwork.jei;
+
+import net.minecraftforge.fml.ModList;
+
 public class JeiSettings {
 
-  private static boolean jeiLoaded;
-  private static boolean jeiSearchSync = true;
+  private static boolean JEISEARCHSYNC = true;
 
   public static boolean isJeiLoaded() {
-    return jeiLoaded;
-  }
-
-  public static void setJeiLoaded(boolean jeiLoaded) {
-    JeiSettings.jeiLoaded = jeiLoaded;
+    return ModList.get().isLoaded("jei");
   }
 
   public static boolean isJeiSearchSynced() {
-    return jeiSearchSync;
+    return JEISEARCHSYNC;
   }
 
   public static void setJeiSearchSync(boolean jeiSearch) {
-    JeiSettings.jeiSearchSync = jeiSearch;
+    JeiSettings.JEISEARCHSYNC = jeiSearch;
   }
 }

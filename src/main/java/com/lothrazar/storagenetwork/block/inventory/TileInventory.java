@@ -19,7 +19,7 @@ public class TileInventory extends TileConnectable implements INamedContainerPro
   private EnumSortType sort = EnumSortType.NAME;
 
   public TileInventory() {
-    super(SsnRegistry.inventorytile);
+    super(SsnRegistry.INVENTORYTILE);
   }
 
   @Override

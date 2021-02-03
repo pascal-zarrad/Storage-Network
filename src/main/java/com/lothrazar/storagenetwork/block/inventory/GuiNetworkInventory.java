@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.inventory;
 
-import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
@@ -12,6 +11,7 @@ import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.List;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputMappings;
@@ -64,7 +64,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
     network.searchBar = new TextFieldWidget(font,
         searchLeft, searchTop,
-        width, font.FONT_HEIGHT, null);//"search"
+        width, font.FONT_HEIGHT, null);
     network.searchBar.setMaxStringLength(30);
     network.initSearchbar();
     network.initButtons();
@@ -80,7 +80,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(ms, mouseX, mouseY); //  //    renderHoveredToolTip(mouseX, mouseY);
+    this.renderHoveredTooltip(ms, mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }
@@ -125,9 +125,8 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
-  @Override //
+  @Override
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
-    //    super.func_230451_b_(ms, mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
@@ -179,7 +178,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     }
     if (network.searchBar.isFocused()) {
       network.searchBar.keyPressed(keyCode, scanCode, b);
-      if (keyCode == 259) {// BACKSPACE
+      if (keyCode == 259) { // BACKSPACE
         network.syncTextToJei();
       }
       return true;
@@ -206,17 +205,8 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     if (network.charTyped(typedChar, keyCode)) {
       return true;
     }
-    return false;// super.charTyped(typedChar, keyCode);
+    return false;
   }
-  //  @Override
-  //  public void renderStackToolTip(ItemStack stack, int x, int y) {
-  //    super.renderTooltip(stack, x, y);
-  //  }
-  //
-  //  @Override
-  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

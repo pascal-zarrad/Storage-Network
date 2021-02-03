@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork.block;
 
+import com.lothrazar.storagenetwork.block.cable.BlockCable;
+import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
-import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
-import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;

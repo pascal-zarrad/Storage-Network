@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.item.remote;
 
-import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
@@ -10,6 +9,7 @@ import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.SortMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.List;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.InputMappings;
@@ -90,7 +90,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
     this.renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(ms, mouseX, mouseY); //    this.renderHoveredToolTip(mouseX, mouseY);
+    this.renderHoveredTooltip(ms, mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }
@@ -107,7 +107,6 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   @Override
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
-    //    super.func_230451_b_(ms, mouseX, mouseY);
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
@@ -144,7 +143,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
-      if (keyCode == 259) {// BACKSPACE
+      if (keyCode == 259) { // BACKSPACE
         network.syncTextToJei();
       }
       network.searchBar.keyPressed(keyCode, scanCode, b);
@@ -171,25 +170,13 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     if (network.charTyped(typedChar, keyCode)) {
       return true;
     }
-    return false;// super.charTyped(typedChar, keyCode);
-    //
-    //    this.fillGradient(p_238468_1_, p_238468_2_, p_238468_3_, p_238468_4_, p_238468_5_, p_238468_6_, p_238468_7_);
+    return false;
   }
 
   @Override
   public void drawGradient(MatrixStack ms, int x, int y, int x2, int y2, int u, int v) {
     super.fillGradient(ms, x, y, x2, y2, u, v);
   }
-  //
-  //  @Override
-  //  public void renderStackToolTip(ItemStack stack, int x, int y) {
-  //    super.renderTooltip(stack, x, y);
-  //  }
-  //
-  //  @Override
-  //  public void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-  //    super.fillGradient(left, top, right, bottom, startColor, endColor);
-  //  }
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {

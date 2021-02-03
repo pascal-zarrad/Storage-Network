@@ -4,8 +4,9 @@ public enum EnumStorageDirection {
   IN, OUT, BOTH;
 
   public boolean match(EnumStorageDirection way) {
-    if (this == BOTH || way == BOTH)
+    if (this == BOTH || way == BOTH) {
       return true;
+    }
     return this == way;
   }
 

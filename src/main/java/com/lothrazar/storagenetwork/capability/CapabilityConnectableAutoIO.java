@@ -1,10 +1,5 @@
 package com.lothrazar.storagenetwork.capability;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -16,6 +11,11 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
+import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -158,7 +158,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public int getTransferRate() {
-    return upgrades.getUpgradesOfType(SsnRegistry.stack_upgrade) > 0 ? 64 : 4;
+    return upgrades.getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
   }
 
   @Override
@@ -241,7 +241,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   private int countOps() {
-    return 0;// upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
+    return 0; // upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
   }
 
   private boolean doesPassOperationFilterLimit(TileMain root) {
@@ -263,7 +263,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public boolean runNow(DimPos connectablePos, TileMain main) {
-    int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.speed_upgrade) + 1, 1);
+    int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE) + 1, 1);
     int speedRatio = (30 / speed);
     if (speedRatio <= 1) {
       speedRatio = 1;
@@ -304,7 +304,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
 
   @Override
   public boolean isStockMode() {
-    return false;//TODO: make this work upgrades.getUpgradesOfType(SsnRegistry.stock_upgrade) > 0;
+    return false; //TODO: make this work upgrades.getUpgradesOfType(SsnRegistry.stock_upgrade) > 0;
   }
 
   @Override

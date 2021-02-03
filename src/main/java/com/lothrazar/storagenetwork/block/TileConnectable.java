@@ -1,12 +1,12 @@
 package com.lothrazar.storagenetwork.block;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -66,7 +66,7 @@ public class TileConnectable extends TileEntity {
   @Override
   public void onChunkUnloaded() {
     super.onChunkUnloaded();
-    if (StorageNetwork.config.doReloadOnChunk() && connectable != null && connectable.getMainPos() != null) {
+    if (StorageNetwork.CONFIG.doReloadOnChunk() && connectable != null && connectable.getMainPos() != null) {
       try {
         TileMain maybe = UtilTileEntity.getTileMainForConnectable(connectable);
         if (maybe != null) {

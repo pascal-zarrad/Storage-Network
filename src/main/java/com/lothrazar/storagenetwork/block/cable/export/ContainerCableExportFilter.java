@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block.cable.export;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -22,7 +22,7 @@ public class ContainerCableExportFilter extends ContainerCable {
   public CapabilityConnectableAutoIO cap;
 
   public ContainerCableExportFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
-    super(SsnRegistry.filterexportContainer, windowId);
+    super(SsnRegistry.FILTEREXPORTCONTAINER, windowId);
     tile = (TileCableExport) world.getTileEntity(pos);
     tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO).ifPresent(h -> {
       this.cap = (CapabilityConnectableAutoIO) h;

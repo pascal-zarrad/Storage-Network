@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block.collection;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -20,7 +20,7 @@ public class ContainerCollectionFilter extends ContainerCable {
   public CapabilityConnectable cap;
 
   public ContainerCollectionFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
-    super(SsnRegistry.collectorCtr, windowId);
+    super(SsnRegistry.COLLECTORCTR, windowId);
     tile = (TileCollection) world.getTileEntity(pos);
     tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).ifPresent(h -> {
       this.cap = (CapabilityConnectable) h;

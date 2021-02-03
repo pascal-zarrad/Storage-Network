@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.gui;
 
-import javax.annotation.Nonnull;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -27,7 +26,7 @@ public class ItemSlotNetwork {
   private ItemStack stack;
 
   //TODO: Interface for parent expose isInRegion and drawgradient rect and the tooltip one
-  public ItemSlotNetwork(IGuiPrivate parent, @Nonnull ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
+  public ItemSlotNetwork(IGuiPrivate parent, ItemStack stack, int x, int y, int size, int guiLeft, int guiTop, boolean number) {
     this.x = x;
     this.y = y;
     this.size = size;
@@ -42,6 +41,7 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
+  @SuppressWarnings("deprecation")
   public void drawSlot(MatrixStack ms, FontRenderer font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
     RenderSystem.pushMatrix();

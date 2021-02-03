@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.capability;
 
-import javax.annotation.Nullable;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
+import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
