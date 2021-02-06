@@ -46,7 +46,6 @@ public class ItemSlotNetwork {
     //     TODO: renderItem and keyboard isKeyDown issues
     RenderSystem.pushMatrix();
     if (!getStack().isEmpty()) {
-      //      RenderSystem.setupGuiFlatDiffuseLighting();// .enableGUIStandardItemLighting();
       String amount;
       //cant sneak in gui
       //default to short form, show full amount if sneak
@@ -72,15 +71,11 @@ public class ItemSlotNetwork {
       Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
       RenderSystem.popMatrix();
       if (isMouseOverSlot(mx, my)) {
-        //      RenderSystem.disableLighting();
-        //      RenderSystem.disableDepthTest();
         int j1 = x;
         int k1 = y;
         RenderSystem.colorMask(true, true, true, false);
         parent.drawGradient(ms, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
         RenderSystem.colorMask(true, true, true, true);
-        //       RenderSystem.enableDepthTest();
-        //      RenderSystem.enableLighting(); 
       }
     }
     RenderSystem.popMatrix();

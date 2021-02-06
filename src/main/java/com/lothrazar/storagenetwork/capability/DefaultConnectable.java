@@ -10,6 +10,22 @@ public class DefaultConnectable implements IConnectable {
   FilterItemStackHandler filters = new FilterItemStackHandler();
   DimPos main;
   DimPos self;
+  private boolean needsRedstone = false;
+
+  @Override
+  public void toggleNeedsRedstone() {
+    needsRedstone = !needsRedstone;
+  }
+
+  @Override
+  public boolean needsRedstone() {
+    return this.needsRedstone;
+  }
+
+  @Override
+  public void needsRedstone(boolean in) {
+    this.needsRedstone = in;
+  }
 
   @Override
   public FilterItemStackHandler getFilter() {

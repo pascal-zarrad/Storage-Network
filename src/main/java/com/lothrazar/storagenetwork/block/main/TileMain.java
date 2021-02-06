@@ -291,6 +291,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (storage == null) {
         continue;
       }
+      //
       // We explicitely don't want to check whether this can do BOTH, because we don't
       // want to import what we've just exported in updateExports().
       if (storage.ioDirection() != EnumStorageDirection.IN) {
@@ -305,6 +306,15 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (stack.isEmpty()) {
         continue;
       }
+      if (storage.needsRedstone()) {
+        //    StorageNetwork.log(storage.needsRedstone() + " == needsRedstone for import ");
+        boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
+        if (power == false) {
+          // StorageNetwork.log(power + " IMPORT pow here ; needs yes skip me");
+          continue;
+        }
+      }
+      //
       // Then try to insert the stack into this network and store the number of remaining items in the stack
       int countUnmoved = insertStack(stack.copy(), true);
       // Calculate how many items in the stack actually got moved
@@ -357,6 +367,14 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (!storage.runNow(connectable.getPos(), this)) {
         continue;
       }
+      if (storage.needsRedstone()) {
+        boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
+        if (power == false) {
+          //  StorageNetwork.log(power + " Export pow here ; needs yes skip me");
+          continue;
+        }
+      }
+      //
       for (IItemStackMatcher matcher : storage.getAutoExportList()) {
         boolean stockMode = storage.isStockMode();
         int amtToRequest = storage.getTransferRate();

@@ -11,6 +11,12 @@ import net.minecraft.item.ItemStack;
  */
 public interface IConnectable {
 
+  public void toggleNeedsRedstone();
+
+  public boolean needsRedstone();
+
+  public void needsRedstone(boolean in);
+
   /**
    * Return the position of the main. For historic reasons each block currently needs to know this.
    *

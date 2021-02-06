@@ -14,6 +14,12 @@ import net.minecraft.util.Direction;
  */
 public interface IConnectableItemAutoIO {
 
+  public void toggleNeedsRedstone();
+
+  public boolean needsRedstone();
+
+  public void needsRedstone(boolean in);
+
   /**
    * Return either IN or OUT here, but not BOTH. If you return BOTH expect weird things to happen.
    *

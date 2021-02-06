@@ -1,7 +1,7 @@
 {
   "name": "item.storagenetwork.stack_upgrade",
   "icon": "storagenetwork:stack_upgrade",
-  "category": "storagenetwork:blocks",
+  "category": "storagenetwork:upgrades",
   "pages": [
     {
       "type": "text",

@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.collection;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -55,10 +56,9 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
       IConnectable capabilityConnectable = this.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
-      if (capabilityConnectable != null && getMain() != null) {
-        //        //
-        //        DimPos mainpos = capabilityConnectable.getMainPos();// this.getMain();
-        TileMain tileMain = getMain().getTileEntity(TileMain.class);
+      DimPos m = getMain();
+      if (capabilityConnectable != null && m != null) {
+        TileMain tileMain = m.getTileEntity(TileMain.class);
         itemHandler.setMain(tileMain);
       }
       else {

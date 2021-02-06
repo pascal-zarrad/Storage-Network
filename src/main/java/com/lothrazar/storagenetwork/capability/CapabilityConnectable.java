@@ -27,6 +27,7 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
     }
     CompoundNBT filters = this.filters.serializeNBT();
     result.put("filters", filters);
+    result.putBoolean("needsRedstone", this.needsRedstone());
     return result;
   }
 
@@ -40,6 +41,7 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
       CompoundNBT filters = nbt.getCompound("filters");
       this.filters.deserializeNBT(filters);
     }
+    this.needsRedstone(nbt.getBoolean("needsRedstone"));
   }
 
   public static class Storage implements Capability.IStorage<IConnectable> {

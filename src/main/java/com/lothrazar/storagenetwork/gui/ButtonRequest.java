@@ -13,10 +13,14 @@ public class ButtonRequest extends Button {
 
   public static enum TextureEnum {
 
-    ALLOWLIST, IGNORELIST, SORT_AMT, SORT_MOD, SORT_NAME, SORT_UP, SORT_DOWN, JEI_RED, JEI_GREEN, IMPORT, PLUS, MINUS;
+    ALLOWLIST, IGNORELIST, SORT_AMT, SORT_MOD, SORT_NAME, SORT_UP, SORT_DOWN, JEI_RED, JEI_GREEN, IMPORT, PLUS, MINUS, REDSTONETRUE, REDSTONEFALSE;
 
     public int getX() {
       switch (this) {
+        case REDSTONETRUE:
+          return 192;
+        case REDSTONEFALSE:
+          return 176;
         case IGNORELIST:
           return 195;
         case ALLOWLIST:
@@ -48,6 +52,10 @@ public class ButtonRequest extends Button {
 
     public int getY() {
       switch (this) {
+        case REDSTONETRUE:
+          return 96;
+        case REDSTONEFALSE:
+          return 96;
         case IGNORELIST:
         case ALLOWLIST:
           return 80;

@@ -1,9 +1,12 @@
 package com.lothrazar.storagenetwork.item;
 
+import com.lothrazar.cyclic.item.builder.BuilderActionType;
+import com.lothrazar.cyclic.util.UtilChat;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
 import javax.annotation.Nullable;
@@ -15,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -26,9 +30,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
+import net.minecraftforge.eventbus.api.Event.Result;
 
 public class ItemBuilder extends Item {
 
+  public static final String NBTBLOCKSTATE = "blockstate";
   public static final String NBT_Z = "Z";
   public static final String NBT_Y = "Y";
   public static final String NBT_X = "X";
@@ -56,6 +63,18 @@ public class ItemBuilder extends Item {
 
   public static void putDim(ItemStack stack, World world) {
     stack.getOrCreateTag().putString(NBT_DIM, DimPos.dimensionToString(world));
+  }
+
+  public static void setBlockState(ItemStack wand, BlockState target) {
+    CompoundNBT encoded = NBTUtil.writeBlockState(target);
+    wand.getOrCreateTag().put(NBTBLOCKSTATE, encoded);
+  }
+
+  public static BlockState getBlockState(ItemStack wand) {
+    if (!wand.getOrCreateTag().contains(NBTBLOCKSTATE)) {
+      return null;
+    }
+    return NBTUtil.readBlockState(wand.getOrCreateTag().getCompound(NBTBLOCKSTATE));
   }
 
   @Override
@@ -87,10 +106,11 @@ public class ItemBuilder extends Item {
           return ActionResultType.PASS;
         }
         TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
-        if (tile instanceof TileMain) {
+        BlockState targetState = BuilderActionType.getBlockState(stack);
+        if (tile instanceof TileMain && targetState != null) {
           TileMain network = (TileMain) tile;
           BlockState bs = world.getBlockState(pos);
-          ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(bs.getBlock()), false, false);
+          ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(targetState.getBlock()), false, false);
           ItemStack found = network.request(matcher, 1, true);
           //SIMULATED, see if materials are available
           if (!found.isEmpty()) {
@@ -133,12 +153,24 @@ public class ItemBuilder extends Item {
       int z = tag.getInt(NBT_Z);
       String dim = tag.getString(NBT_DIM);
       t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
+      t.mergeStyle(TextFormatting.DARK_GRAY);
+      tooltip.add(t);
+    }
+    else {
+      t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
       t.mergeStyle(TextFormatting.GRAY);
       tooltip.add(t);
     }
-    t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    t.mergeStyle(TextFormatting.GRAY);
-    tooltip.add(t);
+    BlockState target = ItemBuilder.getBlockState(stack);
+    if (target != null) {
+      String block = target.getBlock().getTranslationKey();
+      tooltip.add(new TranslationTextComponent(TextFormatting.AQUA + UtilChat.lang(block)));
+    }
+    else {
+      t = new TranslationTextComponent(getTranslationKey() + ".blockstate");
+      t.mergeStyle(TextFormatting.DARK_GRAY);
+      tooltip.add(t);
+    }
   }
 
   public static DimPos getPosStored(ItemStack itemStackIn) {
@@ -147,5 +179,22 @@ public class ItemBuilder extends Item {
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
     return new DimPos(tag);
+  }
+
+  public static void onLeftClickBlock(LeftClickBlock event) {
+    PlayerEntity player = event.getPlayer();
+    ItemStack held = player.getHeldItem(event.getHand());
+    if (held.isEmpty()) {
+      return;
+    }
+    World world = player.getEntityWorld();
+    StorageNetwork.log(SsnRegistry.BUILDER_REMOTE + " bs builder saved " + held);
+    if (held.getItem() == SsnRegistry.BUILDER_REMOTE) {
+      // && player.isCrouching()
+      BlockState target = world.getBlockState(event.getPos());
+      ItemBuilder.setBlockState(held, target);
+      StorageNetwork.log("bs builder saved " + target);
+      event.setResult(Result.DENY);
+    }
   }
 }

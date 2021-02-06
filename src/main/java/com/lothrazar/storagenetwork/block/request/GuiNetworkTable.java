@@ -123,7 +123,6 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
 
   @Override
   public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
-    StorageNetwork.log("GUI NETWORK table drawGuiContainerForegroundLayer");
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 

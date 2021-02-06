@@ -60,6 +60,8 @@ public class SsnRegistry {
       return new ItemStack(SsnRegistry.REQUEST);
     }
   };
+  @ObjectHolder(StorageNetwork.MODID + ":builder_remote")
+  public static ItemBuilder BUILDER_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
   public static Item INVENTORY_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")

@@ -35,6 +35,10 @@ public class ContainerNetworkInventory extends ContainerNetwork {
 
   @Override
   public TileMain getTileMain() {
+    if (tile == null || tile.getMain() == null) {
+      //refresh delay, new chunk load or block placement
+      return null;
+    }
     return tile.getMain().getTileEntity(TileMain.class);
   }
 }

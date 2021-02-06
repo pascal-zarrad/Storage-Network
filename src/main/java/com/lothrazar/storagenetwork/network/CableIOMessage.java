@@ -63,77 +63,91 @@ public class CableIOMessage {
    */
   public static void handle(CableIOMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
-      CapabilityConnectableAutoIO link = null;
-      TileConnectable tile = null;
-      CapabilityConnectable connectable = null;
-      //super super HACK TODO: this is hacky
-      if (player.openContainer instanceof ContainerCableExportFilter) {
-        ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.openContainer;
-        link = ctr.cap;
-        tile = ctr.tile;
-      }
-      if (player.openContainer instanceof ContainerCableImportFilter) {
-        ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
-        link = ctr.cap;
-        tile = ctr.tile;
-      }
-      if (player.openContainer instanceof ContainerCollectionFilter) {
-        ContainerCollectionFilter ctr = (ContainerCollectionFilter) player.openContainer;
-        connectable = ctr.cap;
-        tile = ctr.tile;
-      }
-      TileMain root = null;
-      if (link != null) {
-        root = UtilTileEntity.getTileMainForConnectable(link.connectable);
-      }
-      CableMessageType type = CableMessageType.values()[message.id];
-      switch (type) {
-        case IMPORT_FILTER:
-          link.getFilter().clear();
-          int targetSlot = 0;
-          for (ItemStack filterSuggestion : link.getStoredStacks(false)) {
-            // Ignore stacks that are already filtered 
-            if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
-              continue;
-            }
-            //int over max
-            try {
-              link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
-              targetSlot++;
-              if (targetSlot >= link.getFilter().getSlots()) {
-                continue;
-              }
-            }
-            catch (Exception ex) {
-              //fail slot
-              StorageNetwork.LOGGER.error("Exception saving filter slot ", message);
-            }
-          }
-          PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
-              player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-        break;
-        case SYNC_DATA:
-          link.setPriority(link.getPriority() + message.value);
-          link.getFilter().setIsAllowlist(message.isAllowlist);
-          if (root != null) {
-            root.clearCache();
-          }
-        break;
-        case SAVE_FITLER:
-          if (link != null) {
-            link.setFilter(message.value, message.stack.copy());
-          }
-          else if (connectable != null) {
-            connectable.setFilter(message.value, message.stack.copy());
-          }
-        break;
-      }
-      //
-      player.connection.sendPacket(tile.getUpdatePacket());
-      //
+      handleInternal(message, ctx);
     });
     ctx.get().setPacketHandled(true);
+  }
+
+  private static void handleInternal(CableIOMessage message, Supplier<NetworkEvent.Context> ctx) {
+    ServerPlayerEntity player = ctx.get().getSender();
+    CapabilityConnectableAutoIO link = null;
+    TileConnectable tile = null;
+    CapabilityConnectable connectable = null;
+    //super super HACK TODO: this is hacky
+    if (player.openContainer instanceof ContainerCableExportFilter) {
+      ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.openContainer;
+      link = ctr.cap;
+      tile = ctr.tile;
+    }
+    if (player.openContainer instanceof ContainerCableImportFilter) {
+      ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
+      link = ctr.cap;
+      tile = ctr.tile;
+    }
+    if (player.openContainer instanceof ContainerCollectionFilter) {
+      ContainerCollectionFilter ctr = (ContainerCollectionFilter) player.openContainer;
+      connectable = ctr.cap;
+      tile = ctr.tile;
+    }
+    TileMain root = null;
+    if (link != null) {
+      root = UtilTileEntity.getTileMainForConnectable(link.connectable);
+    }
+    CableMessageType type = CableMessageType.values()[message.id];
+    switch (type) {
+      case IMPORT_FILTER:
+        link.getFilter().clear();
+        int targetSlot = 0;
+        for (ItemStack filterSuggestion : link.getStoredStacks(false)) {
+          // Ignore stacks that are already filtered 
+          if (link.getFilter().exactStackAlreadyInList(filterSuggestion)) {
+            continue;
+          }
+          //int over max
+          try {
+            link.getFilter().setStackInSlot(targetSlot, filterSuggestion.copy());
+            targetSlot++;
+            if (targetSlot >= link.getFilter().getSlots()) {
+              continue;
+            }
+          }
+          catch (Exception ex) {
+            //fail slot
+            StorageNetwork.LOGGER.error("Exception saving filter slot ", message);
+          }
+        }
+        PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
+            player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+      break;
+      case SYNC_DATA:
+        link.setPriority(link.getPriority() + message.value);
+        link.getFilter().setIsAllowlist(message.isAllowlist);
+        if (root != null) {
+          root.clearCache();
+        }
+      break;
+      case SAVE_FITLER:
+        if (link != null) {
+          link.setFilter(message.value, message.stack.copy());
+        }
+        else if (connectable != null) {
+          connectable.setFilter(message.value, message.stack.copy());
+        }
+      break;
+      case REDSTONE:
+        if (link != null) {
+          StorageNetwork.log("redstone link test " + link.needsRedstone());
+          link.toggleNeedsRedstone();
+        }
+        if (connectable != null) {
+          StorageNetwork.log("redstone toggle test " + message.value + "?" + connectable.needsRedstone());
+          connectable.toggleNeedsRedstone();
+        }
+      break;
+    }
+    //
+    player.connection.sendPacket(tile.getUpdatePacket());
+    //
   }
 
   public static void encode(CableIOMessage msg, PacketBuffer buffer) {

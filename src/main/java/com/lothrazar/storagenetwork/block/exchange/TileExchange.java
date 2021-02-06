@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
+import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -37,8 +38,9 @@ public class TileExchange extends TileConnectable {
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
       IConnectable capabilityConnectable = this.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
-      if (capabilityConnectable != null) {
-        TileMain tileMain = getMain().getTileEntity(TileMain.class);
+      DimPos m = getMain();
+      if (capabilityConnectable != null && m != null) {
+        TileMain tileMain = m.getTileEntity(TileMain.class);
         if (itemHandler != null) {
           itemHandler.setMain(tileMain);
         }
