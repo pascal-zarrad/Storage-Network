@@ -316,7 +316,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         if (stockMode) {
           try {
             TileEntity tileEntity = world.getTileEntity(storage.getPos().getBlockPos().offset(storage.facingInventory()));
-            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, storage.facingInventory().getOpposite());
             //request with false to see how many even exist in there.  
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
             if (stillNeeds == 0) {
