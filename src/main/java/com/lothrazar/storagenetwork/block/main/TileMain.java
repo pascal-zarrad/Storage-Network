@@ -226,7 +226,14 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     if (rawStack.isEmpty()) {
       return 0;
     }
-    ItemStack stack = rawStack.copy();
+    ItemStack stack = ItemStack.EMPTY;
+    try {
+      stack = rawStack.copy();
+    }
+    catch (Exception excep) {
+      StorageNetwork.LOGGER.error("Error in copy stack", excep);
+      return 0;
+    }
     // 1. Try to insert into a recent slot for the same item.
     //    We do this to avoid having to search for the appropriate inventory repeatedly.
     String key = getStackKey(stack);
