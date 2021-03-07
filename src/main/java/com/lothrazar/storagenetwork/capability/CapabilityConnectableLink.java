@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.capability;
 
-import com.lothrazar.cyclic.ModCyclic;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -111,7 +111,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return ItemHandlerHelper.insertItemStacked(itemHandler, stack, simulate);
     }
     catch (Exception e) {
-      ModCyclic.LOGGER.error("Insert stack error from other block ", e);
+      StorageNetwork.LOGGER.error("Insert stack error from other block ", e);
       return stack;
     }
   }

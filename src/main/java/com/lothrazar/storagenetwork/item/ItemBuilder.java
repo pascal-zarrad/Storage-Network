@@ -1,7 +1,5 @@
 package com.lothrazar.storagenetwork.item;
 
-import com.lothrazar.cyclic.item.builder.BuilderActionType;
-import com.lothrazar.cyclic.util.UtilChat;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -106,7 +104,7 @@ public class ItemBuilder extends Item {
           return ActionResultType.PASS;
         }
         TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
-        BlockState targetState = BuilderActionType.getBlockState(stack);
+        BlockState targetState = ItemBuilder.getBlockState(stack);
         if (tile instanceof TileMain && targetState != null) {
           TileMain network = (TileMain) tile;
           BlockState bs = world.getBlockState(pos);
@@ -164,7 +162,7 @@ public class ItemBuilder extends Item {
     BlockState target = ItemBuilder.getBlockState(stack);
     if (target != null) {
       String block = target.getBlock().getTranslationKey();
-      tooltip.add(new TranslationTextComponent(TextFormatting.AQUA + UtilChat.lang(block)));
+      tooltip.add(new TranslationTextComponent(TextFormatting.AQUA + UtilTileEntity.lang(block)));
     }
     else {
       t = new TranslationTextComponent(getTranslationKey() + ".blockstate");
