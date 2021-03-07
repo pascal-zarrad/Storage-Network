@@ -1,8 +1,8 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.16.4-latest": "1.3.3",
-    "1.16.4-recommended": "1.3.3"
+    "1.16.4-latest": "1.3.4",
+    "1.16.4-recommended": "1.3.4"
   },
   "1.16.4": {
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)"
@@ -14,5 +14,6 @@
   	,"1.3.1":"New config option 'enableAutoSearchFocus' for clients to disable the auto-focusing on the text box when a network GUI is opened (thanks to PR by LeoBeliik).  Game no longer crashes if JEI is un-installed from a world.  Catch and handle exceptions safely when Network Interface are connected to an external mod is throwing errors (For example, AE2 error with  Ticking GridNode). Refactor: removed deprecated proxy layer in mod startup.  "
   	,"1.3.2":"New Patchouli book added.  Export cable and Filtered Input Cable now both have redstone control options.  Fix language overflow text when some certain other mods are installed.  Catch exceptions from connected or networked inventory capabilities during insertStack.   "
   	,"1.3.3":"Update pt_br.json by Mikeliro.  Fix server crash when inserting an item stack when some stack or mod throws a StackOverflowError error.  Fix some other ClassDef not found errors.  Storage Request Table now wont open (and log errors in console) while network main is disconnected. Optional config added to limit remote range: remoteMaxRange  "
+		,"1.3.4":"Fixed bug in opening remotes; also see changelog fo v1.3.3"
   }
 }

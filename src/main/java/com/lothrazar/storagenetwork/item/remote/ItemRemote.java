@@ -155,12 +155,14 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     int z = tag.getInt(NBT_Z);
     //assume we are in the same world
     BlockPos posTarget = new BlockPos(x, y, z);
-    double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
-    if (distance > ConfigRegistry.ITEMRANGE.get()) {
-      StorageNetwork.LOGGER.error("!dist " + distance);
-      UtilTileEntity.statusMessage(player, "item.remote.outofrange");
-      return super.onItemRightClick(world, player, hand);
+    if (ConfigRegistry.ITEMRANGE.get() != -1) {
+      double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
+      if (distance >= ConfigRegistry.ITEMRANGE.get()) {
+        UtilTileEntity.statusMessage(player, "item.remote.outofrange");
+        return super.onItemRightClick(world, player, hand);
+      }
     }
+    //else it is -1 so dont even check distance
     //k now server only 
     if (world.isRemote) {
       return super.onItemRightClick(world, player, hand);
