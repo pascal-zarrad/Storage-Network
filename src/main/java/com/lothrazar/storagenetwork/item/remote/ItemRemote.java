@@ -4,6 +4,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
@@ -148,14 +149,23 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       UtilTileEntity.statusMessage(player, "item.remote.notconnected");
       return super.onItemRightClick(world, player, hand);
     }
-    if (world.isRemote) {
-      return super.onItemRightClick(world, player, hand);
-    }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
     int x = tag.getInt(NBT_X);
     int y = tag.getInt(NBT_Y);
     int z = tag.getInt(NBT_Z);
     //assume we are in the same world
+    BlockPos posTarget = new BlockPos(x, y, z);
+    double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
+    if (distance > ConfigRegistry.ITEMRANGE.get()) {
+      StorageNetwork.LOGGER.error("!dist " + distance);
+      UtilTileEntity.statusMessage(player, "item.remote.outofrange");
+      return super.onItemRightClick(world, player, hand);
+    }
+    //k now server only 
+    if (world.isRemote) {
+      return super.onItemRightClick(world, player, hand);
+    }
+    //now check the dimension world
     ServerWorld serverTargetWorld = null;
     if (tag.contains(NBT_DIM)) {
       try {
@@ -170,9 +180,10 @@ public class ItemRemote extends Item implements INamedContainerProvider {
         return super.onItemRightClick(world, player, hand);
       }
     }
-    BlockPos posTarget = new BlockPos(x, y, z);
+    //now check is the area chunk loaded
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
       UtilTileEntity.chatMessage(player, "item.remote.notloaded");
+      StorageNetwork.LOGGER.info(UtilTileEntity.lang("item.remote.notloaded") + posTarget);
       return super.onItemRightClick(world, player, hand);
     }
     TileEntity tile = serverTargetWorld.getTileEntity(posTarget);

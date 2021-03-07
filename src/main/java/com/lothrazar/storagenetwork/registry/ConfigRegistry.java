@@ -21,6 +21,7 @@ public class ConfigRegistry {
   private static BooleanValue RELOADONCHUNK;
   private static ConfigValue<List<String>> IGNORELIST;
   private static BooleanValue ENABLEAUTOSEARCHFOCUS;
+  public static IntValue ITEMRANGE;
   static {
     initConfig();
   }
@@ -42,6 +43,9 @@ public class ConfigRegistry {
         .defineInRange("exchangeBufferSize", 1024 * 1024, 1, Integer.MAX_VALUE / 16);
     ENABLEAUTOSEARCHFOCUS = COMMON_BUILDER.comment("\r\n Set to false to disable the automatic focus of the searchbar - client gui screen")
         .define("enableAutoSearchFocus", true);
+    //
+    ITEMRANGE = COMMON_BUILDER.comment("\r\n Maximum range of the Storage Remote and Crafting Remote.   -1 means unlimited.")
+        .defineInRange("remoteMaxRange", -1, -1, Integer.MAX_VALUE / 256);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
