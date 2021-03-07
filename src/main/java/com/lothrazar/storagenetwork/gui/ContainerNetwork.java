@@ -194,7 +194,7 @@ public abstract class ContainerNetwork extends Container {
    */
   @SuppressWarnings("deprecation")
   protected void craftShift(PlayerEntity player, TileMain tile) {
-    if (!this.isCrafting() || matrix == null) {
+    if (!this.isCrafting() || matrix == null || tile == null) {
       return;
     }
     recipeCurrent = null;

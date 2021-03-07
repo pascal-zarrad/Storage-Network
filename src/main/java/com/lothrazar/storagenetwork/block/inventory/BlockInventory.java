@@ -33,6 +33,9 @@ public class BlockInventory extends BaseBlock {
   public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
     if (!world.isRemote) {
       TileInventory tile = (TileInventory) world.getTileEntity(pos);
+      if (tile.getMain() == null || tile.getMain().getBlockPos() == null) {
+        return ActionResultType.PASS;
+      }
       //sync
       ServerPlayerEntity sp = (ServerPlayerEntity) player;
       PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()),
