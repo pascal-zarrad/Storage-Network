@@ -157,6 +157,8 @@
 
     "chat.main.emptyslots": "Potential Empty Slots: ",
     "chat.main.connectables": "Connectables: ",
+    
+    "key.storagenetwork.remote":"Network Remote Curio",
  
 
     "processing.buttons.toggle.true": "Always Active",

@@ -44,9 +44,13 @@ public class RequestMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       TileMain root = null;
+      ContainerNetwork ctr = null;
       if (player.openContainer instanceof ContainerNetwork) {
-        ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
+        ctr = (ContainerNetwork) player.openContainer;
         root = ctr.getTileMain();
+      }
+      else {
+        StorageNetwork.log("Bad container");
       }
       if (root == null) {
         //maybe the table broke after doing this, rare case

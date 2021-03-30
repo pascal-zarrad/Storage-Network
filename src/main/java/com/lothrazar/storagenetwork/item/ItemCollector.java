@@ -6,6 +6,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
 import javax.annotation.Nullable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -24,6 +25,9 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.fml.ModList;
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import top.theillusivec4.curios.api.CuriosApi;
 
 public class ItemCollector extends Item {
 
@@ -38,6 +42,15 @@ public class ItemCollector extends Item {
   }
 
   protected ItemStack findAmmo(PlayerEntity player, Item item) {
+    //is curios installed?
+    if (ModList.get().isLoaded("curios")) {
+      ImmutableTriple<String, Integer, ItemStack> equipped = CuriosApi.getCuriosHelper().findEquippedCurio(item, Minecraft.getInstance().player).orElse(null);
+      if (equipped != null && !equipped.getRight().isEmpty()) {
+        ItemStack remote = equipped.getRight();
+        //success: try to insert items to network thru this remote
+        return remote;
+      }
+    }
     for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
       ItemStack itemstack = player.inventory.getStackInSlot(i);
       if (itemstack.getItem() == item) {
@@ -69,7 +82,7 @@ public class ItemCollector extends Item {
           //
           int countUnmoved = network.insertStack(item, false);
           if (countUnmoved == 0) {
-            StorageNetwork.log("unmoved is zero so all gone" + item);
+            // StorageNetwork.log("unmoved is zero so all gone" + item);
             item.setCount(0);
             event.getItem().setItem(item);
             event.getItem().remove();

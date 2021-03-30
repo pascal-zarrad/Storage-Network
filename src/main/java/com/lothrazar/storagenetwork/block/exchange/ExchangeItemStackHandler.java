@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -18,7 +17,6 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
 
   public ExchangeItemStackHandler() {
     super(ConfigRegistry.EXCHANGEBUFFER.get());
-    StorageNetwork.log("ConfigRegistry.EXCHANGEBUFFER.get()" + ConfigRegistry.EXCHANGEBUFFER.get());
     update();
   }
 
@@ -59,7 +57,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
     }
     validateSlotIndex(slot);
     int remaining = tileMain.insertStack(stack, simulate);
-    StorageNetwork.log("exchange: insertItem " + stack + " remain " + remaining);
+    //  StorageNetwork.log("exchange: insertItem " + stack + " remain " + remaining);
     if (remaining > 0) {
       // if failed, refresh whole list
       update();
@@ -83,7 +81,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
     //    StorageNetwork.log("extractItem " + matcher.getStack());
     ItemStack stack = tileMain.request(matcher, amount, simulate);
     update();
-    StorageNetwork.log("exchange: extractItem; after " + stack);
+    // StorageNetwork.log("exchange: extractItem; after " + stack);
     return stack;
   }
 

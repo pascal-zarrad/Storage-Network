@@ -186,12 +186,10 @@ public class ItemBuilder extends Item {
       return;
     }
     World world = player.getEntityWorld();
-    StorageNetwork.log(SsnRegistry.BUILDER_REMOTE + " bs builder saved " + held);
     if (held.getItem() == SsnRegistry.BUILDER_REMOTE) {
       // && player.isCrouching()
       BlockState target = world.getBlockState(event.getPos());
       ItemBuilder.setBlockState(held, target);
-      StorageNetwork.log("bs builder saved " + target);
       event.setResult(Result.DENY);
     }
   }

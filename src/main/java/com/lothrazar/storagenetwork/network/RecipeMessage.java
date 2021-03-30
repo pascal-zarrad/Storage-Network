@@ -69,7 +69,7 @@ public class RecipeMessage {
       ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
       TileMain main = ctr.getTileMain();
       if (main == null) {
-        StorageNetwork.log("Recipe message cancelled, null tile");
+        StorageNetwork.log("Recipe message cancelled, null tile " + ctr);
         return;
       }
       ClearRecipeMessage.clearContainerRecipe(player, false);

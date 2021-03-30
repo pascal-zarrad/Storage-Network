@@ -130,24 +130,18 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   }
 
   public static DimPos getPosStored(ItemStack itemStackIn) {
-    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
-      return null;
-    }
+    //    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
+    //      return null;
+    //    }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
     return new DimPos(tag);
   }
 
-  @Override
-  public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-    if (hand != Hand.MAIN_HAND) {
-      //no offhand openings
-      return super.onItemRightClick(world, player, hand);
-    }
-    ItemStack itemStackIn = player.getHeldItem(hand);
+  public static boolean openRemote(World world, PlayerEntity player, ItemStack itemStackIn, ItemRemote thiss) {
     if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
       //unbound or invalid data
       UtilTileEntity.statusMessage(player, "item.remote.notconnected");
-      return super.onItemRightClick(world, player, hand);
+      return false;
     }
     CompoundNBT tag = itemStackIn.getOrCreateTag();
     int x = tag.getInt(NBT_X);
@@ -159,13 +153,13 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
       if (distance >= ConfigRegistry.ITEMRANGE.get()) {
         UtilTileEntity.statusMessage(player, "item.remote.outofrange");
-        return super.onItemRightClick(world, player, hand);
+        return false;
       }
     }
     //else it is -1 so dont even check distance
     //k now server only 
     if (world.isRemote) {
-      return super.onItemRightClick(world, player, hand);
+      return false;
     }
     //now check the dimension world
     ServerWorld serverTargetWorld = null;
@@ -179,21 +173,37 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       catch (Exception e) {
         //
         StorageNetwork.LOGGER.error("why is cross dim broken for " + tag.getString(NBT_DIM), e);
-        return super.onItemRightClick(world, player, hand);
+        return false;
       }
     }
     //now check is the area chunk loaded
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
       UtilTileEntity.chatMessage(player, "item.remote.notloaded");
       StorageNetwork.LOGGER.info(UtilTileEntity.lang("item.remote.notloaded") + posTarget);
-      return super.onItemRightClick(world, player, hand);
+      return false;
     }
     TileEntity tile = serverTargetWorld.getTileEntity(posTarget);
     if (tile instanceof TileMain) {
-      NetworkHooks.openGui((ServerPlayerEntity) player, this);
+      NetworkHooks.openGui((ServerPlayerEntity) player, thiss);
+      return true;
     }
     else {
       player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
+      return false;
+    }
+  }
+
+  @Override
+  public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
+    if (hand != Hand.MAIN_HAND) {
+      //no offhand openings
+      return super.onItemRightClick(world, player, hand);
+    }
+    ItemStack itemStackIn = player.getHeldItem(hand);
+    //
+    //
+    if (openRemote(world, player, itemStackIn, this)) {
+      // ok great 
     }
     return super.onItemRightClick(world, player, hand);
   }

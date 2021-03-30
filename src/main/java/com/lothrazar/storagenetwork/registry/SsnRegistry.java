@@ -63,9 +63,9 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":builder_remote")
   public static ItemBuilder BUILDER_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
-  public static Item INVENTORY_REMOTE;
+  public static ItemRemote INVENTORY_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
-  public static Item CRAFTING_REMOTE;
+  public static ItemRemote CRAFTING_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":collector_remote")
   public static ItemCollector COLLECTOR_REMOTE;
   //

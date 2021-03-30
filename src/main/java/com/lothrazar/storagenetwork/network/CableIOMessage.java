@@ -136,11 +136,11 @@ public class CableIOMessage {
       break;
       case REDSTONE:
         if (link != null) {
-          StorageNetwork.log("redstone link test " + link.needsRedstone());
+          //          StorageNetwork.log("redstone link test " + link.needsRedstone());
           link.toggleNeedsRedstone();
         }
         if (connectable != null) {
-          StorageNetwork.log("redstone toggle test " + message.value + "?" + connectable.needsRedstone());
+          //          StorageNetwork.log("redstone toggle test " + message.value + "?" + connectable.needsRedstone());
           connectable.toggleNeedsRedstone();
         }
       break;

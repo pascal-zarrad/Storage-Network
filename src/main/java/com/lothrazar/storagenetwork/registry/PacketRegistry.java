@@ -6,6 +6,7 @@ import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.network.CableLimitMessage;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.InsertMessage;
+import com.lothrazar.storagenetwork.network.KeybindCurioMessage;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.network.RefreshFilterClientMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
@@ -44,5 +45,6 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, StackResponseClientMessage.class, StackResponseClientMessage::encode, StackResponseClientMessage::decode, StackResponseClientMessage::handle);
     INSTANCE.registerMessage(id++, RefreshFilterClientMessage.class, RefreshFilterClientMessage::encode, RefreshFilterClientMessage::decode, RefreshFilterClientMessage::handle);
     INSTANCE.registerMessage(id++, SortClientMessage.class, SortClientMessage::encode, SortClientMessage::decode, SortClientMessage::handle);
+    INSTANCE.registerMessage(id++, KeybindCurioMessage.class, KeybindCurioMessage::encode, KeybindCurioMessage::decode, KeybindCurioMessage::handle);
   }
 }
