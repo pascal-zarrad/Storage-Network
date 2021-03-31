@@ -48,9 +48,7 @@ public class ItemCollector extends Item {
       ItemStack item = event.getItem().getItem();
       PlayerEntity player = (PlayerEntity) event.getEntityLiving();
       World world = player.world;
-      //      ItemStack stackThis = this.findAmmo(player, this);
       DimPos dp = DimPos.getPosStored(this.findAmmo(player, this));
-      StorageNetwork.log("dp collector " + dp);
       if (dp != null && !world.isRemote) {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
@@ -63,7 +61,7 @@ public class ItemCollector extends Item {
           //
           int countUnmoved = network.insertStack(item, false);
           if (countUnmoved == 0) {
-            // StorageNetwork.log("unmoved is zero so all gone" + item);
+            //  ("unmoved is zero so all gone" + item);
             item.setCount(0);
             event.getItem().setItem(item);
             event.getItem().remove();

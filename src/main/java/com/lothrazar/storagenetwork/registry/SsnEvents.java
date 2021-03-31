@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.registry;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.item.ItemBuilder;
 import com.lothrazar.storagenetwork.network.KeybindCurioMessage;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
@@ -22,12 +21,9 @@ public class SsnEvents {
 
   @SubscribeEvent
   public void onKeyInput(KeyInputEvent event) {
-    //
-    if (StorageNetwork.TEST.isPressed()) {
-      //gogo 
-      //
+    if (ClientEventRegistry.INVENTORY_KEY.isPressed()) {
+      //gogo client -> server event
       PacketRegistry.INSTANCE.sendToServer(new KeybindCurioMessage());
-      //      IItemHandlerModifiable all = CuriosApi.getCuriosHelper().getEquippedCurios(Minecraft.getInstance().player).orElse(null);
     }
   }
 }
