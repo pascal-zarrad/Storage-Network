@@ -20,15 +20,13 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   Map<Integer, ItemStack> matrixStacks = new HashMap<>();
   private TileMain root;
   private ItemStack remote;
-  private int remoteHash;
 
   public ContainerNetworkCraftingRemote(int id, PlayerInventory pInv) {
     super(SsnRegistry.CRAFTINGREMOTE, id);
-    this.remote = ContainerNetworkRemote.getCurioRemote(pInv.player);
-    this.remoteHash = remote.hashCode();
+    this.remote = pInv.player.getHeldItemMainhand();
     this.player = pInv.player;
     this.world = player.world;
-    DimPos dp = ItemRemote.getPosStored(remote);
+    DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
       StorageNetwork.LOGGER.error("Remote opening with null pos Stored {} ", remote);
     }
@@ -55,13 +53,13 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
-    return remoteHash == ContainerNetworkRemote.getCurioRemote(player).hashCode();
+    return remote == player.getHeldItemMainhand();
   }
 
   @Override
   public TileMain getTileMain() {
     if (root == null) {
-      DimPos dp = ItemRemote.getPosStored(remote);
+      DimPos dp = DimPos.getPosStored(remote);
       if (dp != null) {
         root = dp.getTileEntity(TileMain.class, world);
       }

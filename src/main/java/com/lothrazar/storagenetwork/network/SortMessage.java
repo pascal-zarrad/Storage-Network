@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.network;
 
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileSortable;
-import com.lothrazar.storagenetwork.item.remote.ItemRemote;
+import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -40,9 +40,9 @@ public class SortMessage {
       }
       else {
         ItemStack stackPlayerHeld = player.inventory.getCurrentItem();
-        if (stackPlayerHeld.getItem() instanceof ItemRemote) {
-          ItemRemote.setSort(stackPlayerHeld, message.sort);
-          ItemRemote.setDownwards(stackPlayerHeld, message.direction);
+        if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
+          ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
+          ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
         }
       }
     });

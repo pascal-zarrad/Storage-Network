@@ -51,22 +51,22 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   @Override
   public boolean getDownwards() {
-    return ItemRemote.getDownwards(remote);
+    return ItemStorageCraftingRemote.getDownwards(remote);
   }
 
   @Override
   public void setDownwards(boolean val) {
-    ItemRemote.setDownwards(remote, val);
+    ItemStorageCraftingRemote.setDownwards(remote, val);
   }
 
   @Override
   public EnumSortType getSort() {
-    return ItemRemote.getSort(remote);
+    return ItemStorageCraftingRemote.getSort(remote);
   }
 
   @Override
   public void setSort(EnumSortType val) {
-    ItemRemote.setSort(remote, val);
+    ItemStorageCraftingRemote.setSort(remote, val);
   }
 
   @Override

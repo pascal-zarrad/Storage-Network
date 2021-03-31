@@ -35,7 +35,7 @@ import com.lothrazar.storagenetwork.item.ItemPicker;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
-import com.lothrazar.storagenetwork.item.remote.ItemRemote;
+import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
@@ -63,9 +63,9 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":builder_remote")
   public static ItemBuilder BUILDER_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
-  public static ItemRemote INVENTORY_REMOTE;
+  public static ItemStorageCraftingRemote INVENTORY_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
-  public static ItemRemote CRAFTING_REMOTE;
+  public static ItemStorageCraftingRemote CRAFTING_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":collector_remote")
   public static ItemCollector COLLECTOR_REMOTE;
   //
@@ -172,8 +172,8 @@ public class SsnRegistry {
       //
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
-      r.register(new ItemRemote(properties).setRegistryName("inventory_remote"));
-      r.register(new ItemRemote(properties).setRegistryName("crafting_remote"));
+      r.register(new ItemStorageCraftingRemote(properties).setRegistryName("inventory_remote"));
+      r.register(new ItemStorageCraftingRemote(properties).setRegistryName("crafting_remote"));
       r.register(new ItemPicker(properties).setRegistryName("picker_remote"));
       r.register(new ItemCollector(properties).setRegistryName("collector_remote"));
       r.register(new ItemBuilder(properties).setRegistryName("builder_remote"));

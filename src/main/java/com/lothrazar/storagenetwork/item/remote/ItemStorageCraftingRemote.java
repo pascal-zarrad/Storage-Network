@@ -33,17 +33,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class ItemRemote extends Item implements INamedContainerProvider {
+public class ItemStorageCraftingRemote extends Item implements INamedContainerProvider {
 
-  public static final String NBT_Z = "Z";
-  public static final String NBT_Y = "Y";
-  public static final String NBT_X = "X";
-  public static final String NBT_DIM = "dimension";
   public static final String NBT_BOUND = "bound";
   public static final String NBT_SORT = "sort";
   public static final String NBT_DOWN = "down";
 
-  public ItemRemote(Properties properties) {
+  public ItemStorageCraftingRemote(Properties properties) {
     super(properties.maxStackSize(1));
   }
 
@@ -72,25 +68,6 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     stack.getOrCreateTag().putInt(NBT_SORT, val.ordinal());
   }
 
-  public static void putPos(ItemStack stack, BlockPos pos) {
-    CompoundNBT tag = stack.getOrCreateTag();
-    tag.putInt(NBT_X, pos.getX());
-    tag.putInt(NBT_Y, pos.getY());
-    tag.putInt(NBT_Z, pos.getZ());
-  }
-
-  public static BlockPos getPos(ItemStack stack) {
-    return null;
-  }
-
-  public static String getDim(ItemStack stack) {
-    return stack.getOrCreateTag().getString(NBT_DIM);
-  }
-
-  public static void putDim(ItemStack stack, World world) {
-    stack.getOrCreateTag().putString(NBT_DIM, DimPos.dimensionToString(world));
-  }
-
   @Override
   public ActionResultType onItemUse(ItemUseContext context) {
     Hand hand = context.getHand();
@@ -99,11 +76,7 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     PlayerEntity player = context.getPlayer();
     if (world.getTileEntity(pos) instanceof TileMain) {
       ItemStack stack = player.getHeldItem(hand);
-      CompoundNBT tag = stack.getOrCreateTag();
-      putPos(stack, pos);
-      tag.putBoolean(NBT_BOUND, true);
-      putDim(stack, world);
-      stack.setTag(tag);
+      DimPos.putPos(stack, pos, world);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
     }
@@ -113,42 +86,24 @@ public class ItemRemote extends Item implements INamedContainerProvider {
   @Override
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    TranslationTextComponent t;
-    if (stack.hasTag()) {
-      CompoundNBT tag = stack.getOrCreateTag();
-      int x = tag.getInt(NBT_X);
-      int y = tag.getInt(NBT_Y);
-      int z = tag.getInt(NBT_Z);
-      String dim = tag.getString(NBT_DIM);
-      t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
-    }
-    else {
-      t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    }
+    TranslationTextComponent t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     t.mergeStyle(TextFormatting.GRAY);
     tooltip.add(t);
+    if (stack.hasTag()) {
+      DimPos dp = DimPos.getPosStored(stack);
+      tooltip.add(dp.makeTooltip());
+    }
   }
 
-  public static DimPos getPosStored(ItemStack itemStackIn) {
-    //    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
-    //      return null;
-    //    }
-    CompoundNBT tag = itemStackIn.getOrCreateTag();
-    return new DimPos(tag);
-  }
-
-  public static boolean openRemote(World world, PlayerEntity player, ItemStack itemStackIn, ItemRemote thiss) {
-    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
+  public static boolean openRemote(World world, PlayerEntity player, ItemStack itemStackIn, ItemStorageCraftingRemote thiss) {
+    DimPos dp = DimPos.getPosStored(itemStackIn);
+    if (dp == null) {
       //unbound or invalid data
       UtilTileEntity.statusMessage(player, "item.remote.notconnected");
       return false;
     }
-    CompoundNBT tag = itemStackIn.getOrCreateTag();
-    int x = tag.getInt(NBT_X);
-    int y = tag.getInt(NBT_Y);
-    int z = tag.getInt(NBT_Z);
     //assume we are in the same world
-    BlockPos posTarget = new BlockPos(x, y, z);
+    BlockPos posTarget = dp.getBlockPos();
     if (ConfigRegistry.ITEMRANGE.get() != -1) {
       double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
       if (distance >= ConfigRegistry.ITEMRANGE.get()) {
@@ -163,18 +118,16 @@ public class ItemRemote extends Item implements INamedContainerProvider {
     }
     //now check the dimension world
     ServerWorld serverTargetWorld = null;
-    if (tag.contains(NBT_DIM)) {
-      try {
-        serverTargetWorld = DimPos.stringDimensionLookup(tag.getString(NBT_DIM), world.getServer());
-        if (serverTargetWorld == null) {
-          StorageNetwork.LOGGER.error("Missing dimension key " + tag.getString(NBT_DIM));
-        }
+    try {
+      serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
+      if (serverTargetWorld == null) {
+        StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
       }
-      catch (Exception e) {
-        //
-        StorageNetwork.LOGGER.error("why is cross dim broken for " + tag.getString(NBT_DIM), e);
-        return false;
-      }
+    }
+    catch (Exception e) {
+      //
+      StorageNetwork.LOGGER.error("unknown exception on dim " + dp.getDimension(), e);
+      return false;
     }
     //now check is the area chunk loaded
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
@@ -200,7 +153,6 @@ public class ItemRemote extends Item implements INamedContainerProvider {
       return super.onItemRightClick(world, player, hand);
     }
     ItemStack itemStackIn = player.getHeldItem(hand);
-    //
     //
     if (openRemote(world, player, itemStackIn, this)) {
       // ok great 

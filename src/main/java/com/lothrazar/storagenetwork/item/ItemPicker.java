@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -28,33 +27,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ItemPicker extends Item {
 
-  public static final String NBT_Z = "Z";
-  public static final String NBT_Y = "Y";
-  public static final String NBT_X = "X";
-  public static final String NBT_DIM = "dimension";
   public static final String NBT_BOUND = "bound";
 
   public ItemPicker(Properties properties) {
     super(properties.maxStackSize(1));
-  }
-
-  public static void putPos(ItemStack stack, BlockPos pos) {
-    CompoundNBT tag = stack.getOrCreateTag();
-    tag.putInt(NBT_X, pos.getX());
-    tag.putInt(NBT_Y, pos.getY());
-    tag.putInt(NBT_Z, pos.getZ());
-  }
-
-  public static BlockPos getPos(ItemStack stack) {
-    return null;
-  }
-
-  public static String getDim(ItemStack stack) {
-    return stack.getOrCreateTag().getString(NBT_DIM);
-  }
-
-  public static void putDim(ItemStack stack, World world) {
-    stack.getOrCreateTag().putString(NBT_DIM, DimPos.dimensionToString(world));
   }
 
   @Override
@@ -65,17 +41,13 @@ public class ItemPicker extends Item {
     PlayerEntity player = context.getPlayer();
     if (world.getTileEntity(pos) instanceof TileMain) {
       ItemStack stack = player.getHeldItem(hand);
-      CompoundNBT tag = stack.getOrCreateTag();
-      putPos(stack, pos);
-      tag.putBoolean(NBT_BOUND, true);
-      putDim(stack, world);
-      stack.setTag(tag);
+      DimPos.putPos(stack, pos, world);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
     }
     else {
       ItemStack stack = player.getHeldItem(hand);
-      DimPos dp = getPosStored(stack);
+      DimPos dp = DimPos.getPosStored(stack);
       if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
@@ -113,26 +85,12 @@ public class ItemPicker extends Item {
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
     TranslationTextComponent t;
-    if (stack.hasTag()) {
-      CompoundNBT tag = stack.getOrCreateTag();
-      int x = tag.getInt(NBT_X);
-      int y = tag.getInt(NBT_Y);
-      int z = tag.getInt(NBT_Z);
-      String dim = tag.getString(NBT_DIM);
-      t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
-      t.mergeStyle(TextFormatting.GRAY);
-      tooltip.add(t);
-    }
     t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     t.mergeStyle(TextFormatting.GRAY);
     tooltip.add(t);
-  }
-
-  public static DimPos getPosStored(ItemStack itemStackIn) {
-    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
-      return null;
+    if (stack.hasTag()) {
+      DimPos dp = DimPos.getPosStored(stack);
+      tooltip.add(dp.makeTooltip());
     }
-    CompoundNBT tag = itemStackIn.getOrCreateTag();
-    return new DimPos(tag);
   }
 }

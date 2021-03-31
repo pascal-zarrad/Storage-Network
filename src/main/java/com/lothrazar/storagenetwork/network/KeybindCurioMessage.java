@@ -1,7 +1,8 @@
 package com.lothrazar.storagenetwork.network;
 
-import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
-import com.lothrazar.storagenetwork.item.remote.ItemRemote;
+import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.util.UtilInventory;
 import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -17,9 +18,9 @@ public class KeybindCurioMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       ServerWorld serverWorld = player.getServerWorld();
-      ItemStack curioRemote = ContainerNetworkRemote.getCurioRemote(player);
+      ItemStack curioRemote = UtilInventory.getCurioRemote(player, SsnRegistry.INVENTORY_REMOTE).getRight();
       if (!curioRemote.isEmpty()) {
-        ItemRemote.openRemote(serverWorld, player, curioRemote, (ItemRemote) curioRemote.getItem());
+        ItemStorageCraftingRemote.openRemote(serverWorld, player, curioRemote, (ItemStorageCraftingRemote) curioRemote.getItem());
       }
     });
     ctx.get().setPacketHandled(true);

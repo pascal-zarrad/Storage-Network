@@ -34,33 +34,9 @@ import net.minecraftforge.eventbus.api.Event.Result;
 public class ItemBuilder extends Item {
 
   public static final String NBTBLOCKSTATE = "blockstate";
-  public static final String NBT_Z = "Z";
-  public static final String NBT_Y = "Y";
-  public static final String NBT_X = "X";
-  public static final String NBT_DIM = "dimension";
-  public static final String NBT_BOUND = "bound";
 
   public ItemBuilder(Properties properties) {
     super(properties.maxStackSize(1));
-  }
-
-  public static void putPos(ItemStack stack, BlockPos pos) {
-    CompoundNBT tag = stack.getOrCreateTag();
-    tag.putInt(NBT_X, pos.getX());
-    tag.putInt(NBT_Y, pos.getY());
-    tag.putInt(NBT_Z, pos.getZ());
-  }
-
-  public static BlockPos getPos(ItemStack stack) {
-    return null;
-  }
-
-  public static String getDim(ItemStack stack) {
-    return stack.getOrCreateTag().getString(NBT_DIM);
-  }
-
-  public static void putDim(ItemStack stack, World world) {
-    stack.getOrCreateTag().putString(NBT_DIM, DimPos.dimensionToString(world));
   }
 
   public static void setBlockState(ItemStack wand, BlockState target) {
@@ -85,9 +61,7 @@ public class ItemBuilder extends Item {
     if (world.getTileEntity(pos) instanceof TileMain) {
       ItemStack stack = player.getHeldItem(hand);
       CompoundNBT tag = stack.getOrCreateTag();
-      putPos(stack, pos);
-      tag.putBoolean(NBT_BOUND, true);
-      putDim(stack, world);
+      DimPos.putPos(stack, pos, world);
       stack.setTag(tag);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return ActionResultType.SUCCESS;
@@ -96,7 +70,7 @@ public class ItemBuilder extends Item {
       player.swingArm(hand);
       ItemStack stack = player.getHeldItem(hand);
       //succeed or fail
-      DimPos dp = getPosStored(stack);
+      DimPos dp = DimPos.getPosStored(stack);
       if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
         ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
@@ -107,13 +81,12 @@ public class ItemBuilder extends Item {
         BlockState targetState = ItemBuilder.getBlockState(stack);
         if (tile instanceof TileMain && targetState != null) {
           TileMain network = (TileMain) tile;
-          BlockState bs = world.getBlockState(pos);
           ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(targetState.getBlock()), false, false);
           ItemStack found = network.request(matcher, 1, true);
           //SIMULATED, see if materials are available
           if (!found.isEmpty()) {
             // yes materials are available
-            boolean success = placeStateSafe(world, player, buildAt, bs);
+            boolean success = placeStateSafe(world, player, buildAt, targetState);
             if (success) {
               network.request(matcher, 1, false);
               //NOT SIMULATED, extract item from network
@@ -144,52 +117,39 @@ public class ItemBuilder extends Item {
   @OnlyIn(Dist.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
     TranslationTextComponent t;
+    t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
+    t.mergeStyle(TextFormatting.GRAY);
+    tooltip.add(t);
     if (stack.hasTag()) {
-      CompoundNBT tag = stack.getOrCreateTag();
-      int x = tag.getInt(NBT_X);
-      int y = tag.getInt(NBT_Y);
-      int z = tag.getInt(NBT_Z);
-      String dim = tag.getString(NBT_DIM);
-      t = new TranslationTextComponent("[" + x + ", " + y + ", " + z + ", " + dim + "]");
-      t.mergeStyle(TextFormatting.DARK_GRAY);
-      tooltip.add(t);
+      DimPos dp = DimPos.getPosStored(stack);
+      tooltip.add(dp.makeTooltip());
+      // block state?
+      BlockState target = ItemBuilder.getBlockState(stack);
+      if (target != null) {
+        String block = target.getBlock().getTranslationKey();
+        t = new TranslationTextComponent(block);
+        t.mergeStyle(TextFormatting.AQUA);
+        tooltip.add(t);
+      }
+      else {
+        //if it has a network connection but no blockstate saved, then
+        t = new TranslationTextComponent(getTranslationKey() + ".blockstate");
+        t.mergeStyle(TextFormatting.AQUA);
+        tooltip.add(t);
+      }
     }
-    else {
-      t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-      t.mergeStyle(TextFormatting.GRAY);
-      tooltip.add(t);
-    }
-    BlockState target = ItemBuilder.getBlockState(stack);
-    if (target != null) {
-      String block = target.getBlock().getTranslationKey();
-      tooltip.add(new TranslationTextComponent(TextFormatting.AQUA + UtilTileEntity.lang(block)));
-    }
-    else {
-      t = new TranslationTextComponent(getTranslationKey() + ".blockstate");
-      t.mergeStyle(TextFormatting.DARK_GRAY);
-      tooltip.add(t);
-    }
-  }
-
-  public static DimPos getPosStored(ItemStack itemStackIn) {
-    if (!itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
-      return null;
-    }
-    CompoundNBT tag = itemStackIn.getOrCreateTag();
-    return new DimPos(tag);
   }
 
   public static void onLeftClickBlock(LeftClickBlock event) {
     PlayerEntity player = event.getPlayer();
     ItemStack held = player.getHeldItem(event.getHand());
-    if (held.isEmpty()) {
-      return;
-    }
-    World world = player.getEntityWorld();
     if (held.getItem() == SsnRegistry.BUILDER_REMOTE) {
       // && player.isCrouching()
+      World world = player.getEntityWorld();
       BlockState target = world.getBlockState(event.getPos());
       ItemBuilder.setBlockState(held, target);
+      //
+      UtilTileEntity.statusMessage(player, target.getBlock().getTranslatedName().getString());
       event.setResult(Result.DENY);
     }
   }
