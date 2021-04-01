@@ -9,22 +9,32 @@ import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import org.apache.commons.lang3.tuple.Triple;
 
 public class ContainerNetworkRemote extends ContainerNetwork {
 
-  private final TileMain root;
+  private TileMain root;
   private ItemStack remote;
 
   public ContainerNetworkRemote(int id, PlayerInventory pInv) {
     super(SsnRegistry.REMOTE, id);
-    this.remote = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.INVENTORY_REMOTE).getRight();
     this.player = pInv.player;
     this.world = player.world;
+    //    if (world.isRemote) {
+    //      Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(Minecraft.getInstance().player, SsnRegistry.INVENTORY_REMOTE);
+    //      this.remote = result.getRight();
+    //    }
+    //    else {
+    Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.INVENTORY_REMOTE);
+    this.remote = result.getRight();
+    //    } 
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
-      StorageNetwork.LOGGER.error("Remote opening with null pos Stored {} ", remote);
+      StorageNetwork.LOGGER.error(world.isRemote + "=client||Remote opening with null pos Stored {} ", result);
     }
-    this.root = dp.getTileEntity(TileMain.class, world);
+    else {
+      this.root = dp.getTileEntity(TileMain.class, world);
+    }
     this.playerInv = pInv;
     bindPlayerInvo(this.playerInv);
     bindHotbar();

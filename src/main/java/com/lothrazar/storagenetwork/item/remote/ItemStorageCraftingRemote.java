@@ -165,7 +165,6 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     return new TranslationTextComponent(this.getTranslationKey());
   }
 
-  @Nullable
   @Override
   public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
     boolean crafting = (this == SsnRegistry.CRAFTING_REMOTE);

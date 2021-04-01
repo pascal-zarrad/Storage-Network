@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
+import org.apache.commons.lang3.tuple.Triple;
 
 public class KeybindCurioMessage {
 
@@ -18,8 +19,9 @@ public class KeybindCurioMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayerEntity player = ctx.get().getSender();
       ServerWorld serverWorld = player.getServerWorld();
-      ItemStack curioRemote = UtilInventory.getCurioRemote(player, SsnRegistry.INVENTORY_REMOTE).getRight();
-      if (!curioRemote.isEmpty()) {
+      Triple<String, Integer, ItemStack> searchResult = UtilInventory.getCurioRemote(player, SsnRegistry.INVENTORY_REMOTE);
+      ItemStack curioRemote = searchResult.getRight();
+      if (!curioRemote.isEmpty() && curioRemote.getItem() instanceof ItemStorageCraftingRemote) {
         ItemStorageCraftingRemote.openRemote(serverWorld, player, curioRemote, (ItemStorageCraftingRemote) curioRemote.getItem());
       }
     });
