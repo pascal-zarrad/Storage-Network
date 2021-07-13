@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -37,20 +38,25 @@ public class TileExchange extends TileConnectable {
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-      IConnectable capabilityConnectable = this.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
-      DimPos m = getMain();
-      if (capabilityConnectable != null && m != null) {
-        TileMain tileMain = m.getTileEntity(TileMain.class);
-        if (itemHandler != null) {
-          itemHandler.setMain(tileMain);
+      try {
+        IConnectable capabilityConnectable = this.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
+        DimPos m = getMain();
+        if (capabilityConnectable != null && m != null) {
+          TileMain tileMain = m.getTileEntity(TileMain.class);
+          if (itemHandler != null && tileMain != null) {
+            itemHandler.setMain(tileMain);
+          }
         }
-      }
-      return LazyOptional.of(new NonNullSupplier<T>() {
+        return LazyOptional.of(new NonNullSupplier<T>() {
 
-        public @Override T get() {
-          return (T) itemHandler;
-        }
-      });
+          public @Override T get() {
+            return (T) itemHandler;
+          }
+        });
+      }
+      catch (Exception e) {
+        StorageNetwork.LOGGER.error("Exchange caught error from a mod", e);
+      }
     }
     return super.getCapability(cap, side);
   }
