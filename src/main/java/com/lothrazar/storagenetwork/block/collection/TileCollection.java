@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.collection;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -61,9 +60,9 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
         TileMain tileMain = m.getTileEntity(TileMain.class);
         itemHandler.setMain(tileMain);
       }
-      else {
-        StorageNetwork.log("Found NO CAP!!! for collector ");
-      }
+      //      else {
+      //        StorageNetwork.log("Found NO CAP!!! for collector ");
+      //      }
       return LazyOptional.of(new NonNullSupplier<T>() {
 
         public @Override T get() {

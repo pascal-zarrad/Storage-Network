@@ -21,7 +21,7 @@ public class BlockExchange extends BaseBlock {
   @Override
   public void addInformation(ItemStack stack, IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);
-    tooltip.add(new TranslationTextComponent("[EXPERIMENTAL: may lag on large networks] ").mergeStyle(TextFormatting.DARK_RED));
+    tooltip.add(new TranslationTextComponent("[WARNING: laggy on large networks] ").mergeStyle(TextFormatting.DARK_GRAY));
   }
 
   @Override

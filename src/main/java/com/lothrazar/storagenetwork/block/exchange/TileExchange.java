@@ -41,9 +41,11 @@ public class TileExchange extends TileConnectable {
       try {
         IConnectable capabilityConnectable = super.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
         DimPos m = getMain();
-        if (capabilityConnectable != null && m != null) {
+        if (capabilityConnectable != null && m != null
+            && itemHandler != null &&
+            itemHandler.tileMain == null) {
           TileMain tileMain = m.getTileEntity(TileMain.class);
-          if (itemHandler != null && tileMain != null) {
+          if (tileMain != null) {
             itemHandler.setMain(tileMain);
           }
         }

@@ -137,7 +137,6 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return ItemStack.EMPTY;
     }
     if (itemHandler instanceof ExchangeItemStackHandler) {
-      StorageNetwork.log("do not extract from exchange, cancel taht");
       return ItemStack.EMPTY;
     }
     ItemStack firstMatchedStack = ItemStack.EMPTY;

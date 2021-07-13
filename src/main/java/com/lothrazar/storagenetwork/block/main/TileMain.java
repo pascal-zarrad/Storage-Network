@@ -528,8 +528,8 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         continue;
       }
       if (tileEntity instanceof TileExchange) {
-        StorageNetwork.log("main tile exhchange bandaid");
-        continue;
+        StorageNetwork.log("keep going??main tile exhchange bandaid");
+        //        continue;
       }
       result.add(capConnect);
     }

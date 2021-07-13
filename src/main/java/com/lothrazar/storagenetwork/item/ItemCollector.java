@@ -67,7 +67,7 @@ public class ItemCollector extends Item {
           }
         }
         else {
-          StorageNetwork.log("item.remote.notfound");
+          StorageNetwork.LOGGER.error("item.remote.notfound");
         }
       }
     }

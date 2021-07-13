@@ -14,7 +14,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class ExchangeItemStackHandler extends ItemStackHandlerEx {
 
-  private TileMain tileMain;
+  TileMain tileMain;
 
   public ExchangeItemStackHandler() {
     super(Math.min(5000, ConfigRegistry.EXCHANGEBUFFER.get()));
@@ -42,6 +42,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
       this.stacks.set(i, stack);
       i++;
     }
+    StorageNetwork.log("exchange updated " + i);
   }
 
   /**
