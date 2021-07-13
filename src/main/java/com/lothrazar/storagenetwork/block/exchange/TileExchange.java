@@ -9,13 +9,14 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileExchange extends TileConnectable {
+public class TileExchange extends TileConnectable implements ITickableTileEntity {
 
   private ExchangeItemStackHandler itemHandler;
 
@@ -61,5 +62,12 @@ public class TileExchange extends TileConnectable {
       }
     }
     return super.getCapability(cap, side);
+  }
+
+  @Override
+  public void tick() {
+    if (this.itemHandler != null && getWorld().getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) {
+      this.itemHandler.update();
+    }
   }
 }

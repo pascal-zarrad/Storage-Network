@@ -30,19 +30,25 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
    * Updates items in the handler based on outside storage.
    */
   public void update() {
-    if (tileMain == null || tileMain.getWorld() == null || tileMain.getWorld().getGameTime() % StorageNetwork.CONFIG.refreshTicks() != 0) {
+    if (tileMain == null || tileMain.getWorld() == null) {
       return;
     }
-    this.stacks.clear();
-    int i = 0;
-    for (ItemStack stack : tileMain.getStacks()) {
-      if (i >= this.stacks.size()) {
-        break;
+    try {
+      StorageNetwork.log("exchange update started");
+      this.stacks.clear();
+      int i = 0;
+      for (ItemStack stack : tileMain.getStacks()) {
+        if (i >= this.stacks.size()) {
+          break;
+        }
+        this.stacks.set(i, stack);
+        i++;
       }
-      this.stacks.set(i, stack);
-      i++;
+      StorageNetwork.log("exchange updated " + i);
     }
-    StorageNetwork.log("exchange updated " + i);
+    catch (Exception e) {
+      StorageNetwork.LOGGER.error("Exchange update error ", e);
+    }
   }
 
   /**
