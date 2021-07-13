@@ -8,6 +8,7 @@ import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
+import com.lothrazar.storagenetwork.block.exchange.TileExchange;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -49,7 +50,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     super(SsnRegistry.MAINTILEENTITY);
   }
 
-  public List<ItemStack> getStacks() {
+  public List<ItemStack> getSortedStacks() {
     List<ItemStack> stacks = Lists.newArrayList();
     try {
       if (getConnectablePositions() == null) {
@@ -63,6 +64,34 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     }
     try {
       for (IConnectableLink storage : getSortedConnectableStorage()) {
+        for (ItemStack stack : storage.getStoredStacks(true)) {
+          if (stack == null || stack.isEmpty()) {
+            continue;
+          }
+          addOrMergeIntoList(stacks, stack.copy());
+        }
+      }
+    }
+    catch (Exception e) {
+      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
+    }
+    return stacks;
+  }
+
+  public List<ItemStack> getStacks() {
+    List<ItemStack> stacks = Lists.newArrayList();
+    try {
+      if (getConnectablePositions() == null) {
+        refreshNetwork();
+      }
+    }
+    catch (Exception e) {
+      //since this has external mod connections, if they break then catch it
+      //      for example, AE2 can break with  Ticking GridNode
+      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
+    }
+    try {
+      for (IConnectableLink storage : getConnectableStorage()) {
         for (ItemStack stack : storage.getStoredStacks(true)) {
           if (stack == null || stack.isEmpty()) {
             continue;
@@ -498,6 +527,10 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (capConnect == null) {
         continue;
       }
+      if (tileEntity instanceof TileExchange) {
+        StorageNetwork.log("main tile exhchange bandaid");
+        continue;
+      }
       result.add(capConnect);
     }
     return result;
@@ -513,7 +546,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getGameTime() % (StorageNetwork.CONFIG.refreshTicks()) == 0) || shouldRefresh) {
+    if (getConnectablePositions() == null || (world.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;

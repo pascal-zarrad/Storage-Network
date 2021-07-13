@@ -157,7 +157,7 @@ public abstract class ContainerNetwork extends Container {
         ItemStack stack = rest == 0 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(itemstack1, rest);
         slot.putStack(stack);
         detectAndSendChanges();
-        List<ItemStack> list = tileMain.getStacks();
+        List<ItemStack> list = tileMain.getSortedStacks();
         if (playerIn instanceof ServerPlayerEntity) {
           ServerPlayerEntity sp = (ServerPlayerEntity) playerIn;
           PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),

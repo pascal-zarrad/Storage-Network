@@ -92,8 +92,11 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   public static ServerWorld stringDimensionLookup(String s, MinecraftServer serv) {
-    //
-    RegistryKey<World> worldKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, ResourceLocation.tryCreate(s));
+    return stringDimensionLookup(ResourceLocation.tryCreate(s), serv);
+  }
+
+  public static ServerWorld stringDimensionLookup(ResourceLocation s, MinecraftServer serv) {
+    RegistryKey<World> worldKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, s);
     if (worldKey == null) {
       return null;
     }
@@ -101,15 +104,18 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   @SuppressWarnings("unchecked")
-  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
-    if (world == null || getBlockPos() == null) {
+  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World worldIn) {
+    if (world == null || worldIn == null || getBlockPos() == null) {
       return null;
     }
     //refresh server world 
-    if (dimension != null && world.getServer() != null
-        && dimension.isEmpty() == false) {
-      //&& dim != world.dimension.getType().getId()) {
-      ServerWorld dimWorld = stringDimensionLookup(this.dimension, world.getServer());
+    String olddim = world.getDimensionKey().getLocation().toString();
+    if (dimension != null && worldIn.getServer() != null
+        && dimension.isEmpty() == false
+        && !dimension.equalsIgnoreCase(olddim)) {
+      StorageNetwork.LOGGER.info("Cross dim?" + this.dimension + " VS " + olddim + " isequal");
+      //
+      ServerWorld dimWorld = stringDimensionLookup(ResourceLocation.tryCreate(this.dimension), world.getServer());
       //reach across to the other dimension
       //      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));
       //      boolean resetUnloadDelay = true;

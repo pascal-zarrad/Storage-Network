@@ -6,6 +6,7 @@ import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
+import com.lothrazar.storagenetwork.block.exchange.ExchangeItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import java.util.ArrayList;
@@ -133,6 +134,10 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     // Test whether the connected block has the IItemHandler capability
     IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
     if (itemHandler == null) {
+      return ItemStack.EMPTY;
+    }
+    if (itemHandler instanceof ExchangeItemStackHandler) {
+      StorageNetwork.log("do not extract from exchange, cancel taht");
       return ItemStack.EMPTY;
     }
     ItemStack firstMatchedStack = ItemStack.EMPTY;

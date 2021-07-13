@@ -96,7 +96,7 @@ public class RequestMessage {
               player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
         }
       }
-      List<ItemStack> list = root.getStacks();
+      List<ItemStack> list = root.getSortedStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
       player.openContainer.detectAndSendChanges();

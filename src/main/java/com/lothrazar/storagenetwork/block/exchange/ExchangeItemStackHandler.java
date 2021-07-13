@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -16,7 +17,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
   private TileMain tileMain;
 
   public ExchangeItemStackHandler() {
-    super(ConfigRegistry.EXCHANGEBUFFER.get());
+    super(Math.min(5000, ConfigRegistry.EXCHANGEBUFFER.get()));
     update();
   }
 
@@ -29,10 +30,10 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
    * Updates items in the handler based on outside storage.
    */
   public void update() {
-    if (tileMain == null) {
+    if (tileMain == null || tileMain.getWorld() == null || tileMain.getWorld().getGameTime() % StorageNetwork.CONFIG.refreshTicks() != 0) {
       return;
     }
-    //    this.stacks.clear(); 
+    this.stacks.clear();
     int i = 0;
     for (ItemStack stack : tileMain.getStacks()) {
       if (i >= this.stacks.size()) {
@@ -56,19 +57,20 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
       return stack;
     }
     validateSlotIndex(slot);
-    int remaining = tileMain.insertStack(stack, simulate);
-    //  StorageNetwork.log("exchange: insertItem " + stack + " remain " + remaining);
-    if (remaining > 0) {
-      // if failed, refresh whole list
-      update();
-      return ItemHandlerHelper.copyStackWithSize(stack, remaining);
+    try {
+      int remaining = tileMain.insertStack(stack, simulate);
+      //  StorageNetwork.log("exchange: insertItem " + stack + " remain " + remaining);
+      if (remaining > 0) {
+        // if failed, refresh whole list
+        update();
+        return ItemHandlerHelper.copyStackWithSize(stack, remaining);
+      }
     }
-    else {
-      // if succesful, update internal list
-      //      super.insertItem(slot, stack, simulate);
-      update();
-      return ItemStack.EMPTY;
+    catch (Exception e) {
+      StorageNetwork.LOGGER.error("insertStack error ", e);
     }
+    update();
+    return ItemStack.EMPTY;
   }
 
   @Override
@@ -79,7 +81,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
     }
     ItemStackMatcher matcher = new ItemStackMatcher(getStackInSlot(slot));
     //    StorageNetwork.log("extractItem " + matcher.getStack());
-    ItemStack stack = tileMain.request(matcher, amount, simulate);
+    ItemStack stack = tileMain.request(matcher, amount, simulate); // Stackoverflow?
     update();
     // StorageNetwork.log("exchange: extractItem; after " + stack);
     return stack;

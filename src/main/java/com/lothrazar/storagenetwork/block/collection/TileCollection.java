@@ -55,7 +55,7 @@ public class TileCollection extends TileConnectable implements INamedContainerPr
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
     if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-      IConnectable capabilityConnectable = this.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
+      IConnectable capabilityConnectable = super.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
       DimPos m = getMain();
       if (capabilityConnectable != null && m != null) {
         TileMain tileMain = m.getTileEntity(TileMain.class);

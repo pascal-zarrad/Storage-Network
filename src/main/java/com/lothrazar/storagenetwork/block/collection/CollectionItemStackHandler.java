@@ -54,10 +54,9 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
         && filter.isStackFiltered(stack)) {
       // filter is not empty, AND stack does not exist in filter
       // so refuse this
-      StorageNetwork.log("refuse insertItem " + stack);
+      //      StorageNetwork.log("refuse insertItem " + stack);
       return stack;
     }
-    //    StorageNetwork.log("insertItem " + stack);
     try {
       int remaining = tileMain.insertStack(stack, simulate);
       if (remaining > 0) {

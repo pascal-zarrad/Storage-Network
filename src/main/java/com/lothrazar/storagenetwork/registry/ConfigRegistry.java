@@ -40,7 +40,7 @@ public class ConfigRegistry {
         list);
     EXCHANGEBUFFER = COMMON_BUILDER.comment("\r\n How many itemstacks from the network are visible to external connections through the storagenetwork:exchange.  "
         + "Too low and not all items can pass through, too large and there will be packet/buffer overflows.")
-        .defineInRange("exchangeBufferSize", 1024 * 1024, 1, Integer.MAX_VALUE / 16);
+        .defineInRange("exchangeBufferSize", 1024, 1, 5000);
     ENABLEAUTOSEARCHFOCUS = COMMON_BUILDER.comment("\r\n Set to false to disable the automatic focus of the searchbar - client gui screen")
         .define("enableAutoSearchFocus", true);
     //
