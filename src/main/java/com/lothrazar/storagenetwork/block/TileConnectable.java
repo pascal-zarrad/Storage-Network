@@ -6,7 +6,6 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -79,9 +78,8 @@ public class TileConnectable extends TileEntity {
     }
   }
 
-  @Nullable
   @Override
-  public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+  public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_CAPABILITY) {
       LazyOptional<CapabilityConnectable> cap = LazyOptional.of(() -> connectable);
       return cap.cast();

@@ -6,7 +6,6 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +16,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileCableWithFacing extends TileConnectable {
 
-  @Nullable
   Direction direction = null;
 
   public TileCableWithFacing(TileEntityType<?> tileEntityTypeIn) {
@@ -32,7 +30,7 @@ public class TileCableWithFacing extends TileConnectable {
     return this.getPos().offset(direction);
   }
 
-  public void setDirection(@Nullable Direction direction) {
+  public void setDirection(Direction direction) {
     this.direction = direction;
   }
 

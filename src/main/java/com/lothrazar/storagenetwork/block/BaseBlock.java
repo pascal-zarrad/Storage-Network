@@ -2,7 +2,6 @@ package com.lothrazar.storagenetwork.block;
 
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import java.util.List;
-import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -30,7 +29,7 @@ public abstract class BaseBlock extends Block {
   }
 
   @Override
-  public void addInformation(ItemStack stack, @Nullable IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
+  public void addInformation(ItemStack stack, IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
     super.addInformation(stack, playerIn, tooltip, advanced);
     TranslationTextComponent t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
     t.mergeStyle(TextFormatting.GRAY);

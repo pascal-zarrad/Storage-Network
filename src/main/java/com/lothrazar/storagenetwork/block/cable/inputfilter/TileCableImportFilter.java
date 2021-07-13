@@ -7,7 +7,6 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,8 +19,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 public class TileCableImportFilter extends TileCableWithFacing implements ITickableTileEntity, INamedContainerProvider {
 
@@ -43,7 +40,7 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
   }
 
   @Override
-  public void setDirection(@Nullable Direction direction) {
+  public void setDirection(Direction direction) {
     super.setDirection(direction);
     this.ioStorage.setInventoryFace(direction);
   }
@@ -63,17 +60,16 @@ public class TileCableImportFilter extends TileCableWithFacing implements ITicka
     return result;
   }
 
-  @Nullable
   @Override
-  public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+  public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_AUTO_IO) {
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
       return cap.cast();
     }
-    if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-      LazyOptional<IItemHandler> cap = LazyOptional.of(() -> ioStorage.upgrades);
-      return cap.cast();
-    }
+    //    if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) { 
+    //      LazyOptional<IItemHandler> cap = LazyOptional.of(() -> ioStorage.upgrades);
+    //      return cap.cast();
+    //    }
     return super.getCapability(capability, facing);
   }
 

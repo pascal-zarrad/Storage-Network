@@ -13,6 +13,7 @@ import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -43,7 +44,6 @@ public class NetworkWidget {
   public ButtonRequest directionBtn;
   public ButtonRequest sortBtn;
   public ButtonRequest jeiBtn;
-  //  public ButtonRequest clearTextBtn;
 
   public NetworkWidget(IGuiNetwork gui) {
     this.gui = gui;
@@ -88,18 +88,18 @@ public class NetworkWidget {
       String tooltipString;
       Minecraft mc = Minecraft.getInstance();
       List<ITextComponent> tooltip = stack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL);
-      List<String> unformattedTooltip = tooltip.stream().map(ITextComponent::getUnformattedComponentText).collect(Collectors.toList());
+      List<String> unformattedTooltip = tooltip.stream().map(ITextComponent::getString).collect(Collectors.toList());
       tooltipString = Joiner.on(' ').join(unformattedTooltip).toLowerCase().trim();
       return tooltipString.contains(searchText.toLowerCase().substring(1));
     }
     else if (searchText.startsWith("$")) { // search tags
-      StringBuilder oreDictStringBuilder = new StringBuilder();
+      List<String> joiner = new ArrayList<>();
       for (ResourceLocation oreId : stack.getItem().getTags()) {
         String oreName = oreId.toString();
-        //OreDictionary.getOreName(oreId);
-        oreDictStringBuilder.append(oreName).append(' ');
+        joiner.add(oreName);
       }
-      return oreDictStringBuilder.toString().toLowerCase().contains(searchText.toLowerCase().substring(1));
+      String dictFinal = Joiner.on(' ').join(joiner).toLowerCase().trim();
+      return dictFinal.contains(searchText.toLowerCase().substring(1));
     }
     else {
       return stack.getDisplayName().getString().toLowerCase().contains(searchText.toLowerCase());

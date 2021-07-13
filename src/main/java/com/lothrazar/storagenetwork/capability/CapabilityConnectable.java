@@ -2,7 +2,6 @@ package com.lothrazar.storagenetwork.capability;
 
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
-import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -46,7 +45,6 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
 
   public static class Storage implements Capability.IStorage<IConnectable> {
 
-    @Nullable
     @Override
     public INBT writeNBT(Capability<IConnectable> capability, IConnectable instance, Direction side) {
       CapabilityConnectable i = (CapabilityConnectable) instance;

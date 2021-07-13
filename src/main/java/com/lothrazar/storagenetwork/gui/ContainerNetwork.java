@@ -9,7 +9,6 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -45,12 +44,11 @@ public abstract class ContainerNetwork extends Container {
   protected ICraftingRecipe recipeCurrent;
   public NetworkCraftingInventory matrix;
 
-  protected ContainerNetwork(@Nullable ContainerType<?> type, int id) {
+  protected ContainerNetwork(ContainerType<?> type, int id) {
     super(type, id);
     this.resultInventory = new CraftResultInventory();
   }
 
-  @Nullable
   public CraftingInventory getCraftMatrix() {
     return matrix;
   }

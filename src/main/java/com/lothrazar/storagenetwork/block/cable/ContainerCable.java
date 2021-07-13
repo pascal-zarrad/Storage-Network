@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.block.cable;
 
-import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -14,7 +13,7 @@ public abstract class ContainerCable extends Container {
   protected PlayerEntity player;
   protected World world;
 
-  protected ContainerCable(@Nullable ContainerType<?> type, int id) {
+  protected ContainerCable(ContainerType<?> type, int id) {
     super(type, id);
   }
 

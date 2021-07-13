@@ -7,7 +7,6 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -25,7 +24,7 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   }
 
   @Override
-  public void setDirection(@Nullable Direction direction) {
+  public void setDirection(Direction direction) {
     super.setDirection(direction);
     this.ioStorage.setInventoryFace(direction);
   }
@@ -43,9 +42,8 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
     return result;
   }
 
-  @Nullable
   @Override
-  public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+  public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_AUTO_IO) {
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
       return cap.cast();

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -307,7 +306,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
 
     @Override
-    @Nullable
     public INBT writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
       return instance.serializeNBT();

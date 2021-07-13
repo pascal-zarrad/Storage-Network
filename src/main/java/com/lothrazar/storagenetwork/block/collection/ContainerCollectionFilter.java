@@ -5,7 +5,6 @@ import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -16,7 +15,6 @@ import net.minecraft.world.World;
 public class ContainerCollectionFilter extends ContainerCable {
 
   public final TileCollection tile;
-  @Nullable
   public CapabilityConnectable cap;
 
   public ContainerCollectionFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {

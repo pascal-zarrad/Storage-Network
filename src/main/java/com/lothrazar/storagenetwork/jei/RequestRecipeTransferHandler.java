@@ -4,7 +4,6 @@ import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
@@ -61,7 +60,6 @@ public class RequestRecipeTransferHandler<C extends Container> implements IRecip
     return nbt;
   }
 
-  @Nullable
   @Override
   public IRecipeTransferError transferRecipe(C c, IRecipeLayout iRecipeLayout, PlayerEntity playerEntity,
       boolean maxTransfer, boolean doTransfer) {

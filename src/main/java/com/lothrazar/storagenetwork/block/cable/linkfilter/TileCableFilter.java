@@ -4,7 +4,6 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -51,14 +50,13 @@ public class TileCableFilter extends TileCableWithFacing implements ITickableTil
   }
 
   @Override
-  public void setDirection(@Nullable Direction direction) {
+  public void setDirection(Direction direction) {
     super.setDirection(direction);
     this.capability.setInventoryFace(direction);
   }
 
-  @Nullable
   @Override
-  public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+  public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY) {
       LazyOptional<CapabilityConnectableLink> cap = LazyOptional.of(() -> this.capability);
       return cap.cast();

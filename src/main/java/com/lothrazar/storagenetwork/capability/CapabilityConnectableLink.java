@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -268,7 +267,6 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
 
   public static class Storage implements Capability.IStorage<IConnectableLink> {
 
-    @Nullable
     @Override
     public INBT writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
       CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;

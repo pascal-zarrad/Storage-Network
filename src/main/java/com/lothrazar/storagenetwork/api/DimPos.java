@@ -2,7 +2,6 @@ package com.lothrazar.storagenetwork.api;
 
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -48,7 +47,6 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return new DimPos(itemStackIn.getOrCreateTag());
   }
 
-  @Nullable
   public World getWorld() {
     return world;
   }
@@ -61,7 +59,6 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return getWorld().getBlockState(getBlockPos());
   }
 
-  @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface) {
     return getTileEntity(tileEntityClassOrInterface, getWorld());
   }
@@ -104,7 +101,6 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   @SuppressWarnings("unchecked")
-  @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
     if (world == null || getBlockPos() == null) {
       return null;
@@ -137,7 +133,6 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return (V) tileEntity;
   }
 
-  @Nullable
   public <V> V getCapability(Capability<V> capability, Direction side) {
     World world = getWorld();
     if (world == null || getBlockPos() == null) {
