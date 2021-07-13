@@ -5,8 +5,7 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
-import com.lothrazar.storagenetwork.jei.JeiSettings;
-import com.lothrazar.storagenetwork.network.SortMessage;
+import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import java.util.List;
@@ -70,6 +69,16 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
   }
 
   @Override
+  public boolean isJeiSearchSynced() {
+    return ItemStorageCraftingRemote.isJeiSearchSynced(remote);
+  }
+
+  @Override
+  public void setJeiSearchSynced(boolean val) {
+    ItemStorageCraftingRemote.setJeiSearchSynced(remote, val);
+  }
+
+  @Override
   public void init() {
     super.init();
     int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
@@ -81,7 +90,7 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
     network.initButtons();
     this.addButton(network.directionBtn);
     this.addButton(network.sortBtn);
-    if (JeiSettings.isJeiLoaded()) {
+    if (JeiHooks.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
   }
@@ -185,6 +194,6 @@ public class GuiNetworkRemote extends ContainerScreen<ContainerNetworkRemote> im
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(null, getDownwards(), getSort(), this.isJeiSearchSynced()));
   }
 }

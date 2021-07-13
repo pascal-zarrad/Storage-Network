@@ -5,10 +5,9 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
-import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
-import com.lothrazar.storagenetwork.network.SortMessage;
+import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import java.util.List;
@@ -70,7 +69,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     network.initButtons();
     this.addButton(network.directionBtn);
     this.addButton(network.sortBtn);
-    if (JeiSettings.isJeiLoaded()) {
+    if (JeiHooks.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
     //    addButton(network.clearTextBtn);
@@ -87,7 +86,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), this.isJeiSearchSynced()));
   }
 
   @Override
@@ -211,5 +210,15 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
+  }
+
+  @Override
+  public boolean isJeiSearchSynced() {
+    return tile.isJeiSearchSynced();
+  }
+
+  @Override
+  public void setJeiSearchSynced(boolean val) {
+    tile.setJeiSearchSynced(val);
   }
 }

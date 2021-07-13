@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.network;
 
 import com.lothrazar.storagenetwork.api.EnumSortType;
-import com.lothrazar.storagenetwork.api.ITileSortable;
+import com.lothrazar.storagenetwork.api.ITileNetworkSync;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
@@ -28,8 +28,8 @@ public class SortClientMessage {
     ctx.get().enqueueWork(() -> {
       Minecraft mc = Minecraft.getInstance();
       TileEntity tileEntity = mc.world.getTileEntity(message.pos);
-      if (tileEntity instanceof ITileSortable) {
-        ITileSortable ts = (ITileSortable) tileEntity;
+      if (tileEntity instanceof ITileNetworkSync) {
+        ITileNetworkSync ts = (ITileNetworkSync) tileEntity;
         ts.setDownwards(message.direction);
         ts.setSort(message.sort);
       }

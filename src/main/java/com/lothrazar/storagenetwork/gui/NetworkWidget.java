@@ -7,7 +7,6 @@ import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
 import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
-import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -73,7 +72,7 @@ public class NetworkWidget {
       return;
     }
     searchBar.setText("");
-    if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+    if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
       JeiHooks.setFilterText("");
     }
   }
@@ -187,15 +186,18 @@ public class NetworkWidget {
     searchBar.setTextColor(16777215);
     searchBar.setFocused2(StorageNetwork.CONFIG.enableAutoSearchFocus());
     try {
-      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
+      if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
         searchBar.setText(JeiHooks.getFilterText());
       }
     }
     catch (Exception e) {
       StorageNetwork.LOGGER.error("Search bar error ", e);
-      if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-        searchBar.setText(JeiHooks.getFilterText());
-      }
+    }
+  }
+
+  public void syncTextToJei() {
+    if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
+      JeiHooks.setFilterText(searchBar.getText());
     }
   }
 
@@ -214,8 +216,8 @@ public class NetworkWidget {
     else if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
       tooltip = new TranslationTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase());
     }
-    else if (JeiSettings.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      tooltip = new TranslationTextComponent(JeiSettings.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+    else if (JeiHooks.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+      tooltip = new TranslationTextComponent(gui.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
     }
     else if (this.inSearchBar(mouseX, mouseY)) {
       //tooltip = new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear");
@@ -260,12 +262,6 @@ public class NetworkWidget {
       return true;
     }
     return false;
-  }
-
-  public void syncTextToJei() {
-    if (JeiSettings.isJeiLoaded() && JeiSettings.isJeiSearchSynced()) {
-      JeiHooks.setFilterText(searchBar.getText());
-    }
   }
 
   public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
@@ -316,9 +312,10 @@ public class NetworkWidget {
       gui.syncDataToServer();
     });
     sortBtn.setHeight(16);
-    if (JeiSettings.isJeiLoaded()) {
+    if (JeiHooks.isJeiLoaded()) {
       jeiBtn = new ButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
-        JeiSettings.setJeiSearchSync(!JeiSettings.isJeiSearchSynced());
+        gui.setJeiSearchSynced(!gui.isJeiSearchSynced());
+        gui.syncDataToServer();
       });
       jeiBtn.setHeight(16);
     }
@@ -357,8 +354,8 @@ public class NetworkWidget {
       break;
     }
     directionBtn.setTextureId(gui.getDownwards() ? TextureEnum.SORT_DOWN : TextureEnum.SORT_UP);
-    if (jeiBtn != null && JeiSettings.isJeiLoaded()) {
-      jeiBtn.setTextureId(JeiSettings.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
+    if (jeiBtn != null && JeiHooks.isJeiLoaded()) {
+      jeiBtn.setTextureId(gui.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
     }
   }
 }

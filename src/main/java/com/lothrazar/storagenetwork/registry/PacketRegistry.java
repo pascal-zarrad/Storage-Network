@@ -11,7 +11,7 @@ import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.network.RefreshFilterClientMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SortClientMessage;
-import com.lothrazar.storagenetwork.network.SortMessage;
+import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
 import com.lothrazar.storagenetwork.network.StackResponseClientMessage;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +38,7 @@ public class PacketRegistry {
     INSTANCE.registerMessage(id++, InsertMessage.class, InsertMessage::encode, InsertMessage::decode, InsertMessage::handle);
     INSTANCE.registerMessage(id++, RequestMessage.class, RequestMessage::encode, RequestMessage::decode, RequestMessage::handle);
     INSTANCE.registerMessage(id++, ClearRecipeMessage.class, ClearRecipeMessage::encode, ClearRecipeMessage::decode, ClearRecipeMessage::handle);
-    INSTANCE.registerMessage(id++, SortMessage.class, SortMessage::encode, SortMessage::decode, SortMessage::handle);
+    INSTANCE.registerMessage(id++, SettingsSyncMessage.class, SettingsSyncMessage::encode, SettingsSyncMessage::decode, SettingsSyncMessage::handle);
     INSTANCE.registerMessage(id++, RecipeMessage.class, RecipeMessage::encode, RecipeMessage::decode, RecipeMessage::handle);
     id++; //    INSTANCE.registerMessage(id++, CableFilterMessage.class, CableFilterMessage::encode, CableFilterMessage::decode, CableFilterMessage::handle);
     INSTANCE.registerMessage(id++, CableLimitMessage.class, CableLimitMessage::encode, CableLimitMessage::decode, CableLimitMessage::handle);

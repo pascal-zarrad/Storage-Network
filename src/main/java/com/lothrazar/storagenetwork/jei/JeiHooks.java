@@ -3,15 +3,20 @@ package com.lothrazar.storagenetwork.jei;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.ModList;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.config.KeyBindings;
 import mezz.jei.gui.Focus;
 
 public class JeiHooks {
 
+  public static boolean isJeiLoaded() {
+    return ModList.get().isLoaded("jei");
+  }
+
   public static String getFilterText() {
     try {
-      if (JeiSettings.isJeiLoaded()) {
+      if (isJeiLoaded()) {
         return getJeiTextInternal();
       }
     }
@@ -28,7 +33,7 @@ public class JeiHooks {
    */
   public static void setFilterText(String s) {
     try {
-      if (JeiSettings.isJeiLoaded()) {
+      if (isJeiLoaded()) {
         setJeiTextInternal(s);
       }
     }
@@ -46,7 +51,7 @@ public class JeiHooks {
   }
 
   public static void testJeiKeybind(InputMappings.Input keyCode, ItemStack stackUnderMouse) {
-    if (!JeiSettings.isJeiLoaded()) {
+    if (!isJeiLoaded()) {
       return;
     }
     final boolean showRecipe = KeyBindings.showRecipe.isActiveAndMatches(keyCode);

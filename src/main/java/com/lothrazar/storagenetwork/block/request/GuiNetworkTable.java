@@ -5,10 +5,9 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
-import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
-import com.lothrazar.storagenetwork.network.SortMessage;
+import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import java.util.List;
@@ -67,7 +66,7 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
     network.initButtons();
     this.addButton(network.directionBtn);
     this.addButton(network.sortBtn);
-    if (JeiSettings.isJeiLoaded()) {
+    if (JeiHooks.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
   }
@@ -83,12 +82,22 @@ public class GuiNetworkTable extends ContainerScreen<ContainerNetworkCraftingTab
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SortMessage(getPos(), getDownwards(), getSort()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), this.isJeiSearchSynced()));
   }
 
   @Override
   public boolean getDownwards() {
     return tile.isDownwards();
+  }
+
+  @Override
+  public boolean isJeiSearchSynced() {
+    return tile.isJeiSearchSynced();
+  }
+
+  @Override
+  public void setJeiSearchSynced(boolean val) {
+    tile.setJeiSearchSynced(val);
   }
 
   @Override

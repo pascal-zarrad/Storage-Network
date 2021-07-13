@@ -4,6 +4,7 @@ import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
@@ -34,12 +35,25 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 public class ItemStorageCraftingRemote extends Item implements INamedContainerProvider {
 
+  public static final String NBT_JEI = TileRequest.NBT_JEI;
   public static final String NBT_BOUND = "bound";
   public static final String NBT_SORT = "sort";
   public static final String NBT_DOWN = "down";
 
   public ItemStorageCraftingRemote(Properties properties) {
     super(properties.maxStackSize(1));
+  }
+
+  public static boolean isJeiSearchSynced(ItemStack stack) {
+    CompoundNBT tag = stack.getOrCreateTag();
+    if (tag.contains(NBT_JEI)) {
+      return tag.getBoolean(NBT_JEI);
+    }
+    return false;
+  }
+
+  public static void setJeiSearchSynced(ItemStack stack, boolean val) {
+    stack.getOrCreateTag().putBoolean(NBT_JEI, val);
   }
 
   public static boolean getDownwards(ItemStack stack) {

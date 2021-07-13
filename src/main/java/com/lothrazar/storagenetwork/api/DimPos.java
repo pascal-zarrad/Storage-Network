@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.api;
 
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import javax.annotation.Nullable;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -104,29 +105,22 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   @SuppressWarnings("unchecked")
-  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World worldIn) {
-    if (world == null || worldIn == null || getBlockPos() == null) {
+  @Nullable
+  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
+    if (world == null || getBlockPos() == null) {
       return null;
     }
     //refresh server world 
-    String olddim = world.getDimensionKey().getLocation().toString();
-    if (dimension != null && worldIn.getServer() != null
-        && dimension.isEmpty() == false
-        && !dimension.equalsIgnoreCase(olddim)) {
-      StorageNetwork.LOGGER.info("Cross dim?" + this.dimension + " VS " + olddim + " isequal");
-      //
-      ServerWorld dimWorld = stringDimensionLookup(ResourceLocation.tryCreate(this.dimension), world.getServer());
+    if (dimension != null && world.getServer() != null
+        && dimension.isEmpty() == false) {
+      ServerWorld dimWorld = stringDimensionLookup(this.dimension, world.getServer());
       //reach across to the other dimension
-      //      DimensionType dimTarget = DimensionType.byName(new ResourceLocation(dimension));
-      //      boolean resetUnloadDelay = true;
-      //      boolean forceLoad = true;
-      //      ServerWorld dimWorld = null;//DimensionManager.getWorld(world.getServer(), dimTarget, resetUnloadDelay, forceLoad);
       if (dimWorld != null) {
         world = dimWorld.getWorld();
       }
-      //      else {
-      //        StorageNetwork.log(" Dimworld NOT FOUND for " + dimension);
-      //      }
+      else {
+        StorageNetwork.LOGGER.error(" Dimworld NOT FOUND for " + dimension);
+      }
     }
     //end refresh srever world
     TileEntity tileEntity = world.getTileEntity(getBlockPos());

@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.request;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.EnumSortType;
-import com.lothrazar.storagenetwork.api.ITileSortable;
+import com.lothrazar.storagenetwork.api.ITileNetworkSync;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import java.util.HashMap;
@@ -19,13 +19,15 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 
-public class TileRequest extends TileConnectable implements INamedContainerProvider, ITileSortable {
+public class TileRequest extends TileConnectable implements INamedContainerProvider, ITileNetworkSync {
 
+  public static final String NBT_JEI = StorageNetwork.MODID + "jei";
   private static final String NBT_DIR = StorageNetwork.MODID + "dir";
   private static final String NBT_SORT = StorageNetwork.MODID + "sort";
   Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;
+  private boolean isJeiSearchSynced;
 
   public TileRequest() {
     super(SsnRegistry.REQUESTTILE);
@@ -36,6 +38,9 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
     setDownwards(compound.getBoolean(NBT_DIR));
     if (compound.contains(NBT_SORT)) {
       setSort(EnumSortType.values()[compound.getInt(NBT_SORT)]);
+    }
+    if (compound.contains(NBT_JEI)) {
+      this.setJeiSearchSynced(compound.getBoolean(NBT_JEI));
     }
     ListNBT invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
     matrix = new HashMap<>();
@@ -52,6 +57,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
   public CompoundNBT write(CompoundNBT compound) {
     compound.putBoolean(NBT_DIR, isDownwards());
     compound.putInt(NBT_SORT, getSort().ordinal());
+    compound.putBoolean(NBT_JEI, this.isJeiSearchSynced());
     ListNBT invList = new ListNBT();
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
@@ -93,5 +99,13 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
   @Override
   public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
     return new ContainerNetworkCraftingTable(i, world, pos, playerInventory, playerEntity);
+  }
+
+  public boolean isJeiSearchSynced() {
+    return isJeiSearchSynced;
+  }
+
+  public void setJeiSearchSynced(boolean val) {
+    isJeiSearchSynced = val;
   }
 }

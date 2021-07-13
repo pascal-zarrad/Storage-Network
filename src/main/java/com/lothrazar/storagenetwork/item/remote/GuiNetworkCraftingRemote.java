@@ -5,10 +5,9 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
-import com.lothrazar.storagenetwork.jei.JeiSettings;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
-import com.lothrazar.storagenetwork.network.SortMessage;
+import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import java.util.List;
@@ -23,6 +22,8 @@ import net.minecraft.util.text.ITextComponent;
 
 public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCraftingRemote> implements IGuiNetwork {
 
+  private static final int KEY_BACKSPACE = 259;
+  private static final int KEY_ESC = 256;
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
   private final ResourceLocation textureCraft = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
@@ -53,6 +54,16 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
   @Override
   public void setStacks(List<ItemStack> stacks) {
     network.stacks = stacks;
+  }
+
+  @Override
+  public boolean isJeiSearchSynced() {
+    return ItemStorageCraftingRemote.isJeiSearchSynced(remote);
+  }
+
+  @Override
+  public void setJeiSearchSynced(boolean val) {
+    ItemStorageCraftingRemote.setJeiSearchSynced(remote, val);
   }
 
   @Override
@@ -88,7 +99,7 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
     network.initButtons();
     this.addButton(network.directionBtn);
     this.addButton(network.sortBtn);
-    if (JeiSettings.isJeiLoaded()) {
+    if (JeiHooks.isJeiLoaded()) {
       addButton(network.jeiBtn);
     }
   }
@@ -155,12 +166,12 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int b) {
     InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
-    if (keyCode == 256) {
+    if (keyCode == KEY_ESC) {
       minecraft.player.closeScreen();
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
-      if (keyCode == 259) { // BACKSPACE
+      if (keyCode == KEY_BACKSPACE) { // BACKSPACE
         network.syncTextToJei();
       }
       network.searchBar.keyPressed(keyCode, scanCode, b);
@@ -197,6 +208,6 @@ public class GuiNetworkCraftingRemote extends ContainerScreen<ContainerNetworkCr
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SortMessage(null, getDownwards(), getSort()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(null, getDownwards(), getSort(), this.isJeiSearchSynced()));
   }
 }

@@ -9,6 +9,10 @@ public interface IGuiNetwork extends IGuiPrivate {
 
   boolean getDownwards();
 
+  boolean isJeiSearchSynced();
+
+  void setJeiSearchSynced(boolean val);
+
   void setDownwards(boolean val);
 
   EnumSortType getSort();

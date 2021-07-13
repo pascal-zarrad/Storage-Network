@@ -34,7 +34,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
       return;
     }
     try {
-      StorageNetwork.log("exchange update started");
+      //      StorageNetwork.log("exchange update started");
       this.stacks.clear();
       int i = 0;
       for (ItemStack stack : tileMain.getStacks()) {
@@ -44,7 +44,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
         this.stacks.set(i, stack);
         i++;
       }
-      StorageNetwork.log("exchange updated " + i);
+      //      StorageNetwork.log("exchange updated " + i);
     }
     catch (Exception e) {
       StorageNetwork.LOGGER.error("Exchange update error ", e);

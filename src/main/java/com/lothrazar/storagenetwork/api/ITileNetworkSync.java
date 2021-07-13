@@ -1,5 +1,5 @@
 package com.lothrazar.storagenetwork.api;
-public interface ITileSortable {
+public interface ITileNetworkSync {
 
   boolean isDownwards();
 
@@ -8,4 +8,6 @@ public interface ITileSortable {
   EnumSortType getSort();
 
   void setSort(EnumSortType sort);
+
+  void setJeiSearchSynced(boolean val);
 }
