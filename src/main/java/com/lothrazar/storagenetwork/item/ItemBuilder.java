@@ -122,8 +122,9 @@ public class ItemBuilder extends Item {
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);
-      tooltip.add(dp.makeTooltip());
-      // block state?
+      if (dp != null) {
+        tooltip.add(dp.makeTooltip());
+      } // block state?
       BlockState target = ItemBuilder.getBlockState(stack);
       if (target != null) {
         String block = target.getBlock().getTranslationKey();
@@ -144,12 +145,10 @@ public class ItemBuilder extends Item {
     PlayerEntity player = event.getPlayer();
     ItemStack held = player.getHeldItem(event.getHand());
     if (held.getItem() == SsnRegistry.BUILDER_REMOTE) {
-      // && player.isCrouching()
       World world = player.getEntityWorld();
       BlockState target = world.getBlockState(event.getPos());
       ItemBuilder.setBlockState(held, target);
-      //
-      UtilTileEntity.statusMessage(player, target.getBlock().getTranslatedName().getString());
+      UtilTileEntity.statusMessage(player, target);
       event.setResult(Result.DENY);
     }
   }

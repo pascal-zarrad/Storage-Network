@@ -5,6 +5,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -19,6 +20,12 @@ public class UtilTileEntity {
   public static void chatMessage(PlayerEntity player, String message) {
     if (player.world.isRemote) {
       player.sendMessage(new TranslationTextComponent(message), player.getUniqueID());
+    }
+  }
+
+  public static void statusMessage(PlayerEntity player, BlockState bs) {
+    if (player.world.isRemote) {
+      player.sendStatusMessage(new TranslationTextComponent(bs.getBlock().getTranslatedName().getString()), true);
     }
   }
 

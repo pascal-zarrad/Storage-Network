@@ -41,7 +41,7 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  @SuppressWarnings("deprecation")
+  //  @SuppressWarnings("deprecation")
   public void drawSlot(MatrixStack ms, FontRenderer font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
     RenderSystem.pushMatrix();
