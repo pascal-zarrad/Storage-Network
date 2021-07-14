@@ -22,6 +22,7 @@ public class ConfigRegistry {
   private static ConfigValue<List<String>> IGNORELIST;
   private static BooleanValue ENABLEAUTOSEARCHFOCUS;
   public static IntValue ITEMRANGE;
+  public static IntValue RECIPEMAXTAGS;
   static {
     initConfig();
   }
@@ -46,6 +47,9 @@ public class ConfigRegistry {
     //
     ITEMRANGE = COMMON_BUILDER.comment("\r\n Maximum range of the Storage Remote and Crafting Remote.   -1 means unlimited.")
         .defineInRange("remoteMaxRange", -1, -1, Integer.MAX_VALUE / 256);
+    //
+    RECIPEMAXTAGS = COMMON_BUILDER.comment("\r\n When matching items to recipes in the JEI + button, this is the maximum number of tags to serialize over the network when on a server.  Reduce if you get errors relating to Packet Sizes being too large (Minecraft 1.12.2 had this hardcoded at 5).")
+        .defineInRange("jeiMaximumRecipeTags", 64, 5, 128);
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }

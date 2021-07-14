@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public abstract class ContainerCable extends Container {
 
-  protected int sq = 18;
+  protected static final int SQ = 18;
   protected PlayerEntity player;
   protected World world;
 

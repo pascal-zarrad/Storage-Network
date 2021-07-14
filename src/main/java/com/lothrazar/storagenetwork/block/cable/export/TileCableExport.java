@@ -70,10 +70,6 @@ public class TileCableExport extends TileCableWithFacing implements ITickableTil
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
       return cap.cast();
     }
-    //    if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-    //      LazyOptional<IItemHandler> cap = LazyOptional.of(() -> ioStorage.upgrades);
-    //      return cap.cast();
-    //    }
     return super.getCapability(capability, facing);
   }
 

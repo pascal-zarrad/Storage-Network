@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.network.RecipeMessage;
+import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +40,13 @@ public class RequestRecipeTransferHandler<C extends Container> implements IRecip
           continue;
         }
         List<ItemStack> possibleItems = ingredient.getAllIngredients();
-        if (possibleItems == null) {
+        if (possibleItems == null || possibleItems.isEmpty()) {
           continue;
         }
         ListNBT invList = new ListNBT();
         for (int i = 0; i < possibleItems.size(); i++) {
-          if (i >= 5) {
-            break; // Max 5 possible items to avoid reaching max network packet size
+          if (i >= ConfigRegistry.RECIPEMAXTAGS.get()) {
+            break;
           }
           ItemStack itemStack = possibleItems.get(i);
           if (!itemStack.isEmpty()) {

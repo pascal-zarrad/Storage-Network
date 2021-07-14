@@ -7,6 +7,7 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -25,10 +26,11 @@ public class ContainerCableFilter extends ContainerCable {
     this.cap = (CapabilityConnectableLink) rawLink;
     this.bindPlayerInvo(playerInv);
   }
-  //  @Override
-  //  public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-  //    return ItemStack.EMPTY;
-  //  }
+
+  @Override
+  public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
+    return ItemStack.EMPTY;
+  }
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {

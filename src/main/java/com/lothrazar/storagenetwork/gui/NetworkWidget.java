@@ -332,7 +332,7 @@ public class NetworkWidget {
           case AMOUNT:
             return Integer.compare(o1.getCount(), o2.getCount()) * mul;
           case NAME:
-            return o2.getDisplayName().toString().compareToIgnoreCase(o1.getDisplayName().toString()) * mul;
+            return o2.getDisplayName().getString().compareToIgnoreCase(o1.getDisplayName().getString()) * mul;
           case MOD:
             return UtilTileEntity.getModNameForItem(o2.getItem()).compareToIgnoreCase(UtilTileEntity.getModNameForItem(o1.getItem())) * mul;
         }
