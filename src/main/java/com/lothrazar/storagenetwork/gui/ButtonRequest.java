@@ -1,13 +1,15 @@
 package com.lothrazar.storagenetwork.gui;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.client.gui.components.Button.OnPress;
 
 public class ButtonRequest extends Button {
 
@@ -94,24 +96,24 @@ public class ButtonRequest extends Button {
     return texture;
   }
 
-  public ButtonRequest(int xPos, int yPos, String displayString, IPressable handler) {
-    super(xPos, yPos, SIZE, SIZE, new TranslationTextComponent(displayString), handler);
+  public ButtonRequest(int xPos, int yPos, String displayString, OnPress handler) {
+    super(xPos, yPos, SIZE, SIZE, new TranslatableComponent(displayString), handler);
     texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
   }
 
   @Override
-  public void render(MatrixStack ms, int mx, int my, float pt) {
+  public void render(PoseStack ms, int mx, int my, float pt) {
     super.render(ms, mx, my, pt);
   }
 
   @Override
-  public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partial) {
+  public void renderButton(PoseStack ms, int mouseX, int mouseY, float partial) {
     if (texture == null) {
       super.renderButton(ms, mouseX, mouseY, partial);
       return;
     }
     Minecraft minecraft = Minecraft.getInstance();
-    minecraft.getTextureManager().bindTexture(getTexture());
+    minecraft.getTextureManager().bind(getTexture());
     int k = this.getYImage(this.isHovered());
     RenderSystem.enableBlend();
     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);

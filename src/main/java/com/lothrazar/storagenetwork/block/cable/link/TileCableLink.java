@@ -4,14 +4,14 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableLink extends TileCableWithFacing implements ITickableTileEntity {
+public class TileCableLink extends TileCableWithFacing implements TickableBlockEntity {
 
   protected CapabilityConnectableLink itemStorage;
 
@@ -21,14 +21,14 @@ public class TileCableLink extends TileCableWithFacing implements ITickableTileE
   }
 
   @Override
-  public void read(BlockState bs, CompoundNBT compound) {
-    super.read(bs, compound);
+  public void load(BlockState bs, CompoundTag compound) {
+    super.load(bs, compound);
     this.itemStorage.deserializeNBT(compound.getCompound("capability"));
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT compound) {
-    CompoundNBT result = super.write(compound);
+  public CompoundTag save(CompoundTag compound) {
+    CompoundTag result = super.save(compound);
     result.put("capability", itemStorage.serializeNBT());
     return result;
   }

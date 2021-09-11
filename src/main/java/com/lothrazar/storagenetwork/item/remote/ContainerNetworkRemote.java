@@ -6,9 +6,9 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilInventory;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.apache.commons.lang3.tuple.Triple;
 
 public class ContainerNetworkRemote extends ContainerNetwork {
@@ -16,10 +16,10 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   private TileMain root;
   private ItemStack remote;
 
-  public ContainerNetworkRemote(int id, PlayerInventory pInv) {
+  public ContainerNetworkRemote(int id, Inventory pInv) {
     super(SsnRegistry.REMOTE, id);
     this.player = pInv.player;
-    this.world = player.world;
+    this.world = player.level;
     //    if (world.isRemote) {
     //      Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(Minecraft.getInstance().player, SsnRegistry.INVENTORY_REMOTE);
     //      this.remote = result.getRight();
@@ -30,7 +30,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     //    } 
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
-      StorageNetwork.LOGGER.error(world.isRemote + "=client||Remote opening with null pos Stored {} ", result);
+      StorageNetwork.LOGGER.error(world.isClientSide + "=client||Remote opening with null pos Stored {} ", result);
     }
     else {
       StorageNetwork.log("CONTAINER FFFFFF" + dp.getBlockPos());
@@ -46,7 +46,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   }
 
   @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
+  public boolean stillValid(Player playerIn) {
     //does not store itemstack inventory, and opens from curios so no security here. unless it dissapears
     return !remote.isEmpty();
   }

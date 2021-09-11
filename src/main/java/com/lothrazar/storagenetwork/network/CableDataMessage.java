@@ -7,10 +7,10 @@ import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.function.Supplier;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -53,9 +53,9 @@ public class CableDataMessage {
 
   public static void handle(CableDataMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
+      ServerPlayer player = ctx.get().getSender();
       CapabilityConnectableLink link = null;
-      ContainerCableFilter container = (ContainerCableFilter) player.openContainer;
+      ContainerCableFilter container = (ContainerCableFilter) player.containerMenu;
       if (container == null || container.cap == null) {
         return;
       }
@@ -84,7 +84,7 @@ public class CableDataMessage {
             }
           }
           PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
-              player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+              player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
         break;
         case SYNC_DATA:
           link.setPriority(link.getPriority() + message.value);
@@ -98,22 +98,22 @@ public class CableDataMessage {
         break;
       }
       //
-      player.connection.sendPacket(container.tile.getUpdatePacket());
+      player.connection.send(container.tile.getUpdatePacket());
       //
     });
     ctx.get().setPacketHandled(true);
   }
 
-  public static void encode(CableDataMessage msg, PacketBuffer buffer) {
+  public static void encode(CableDataMessage msg, FriendlyByteBuf buffer) {
     buffer.writeInt(msg.id);
     buffer.writeInt(msg.value);
     buffer.writeBoolean(msg.isAllowlist);
-    buffer.writeCompoundTag(msg.stack.write(new CompoundNBT()));
+    buffer.writeNbt(msg.stack.save(new CompoundTag()));
   }
 
-  public static CableDataMessage decode(PacketBuffer buffer) {
+  public static CableDataMessage decode(FriendlyByteBuf buffer) {
     CableDataMessage c = new CableDataMessage(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
-    c.stack = ItemStack.read(buffer.readCompoundTag());
+    c.stack = ItemStack.of(buffer.readNbt());
     return c;
   }
 }

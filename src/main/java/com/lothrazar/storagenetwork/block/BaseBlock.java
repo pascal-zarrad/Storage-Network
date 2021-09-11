@@ -2,24 +2,24 @@ package com.lothrazar.storagenetwork.block;
 
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import java.util.List;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 public abstract class BaseBlock extends Block {
 
   public BaseBlock(Material materialIn, String registryName) {
-    super(Block.Properties.create(materialIn).hardnessAndResistance(0.5F).sound(SoundType.STONE));
+    super(Block.Properties.of(materialIn).strength(0.5F).sound(SoundType.STONE));
     setRegistryName(registryName);
   }
 
@@ -29,21 +29,21 @@ public abstract class BaseBlock extends Block {
   }
 
   @Override
-  public void addInformation(ItemStack stack, IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-    super.addInformation(stack, playerIn, tooltip, advanced);
-    TranslationTextComponent t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    t.mergeStyle(TextFormatting.GRAY);
+  public void appendHoverText(ItemStack stack, BlockGetter playerIn, List<Component> tooltip, TooltipFlag advanced) {
+    super.appendHoverText(stack, playerIn, tooltip, advanced);
+    TranslatableComponent t = new TranslatableComponent(getDescriptionId() + ".tooltip");
+    t.withStyle(ChatFormatting.GRAY);
     tooltip.add(t);
   }
 
-  protected void updateConnection(World worldIn, BlockPos pos, BlockState stateIn) {
+  protected void updateConnection(Level worldIn, BlockPos pos, BlockState stateIn) {
     BlockState facingState;
     for (Direction d : Direction.values()) {
-      BlockPos facingPos = pos.offset(d);
+      BlockPos facingPos = pos.relative(d);
       facingState = worldIn.getBlockState(facingPos);
       if (facingState.getBlock() instanceof BlockCable) {
         BlockCable c = (BlockCable) facingState.getBlock();
-        c.updatePostPlacement(facingState, d.getOpposite(), stateIn, worldIn, facingPos, pos);
+        c.updateShape(facingState, d.getOpposite(), stateIn, worldIn, facingPos, pos);
       }
     }
   }

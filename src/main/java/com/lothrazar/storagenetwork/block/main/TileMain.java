@@ -20,30 +20,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class TileMain extends TileEntity implements ITickableTileEntity {
+public class TileMain extends BlockEntity implements TickableBlockEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
   private boolean shouldRefresh = true;
 
   private DimPos getDimPos() {
-    return new DimPos(world, pos);
+    return new DimPos(level, worldPosition);
   }
 
   public TileMain() {
@@ -143,8 +143,8 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   @Override
-  public CompoundNBT getUpdateTag() {
-    return write(new CompoundNBT());
+  public CompoundTag getUpdateTag() {
+    return save(new CompoundTag());
   }
 
   /**
@@ -168,17 +168,17 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (!lookPos.isLoaded()) {
         continue;
       }
-      IChunk chunk = lookPos.getChunk();
+      ChunkAccess chunk = lookPos.getChunk();
       if (chunk == null) {
         continue;
       }
       // Prevent having multiple  on a network and break all others.
       TileMain maybeMain = lookPos.getTileEntity(TileMain.class);
-      if (maybeMain != null && !lookPos.equals(world, pos)) {
+      if (maybeMain != null && !lookPos.equals(level, worldPosition)) {
         nukeAndDrop(lookPos);
         continue;
       }
-      TileEntity tileHere = lookPos.getTileEntity(TileEntity.class);
+      BlockEntity tileHere = lookPos.getTileEntity(BlockEntity.class);
       if (tileHere == null) {
         continue;
       }
@@ -209,15 +209,15 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         }
         set.add(realConnectablePos);
         addConnectables(realConnectablePos, set);
-        tileHere.markDirty();
-        chunk.setModified(true);
+        tileHere.setChanged();
+        chunk.setUnsaved(true);
       }
     }
   }
 
   private static void nukeAndDrop(DimPos lookPos) {
     lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
-    lookPos.getWorld().removeTileEntity(lookPos.getBlockPos());
+    lookPos.getWorld().removeBlockEntity(lookPos.getBlockPos());
   }
 
   public static boolean isTargetAllowed(BlockState state) {
@@ -234,7 +234,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   public void refreshNetwork() {
-    if (world.isRemote) {
+    if (level.isClientSide) {
       return;
     }
     shouldRefresh = true;
@@ -344,7 +344,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       }
       if (storage.needsRedstone()) {
         //    StorageNetwork.log(storage.needsRedstone() + " == needsRedstone for import ");
-        boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
+        boolean power = level.hasNeighborSignal(connectable.getPos().getBlockPos());
         if (power == false) {
           // StorageNetwork.log(power + " IMPORT pow here ; needs yes skip me");
           continue;
@@ -361,7 +361,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       // Alright, simulation says we're good, let's do it!
       // First extract from the storage
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markDirty();
+      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
       // Then insert into our network
       insertStack(actuallyExtracted.copy(), false);
     }
@@ -404,7 +404,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         continue;
       }
       if (storage.needsRedstone()) {
-        boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
+        boolean power = level.hasNeighborSignal(connectable.getPos().getBlockPos());
         if (power == false) {
           //  StorageNetwork.log(power + " Export pow here ; needs yes skip me");
           continue;
@@ -417,7 +417,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         if (stockMode) {
           try {
             //       StorageNetwork.log("updateExports: attempt " + matcher.getStack());
-            TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
+            BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
             IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
             //request with false to see how many even exist in there.  
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
@@ -499,7 +499,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (!pos.isLoaded()) {
         continue;
       }
-      TileEntity tileEntity = pos.getTileEntity(TileEntity.class);
+      BlockEntity tileEntity = pos.getTileEntity(BlockEntity.class);
       if (tileEntity == null) {
         continue;
       }
@@ -519,7 +519,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (!dimpos.isLoaded()) {
         continue;
       }
-      TileEntity tileEntity = dimpos.getTileEntity(TileEntity.class);
+      BlockEntity tileEntity = dimpos.getTileEntity(BlockEntity.class);
       if (tileEntity == null) {
         continue;
       }
@@ -542,15 +542,15 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
 
   @Override
   public void tick() {
-    if (world == null || world.isRemote) {
+    if (level == null || level.isClientSide) {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) || shouldRefresh) {
+    if (getConnectablePositions() == null || (level.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
-        world.getChunk(pos).setModified(true);
+        level.getChunk(worldPosition).setUnsaved(true);
       }
       catch (Throwable e) {
         StorageNetwork.LOGGER.info("Refresh network error ", e);
@@ -562,18 +562,18 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   @Override
-  public SUpdateTileEntityPacket getUpdatePacket() {
-    CompoundNBT syncData = new CompoundNBT();
-    write(syncData);
-    return new SUpdateTileEntityPacket(pos, 1, syncData);
+  public ClientboundBlockEntityDataPacket getUpdatePacket() {
+    CompoundTag syncData = new CompoundTag();
+    save(syncData);
+    return new ClientboundBlockEntityDataPacket(worldPosition, 1, syncData);
   }
 
   @Override
-  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    read(this.getBlockState(), pkt.getNbtCompound());
+  public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    load(this.getBlockState(), pkt.getTag());
   }
 
-  public static boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newSate) {
+  public static boolean shouldRefresh(Level world, BlockPos pos, BlockState oldState, BlockState newSate) {
     return oldState.getBlock() != newSate.getBlock();
   }
 

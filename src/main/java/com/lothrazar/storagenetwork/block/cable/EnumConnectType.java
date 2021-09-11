@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.block.cable;
 
 import java.util.Locale;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum EnumConnectType implements IStringSerializable {
+public enum EnumConnectType implements StringRepresentable {
 
   NONE, CABLE, INVENTORY, BLOCKED;
 
@@ -16,7 +16,7 @@ public enum EnumConnectType implements IStringSerializable {
   }
 
   @Override
-  public String getString() {
+  public String getSerializedName() {
     return getName();
   }
 

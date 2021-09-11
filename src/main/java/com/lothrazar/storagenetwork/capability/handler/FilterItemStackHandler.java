@@ -3,8 +3,8 @@ package com.lothrazar.storagenetwork.capability.handler;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 
@@ -69,18 +69,18 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   @Override
-  public void deserializeNBT(CompoundNBT nbt) {
+  public void deserializeNBT(CompoundTag nbt) {
     super.deserializeNBT(nbt);
-    CompoundNBT rulesTag = nbt.getCompound("rules");
+    CompoundTag rulesTag = nbt.getCompound("rules");
     tags = rulesTag.getBoolean("tags");
     this.nbt = rulesTag.getBoolean("nbt");
     isAllowList = rulesTag.getBoolean("whitelist");
   }
 
   @Override
-  public CompoundNBT serializeNBT() {
-    CompoundNBT result = super.serializeNBT();
-    CompoundNBT rulesTag = new CompoundNBT();
+  public CompoundTag serializeNBT() {
+    CompoundTag result = super.serializeNBT();
+    CompoundTag rulesTag = new CompoundTag();
     rulesTag.putBoolean("tags", tags);
     rulesTag.putBoolean("nbt", nbt);
     rulesTag.putBoolean("whitelist", isAllowList);

@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class CableLimitMessage {
@@ -34,15 +34,15 @@ public class CableLimitMessage {
     ctx.get().setPacketHandled(true);
   }
 
-  public static CableLimitMessage decode(PacketBuffer buf) {
+  public static CableLimitMessage decode(FriendlyByteBuf buf) {
     CableLimitMessage message = new CableLimitMessage();
     message.limit = buf.readInt();
-    message.stack = ItemStack.read(buf.readCompoundTag());
+    message.stack = ItemStack.of(buf.readNbt());
     return message;
   }
 
-  public static void encode(CableLimitMessage msg, PacketBuffer buf) {
+  public static void encode(CableLimitMessage msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.limit);
-    buf.writeCompoundTag(msg.stack.serializeNBT());
+    buf.writeNbt(msg.stack.serializeNBT());
   }
 }

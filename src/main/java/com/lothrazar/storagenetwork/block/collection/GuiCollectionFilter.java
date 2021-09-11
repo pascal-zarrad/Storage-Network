@@ -8,32 +8,32 @@ import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
-public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilter> implements IGuiPrivate {
+public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollectionFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/plain_filter.png");
   ContainerCollectionFilter containerCableLink;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
-  public GuiCollectionFilter(ContainerCollectionFilter containerCableFilter, PlayerInventory inv, ITextComponent name) {
+  public GuiCollectionFilter(ContainerCollectionFilter containerCableFilter, Inventory inv, Component name) {
     super(containerCableFilter, inv, name);
     this.containerCableLink = containerCableFilter;
   }
 
   @Override
-  public void renderStackTooltip(MatrixStack ms, ItemStack stack, int mousex, int mousey) {
+  public void renderStackTooltip(PoseStack ms, ItemStack stack, int mousex, int mousey) {
     super.renderTooltip(ms, stack, mousex, mousey);
   }
 
   @Override
-  public void drawGradient(MatrixStack ms, int x, int y, int x2, int y2, int u, int v) {
+  public void drawGradient(PoseStack ms, int x, int y, int x2, int y2, int u, int v) {
     super.fillGradient(ms, x, y, x2, y2, u, v);
   }
 
@@ -47,25 +47,25 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
   }
 
   @Override
-  public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+  public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(ms, mouseX, mouseY);
+    this.renderTooltip(ms, mouseX, mouseY);
   }
 
   @Override
-  public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
+  public void renderLabels(PoseStack ms, int mouseX, int mouseY) {
     //    super.drawGuiContainerForegroundLayer(ms, mouseX, mouseY);
   }
 
   public static final int SLOT_SIZE = 18;
 
   @Override
-  protected void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    minecraft.getTextureManager().bindTexture(texture);
-    int xCenter = (width - xSize) / 2;
-    int yCenter = (height - ySize) / 2;
-    blit(ms, xCenter, yCenter, 0, 0, xSize, ySize);
+  protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+    minecraft.getTextureManager().bind(texture);
+    int xCenter = (width - imageWidth) / 2;
+    int yCenter = (height - imageHeight) / 2;
+    blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
     itemSlotsGhost = Lists.newArrayList();
     //TODO: shared with GuiCableIO
     int rows = 2;
@@ -76,7 +76,7 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
       for (int col = 0; col < cols; col++) {
         ItemStack stack = containerCableLink.cap.getFilter().getStackInSlot(index);
         int x = 8 + col * SLOT_SIZE;
-        itemSlotsGhost.add(new ItemSlotNetwork(this, stack, guiLeft + x, guiTop + y, stack.getCount(), guiLeft, guiTop, true));
+        itemSlotsGhost.add(new ItemSlotNetwork(this, stack, leftPos + x, topPos + y, stack.getCount(), leftPos, topPos, true));
         index++;
       }
       //move down to second row
@@ -97,7 +97,7 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    ItemStack mouse = minecraft.player.inventory.getItemStack();
+    ItemStack mouse = minecraft.player.inventory.getCarried();
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
@@ -132,6 +132,6 @@ public class GuiCollectionFilter extends ContainerScreen<ContainerCollectionFilt
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
-    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
+    return super.isHovering(x, y, width, height, mouseX, mouseY);
   }
 }

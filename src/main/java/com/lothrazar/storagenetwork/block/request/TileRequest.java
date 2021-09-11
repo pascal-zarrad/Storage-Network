@@ -7,19 +7,19 @@ import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.util.Constants;
 
-public class TileRequest extends TileConnectable implements INamedContainerProvider, ITileNetworkSync {
+public class TileRequest extends TileConnectable implements MenuProvider, ITileNetworkSync {
 
   public static final String NBT_JEI = StorageNetwork.MODID + "jei";
   private static final String NBT_DIR = StorageNetwork.MODID + "dir";
@@ -34,7 +34,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
   }
 
   @Override
-  public void read(BlockState bs, CompoundNBT compound) {
+  public void load(BlockState bs, CompoundTag compound) {
     setDownwards(compound.getBoolean(NBT_DIR));
     if (compound.contains(NBT_SORT)) {
       setSort(EnumSortType.values()[compound.getInt(NBT_SORT)]);
@@ -42,33 +42,33 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
     if (compound.contains(NBT_JEI)) {
       this.setJeiSearchSynced(compound.getBoolean(NBT_JEI));
     }
-    ListNBT invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
+    ListTag invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
     matrix = new HashMap<>();
     for (int i = 0; i < invList.size(); i++) {
-      CompoundNBT stackTag = invList.getCompound(i);
+      CompoundTag stackTag = invList.getCompound(i);
       int slot = stackTag.getByte("Slot");
-      ItemStack s = ItemStack.read(stackTag);
+      ItemStack s = ItemStack.of(stackTag);
       matrix.put(slot, s);
     }
-    super.read(bs, compound);
+    super.load(bs, compound);
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT compound) {
+  public CompoundTag save(CompoundTag compound) {
     compound.putBoolean(NBT_DIR, isDownwards());
     compound.putInt(NBT_SORT, getSort().ordinal());
     compound.putBoolean(NBT_JEI, this.isJeiSearchSynced());
-    ListNBT invList = new ListNBT();
+    ListTag invList = new ListTag();
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
-        CompoundNBT stackTag = new CompoundNBT();
+        CompoundTag stackTag = new CompoundTag();
         stackTag.putByte("Slot", (byte) i);
-        matrix.get(i).write(stackTag);
+        matrix.get(i).save(stackTag);
         invList.add(stackTag);
       }
     }
     compound.put("matrix", invList);
-    return super.write(compound);
+    return super.save(compound);
   }
 
   @Override
@@ -92,13 +92,13 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
   }
 
   @Override
-  public ITextComponent getDisplayName() {
-    return new TranslationTextComponent(getType().getRegistryName().getPath());
+  public Component getDisplayName() {
+    return new TranslatableComponent(getType().getRegistryName().getPath());
   }
 
   @Override
-  public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-    return new ContainerNetworkCraftingTable(i, world, pos, playerInventory, playerEntity);
+  public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
+    return new ContainerNetworkCraftingTable(i, level, worldPosition, playerInventory, playerEntity);
   }
 
   public boolean isJeiSearchSynced() {

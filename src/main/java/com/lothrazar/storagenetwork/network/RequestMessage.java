@@ -9,9 +9,9 @@ import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -42,11 +42,11 @@ public class RequestMessage {
 
   public static void handle(RequestMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
+      ServerPlayer player = ctx.get().getSender();
       TileMain root = null;
       ContainerNetwork ctr = null;
-      if (player.openContainer instanceof ContainerNetwork) {
-        ctr = (ContainerNetwork) player.openContainer;
+      if (player.containerMenu instanceof ContainerNetwork) {
+        ctr = (ContainerNetwork) player.containerMenu;
         root = ctr.getTileMain();
       }
       else {
@@ -91,31 +91,31 @@ public class RequestMessage {
         }
         else {
           //when player TAKES an item, go here
-          player.inventory.setItemStack(stack);
+          player.inventory.setCarried(stack);
           PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(stack),
-              player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+              player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
         }
       }
       List<ItemStack> list = root.getSortedStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-          player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-      player.openContainer.detectAndSendChanges();
+          player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+      player.containerMenu.broadcastChanges();
     });
     ctx.get().setPacketHandled(true);
   }
 
-  public static RequestMessage decode(PacketBuffer buf) {
+  public static RequestMessage decode(FriendlyByteBuf buf) {
     RequestMessage msg = new RequestMessage();
     msg.mouseButton = buf.readInt();
-    msg.stack = ItemStack.read(buf.readCompoundTag());
+    msg.stack = ItemStack.of(buf.readNbt());
     msg.shift = buf.readBoolean();
     msg.ctrl = buf.readBoolean();
     return msg;
   }
 
-  public static void encode(RequestMessage msg, PacketBuffer buf) {
+  public static void encode(RequestMessage msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.mouseButton);
-    buf.writeCompoundTag(msg.stack.serializeNBT());
+    buf.writeNbt(msg.stack.serializeNBT());
     buf.writeBoolean(msg.shift);
     buf.writeBoolean(msg.ctrl);
   }

@@ -9,71 +9,71 @@ import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import java.util.Map;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BlockCable extends BaseBlock {
 
   public BlockCable(String registryName) {
-    super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F), registryName);
-    setDefaultState(stateContainer.getBaseState()
-        .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
-        .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
-        .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
+    super(Block.Properties.of(Material.STONE).strength(0.2F), registryName);
+    registerDefaultState(stateDefinition.any()
+        .setValue(NORTH, EnumConnectType.NONE).setValue(EAST, EnumConnectType.NONE)
+        .setValue(SOUTH, EnumConnectType.NONE).setValue(WEST, EnumConnectType.NONE)
+        .setValue(UP, EnumConnectType.NONE).setValue(DOWN, EnumConnectType.NONE));
   }
 
   @SuppressWarnings("deprecation")
   @Override
-  public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+  public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
     if (state.getBlock() != newState.getBlock()) {
-      TileEntity tileentity = worldIn.getTileEntity(pos);
+      BlockEntity tileentity = worldIn.getBlockEntity(pos);
       if (tileentity != null) {
         IItemHandler items = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if (items != null) {
           for (int i = 0; i < items.getSlots(); ++i) {
-            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
+            Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
           }
-          worldIn.updateComparatorOutputLevel(pos, this);
+          worldIn.updateNeighbourForOutputSignal(pos, this);
         }
         IConnectableItemAutoIO connectable = tileentity.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO).orElse(null);
         if (connectable instanceof CapabilityConnectableAutoIO) {
           CapabilityConnectableAutoIO filterCable = (CapabilityConnectableAutoIO) connectable;
           for (int i = 0; i < filterCable.upgrades.getSlots(); ++i) {
-            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), filterCable.upgrades.getStackInSlot(i));
+            Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), filterCable.upgrades.getStackInSlot(i));
           }
-          worldIn.updateComparatorOutputLevel(pos, this);
+          worldIn.updateNeighbourForOutputSignal(pos, this);
         }
       }
-      super.onReplaced(state, worldIn, pos, newState, isMoving);
+      super.onRemove(state, worldIn, pos, newState, isMoving);
     }
   }
 
   public static BlockState cleanBlockState(BlockState state) {
     for (Direction d : Direction.values()) {
       EnumProperty<EnumConnectType> prop = FACING_TO_PROPERTY_MAP.get(d);
-      if (state.get(prop) == EnumConnectType.INVENTORY) {
+      if (state.getValue(prop) == EnumConnectType.INVENTORY) {
         //dont replace cable types only inv types
-        state = state.with(prop, EnumConnectType.NONE);
+        state = state.setValue(prop, EnumConnectType.NONE);
       }
     }
     return state;
@@ -100,53 +100,53 @@ public class BlockCable extends BaseBlock {
   private static final double sm = C - w;
   private static final double lg = C + w;
   //(double x1, double y1, double z1, double x2, double y2, double z2)
-  private static final VoxelShape AABB = Block.makeCuboidShape(sm, sm, sm, lg, lg, lg);
+  private static final VoxelShape AABB = Block.box(sm, sm, sm, lg, lg, lg);
   //Y for updown
-  private static final VoxelShape AABB_UP = Block.makeCuboidShape(sm, sm, sm, lg, top, lg);
-  private static final VoxelShape AABB_DOWN = Block.makeCuboidShape(sm, bot, sm, lg, lg, lg);
+  private static final VoxelShape AABB_UP = Block.box(sm, sm, sm, lg, top, lg);
+  private static final VoxelShape AABB_DOWN = Block.box(sm, bot, sm, lg, lg, lg);
   //Z for n-s
-  private static final VoxelShape AABB_NORTH = Block.makeCuboidShape(sm, sm, bot, lg, lg, lg);
-  private static final VoxelShape AABB_SOUTH = Block.makeCuboidShape(sm, sm, sm, lg, lg, top);
+  private static final VoxelShape AABB_NORTH = Block.box(sm, sm, bot, lg, lg, lg);
+  private static final VoxelShape AABB_SOUTH = Block.box(sm, sm, sm, lg, lg, top);
   //X for e-w
-  private static final VoxelShape AABB_WEST = Block.makeCuboidShape(bot, sm, sm, lg, lg, lg);
-  private static final VoxelShape AABB_EAST = Block.makeCuboidShape(sm, sm, sm, top, lg, lg);
+  private static final VoxelShape AABB_WEST = Block.box(bot, sm, sm, lg, lg, lg);
+  private static final VoxelShape AABB_EAST = Block.box(sm, sm, sm, top, lg, lg);
 
   private boolean shapeConnects(BlockState state, EnumProperty<EnumConnectType> dirctionProperty) {
-    return state.get(dirctionProperty).equals(EnumConnectType.CABLE)
-        || state.get(dirctionProperty).equals(EnumConnectType.INVENTORY);
+    return state.getValue(dirctionProperty).equals(EnumConnectType.CABLE)
+        || state.getValue(dirctionProperty).equals(EnumConnectType.INVENTORY);
   }
 
   @Override
-  public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+  public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
     return ShapeCache.getOrCreate(state, this::createShape);
   }
 
   private VoxelShape createShape(BlockState state) {
     VoxelShape shape = AABB;
     if (shapeConnects(state, UP)) {
-      shape = VoxelShapes.combine(shape, AABB_UP, IBooleanFunction.OR);
+      shape = Shapes.joinUnoptimized(shape, AABB_UP, BooleanOp.OR);
     }
     if (shapeConnects(state, DOWN)) {
-      shape = VoxelShapes.combine(shape, AABB_DOWN, IBooleanFunction.OR);
+      shape = Shapes.joinUnoptimized(shape, AABB_DOWN, BooleanOp.OR);
     }
-    if (state.get(WEST).equals(EnumConnectType.CABLE)) {
-      shape = VoxelShapes.combine(shape, AABB_WEST, IBooleanFunction.OR);
+    if (state.getValue(WEST).equals(EnumConnectType.CABLE)) {
+      shape = Shapes.joinUnoptimized(shape, AABB_WEST, BooleanOp.OR);
     }
-    if (state.get(EAST).equals(EnumConnectType.CABLE)) {
-      shape = VoxelShapes.combine(shape, AABB_EAST, IBooleanFunction.OR);
+    if (state.getValue(EAST).equals(EnumConnectType.CABLE)) {
+      shape = Shapes.joinUnoptimized(shape, AABB_EAST, BooleanOp.OR);
     }
-    if (state.get(NORTH).equals(EnumConnectType.CABLE)) {
-      shape = VoxelShapes.combine(shape, AABB_NORTH, IBooleanFunction.OR);
+    if (state.getValue(NORTH).equals(EnumConnectType.CABLE)) {
+      shape = Shapes.joinUnoptimized(shape, AABB_NORTH, BooleanOp.OR);
     }
-    if (state.get(SOUTH).equals(EnumConnectType.CABLE)) {
-      shape = VoxelShapes.combine(shape, AABB_SOUTH, IBooleanFunction.OR);
+    if (state.getValue(SOUTH).equals(EnumConnectType.CABLE)) {
+      shape = Shapes.joinUnoptimized(shape, AABB_SOUTH, BooleanOp.OR);
     }
     return shape;
   }
 
   @Override
-  public BlockRenderType getRenderType(BlockState bs) {
-    return BlockRenderType.MODEL;
+  public RenderShape getRenderShape(BlockState bs) {
+    return RenderShape.MODEL;
   }
 
   @Override
@@ -155,45 +155,45 @@ public class BlockCable extends BaseBlock {
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
     return new TileCable();
   }
 
   @Override
-  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState stateIn, LivingEntity placer, ItemStack stack) {
+  public void setPlacedBy(Level worldIn, BlockPos pos, BlockState stateIn, LivingEntity placer, ItemStack stack) {
     BlockState facingState;
     for (Direction d : Direction.values()) {
-      BlockPos posoff = pos.offset(d);
+      BlockPos posoff = pos.relative(d);
       facingState = worldIn.getBlockState(posoff);
-      TileEntity tileOffset = worldIn.getTileEntity(posoff);
+      BlockEntity tileOffset = worldIn.getBlockEntity(posoff);
       IConnectable cap = null;
       if (tileOffset != null) {
         cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
       }
       if (cap != null
           || facingState.getBlock() == SsnRegistry.MAIN) {
-        stateIn = stateIn.with(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
-        worldIn.setBlockState(pos, stateIn);
+        stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
+        worldIn.setBlockAndUpdate(pos, stateIn);
       }
     }
   }
 
   @Override
-  protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-    super.fillStateContainer(builder);
+  protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    super.createBlockStateDefinition(builder);
     builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
   }
 
   @Override
-  public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+  public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     if (facingState.getBlock() == SsnRegistry.MAIN
         || facingState.getBlock() instanceof BlockCable) {
       //      StorageNetwork.log("plain cable" + facingState.getBlock());
-      return stateIn.with(property, EnumConnectType.CABLE);
+      return stateIn.setValue(property, EnumConnectType.CABLE);
     } //
       //based on capability you have, edit connection type
-    TileEntity tileOffset = world.getTileEntity(facingPos);
+    BlockEntity tileOffset = world.getBlockEntity(facingPos);
     IConnectable cap = null;
     if (tileOffset != null) {
       cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
@@ -202,36 +202,36 @@ public class BlockCable extends BaseBlock {
       //      StorageNetwork.log("EARLY EXIT block" + facingState.getBlock() + " has cap " + cap);
       if (cap.getMainPos() != null) {
         //its a network bock of some type, knows where network is but not exactly inventory
-        return stateIn.with(property, EnumConnectType.INVENTORY);
+        return stateIn.setValue(property, EnumConnectType.INVENTORY);
       }
-      return stateIn.with(property, EnumConnectType.CABLE);
+      return stateIn.setValue(property, EnumConnectType.CABLE);
     }
     //if i have zero other inventories, and this is one now, ok go invo
     if (!this.hasInventoryAlready(stateIn)
         && isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
-      return stateIn.with(property, EnumConnectType.INVENTORY);
+      return stateIn.setValue(property, EnumConnectType.INVENTORY);
     }
-    return stateIn.with(property, EnumConnectType.NONE);
+    return stateIn.setValue(property, EnumConnectType.NONE);
   }
 
   //only one inventory allowed per link cable eh
   private boolean hasInventoryAlready(BlockState stateIn) {
     for (Direction d : Direction.values()) {
-      if (stateIn.get(FACING_TO_PROPERTY_MAP.get(d)).isInventory()) {
+      if (stateIn.getValue(FACING_TO_PROPERTY_MAP.get(d)).isInventory()) {
         return true;
       }
     }
     return false;
   }
 
-  private static boolean isInventory(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+  private static boolean isInventory(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
     if (facing == null) {
       return false;
     }
     if (!TileMain.isTargetAllowed(facingState)) {
       return false;
     }
-    TileEntity neighbor = world.getTileEntity(facingPos);
+    BlockEntity neighbor = world.getBlockEntity(facingPos);
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
       return true;

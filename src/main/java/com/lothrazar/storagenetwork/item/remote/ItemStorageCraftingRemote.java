@@ -9,31 +9,33 @@ import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class ItemStorageCraftingRemote extends Item implements INamedContainerProvider {
+import net.minecraft.world.item.Item.Properties;
+
+public class ItemStorageCraftingRemote extends Item implements MenuProvider {
 
   public static final String NBT_JEI = TileRequest.NBT_JEI;
   public static final String NBT_BOUND = "bound";
@@ -41,11 +43,11 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
   public static final String NBT_DOWN = "down";
 
   public ItemStorageCraftingRemote(Properties properties) {
-    super(properties.maxStackSize(1));
+    super(properties.stacksTo(1));
   }
 
   public static boolean isJeiSearchSynced(ItemStack stack) {
-    CompoundNBT tag = stack.getOrCreateTag();
+    CompoundTag tag = stack.getOrCreateTag();
     if (tag.contains(NBT_JEI)) {
       return tag.getBoolean(NBT_JEI);
     }
@@ -57,7 +59,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
   }
 
   public static boolean getDownwards(ItemStack stack) {
-    CompoundNBT tag = stack.getOrCreateTag();
+    CompoundTag tag = stack.getOrCreateTag();
     if (tag.contains(NBT_DOWN)) {
       return tag.getBoolean(NBT_DOWN);
     }
@@ -69,7 +71,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
   }
 
   public static EnumSortType getSort(ItemStack stack) {
-    CompoundNBT tag = stack.getOrCreateTag();
+    CompoundTag tag = stack.getOrCreateTag();
     if (tag.contains(NBT_SORT)) {
       int sort = tag.getInt(NBT_SORT);
       return EnumSortType.values()[sort];
@@ -82,25 +84,25 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
   }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context) {
-    Hand hand = context.getHand();
-    World world = context.getWorld();
-    BlockPos pos = context.getPos();
-    PlayerEntity player = context.getPlayer();
-    if (world.getTileEntity(pos) instanceof TileMain) {
-      ItemStack stack = player.getHeldItem(hand);
+  public InteractionResult useOn(UseOnContext context) {
+    InteractionHand hand = context.getHand();
+    Level world = context.getLevel();
+    BlockPos pos = context.getClickedPos();
+    Player player = context.getPlayer();
+    if (world.getBlockEntity(pos) instanceof TileMain) {
+      ItemStack stack = player.getItemInHand(hand);
       DimPos.putPos(stack, pos, world);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
-      return ActionResultType.SUCCESS;
+      return InteractionResult.SUCCESS;
     }
-    return ActionResultType.PASS;
+    return InteractionResult.PASS;
   }
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    TranslationTextComponent t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    t.mergeStyle(TextFormatting.GRAY);
+  public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    TranslatableComponent t = new TranslatableComponent(getDescriptionId() + ".tooltip");
+    t.withStyle(ChatFormatting.GRAY);
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);
@@ -108,7 +110,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     }
   }
 
-  public static boolean openRemote(World world, PlayerEntity player, ItemStack itemStackIn, ItemStorageCraftingRemote thiss) {
+  public static boolean openRemote(Level world, Player player, ItemStack itemStackIn, ItemStorageCraftingRemote thiss) {
     DimPos dp = DimPos.getPosStored(itemStackIn);
     if (dp == null) {
       //unbound or invalid data
@@ -118,7 +120,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     //assume we are in the same world
     BlockPos posTarget = dp.getBlockPos();
     if (ConfigRegistry.ITEMRANGE.get() != -1) {
-      double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
+      double distance = player.distanceToSqr(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
       if (distance >= ConfigRegistry.ITEMRANGE.get()) {
         UtilTileEntity.statusMessage(player, "item.remote.outofrange");
         return false;
@@ -126,11 +128,11 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     }
     //else it is -1 so dont even check distance
     //k now server only 
-    if (world.isRemote) {
+    if (world.isClientSide) {
       return false;
     }
     //now check the dimension world
-    ServerWorld serverTargetWorld = null;
+    ServerLevel serverTargetWorld = null;
     try {
       serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
       if (serverTargetWorld == null) {
@@ -148,39 +150,39 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
       StorageNetwork.LOGGER.info(UtilTileEntity.lang("item.remote.notloaded") + posTarget);
       return false;
     }
-    TileEntity tile = serverTargetWorld.getTileEntity(posTarget);
+    BlockEntity tile = serverTargetWorld.getBlockEntity(posTarget);
     if (tile instanceof TileMain) {
-      NetworkHooks.openGui((ServerPlayerEntity) player, thiss);
+      NetworkHooks.openGui((ServerPlayer) player, thiss);
       return true;
     }
     else {
-      player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
+      player.displayClientMessage(new TranslatableComponent("item.remote.notfound"), true);
       return false;
     }
   }
 
   @Override
-  public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-    if (hand != Hand.MAIN_HAND) {
+  public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    if (hand != InteractionHand.MAIN_HAND) {
       //no offhand openings
-      return super.onItemRightClick(world, player, hand);
+      return super.use(world, player, hand);
     }
-    ItemStack itemStackIn = player.getHeldItem(hand);
+    ItemStack itemStackIn = player.getItemInHand(hand);
     //
     if (openRemote(world, player, itemStackIn, this)) {
       // ok great 
-      return ActionResult.resultSuccess(itemStackIn);
+      return InteractionResultHolder.success(itemStackIn);
     }
-    return super.onItemRightClick(world, player, hand);
+    return super.use(world, player, hand);
   }
 
   @Override
-  public ITextComponent getDisplayName() {
-    return new TranslationTextComponent(this.getTranslationKey());
+  public Component getDisplayName() {
+    return new TranslatableComponent(this.getDescriptionId());
   }
 
   @Override
-  public Container createMenu(int id, PlayerInventory inv, PlayerEntity player) {
+  public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
     boolean crafting = (this == SsnRegistry.CRAFTING_REMOTE);
     if (crafting) {
       return new ContainerNetworkCraftingRemote(id, inv);

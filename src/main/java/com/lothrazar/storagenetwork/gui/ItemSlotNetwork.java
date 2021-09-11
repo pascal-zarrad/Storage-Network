@@ -2,12 +2,12 @@ package com.lothrazar.storagenetwork.gui;
 
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.util.UtilInventory;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * used as the MAIN grid in the network item display
@@ -42,7 +42,7 @@ public class ItemSlotNetwork {
   }
 
   @SuppressWarnings("deprecation")
-  public void drawSlot(MatrixStack ms, FontRenderer font, int mx, int my) {
+  public void drawSlot(PoseStack ms, Font font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
     RenderSystem.pushMatrix();
     if (!getStack().isEmpty()) {
@@ -59,16 +59,16 @@ public class ItemSlotNetwork {
         RenderSystem.pushMatrix();
         RenderSystem.scalef(.5f, .5f, .5f);
         //z level important to get numbers on top of items
-        Minecraft.getInstance().getItemRenderer().zLevel = -0.1F;
-        Minecraft.getInstance().getItemRenderer().renderItemOverlayIntoGUI(font, stack,
+        Minecraft.getInstance().getItemRenderer().blitOffset = -0.1F;
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack,
             x * 2 + 16,
             y * 2 + 16, amount);
         RenderSystem.popMatrix();
       }
       RenderSystem.pushMatrix();
       //z level important to get numbers on top of items
-      Minecraft.getInstance().getItemRenderer().zLevel = -100F;
-      Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(getStack(), x, y);
+      Minecraft.getInstance().getItemRenderer().blitOffset = -100F;
+      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
       RenderSystem.popMatrix();
       if (isMouseOverSlot(mx, my)) {
         int j1 = x;
@@ -81,7 +81,7 @@ public class ItemSlotNetwork {
     RenderSystem.popMatrix();
   }
 
-  public void drawTooltip(MatrixStack ms, int mx, int my) {
+  public void drawTooltip(PoseStack ms, int mx, int my) {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
       parent.renderStackTooltip(ms, getStack(),
           mx - parent.getGuiLeft(),

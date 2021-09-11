@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.api;
 
 import java.util.List;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IGuiNetwork extends IGuiPrivate {
 

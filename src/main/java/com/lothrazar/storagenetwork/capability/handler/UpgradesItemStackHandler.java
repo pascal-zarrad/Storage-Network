@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.capability.handler;
 
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class UpgradesItemStackHandler extends ItemStackHandlerEx {
 

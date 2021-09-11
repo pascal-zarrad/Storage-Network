@@ -5,20 +5,20 @@ import com.lothrazar.storagenetwork.block.cable.ContainerCable;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class ContainerCableFilter extends ContainerCable {
 
   public final TileCableFilter tile;
   public CapabilityConnectableLink cap;
 
-  public ContainerCableFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+  public ContainerCableFilter(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
     super(SsnRegistry.FILTERCONTAINER, windowId);
-    tile = (TileCableFilter) world.getTileEntity(pos);
+    tile = (TileCableFilter) world.getBlockEntity(pos);
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
     if (!(rawLink instanceof CapabilityConnectableLink)) {
       return;
@@ -28,12 +28,12 @@ public class ContainerCableFilter extends ContainerCable {
   }
 
   @Override
-  public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
+  public ItemStack quickMoveStack(Player player, int slotIndex) {
     return ItemStack.EMPTY;
   }
 
   @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
+  public boolean stillValid(Player playerIn) {
     return true;
   }
 }

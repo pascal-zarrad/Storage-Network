@@ -2,26 +2,26 @@ package com.lothrazar.storagenetwork.block.exchange;
 
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import java.util.List;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
 
 public class BlockExchange extends BaseBlock {
 
   public BlockExchange() {
-    super(Material.IRON, "exchange");
+    super(Material.METAL, "exchange");
   }
 
   @Override
-  public void addInformation(ItemStack stack, IBlockReader playerIn, List<ITextComponent> tooltip, ITooltipFlag advanced) {
-    super.addInformation(stack, playerIn, tooltip, advanced);
-    tooltip.add(new TranslationTextComponent("[WARNING: laggy on large networks] ").mergeStyle(TextFormatting.DARK_GRAY));
+  public void appendHoverText(ItemStack stack, BlockGetter playerIn, List<Component> tooltip, TooltipFlag advanced) {
+    super.appendHoverText(stack, playerIn, tooltip, advanced);
+    tooltip.add(new TranslatableComponent("[WARNING: laggy on large networks] ").withStyle(ChatFormatting.DARK_GRAY));
   }
 
   @Override
@@ -30,7 +30,7 @@ public class BlockExchange extends BaseBlock {
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
     return new TileExchange();
   }
 }

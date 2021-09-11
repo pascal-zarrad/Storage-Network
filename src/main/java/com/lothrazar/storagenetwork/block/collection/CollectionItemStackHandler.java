@@ -7,7 +7,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**

@@ -3,25 +3,25 @@ package com.lothrazar.storagenetwork.block.request;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.network.SortClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class BlockRequest extends BaseBlock {
 
   public BlockRequest() {
-    super(Material.IRON, "request");
+    super(Material.METAL, "request");
   }
 
   @Override
@@ -30,29 +30,29 @@ public class BlockRequest extends BaseBlock {
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
     return new TileRequest();
   }
 
   @Override
-  public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-    if (!world.isRemote) {
-      TileRequest tile = (TileRequest) world.getTileEntity(pos);
+  public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
+    if (!world.isClientSide) {
+      TileRequest tile = (TileRequest) world.getBlockEntity(pos);
       if (tile.getMain() == null || tile.getMain().getBlockPos() == null) {
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
       }
       //sync
-      ServerPlayerEntity sp = (ServerPlayerEntity) player;
+      ServerPlayer sp = (ServerPlayer) player;
       PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()),
-          sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+          sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       //end sync
-      if (tile instanceof INamedContainerProvider) {
-        NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tile, tile.getPos());
+      if (tile instanceof MenuProvider) {
+        NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tile, tile.getBlockPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!");
       }
     }
-    return ActionResultType.SUCCESS;
+    return InteractionResult.SUCCESS;
   }
 }

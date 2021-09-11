@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.capability;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class DefaultConnectable implements IConnectable {
 

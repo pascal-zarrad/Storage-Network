@@ -6,60 +6,60 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * Base class for Cable, Control, Request
  */
-public class TileConnectable extends TileEntity {
+public class TileConnectable extends BlockEntity {
 
   private final CapabilityConnectable connectable;
 
-  public TileConnectable(TileEntityType<?> tileEntityTypeIn) {
+  public TileConnectable(BlockEntityType<?> tileEntityTypeIn) {
     super(tileEntityTypeIn);
     connectable = new CapabilityConnectable();
   }
 
   @Override
-  public void setPos(BlockPos posIn) {
-    super.setPos(posIn);
+  public void setPosition(BlockPos posIn) {
+    super.setPosition(posIn);
     //   StorageNetwork.log("TILE CONNECTABLE :: SET POS on the capability" + posIn + "?" + world);
-    connectable.setPos(new DimPos(world, pos));
+    connectable.setPos(new DimPos(level, worldPosition));
   }
 
   @Override
-  public void read(BlockState bs, CompoundNBT compound) {
+  public void load(BlockState bs, CompoundTag compound) {
     if (compound.contains("connectable")) {
       connectable.deserializeNBT(compound.getCompound("connectable"));
     }
-    super.read(bs, compound);
+    super.load(bs, compound);
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT compound) {
+  public CompoundTag save(CompoundTag compound) {
     compound.put("connectable", connectable.serializeNBT());
-    return super.write(compound);
+    return super.save(compound);
   }
 
   @Override
-  public SUpdateTileEntityPacket getUpdatePacket() {
-    CompoundNBT syncData = new CompoundNBT();
-    write(syncData);
-    return new SUpdateTileEntityPacket(pos, 0, syncData);
+  public ClientboundBlockEntityDataPacket getUpdatePacket() {
+    CompoundTag syncData = new CompoundTag();
+    save(syncData);
+    return new ClientboundBlockEntityDataPacket(worldPosition, 0, syncData);
   }
 
   @Override
-  public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-    read(this.getBlockState(), pkt.getNbtCompound());
+  public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    load(this.getBlockState(), pkt.getTag());
   }
 
   @Override

@@ -9,11 +9,11 @@ import com.lothrazar.storagenetwork.gui.NetworkCraftingInventory;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 public class ContainerNetworkCraftingRemote extends ContainerNetwork {
 
@@ -21,11 +21,11 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   private TileMain root;
   private ItemStack remote;
 
-  public ContainerNetworkCraftingRemote(int id, PlayerInventory pInv) {
+  public ContainerNetworkCraftingRemote(int id, Inventory pInv) {
     super(SsnRegistry.CRAFTINGREMOTE, id);
-    this.remote = pInv.player.getHeldItemMainhand();
+    this.remote = pInv.player.getMainHandItem();
     this.player = pInv.player;
-    this.world = player.world;
+    this.world = player.level;
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
       StorageNetwork.LOGGER.error("Remote opening with null pos Stored {} ", remote);
@@ -39,21 +39,21 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     bindGrid();
     bindPlayerInvo(this.playerInv);
     bindHotbar();
-    for (int i = 0; i < matrix.getSizeInventory(); i++) {
+    for (int i = 0; i < matrix.getContainerSize(); i++) {
       if (remote.hasTag() && remote.getTag().contains("matrix" + i)) {
-        CompoundNBT tag = remote.getTag().getCompound("matrix" + i);
-        ItemStack stackSaved = ItemStack.read(tag);
+        CompoundTag tag = remote.getTag().getCompound("matrix" + i);
+        ItemStack stackSaved = ItemStack.of(tag);
         if (!stackSaved.isEmpty()) {
-          matrix.setInventorySlotContents(i, stackSaved);
+          matrix.setItem(i, stackSaved);
         }
       }
     }
-    onCraftMatrixChanged(matrix);
+    slotsChanged(matrix);
   }
 
   @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
-    return remote == player.getHeldItemMainhand();
+  public boolean stillValid(Player playerIn) {
+    return remote == player.getMainHandItem();
   }
 
   @Override
@@ -68,22 +68,22 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   }
 
   @Override
-  public void onCraftMatrixChanged(IInventory inventoryIn) {
+  public void slotsChanged(Container inventoryIn) {
     if (recipeLocked) {
       //      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
     //    findMatchingRecipe(matrix);
-    super.onCraftMatrixChanged(inventoryIn);
+    super.slotsChanged(inventoryIn);
   }
 
   @Override
-  public void onContainerClosed(PlayerEntity playerIn) {
-    super.onContainerClosed(playerIn);
+  public void removed(Player playerIn) {
+    super.removed(playerIn);
     ItemStack me;
-    for (int i = 0; i < matrix.getSizeInventory(); i++) {
-      me = matrix.getStackInSlot(i);
-      CompoundNBT here = me.write(new CompoundNBT());
+    for (int i = 0; i < matrix.getContainerSize(); i++) {
+      me = matrix.getItem(i);
+      CompoundTag here = me.save(new CompoundTag());
       this.remote.getTag().put("matrix" + i, here);
     }
   }

@@ -4,11 +4,11 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileNetworkSync;
 import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import java.util.function.Supplier;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class SettingsSyncMessage {
@@ -30,19 +30,19 @@ public class SettingsSyncMessage {
 
   public static void handle(SettingsSyncMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
+      ServerPlayer player = ctx.get().getSender();
       if (message.targetTileEntity) {
-        TileEntity tileEntity = player.world.getTileEntity(message.pos);
+        BlockEntity tileEntity = player.level.getBlockEntity(message.pos);
         if (tileEntity instanceof ITileNetworkSync) {
           ITileNetworkSync tile = (ITileNetworkSync) tileEntity;
           tile.setSort(message.sort);
           tile.setDownwards(message.direction);
           tile.setJeiSearchSynced(message.jeiSync);
-          tileEntity.markDirty();
+          tileEntity.setChanged();
         }
       }
       else {
-        ItemStack stackPlayerHeld = player.inventory.getCurrentItem();
+        ItemStack stackPlayerHeld = player.inventory.getSelected();
         if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
@@ -53,7 +53,7 @@ public class SettingsSyncMessage {
     ctx.get().setPacketHandled(true);
   }
 
-  public static SettingsSyncMessage decode(PacketBuffer buf) {
+  public static SettingsSyncMessage decode(FriendlyByteBuf buf) {
     SettingsSyncMessage message = new SettingsSyncMessage();
     message.direction = buf.readBoolean();
     int sort = buf.readInt();
@@ -64,7 +64,7 @@ public class SettingsSyncMessage {
     return message;
   }
 
-  public static void encode(SettingsSyncMessage msg, PacketBuffer buf) {
+  public static void encode(SettingsSyncMessage msg, FriendlyByteBuf buf) {
     buf.writeBoolean(msg.direction);
     buf.writeInt(msg.sort.ordinal());
     if (msg.pos != null) {

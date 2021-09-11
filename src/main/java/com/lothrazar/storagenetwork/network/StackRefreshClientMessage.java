@@ -5,9 +5,9 @@ import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
@@ -34,40 +34,40 @@ public class StackRefreshClientMessage {
   public static void handle(StackRefreshClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       Minecraft mc = Minecraft.getInstance();
-      if (mc.currentScreen instanceof IGuiNetwork) {
-        IGuiNetwork gui = (IGuiNetwork) mc.currentScreen;
+      if (mc.screen instanceof IGuiNetwork) {
+        IGuiNetwork gui = (IGuiNetwork) mc.screen;
         gui.setStacks(message.stacks);
       }
     });
     ctx.get().setPacketHandled(true);
   }
 
-  public static void encode(StackRefreshClientMessage msg, PacketBuffer buf) {
+  public static void encode(StackRefreshClientMessage msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.size);
     buf.writeInt(msg.csize);
     for (ItemStack stack : msg.stacks) {
-      buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeNbt(stack.serializeNBT());
       buf.writeInt(stack.getCount());
     }
     for (ItemStack stack : msg.craftableStacks) {
-      buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeNbt(stack.serializeNBT());
       buf.writeInt(stack.getCount());
     }
   }
 
-  public static StackRefreshClientMessage decode(PacketBuffer buf) {
+  public static StackRefreshClientMessage decode(FriendlyByteBuf buf) {
     int size = buf.readInt();
     int csize = buf.readInt();
     List<ItemStack> stacks = Lists.newArrayList();
     for (int i = 0; i < size; i++) {
-      CompoundNBT stacktag = buf.readCompoundTag();
-      ItemStack stack = ItemStack.read(stacktag);
+      CompoundTag stacktag = buf.readNbt();
+      ItemStack stack = ItemStack.of(stacktag);
       stack.setCount(buf.readInt());
       stacks.add(stack);
     }
     List<ItemStack> craftableStacks = Lists.newArrayList();
     for (int i = 0; i < csize; i++) {
-      ItemStack stack = ItemStack.read(buf.readCompoundTag());
+      ItemStack stack = ItemStack.of(buf.readNbt());
       stack.setCount(buf.readInt());
       craftableStacks.add(stack);
     }

@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.api;
 
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * All blocks that can connect to the storage-network need to expose this capability. Because of the way the storage-networking is built up, each connectable needs to expose its own position and

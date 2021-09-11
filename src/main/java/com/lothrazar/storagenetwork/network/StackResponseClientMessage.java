@@ -2,8 +2,8 @@ package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
@@ -23,18 +23,18 @@ public class StackResponseClientMessage {
 
   public static void handle(StackResponseClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      Minecraft.getInstance().player.inventory.setItemStack(message.stack);
+      Minecraft.getInstance().player.inventory.setCarried(message.stack);
     });
     ctx.get().setPacketHandled(true);
   }
 
-  public static StackResponseClientMessage decode(PacketBuffer buf) {
+  public static StackResponseClientMessage decode(FriendlyByteBuf buf) {
     StackResponseClientMessage message = new StackResponseClientMessage();
-    message.stack = ItemStack.read(buf.readCompoundTag());
+    message.stack = ItemStack.of(buf.readNbt());
     return message;
   }
 
-  public static void encode(StackResponseClientMessage msg, PacketBuffer buf) {
-    buf.writeCompoundTag(msg.stack.serializeNBT());
+  public static void encode(StackResponseClientMessage msg, FriendlyByteBuf buf) {
+    buf.writeNbt(msg.stack.serializeNBT());
   }
 }

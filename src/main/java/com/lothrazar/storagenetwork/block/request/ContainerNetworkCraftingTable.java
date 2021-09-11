@@ -4,18 +4,18 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkCraftingInventory;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class ContainerNetworkCraftingTable extends ContainerNetwork {
 
   private final TileRequest tileRequest;
 
-  public ContainerNetworkCraftingTable(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+  public ContainerNetworkCraftingTable(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
     super(SsnRegistry.REQUESTCONTAINER, windowId);
-    tileRequest = (TileRequest) world.getTileEntity(pos);
+    tileRequest = (TileRequest) world.getBlockEntity(pos);
     matrix = new NetworkCraftingInventory(this, tileRequest.matrix);
     this.playerInv = playerInv;
     SlotCraftingNetwork slotCraftOutput = new SlotCraftingNetwork(this, playerInv.player, matrix, resultInventory, 0, 101, 128);
@@ -24,7 +24,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
     bindGrid();
     bindPlayerInvo(this.playerInv);
     bindHotbar();
-    onCraftMatrixChanged(matrix);
+    slotsChanged(matrix);
   }
 
   @Override
@@ -36,17 +36,17 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
   public void slotChanged() {
     //parent is abstract
     //seems to not happen from -shiftclick- crafting
-    for (int i = 0; i < matrix.getSizeInventory(); i++) {
-      getTileRequest().matrix.put(i, matrix.getStackInSlot(i));
+    for (int i = 0; i < matrix.getContainerSize(); i++) {
+      getTileRequest().matrix.put(i, matrix.getItem(i));
     }
   }
 
   @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
+  public boolean stillValid(Player playerIn) {
     //    TileMain main = getTileMain();
     TileRequest table = getTileRequest();
-    BlockPos pos = table.getPos();
-    return playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
+    BlockPos pos = table.getBlockPos();
+    return playerIn.distanceToSqr(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
   }
 
   @Override

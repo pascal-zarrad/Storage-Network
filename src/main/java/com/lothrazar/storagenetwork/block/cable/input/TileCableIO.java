@@ -7,14 +7,14 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableIO extends TileCableWithFacing implements ITickableTileEntity {
+public class TileCableIO extends TileCableWithFacing implements TickableBlockEntity {
 
   protected CapabilityConnectableAutoIO ioStorage;
 
@@ -30,14 +30,14 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
   }
 
   @Override
-  public void read(BlockState bs, CompoundNBT compound) {
-    super.read(bs, compound);
+  public void load(BlockState bs, CompoundTag compound) {
+    super.load(bs, compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT compound) {
-    CompoundNBT result = super.write(compound);
+  public CompoundTag save(CompoundTag compound) {
+    CompoundTag result = super.save(compound);
     result.put("ioStorage", this.ioStorage.serializeNBT());
     return result;
   }
@@ -57,8 +57,8 @@ public class TileCableIO extends TileCableWithFacing implements ITickableTileEnt
       this.findNewDirection();
       if (getDirection() != null) {
         BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
-        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.CABLE);
-        world.setBlockState(pos, newState);
+        newState = newState.setValue(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.CABLE);
+        level.setBlockAndUpdate(worldPosition, newState);
       }
     }
   }

@@ -2,58 +2,58 @@ package com.lothrazar.storagenetwork.gui;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.RecipeItemHelper;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.core.NonNullList;
 
-public class NetworkCraftingInventory extends CraftingInventory {
+public class NetworkCraftingInventory extends CraftingContainer {
 
   /** stupid thing is private with no getter so overwrite */
   private final NonNullList<ItemStack> stackList;
-  private final Container eventHandler;
+  private final AbstractContainerMenu eventHandler;
   public boolean skipEvents;
 
-  private NetworkCraftingInventory(Container eventHandlerIn, int width, int height) {
+  private NetworkCraftingInventory(AbstractContainerMenu eventHandlerIn, int width, int height) {
     super(eventHandlerIn, width, height);
     eventHandler = eventHandlerIn;
     stackList = NonNullList.<ItemStack> withSize(3 * 3, ItemStack.EMPTY);
   }
 
-  public NetworkCraftingInventory(Container eventHandlerIn, Map<Integer, ItemStack> matrix) {
+  public NetworkCraftingInventory(AbstractContainerMenu eventHandlerIn, Map<Integer, ItemStack> matrix) {
     this(eventHandlerIn, 3, 3);
     skipEvents = true;
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
-        setInventorySlotContents(i, matrix.get(i));
+        setItem(i, matrix.get(i));
       }
     }
     skipEvents = false;
   }
 
-  public NetworkCraftingInventory(Container eventHandlerIn, List<ItemStack> matrix) {
+  public NetworkCraftingInventory(AbstractContainerMenu eventHandlerIn, List<ItemStack> matrix) {
     this(eventHandlerIn, 3, 3);
     skipEvents = true;
     for (int i = 0; i < 9; i++) {
       if (matrix.get(i) != null && matrix.get(i).isEmpty() == false) {
-        setInventorySlotContents(i, matrix.get(i));
+        setItem(i, matrix.get(i));
       }
     }
     skipEvents = false;
   }
 
   @Override
-  public void setInventorySlotContents(int index, ItemStack stack) {
+  public void setItem(int index, ItemStack stack) {
     stackList.set(index, stack);
     if (skipEvents == false) {
-      eventHandler.onCraftMatrixChanged(this);
+      eventHandler.slotsChanged(this);
     }
   }
 
   @Override
-  public int getSizeInventory() {
+  public int getContainerSize() {
     return stackList.size();
   }
 
@@ -68,31 +68,31 @@ public class NetworkCraftingInventory extends CraftingInventory {
   }
 
   @Override
-  public ItemStack getStackInSlot(int index) {
-    return index >= getSizeInventory() ? ItemStack.EMPTY : (ItemStack) stackList.get(index);
+  public ItemStack getItem(int index) {
+    return index >= getContainerSize() ? ItemStack.EMPTY : (ItemStack) stackList.get(index);
   }
 
   @Override
-  public ItemStack removeStackFromSlot(int index) {
-    return ItemStackHelper.getAndRemove(stackList, index);
+  public ItemStack removeItemNoUpdate(int index) {
+    return ContainerHelper.takeItem(stackList, index);
   }
 
   @Override
-  public ItemStack decrStackSize(int index, int count) {
-    ItemStack itemstack = ItemStackHelper.getAndSplit(stackList, index, count);
+  public ItemStack removeItem(int index, int count) {
+    ItemStack itemstack = ContainerHelper.removeItem(stackList, index, count);
     if (!itemstack.isEmpty()) {
-      eventHandler.onCraftMatrixChanged(this);
+      eventHandler.slotsChanged(this);
     }
     return itemstack;
   }
 
   @Override
-  public void clear() {
+  public void clearContent() {
     stackList.clear();
   }
 
   @Override
-  public void fillStackedContents(RecipeItemHelper helper) {
+  public void fillStackedContents(StackedContents helper) {
     for (ItemStack itemstack : stackList) {
       helper.accountStack(itemstack);
     }

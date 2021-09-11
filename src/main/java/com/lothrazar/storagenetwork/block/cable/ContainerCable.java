@@ -1,25 +1,25 @@
 package com.lothrazar.storagenetwork.block.cable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.level.Level;
 
-public abstract class ContainerCable extends Container {
+public abstract class ContainerCable extends AbstractContainerMenu {
 
   protected static final int SQ = 18;
-  protected PlayerEntity player;
-  protected World world;
+  protected Player player;
+  protected Level world;
 
-  protected ContainerCable(ContainerType<?> type, int id) {
+  protected ContainerCable(MenuType<?> type, int id) {
     super(type, id);
   }
 
-  protected void bindPlayerInvo(PlayerInventory playerInv) {
+  protected void bindPlayerInvo(Inventory playerInv) {
     this.player = playerInv.player;
-    this.world = player.world;
+    this.world = player.level;
     //player inventory
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {

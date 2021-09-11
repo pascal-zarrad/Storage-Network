@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.api;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Do not implement this interface yourself, but get instances from the {@link } you get passed on your Plugin initialization.

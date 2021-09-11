@@ -5,14 +5,14 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.network.play.server.SPlaySoundEffectPacket;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class UtilTileEntity {
 
@@ -21,34 +21,34 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_RIGHT = 1;
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
 
-  public static void playSoundFromServer(ServerPlayerEntity entityIn, SoundEvent soundIn, float volume) {
+  public static void playSoundFromServer(ServerPlayer entityIn, SoundEvent soundIn, float volume) {
     if (soundIn == null || entityIn == null) {
       return;
     }
-    entityIn.connection.sendPacket(new SPlaySoundEffectPacket(soundIn, SoundCategory.PLAYERS, entityIn.lastTickPosX, entityIn.lastTickPosY, entityIn.lastTickPosZ, volume, 1.0F));
+    entityIn.connection.send(new ClientboundSoundPacket(soundIn, SoundSource.PLAYERS, entityIn.xOld, entityIn.yOld, entityIn.zOld, volume, 1.0F));
   }
 
-  public static void chatMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent(message), player.getUniqueID());
+  public static void chatMessage(Player player, String message) {
+    if (player.level.isClientSide) {
+      player.sendMessage(new TranslatableComponent(message), player.getUUID());
     }
   }
 
-  public static void statusMessage(PlayerEntity player, BlockState bs) {
-    if (player.world.isRemote) {
-      player.sendStatusMessage(new TranslationTextComponent(bs.getBlock().getTranslatedName().getString()), true);
+  public static void statusMessage(Player player, BlockState bs) {
+    if (player.level.isClientSide) {
+      player.displayClientMessage(new TranslatableComponent(bs.getBlock().getName().getString()), true);
     }
   }
 
-  public static void statusMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendStatusMessage(new TranslationTextComponent(message), true);
+  public static void statusMessage(Player player, String message) {
+    if (player.level.isClientSide) {
+      player.displayClientMessage(new TranslatableComponent(message), true);
     }
   }
 
   public static String lang(String message) {
-    TranslationTextComponent t = new TranslationTextComponent(message);
-    return t.getUnformattedComponentText();
+    TranslatableComponent t = new TranslatableComponent(message);
+    return t.getContents();
   }
 
   /**

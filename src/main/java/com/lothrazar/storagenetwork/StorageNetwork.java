@@ -14,7 +14,7 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnEvents;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -50,14 +50,14 @@ public class StorageNetwork {
   }
 
   private void setupClient(final FMLClientSetupEvent event) {
-    ScreenManager.registerFactory(SsnRegistry.REQUESTCONTAINER, GuiNetworkTable::new);
-    ScreenManager.registerFactory(SsnRegistry.FILTERCONTAINER, GuiCableFilter::new);
-    ScreenManager.registerFactory(SsnRegistry.FILTERIMPORTCONTAINER, GuiCableImportFilter::new);
-    ScreenManager.registerFactory(SsnRegistry.FILTEREXPORTCONTAINER, GuiCableExportFilter::new);
-    ScreenManager.registerFactory(SsnRegistry.REMOTE, GuiNetworkRemote::new);
-    ScreenManager.registerFactory(SsnRegistry.CRAFTINGREMOTE, GuiNetworkCraftingRemote::new);
-    ScreenManager.registerFactory(SsnRegistry.INVENTORYCONTAINER, GuiNetworkInventory::new);
-    ScreenManager.registerFactory(SsnRegistry.COLLECTORCTR, GuiCollectionFilter::new);
+    MenuScreens.register(SsnRegistry.REQUESTCONTAINER, GuiNetworkTable::new);
+    MenuScreens.register(SsnRegistry.FILTERCONTAINER, GuiCableFilter::new);
+    MenuScreens.register(SsnRegistry.FILTERIMPORTCONTAINER, GuiCableImportFilter::new);
+    MenuScreens.register(SsnRegistry.FILTEREXPORTCONTAINER, GuiCableExportFilter::new);
+    MenuScreens.register(SsnRegistry.REMOTE, GuiNetworkRemote::new);
+    MenuScreens.register(SsnRegistry.CRAFTINGREMOTE, GuiNetworkCraftingRemote::new);
+    MenuScreens.register(SsnRegistry.INVENTORYCONTAINER, GuiNetworkInventory::new);
+    MenuScreens.register(SsnRegistry.COLLECTORCTR, GuiCollectionFilter::new);
     // 
     ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
   }

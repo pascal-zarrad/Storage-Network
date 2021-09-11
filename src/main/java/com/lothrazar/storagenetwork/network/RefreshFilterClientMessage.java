@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
@@ -32,38 +32,38 @@ public class RefreshFilterClientMessage {
   public static void handle(RefreshFilterClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       //TODO: optimize with base class or interface
-      if (Minecraft.getInstance().currentScreen instanceof GuiCableFilter) {
-        GuiCableFilter gui = (GuiCableFilter) Minecraft.getInstance().currentScreen;
+      if (Minecraft.getInstance().screen instanceof GuiCableFilter) {
+        GuiCableFilter gui = (GuiCableFilter) Minecraft.getInstance().screen;
         gui.setFilterItems(message.stacks);
       }
-      if (Minecraft.getInstance().currentScreen instanceof GuiCableImportFilter) {
-        GuiCableImportFilter gui = (GuiCableImportFilter) Minecraft.getInstance().currentScreen;
+      if (Minecraft.getInstance().screen instanceof GuiCableImportFilter) {
+        GuiCableImportFilter gui = (GuiCableImportFilter) Minecraft.getInstance().screen;
         gui.setFilterItems(message.stacks);
       }
-      if (Minecraft.getInstance().currentScreen instanceof GuiCableExportFilter) {
-        GuiCableExportFilter gui = (GuiCableExportFilter) Minecraft.getInstance().currentScreen;
+      if (Minecraft.getInstance().screen instanceof GuiCableExportFilter) {
+        GuiCableExportFilter gui = (GuiCableExportFilter) Minecraft.getInstance().screen;
         gui.setFilterItems(message.stacks);
       }
     });
     ctx.get().setPacketHandled(true);
   }
 
-  public static RefreshFilterClientMessage decode(PacketBuffer buf) {
+  public static RefreshFilterClientMessage decode(FriendlyByteBuf buf) {
     RefreshFilterClientMessage message = new RefreshFilterClientMessage();
     message.size = buf.readInt();
     message.stacks = new ArrayList<>();
     for (int i = 0; i < message.size; i++) {
-      ItemStack stack = ItemStack.read(buf.readCompoundTag());
+      ItemStack stack = ItemStack.of(buf.readNbt());
       stack.setCount(buf.readInt());
       message.stacks.add(stack);
     }
     return message;
   }
 
-  public static void encode(RefreshFilterClientMessage msg, PacketBuffer buf) {
+  public static void encode(RefreshFilterClientMessage msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.size);
     for (ItemStack stack : msg.stacks) {
-      buf.writeCompoundTag(stack.serializeNBT());
+      buf.writeNbt(stack.serializeNBT());
       buf.writeInt(stack.getCount());
     }
   }

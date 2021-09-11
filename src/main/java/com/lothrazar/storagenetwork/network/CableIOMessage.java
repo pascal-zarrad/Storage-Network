@@ -11,10 +11,10 @@ import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.function.Supplier;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -69,23 +69,23 @@ public class CableIOMessage {
   }
 
   private static void handleInternal(CableIOMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ServerPlayerEntity player = ctx.get().getSender();
+    ServerPlayer player = ctx.get().getSender();
     CapabilityConnectableAutoIO link = null;
     TileConnectable tile = null;
     CapabilityConnectable connectable = null;
     //super super HACK TODO: this is hacky
-    if (player.openContainer instanceof ContainerCableExportFilter) {
-      ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.openContainer;
+    if (player.containerMenu instanceof ContainerCableExportFilter) {
+      ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.containerMenu;
       link = ctr.cap;
       tile = ctr.tile;
     }
-    if (player.openContainer instanceof ContainerCableImportFilter) {
-      ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.openContainer;
+    if (player.containerMenu instanceof ContainerCableImportFilter) {
+      ContainerCableImportFilter ctr = (ContainerCableImportFilter) player.containerMenu;
       link = ctr.cap;
       tile = ctr.tile;
     }
-    if (player.openContainer instanceof ContainerCollectionFilter) {
-      ContainerCollectionFilter ctr = (ContainerCollectionFilter) player.openContainer;
+    if (player.containerMenu instanceof ContainerCollectionFilter) {
+      ContainerCollectionFilter ctr = (ContainerCollectionFilter) player.containerMenu;
       connectable = ctr.cap;
       tile = ctr.tile;
     }
@@ -117,7 +117,7 @@ public class CableIOMessage {
           }
         }
         PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
-            player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+            player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       break;
       case SYNC_DATA:
         link.setPriority(link.getPriority() + message.value);
@@ -146,20 +146,20 @@ public class CableIOMessage {
       break;
     }
     //
-    player.connection.sendPacket(tile.getUpdatePacket());
+    player.connection.send(tile.getUpdatePacket());
     //
   }
 
-  public static void encode(CableIOMessage msg, PacketBuffer buffer) {
+  public static void encode(CableIOMessage msg, FriendlyByteBuf buffer) {
     buffer.writeInt(msg.id);
     buffer.writeInt(msg.value);
     buffer.writeBoolean(msg.isAllowlist);
-    buffer.writeCompoundTag(msg.stack.write(new CompoundNBT()));
+    buffer.writeNbt(msg.stack.save(new CompoundTag()));
   }
 
-  public static CableIOMessage decode(PacketBuffer buffer) {
+  public static CableIOMessage decode(FriendlyByteBuf buffer) {
     CableIOMessage c = new CableIOMessage(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
-    c.stack = ItemStack.read(buffer.readCompoundTag());
+    c.stack = ItemStack.of(buffer.readNbt());
     return c;
   }
 }

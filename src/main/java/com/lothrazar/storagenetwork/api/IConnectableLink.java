@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.api;
 
 import java.util.List;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * All storage-networks parts that expose IConnectable can also expose this capability to make the part able to interact with nearby inventories.

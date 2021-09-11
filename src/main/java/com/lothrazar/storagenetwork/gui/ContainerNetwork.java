@@ -9,53 +9,53 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.play.server.SSetSlotPacket;
-import net.minecraft.util.NonNullList;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
-public abstract class ContainerNetwork extends Container {
+public abstract class ContainerNetwork extends AbstractContainerMenu {
 
   public abstract TileMain getTileMain();
 
   public abstract void slotChanged();
 
-  protected final CraftResultInventory resultInventory;
-  protected PlayerInventory playerInv;
-  protected CraftingResultSlot result;
+  protected final ResultContainer resultInventory;
+  protected Inventory playerInv;
+  protected ResultSlot result;
   protected boolean recipeLocked = false;
-  protected PlayerEntity player;
-  protected World world;
-  protected ICraftingRecipe recipeCurrent;
+  protected Player player;
+  protected Level world;
+  protected CraftingRecipe recipeCurrent;
   public NetworkCraftingInventory matrix;
 
-  protected ContainerNetwork(ContainerType<?> type, int id) {
+  protected ContainerNetwork(MenuType<?> type, int id) {
     super(type, id);
-    this.resultInventory = new CraftResultInventory();
+    this.resultInventory = new ResultContainer();
   }
 
-  public CraftingInventory getCraftMatrix() {
+  public CraftingContainer getCraftMatrix() {
     return matrix;
   }
 
-  protected void bindPlayerInvo(PlayerInventory playerInv) {
+  protected void bindPlayerInvo(Inventory playerInv) {
     this.player = playerInv.player;
-    this.world = player.world;
+    this.world = player.level;
     //player inventory
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {
@@ -65,11 +65,11 @@ public abstract class ContainerNetwork extends Container {
   }
 
   @Override
-  public boolean canMergeSlot(ItemStack stack, Slot slot) {
+  public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
     if (!this.isCrafting()) {
-      return super.canMergeSlot(stack, slot);
+      return super.canTakeItemForPickAll(stack, slot);
     }
-    return slot.inventory != result && super.canMergeSlot(stack, slot);
+    return slot.container != result && super.canTakeItemForPickAll(stack, slot);
   }
 
   public void bindHotbar() {
@@ -90,62 +90,62 @@ public abstract class ContainerNetwork extends Container {
   }
 
   @Override
-  public void onContainerClosed(PlayerEntity playerIn) {
+  public void removed(Player playerIn) {
     slotChanged();
-    super.onContainerClosed(playerIn);
+    super.removed(playerIn);
   }
 
   @Override
-  public void onCraftMatrixChanged(IInventory inventoryIn) {
+  public void slotsChanged(Container inventoryIn) {
     if (recipeLocked) {
       //      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
-    super.onCraftMatrixChanged(inventoryIn);
+    super.slotsChanged(inventoryIn);
     this.recipeCurrent = null;
-    findMatchingRecipe(this.windowId, world, this.player, this.matrix, this.resultInventory);
+    findMatchingRecipe(this.containerId, world, this.player, this.matrix, this.resultInventory);
   }
 
   //it runs on server tho
-  protected void findMatchingRecipeClient(World world, CraftingInventory inventory, CraftResultInventory result) {
-    Optional<ICraftingRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
+  protected void findMatchingRecipeClient(Level world, CraftingContainer inventory, ResultContainer result) {
+    Optional<CraftingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inventory, world);
     if (optional.isPresent()) {
-      ICraftingRecipe icraftingrecipe = optional.get();
+      CraftingRecipe icraftingrecipe = optional.get();
       this.recipeCurrent = icraftingrecipe;
     }
   }
 
-  //from WorkbenchContainer::func_217066_a
-  private void findMatchingRecipe(int number, World world, PlayerEntity player, CraftingInventory inventory, CraftResultInventory result) {
-    if (!world.isRemote) {
-      ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
+  //from WorkbenchContainer::slotChangedCraftingGrid
+  private void findMatchingRecipe(int number, Level world, Player player, CraftingContainer inventory, ResultContainer result) {
+    if (!world.isClientSide) {
+      ServerPlayer serverplayerentity = (ServerPlayer) player;
       ItemStack itemstack = ItemStack.EMPTY;
-      Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, inventory, world);
+      Optional<CraftingRecipe> optional = world.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inventory, world);
       if (optional.isPresent()) {
-        ICraftingRecipe icraftingrecipe = optional.get();
-        if (result.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
-          itemstack = icraftingrecipe.getCraftingResult(inventory);
-          //          itemstack = icraftingrecipe.func_77572_b(inventory);
+        CraftingRecipe icraftingrecipe = optional.get();
+        if (result.setRecipeUsed(world, serverplayerentity, icraftingrecipe)) {
+          itemstack = icraftingrecipe.assemble(inventory);
+          //          itemstack = icraftingrecipe.assemble(inventory);
           //save for next time
           this.recipeCurrent = icraftingrecipe;
         }
       }
-      result.setInventorySlotContents(0, itemstack);
-      serverplayerentity.connection.sendPacket(new SSetSlotPacket(number, 0, itemstack));
+      result.setItem(0, itemstack);
+      serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(number, 0, itemstack));
     }
   }
 
   public abstract boolean isCrafting();
 
   @Override
-  public ItemStack transferStackInSlot(PlayerEntity playerIn, int slotIndex) {
-    if (playerIn.world.isRemote) {
+  public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
+    if (playerIn.level.isClientSide) {
       return ItemStack.EMPTY;
     }
     ItemStack itemstack = ItemStack.EMPTY;
-    Slot slot = this.inventorySlots.get(slotIndex);
-    if (slot != null && slot.getHasStack()) {
-      ItemStack itemstack1 = slot.getStack();
+    Slot slot = this.slots.get(slotIndex);
+    if (slot != null && slot.hasItem()) {
+      ItemStack itemstack1 = slot.getItem();
       itemstack = itemstack1.copy();
       TileMain tileMain = this.getTileMain();
       if (this.isCrafting() && slotIndex == 0) {
@@ -155,13 +155,13 @@ public abstract class ContainerNetwork extends Container {
       else if (tileMain != null) {
         int rest = tileMain.insertStack(itemstack1, false);
         ItemStack stack = rest == 0 ? ItemStack.EMPTY : ItemHandlerHelper.copyStackWithSize(itemstack1, rest);
-        slot.putStack(stack);
-        detectAndSendChanges();
+        slot.set(stack);
+        broadcastChanges();
         List<ItemStack> list = tileMain.getSortedStacks();
-        if (playerIn instanceof ServerPlayerEntity) {
-          ServerPlayerEntity sp = (ServerPlayerEntity) playerIn;
+        if (playerIn instanceof ServerPlayer) {
+          ServerPlayer sp = (ServerPlayer) playerIn;
           PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-              sp.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+              sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
         }
         if (stack.isEmpty()) {
           return ItemStack.EMPTY;
@@ -170,10 +170,10 @@ public abstract class ContainerNetwork extends Container {
         return ItemStack.EMPTY;
       }
       if (itemstack1.getCount() == 0) {
-        slot.putStack(ItemStack.EMPTY);
+        slot.set(ItemStack.EMPTY);
       }
       else {
-        slot.onSlotChanged();
+        slot.setChanged();
       }
       if (itemstack1.getCount() == itemstack.getCount()) {
         return ItemStack.EMPTY;
@@ -191,22 +191,22 @@ public abstract class ContainerNetwork extends Container {
    * @param tile
    */
   @SuppressWarnings("deprecation")
-  protected void craftShift(PlayerEntity player, TileMain tile) {
+  protected void craftShift(Player player, TileMain tile) {
     if (!this.isCrafting() || matrix == null || tile == null) {
       return;
     }
     recipeCurrent = null;
-    this.findMatchingRecipeClient(player.world, this.matrix, this.resultInventory);
+    this.findMatchingRecipeClient(player.level, this.matrix, this.resultInventory);
     if (recipeCurrent == null) {
       return;
     }
     this.recipeLocked = true;
     int crafted = 0;
     List<ItemStack> recipeCopy = Lists.newArrayList();
-    for (int i = 0; i < matrix.getSizeInventory(); i++) {
-      recipeCopy.add(matrix.getStackInSlot(i).copy());
+    for (int i = 0; i < matrix.getContainerSize(); i++) {
+      recipeCopy.add(matrix.getItem(i).copy());
     }
-    ItemStack res = recipeCurrent.getCraftingResult(matrix);
+    ItemStack res = recipeCurrent.assemble(matrix);
     if (res.isEmpty()) {
       StorageNetwork.LOGGER.error("err Recipe output is an empty stack " + recipeCurrent);
       return;
@@ -214,59 +214,59 @@ public abstract class ContainerNetwork extends Container {
     int sizePerCraft = res.getCount();
     //StorageNetwork.log("[craftShift] sizePerCraft = " + sizePerCraft + " for stack " + res);
     while (crafted + sizePerCraft <= res.getMaxStackSize()) {
-      res = recipeCurrent.getCraftingResult(matrix);
+      res = recipeCurrent.assemble(matrix);
       //  StorageNetwork.log("[craftShift]  crafted = " + crafted + " ; res.count() = " + res.getCount() + " MAX=" + res.getMaxStackSize());
       if (!ItemHandlerHelper.insertItemStacked(new PlayerMainInvWrapper(playerInv), res, true).isEmpty()) {
         //  StorageNetwork.log("[craftShift] cannot insert more, end");
         break;
       }
       //stop if empty
-      if (recipeCurrent.matches(matrix, player.world) == false) {
+      if (recipeCurrent.matches(matrix, player.level) == false) {
         // StorageNetwork.log("[craftShift] recipe doesnt match i quit");
         break;
       }
       //onTake replaced with this handcoded rewrite
       //StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
-      if (!player.inventory.addItemStackToInventory(res)) {
-        player.dropItem(res, false);
+      if (!player.inventory.add(res)) {
+        player.drop(res, false);
       }
       NonNullList<ItemStack> remainder = recipeCurrent.getRemainingItems(this.matrix);
       for (int i = 0; i < remainder.size(); ++i) {
         ItemStack remainderCurrent = remainder.get(i);
-        ItemStack slot = this.matrix.getStackInSlot(i);
+        ItemStack slot = this.matrix.getItem(i);
         if (remainderCurrent.isEmpty()) {
-          matrix.getStackInSlot(i).shrink(1);
+          matrix.getItem(i).shrink(1);
           continue;
         }
-        if (slot.getItem().getContainerItem() != null) { //is the fix for milk and similar
-          slot = new ItemStack(slot.getItem().getContainerItem());
-          matrix.setInventorySlotContents(i, slot);
+        if (slot.getItem().getCraftingRemainingItem() != null) { //is the fix for milk and similar
+          slot = new ItemStack(slot.getItem().getCraftingRemainingItem());
+          matrix.setItem(i, slot);
         }
         else if (!slot.getItem().getContainerItem(slot).isEmpty()) { //is the fix for milk and similar
           slot = slot.getItem().getContainerItem(slot);
-          matrix.setInventorySlotContents(i, slot);
+          matrix.setItem(i, slot);
         }
         else if (!remainderCurrent.isEmpty()) {
           if (slot.isEmpty()) {
-            this.matrix.setInventorySlotContents(i, remainderCurrent);
+            this.matrix.setItem(i, remainderCurrent);
           }
-          else if (ItemStack.areItemsEqual(slot, remainderCurrent) && ItemStack.areItemStackTagsEqual(slot, remainderCurrent)) {
+          else if (ItemStack.isSame(slot, remainderCurrent) && ItemStack.tagMatches(slot, remainderCurrent)) {
             remainderCurrent.grow(slot.getCount());
-            this.matrix.setInventorySlotContents(i, remainderCurrent);
+            this.matrix.setItem(i, remainderCurrent);
           }
-          else if (ItemStack.areItemsEqualIgnoreDurability(slot, remainderCurrent)) {
+          else if (ItemStack.isSameIgnoreDurability(slot, remainderCurrent)) {
             //crafting that consumes durability
-            this.matrix.setInventorySlotContents(i, remainderCurrent);
+            this.matrix.setItem(i, remainderCurrent);
           }
           else {
-            if (!player.inventory.addItemStackToInventory(remainderCurrent)) {
-              player.dropItem(remainderCurrent, false);
+            if (!player.inventory.add(remainderCurrent)) {
+              player.drop(remainderCurrent, false);
             }
           }
         }
         else if (!slot.isEmpty()) {
-          this.matrix.decrStackSize(i, 1);
-          slot = this.matrix.getStackInSlot(i);
+          this.matrix.removeItem(i, 1);
+          slot = this.matrix.getItem(i);
         }
       } //end loop on remiainder
       //END onTake redo
@@ -274,22 +274,22 @@ public abstract class ContainerNetwork extends Container {
       ItemStack stackInSlot;
       ItemStack recipeStack;
       ItemStackMatcher itemStackMatcherCurrent;
-      for (int i = 0; i < matrix.getSizeInventory(); i++) {
-        stackInSlot = matrix.getStackInSlot(i);
+      for (int i = 0; i < matrix.getContainerSize(); i++) {
+        stackInSlot = matrix.getItem(i);
         if (stackInSlot.isEmpty()) {
           recipeStack = recipeCopy.get(i);
           //////////////// booleans are meta, ore(?ignored?), nbt
           itemStackMatcherCurrent = !recipeStack.isEmpty() ? new ItemStackMatcher(recipeStack, false, false) : null;
           //false here means dont simulate
           ItemStack req = tile.request(itemStackMatcherCurrent, 1, false);
-          matrix.setInventorySlotContents(i, req);
+          matrix.setItem(i, req);
         }
       }
-      onCraftMatrixChanged(matrix);
+      slotsChanged(matrix);
     }
-    detectAndSendChanges();
+    broadcastChanges();
     this.recipeLocked = false;
     //update recipe again in case remnants left : IE hammer and such
-    this.onCraftMatrixChanged(this.matrix);
+    this.slotsChanged(this.matrix);
   }
 }

@@ -21,7 +21,7 @@ public class SsnEvents {
 
   @SubscribeEvent
   public void onKeyInput(KeyInputEvent event) {
-    if (ClientEventRegistry.INVENTORY_KEY.isPressed()) {
+    if (ClientEventRegistry.INVENTORY_KEY.consumeClick()) {
       //gogo client -> server event
       PacketRegistry.INSTANCE.sendToServer(new KeybindCurioMessage());
     }

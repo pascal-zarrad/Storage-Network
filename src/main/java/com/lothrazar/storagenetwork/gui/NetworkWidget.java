@@ -11,27 +11,27 @@ import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class NetworkWidget {
 
   private final IGuiNetwork gui;
-  public TextFieldWidget searchBar;
+  public EditBox searchBar;
   long lastClick;
   int page = 1, maxPage = 1;
   public List<ItemStack> stacks;
@@ -53,7 +53,7 @@ public class NetworkWidget {
   }
 
   public void applySearchTextToSlots() {
-    String searchText = searchBar.getText();
+    String searchText = searchBar.getValue();
     List<ItemStack> stacksToDisplay = searchText.equals("") ? Lists.newArrayList(stacks) : Lists.newArrayList();
     if (!searchText.equals("")) {
       for (ItemStack stack : stacks) {
@@ -71,14 +71,14 @@ public class NetworkWidget {
     if (searchBar == null) {
       return;
     }
-    searchBar.setText("");
+    searchBar.setValue("");
     if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
       JeiHooks.setFilterText("");
     }
   }
 
   private boolean doesStackMatchSearch(ItemStack stack) {
-    String searchText = searchBar.getText();
+    String searchText = searchBar.getValue();
     if (searchText.startsWith("@")) { // TODO: ENUM //search modname 
       String name = UtilTileEntity.getModNameForItem(stack.getItem());
       return name.toLowerCase().contains(searchText.toLowerCase().substring(1));
@@ -86,8 +86,8 @@ public class NetworkWidget {
     else if (searchText.startsWith("#")) { // search tooltips
       String tooltipString;
       Minecraft mc = Minecraft.getInstance();
-      List<ITextComponent> tooltip = stack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL);
-      List<String> unformattedTooltip = tooltip.stream().map(ITextComponent::getString).collect(Collectors.toList());
+      List<Component> tooltip = stack.getTooltipLines(mc.player, TooltipFlag.Default.NORMAL);
+      List<String> unformattedTooltip = tooltip.stream().map(Component::getString).collect(Collectors.toList());
       tooltipString = Joiner.on(' ').join(unformattedTooltip).toLowerCase().trim();
       return tooltipString.contains(searchText.toLowerCase().substring(1));
     }
@@ -101,7 +101,7 @@ public class NetworkWidget {
       return dictFinal.contains(searchText.toLowerCase().substring(1));
     }
     else {
-      return stack.getDisplayName().getString().toLowerCase().contains(searchText.toLowerCase());
+      return stack.getHoverName().getString().toLowerCase().contains(searchText.toLowerCase());
     }
   }
 
@@ -176,18 +176,18 @@ public class NetworkWidget {
   public boolean inSearchBar(double mouseX, double mouseY) {
     return gui.isInRegion(
         searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTop(), // x, y
-        searchBar.getWidth(), searchBar.getHeightRealms(), // width, height
+        searchBar.getWidth(), searchBar.getHeight(), // width, height
         mouseX, mouseY);
   }
 
   public void initSearchbar() {
-    searchBar.setEnableBackgroundDrawing(false);
+    searchBar.setBordered(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
-    searchBar.setFocused2(StorageNetwork.CONFIG.enableAutoSearchFocus());
+    searchBar.setFocus(StorageNetwork.CONFIG.enableAutoSearchFocus());
     try {
       if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
-        searchBar.setText(JeiHooks.getFilterText());
+        searchBar.setValue(JeiHooks.getFilterText());
       }
     }
     catch (Exception e) {
@@ -197,11 +197,11 @@ public class NetworkWidget {
 
   public void syncTextToJei() {
     if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
-      JeiHooks.setFilterText(searchBar.getText());
+      JeiHooks.setFilterText(searchBar.getValue());
     }
   }
 
-  public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY, FontRenderer font) {
+  public void drawGuiContainerForegroundLayer(PoseStack ms, int mouseX, int mouseY, Font font) {
     for (ItemSlotNetwork slot : slots) {
       if (slot != null && slot.isMouseOverSlot(mouseX, mouseY)) {
         slot.drawTooltip(ms, mouseX, mouseY);
@@ -209,27 +209,27 @@ public class NetworkWidget {
       }
     }
     // 
-    TranslationTextComponent tooltip = null;
+    TranslatableComponent tooltip = null;
     if (directionBtn != null && directionBtn.isMouseOver(mouseX, mouseY)) {
-      tooltip = new TranslationTextComponent("gui.storagenetwork.sort");
+      tooltip = new TranslatableComponent("gui.storagenetwork.sort");
     }
     else if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
-      tooltip = new TranslationTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase());
+      tooltip = new TranslatableComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase());
     }
     else if (JeiHooks.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
-      tooltip = new TranslationTextComponent(gui.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
+      tooltip = new TranslatableComponent(gui.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
     }
     else if (this.inSearchBar(mouseX, mouseY)) {
       //tooltip = new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear");
       if (!Screen.hasShiftDown()) {
-        tooltip = new TranslationTextComponent("gui.storagenetwork.shift");
+        tooltip = new TranslatableComponent("gui.storagenetwork.shift");
       }
       else {
-        List<ITextComponent> lis = Lists.newArrayList();
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_mod")); //@
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tooltip")); //#
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_tags")); //$
-        lis.add(new TranslationTextComponent("gui.storagenetwork.fil.tooltip_clear")); //clear
+        List<Component> lis = Lists.newArrayList();
+        lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_mod")); //@
+        lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_tooltip")); //#
+        lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_tags")); //$
+        lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_clear")); //clear
         Screen screen = ((Screen) gui);
         screen.renderWrappedToolTip(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
         return; // all done, we have our tts rendered
@@ -242,7 +242,7 @@ public class NetworkWidget {
     }
   }
 
-  public void renderItemSlots(MatrixStack ms, int mouseX, int mouseY, FontRenderer font) {
+  public void renderItemSlots(PoseStack ms, int mouseX, int mouseY, Font font) {
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
       slot.drawSlot(ms, font, mouseX, mouseY);
@@ -265,19 +265,19 @@ public class NetworkWidget {
   }
 
   public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    searchBar.setFocused2(false);
+    searchBar.setFocus(false);
     if (inSearchBar(mouseX, mouseY)) {
-      searchBar.setFocused2(true);
+      searchBar.setFocus(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         clearSearch();
         return;
       }
     }
-    ClientPlayerEntity player = Minecraft.getInstance().player;
+    LocalPlayer player = Minecraft.getInstance().player;
     if (player == null) {
       return;
     }
-    ItemStack stackCarriedByMouse = player.inventory.getItemStack();
+    ItemStack stackCarriedByMouse = player.inventory.getCarried();
     if (!stackUnderMouse.isEmpty()
         && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
         && stackCarriedByMouse.isEmpty() &&
@@ -332,7 +332,7 @@ public class NetworkWidget {
           case AMOUNT:
             return Integer.compare(o1.getCount(), o2.getCount()) * mul;
           case NAME:
-            return o2.getDisplayName().getString().compareToIgnoreCase(o1.getDisplayName().getString()) * mul;
+            return o2.getHoverName().getString().compareToIgnoreCase(o1.getHoverName().getString()) * mul;
           case MOD:
             return UtilTileEntity.getModNameForItem(o2.getItem()).compareToIgnoreCase(UtilTileEntity.getModNameForItem(o1.getItem())) * mul;
         }

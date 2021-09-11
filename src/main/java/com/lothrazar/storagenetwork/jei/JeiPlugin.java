@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.jei;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;

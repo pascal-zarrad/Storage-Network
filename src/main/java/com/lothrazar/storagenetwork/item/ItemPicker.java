@@ -6,54 +6,56 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemPicker extends Item {
 
   public static final String NBT_BOUND = "bound";
 
   public ItemPicker(Properties properties) {
-    super(properties.maxStackSize(1));
+    super(properties.stacksTo(1));
   }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context) {
-    Hand hand = context.getHand();
-    World world = context.getWorld();
-    BlockPos pos = context.getPos();
-    PlayerEntity player = context.getPlayer();
-    if (world.getTileEntity(pos) instanceof TileMain) {
-      ItemStack stack = player.getHeldItem(hand);
+  public InteractionResult useOn(UseOnContext context) {
+    InteractionHand hand = context.getHand();
+    Level world = context.getLevel();
+    BlockPos pos = context.getClickedPos();
+    Player player = context.getPlayer();
+    if (world.getBlockEntity(pos) instanceof TileMain) {
+      ItemStack stack = player.getItemInHand(hand);
       DimPos.putPos(stack, pos, world);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
-      return ActionResultType.SUCCESS;
+      return InteractionResult.SUCCESS;
     }
     else {
-      ItemStack stack = player.getHeldItem(hand);
+      ItemStack stack = player.getItemInHand(hand);
       DimPos dp = DimPos.getPosStored(stack);
-      if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
-        ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
+      if (dp != null && hand == InteractionHand.MAIN_HAND && !world.isClientSide) {
+        ServerLevel serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
           StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
-          return ActionResultType.PASS;
+          return InteractionResult.PASS;
         }
-        TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
+        BlockEntity tile = serverTargetWorld.getBlockEntity(dp.getBlockPos());
         if (tile instanceof TileMain) {
           TileMain network = (TileMain) tile;
           BlockState bs = world.getBlockState(pos);
@@ -61,31 +63,31 @@ public class ItemPicker extends Item {
           int size = player.isCrouching() ? 1 : 64;
           ItemStack found = network.request(matcher, size, false);
           if (!found.isEmpty()) {
-            player.sendStatusMessage(new TranslationTextComponent("item.remote.found"), true);
+            player.displayClientMessage(new TranslatableComponent("item.remote.found"), true);
             //using add will bypass the collector so try if possible
-            if (!player.addItemStackToInventory(found)) {
-              player.entityDropItem(found);
+            if (!player.addItem(found)) {
+              player.spawnAtLocation(found);
             }
           }
           else {
-            player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
+            player.displayClientMessage(new TranslatableComponent("item.remote.notfound.item"), true);
           }
         }
         else {
           //no main
-          player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
+          player.displayClientMessage(new TranslatableComponent("item.remote.notfound"), true);
         }
       }
     }
-    return ActionResultType.PASS;
+    return InteractionResult.PASS;
   }
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    TranslationTextComponent t;
-    t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    t.mergeStyle(TextFormatting.GRAY);
+  public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    TranslatableComponent t;
+    t = new TranslatableComponent(getDescriptionId() + ".tooltip");
+    t.withStyle(ChatFormatting.GRAY);
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);

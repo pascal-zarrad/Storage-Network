@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -39,41 +39,41 @@ public class RecipeMessage {
    *  }
    * @formatter:on
    */
-  private CompoundNBT nbt;
+  private CompoundTag nbt;
   private int index = 0;
 
   private RecipeMessage() {}
 
-  public RecipeMessage(CompoundNBT nbt) {
+  public RecipeMessage(CompoundTag nbt) {
     this.nbt = nbt;
   }
 
-  public static RecipeMessage decode(PacketBuffer buf) {
+  public static RecipeMessage decode(FriendlyByteBuf buf) {
     RecipeMessage message = new RecipeMessage();
     message.index = buf.readInt();
-    message.nbt = buf.readCompoundTag();
+    message.nbt = buf.readNbt();
     return message;
   }
 
-  public static void encode(RecipeMessage msg, PacketBuffer buf) {
+  public static void encode(RecipeMessage msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.index);
-    buf.writeCompoundTag(msg.nbt);
+    buf.writeNbt(msg.nbt);
   }
 
   public static void handle(RecipeMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
-      if (player.openContainer instanceof ContainerNetwork == false) {
+      ServerPlayer player = ctx.get().getSender();
+      if (player.containerMenu instanceof ContainerNetwork == false) {
         return;
       }
-      ContainerNetwork ctr = (ContainerNetwork) player.openContainer;
+      ContainerNetwork ctr = (ContainerNetwork) player.containerMenu;
       TileMain main = ctr.getTileMain();
       if (main == null) {
         StorageNetwork.log("Recipe message cancelled, null tile " + ctr);
         return;
       }
       ClearRecipeMessage.clearContainerRecipe(player, false);
-      CraftingInventory craftMatrix = ctr.getCraftMatrix();
+      CraftingContainer craftMatrix = ctr.getCraftMatrix();
       for (int slot = 0; slot < 9; slot++) {
         Map<Integer, ItemStack> map = new HashMap<>();
         //if its a string, then ore dict is allowed
@@ -82,10 +82,10 @@ public class RecipeMessage {
          **********/
         boolean isOreDict;
         isOreDict = false;
-        ListNBT invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
+        ListTag invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < invList.size(); i++) {
-          CompoundNBT stackTag = invList.getCompound(i);
-          ItemStack s = ItemStack.read(stackTag);
+          CompoundTag stackTag = invList.getCompound(i);
+          ItemStack s = ItemStack.of(stackTag);
           map.put(i, s);
         }
         /********* end parse nbt of this current slot ******/
@@ -100,16 +100,16 @@ public class RecipeMessage {
           itemStackMatcher.setOre(isOreDict);
           ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, true);
           /*********** First try and use the players inventory **/
-          if (ex != null && !ex.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
+          if (ex != null && !ex.isEmpty() && craftMatrix.getItem(slot).isEmpty()) {
             UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, false);
             //make sure to add the real item after the nonsimulated withdrawl is complete https://github.com/PrinceOfAmber/Storage-Network/issues/16
-            craftMatrix.setInventorySlotContents(slot, ex);
+            craftMatrix.setItem(slot, ex);
             break;
           }
           /********* now find it from the network ***/
           stackCurrent = main.request(!stackCurrent.isEmpty() ? itemStackMatcher : null, 1, false);
-          if (!stackCurrent.isEmpty() && craftMatrix.getStackInSlot(slot).isEmpty()) {
-            craftMatrix.setInventorySlotContents(slot, stackCurrent);
+          if (!stackCurrent.isEmpty() && craftMatrix.getItem(slot).isEmpty()) {
+            craftMatrix.setItem(slot, stackCurrent);
             break;
           }
         }
@@ -119,7 +119,7 @@ public class RecipeMessage {
         ctr.slotChanged();
         List<ItemStack> list = main.getStacks();
         PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-            player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+            player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       } //end run
     });
     ctx.get().setPacketHandled(true);

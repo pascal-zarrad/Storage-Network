@@ -7,16 +7,16 @@ import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileExchange extends TileConnectable implements ITickableTileEntity {
+public class TileExchange extends TileConnectable implements TickableBlockEntity {
 
   private ExchangeItemStackHandler itemHandler;
 
@@ -26,13 +26,13 @@ public class TileExchange extends TileConnectable implements ITickableTileEntity
   }
 
   @Override
-  public void read(BlockState bs, CompoundNBT compound) {
-    super.read(bs, compound);
+  public void load(BlockState bs, CompoundTag compound) {
+    super.load(bs, compound);
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT compound) {
-    return super.write(compound);
+  public CompoundTag save(CompoundTag compound) {
+    return super.save(compound);
   }
 
   @SuppressWarnings("unchecked")
@@ -66,7 +66,7 @@ public class TileExchange extends TileConnectable implements ITickableTileEntity
 
   @Override
   public void tick() {
-    if (this.itemHandler != null && getWorld().getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) {
+    if (this.itemHandler != null && getLevel().getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) {
       this.itemHandler.update();
     }
   }

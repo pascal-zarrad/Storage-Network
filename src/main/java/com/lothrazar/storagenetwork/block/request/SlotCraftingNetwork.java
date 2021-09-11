@@ -5,45 +5,45 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import java.util.List;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.item.ItemStack;
 
-public class SlotCraftingNetwork extends CraftingResultSlot {
+public class SlotCraftingNetwork extends ResultSlot {
 
   private TileMain tileMain;
   private final ContainerNetwork parent;
 
-  public SlotCraftingNetwork(ContainerNetwork parent, PlayerEntity player,
-      CraftingInventory craftingInventory, IInventory inventoryIn,
+  public SlotCraftingNetwork(ContainerNetwork parent, Player player,
+      CraftingContainer craftingInventory, Container inventoryIn,
       int slotIndex, int xPosition, int yPosition) {
     super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
     this.parent = parent;
   }
 
   @Override
-  public ItemStack onTake(PlayerEntity playerIn, ItemStack stack) {
-    if (playerIn.world.isRemote) {
+  public ItemStack onTake(Player playerIn, ItemStack stack) {
+    if (playerIn.level.isClientSide) {
       return stack;
     }
     List<ItemStack> lis = Lists.newArrayList();
-    for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {
-      lis.add(parent.matrix.getStackInSlot(i).copy());
+    for (int i = 0; i < parent.matrix.getContainerSize(); i++) {
+      lis.add(parent.matrix.getItem(i).copy());
     }
     super.onTake(playerIn, stack);
-    parent.detectAndSendChanges();
-    for (int i = 0; i < parent.matrix.getSizeInventory(); i++) {
-      if (parent.matrix.getStackInSlot(i).isEmpty() && getTileMain() != null) {
+    parent.broadcastChanges();
+    for (int i = 0; i < parent.matrix.getContainerSize(); i++) {
+      if (parent.matrix.getItem(i).isEmpty() && getTileMain() != null) {
         ItemStack req = getTileMain().request(
             !lis.get(i).isEmpty() ? new ItemStackMatcher(lis.get(i), false, false) : null, 1, false);
         if (!req.isEmpty()) {
-          parent.matrix.setInventorySlotContents(i, req);
+          parent.matrix.setItem(i, req);
         }
       }
     }
-    parent.detectAndSendChanges();
+    parent.broadcastChanges();
     return stack;
   }
 

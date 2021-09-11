@@ -15,11 +15,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -27,7 +27,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT>, IConnectableItemAutoIO {
+public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag>, IConnectableItemAutoIO {
 
   public final IConnectable connectable;
   public EnumStorageDirection direction;
@@ -100,7 +100,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     filters.getStacks().set(value, stack);
   }
 
-  public CapabilityConnectableAutoIO(TileEntity tile, EnumStorageDirection direction) {
+  public CapabilityConnectableAutoIO(BlockEntity tile, EnumStorageDirection direction) {
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     this.direction = direction;
     // Set some defaults
@@ -117,11 +117,11 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   @Override
-  public CompoundNBT serializeNBT() {
-    CompoundNBT result = new CompoundNBT();
+  public CompoundTag serializeNBT() {
+    CompoundTag result = new CompoundTag();
     result.put("upgrades", this.upgrades.serializeNBT());
     result.put("filters", this.filters.serializeNBT());
-    CompoundNBT operation = new CompoundNBT();
+    CompoundTag operation = new CompoundTag();
     operation.put("stack", operationStack.serializeNBT());
     operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
     operation.putInt("limit", operationLimit);
@@ -135,22 +135,22 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   @Override
-  public void deserializeNBT(CompoundNBT nbt) {
-    CompoundNBT upgrades = nbt.getCompound("upgrades");
+  public void deserializeNBT(CompoundTag nbt) {
+    CompoundTag upgrades = nbt.getCompound("upgrades");
     if (upgrades != null) {
       this.upgrades.deserializeNBT(upgrades);
     }
-    CompoundNBT filters = nbt.getCompound("filters");
+    CompoundTag filters = nbt.getCompound("filters");
     if (filters != null) {
       this.filters.deserializeNBT(filters);
     }
-    CompoundNBT operation = nbt.getCompound("operation");
+    CompoundTag operation = nbt.getCompound("operation");
     operationStack = ItemStack.EMPTY;
     if (operation != null) {
       operationLimit = operation.getInt("limit");
       operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
       if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
-        operationStack = ItemStack.read((CompoundNBT) operation.get("stack"));
+        operationStack = ItemStack.of((CompoundTag) operation.get("stack"));
       }
       //      else {
       //        operationStack = ItemStack.EMPTY;
@@ -306,15 +306,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
 
     @Override
-    public INBT writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
+    public Tag writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
       return instance.serializeNBT();
     }
 
     @Override
-    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, INBT nbt) {
+    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, Tag nbt) {
       CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-      instance.deserializeNBT((CompoundNBT) nbt);
+      instance.deserializeNBT((CompoundTag) nbt);
     }
   }
 

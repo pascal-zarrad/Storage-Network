@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -26,7 +26,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 // TODO: We should add support for CommonCapabilities SlotlessItemHandler for efficiency reasons and compatibility with colossal chests, integrated dynamics etc
-public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<CompoundNBT> {
+public class CapabilityConnectableLink implements IConnectableLink, INBTSerializable<CompoundTag> {
 
   public final IConnectable connectable;
   private boolean operationMustBeSmaller = true;
@@ -42,7 +42,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     filters.setIsAllowlist(false);
   }
 
-  public CapabilityConnectableLink(TileEntity tile) {
+  public CapabilityConnectableLink(BlockEntity tile) {
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     filters.setIsAllowlist(false);
   }
@@ -219,27 +219,27 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   }
 
   @Override
-  public CompoundNBT serializeNBT() {
-    CompoundNBT result = new CompoundNBT();
+  public CompoundTag serializeNBT() {
+    CompoundTag result = new CompoundTag();
     result.putInt("prio", priority);
     if (inventoryFace != null) {
       result.putString("inventoryFace", inventoryFace.toString());
     }
     result.putString("way", filterDirection.toString());
-    CompoundNBT operation = new CompoundNBT();
+    CompoundTag operation = new CompoundTag();
     operation.put("stack", operationStack.serializeNBT());
     operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
     operation.putInt("limit", operationLimit);
     result.put("operation", operation);
-    CompoundNBT filters = this.filters.serializeNBT();
+    CompoundTag filters = this.filters.serializeNBT();
     result.put("filters", filters);
     return result;
   }
 
   @Override
-  public void deserializeNBT(CompoundNBT nbt) {
+  public void deserializeNBT(CompoundTag nbt) {
     priority = nbt.getInt("prio");
-    CompoundNBT filters = nbt.getCompound("filters");
+    CompoundTag filters = nbt.getCompound("filters");
     this.filters.deserializeNBT(filters);
     if (nbt.contains("inventoryFace")) {
       inventoryFace = Direction.byName(nbt.getString("inventoryFace"));
@@ -250,13 +250,13 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     catch (Exception e) {
       filterDirection = EnumStorageDirection.BOTH;
     }
-    CompoundNBT operation = nbt.getCompound("operation");
+    CompoundTag operation = nbt.getCompound("operation");
     operationStack = ItemStack.EMPTY;
     if (operation != null) {
       operationLimit = operation.getInt("limit");
       operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
       if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
-        operationStack = ItemStack.read(operation.getCompound("stack"));
+        operationStack = ItemStack.of(operation.getCompound("stack"));
       }
     }
   }
@@ -272,15 +272,15 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   public static class Storage implements Capability.IStorage<IConnectableLink> {
 
     @Override
-    public INBT writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
+    public Tag writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
       CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
       return instance.serializeNBT();
     }
 
     @Override
-    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, INBT nbt) {
+    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, Tag nbt) {
       CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-      instance.deserializeNBT((CompoundNBT) nbt);
+      instance.deserializeNBT((CompoundTag) nbt);
     }
   }
 }

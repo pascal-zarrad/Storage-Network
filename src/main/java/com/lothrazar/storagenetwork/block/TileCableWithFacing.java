@@ -6,19 +6,19 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileCableWithFacing extends TileConnectable {
 
   Direction direction = null;
 
-  public TileCableWithFacing(TileEntityType<?> tileEntityTypeIn) {
+  public TileCableWithFacing(BlockEntityType<?> tileEntityTypeIn) {
     super(tileEntityTypeIn);
   }
 
@@ -27,7 +27,7 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   public BlockPos getFacingPosition() {
-    return this.getPos().offset(direction);
+    return this.getBlockPos().relative(direction);
   }
 
   public void setDirection(Direction direction) {
@@ -38,10 +38,10 @@ public class TileCableWithFacing extends TileConnectable {
     if (facing == null) {
       return false;
     }
-    if (!TileMain.isTargetAllowed(world.getBlockState(pos.offset(facing)))) {
+    if (!TileMain.isTargetAllowed(level.getBlockState(worldPosition.relative(facing)))) {
       return false;
     }
-    TileEntity neighbor = world.getTileEntity(pos.offset(facing));
+    BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing));
     if (neighbor != null && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
       return true;
     }
@@ -71,7 +71,7 @@ public class TileCableWithFacing extends TileConnectable {
       }
       if (isValidLinkNeighbor(facing)) {
         setDirection(facing);
-        this.markDirty();
+        this.setChanged();
         if (previous != direction) {
           TileMain mainNode = getTileMain();
           if (mainNode != null) {
@@ -88,8 +88,8 @@ public class TileCableWithFacing extends TileConnectable {
       this.findNewDirection();
       if (getDirection() != null) {
         BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
-        newState = newState.with(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.INVENTORY);
-        world.setBlockState(pos, newState);
+        newState = newState.setValue(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.INVENTORY);
+        level.setBlockAndUpdate(worldPosition, newState);
       }
     }
   }
@@ -102,8 +102,8 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   @Override // read
-  public void read(BlockState bs, CompoundNBT compound) {
-    super.read(bs, compound);
+  public void load(BlockState bs, CompoundTag compound) {
+    super.load(bs, compound);
     if (compound.contains("direction")) {
       this.direction = Direction.values()[(compound.getInt("direction"))];
     }
@@ -113,10 +113,10 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   @Override
-  public CompoundNBT write(CompoundNBT compound) {
+  public CompoundTag save(CompoundTag compound) {
     if (direction != null) {
       compound.putInt("direction", this.direction.ordinal());
     }
-    return super.write(compound);
+    return super.save(compound);
   }
 }

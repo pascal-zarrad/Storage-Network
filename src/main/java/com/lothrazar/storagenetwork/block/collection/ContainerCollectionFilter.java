@@ -5,21 +5,21 @@ import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class ContainerCollectionFilter extends ContainerCable {
 
   public final TileCollection tile;
   public CapabilityConnectable cap;
 
-  public ContainerCollectionFilter(int windowId, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
+  public ContainerCollectionFilter(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
     super(SsnRegistry.COLLECTORCTR, windowId);
-    tile = (TileCollection) world.getTileEntity(pos);
+    tile = (TileCollection) world.getBlockEntity(pos);
     tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).ifPresent(h -> {
       this.cap = (CapabilityConnectable) h;
     });
@@ -27,22 +27,22 @@ public class ContainerCollectionFilter extends ContainerCable {
   }
 
   @Override
-  public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-    Slot slot = this.inventorySlots.get(slotIndex);
+  public ItemStack quickMoveStack(Player player, int slotIndex) {
+    Slot slot = this.slots.get(slotIndex);
     //in range [4,39] means its coming FROM inventory
     // [0,3] is the filter list
-    if (slot != null && slot.getHasStack()) {
-      ItemStack stackInSlot = slot.getStack();
+    if (slot != null && slot.hasItem()) {
+      ItemStack stackInSlot = slot.getItem();
       if (stackInSlot.getItem() instanceof ItemUpgrade) {
         if (4 <= slotIndex && slotIndex <= 39) {
           //FROM inventory to upgrade slots
-          if (!this.mergeItemStack(stackInSlot, 0, 4, true)) {
+          if (!this.moveItemStackTo(stackInSlot, 0, 4, true)) {
             return ItemStack.EMPTY;
           }
         }
         else if (0 <= slotIndex && slotIndex <= 3) {
           //FROM upgrade slots TO inventory
-          if (!this.mergeItemStack(stackInSlot, 0, 35, true)) {
+          if (!this.moveItemStackTo(stackInSlot, 0, 35, true)) {
             return ItemStack.EMPTY;
           }
         }
@@ -52,7 +52,7 @@ public class ContainerCollectionFilter extends ContainerCable {
   }
 
   @Override
-  public boolean canInteractWith(PlayerEntity playerIn) {
+  public boolean stillValid(Player playerIn) {
     return true;
   }
 }

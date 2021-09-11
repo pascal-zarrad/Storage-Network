@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.api;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IGuiPrivate {
   //  void renderStackToolTip(ItemStack stack, int x, int y);
@@ -14,7 +14,7 @@ public interface IGuiPrivate {
 
   boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY);
 
-  void drawGradient(MatrixStack ms, int j1, int k1, int i, int j, int k, int l);
+  void drawGradient(PoseStack ms, int j1, int k1, int i, int j, int k, int l);
 
-  void renderStackTooltip(MatrixStack ms, ItemStack stack, int i, int j);
+  void renderStackTooltip(PoseStack ms, ItemStack stack, int i, int j);
 }

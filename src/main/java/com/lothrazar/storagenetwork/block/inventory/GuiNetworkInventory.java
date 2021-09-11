@@ -9,21 +9,21 @@ import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInventory> implements IGuiNetwork {
+public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetworkInventory> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
@@ -32,23 +32,23 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   final NetworkWidget network;
   private TileInventory tile;
 
-  public GuiNetworkInventory(ContainerNetworkInventory container, PlayerInventory inv, ITextComponent name) {
+  public GuiNetworkInventory(ContainerNetworkInventory container, Inventory inv, Component name) {
     super(container, inv, name);
     tile = container.tile;
     network = new NetworkWidget(this);
     network.setLines(8);
-    xSize = WIDTH;
-    ySize = HEIGHT;
+    imageWidth = WIDTH;
+    imageHeight = HEIGHT;
     network.fieldHeight = 180;
   }
 
   @Override
-  public void renderStackTooltip(MatrixStack ms, ItemStack stack, int mousex, int mousey) {
+  public void renderStackTooltip(PoseStack ms, ItemStack stack, int mousex, int mousey) {
     super.renderTooltip(ms, stack, mousex, mousey);
   }
 
   @Override
-  public void drawGradient(MatrixStack ms, int x, int y, int x2, int y2, int u, int v) {
+  public void drawGradient(PoseStack ms, int x, int y, int x2, int y2, int u, int v) {
     super.fillGradient(ms, x, y, x2, y2, u, v);
   }
 
@@ -60,11 +60,11 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   @Override
   public void init() {
     super.init();
-    int searchLeft = guiLeft + 81, searchTop = guiTop + 160, width = 85;
-    network.searchBar = new TextFieldWidget(font,
+    int searchLeft = leftPos + 81, searchTop = topPos + 160, width = 85;
+    network.searchBar = new EditBox(font,
         searchLeft, searchTop,
-        width, font.FONT_HEIGHT, null);
-    network.searchBar.setMaxStringLength(30);
+        width, font.lineHeight, null);
+    network.searchBar.setMaxLength(30);
     network.initSearchbar();
     network.initButtons();
     this.addButton(network.directionBtn);
@@ -76,10 +76,10 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   }
 
   @Override
-  public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+  public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
-    this.renderHoveredTooltip(ms, mouseX, mouseY);
+    this.renderTooltip(ms, mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
     network.render();
   }
@@ -110,28 +110,28 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
   }
 
   public BlockPos getPos() {
-    return tile.getPos();
+    return tile.getBlockPos();
   }
 
   @Override
-  public void drawGuiContainerBackgroundLayer(MatrixStack ms, float partialTicks, int mouseX, int mouseY) {
-    minecraft.getTextureManager().bindTexture(texture);
-    int xCenter = (width - xSize) / 2;
-    int yCenter = (height - ySize) / 2;
-    blit(ms, xCenter, yCenter, 0, 0, xSize, ySize);
+  public void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+    minecraft.getTextureManager().bind(texture);
+    int xCenter = (width - imageWidth) / 2;
+    int yCenter = (height - imageHeight) / 2;
+    blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
     //good stuff
     network.applySearchTextToSlots();
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
   @Override
-  public void drawGuiContainerForegroundLayer(MatrixStack ms, int mouseX, int mouseY) {
+  public void renderLabels(PoseStack ms, int mouseX, int mouseY) {
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
   boolean isScrollable(double x, double y) {
     int scrollHeight = 135;
-    return isPointInRegion(0, 0,
+    return isHovering(0, 0,
         this.width - 8, scrollHeight,
         x, y);
   }
@@ -160,7 +160,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     //recipe clear thingy
     int rectX = 63;
     int rectY = 110;
-    if (isPointInRegion(rectX, rectY, 7, 7, mouseX, mouseY)) {
+    if (isHovering(rectX, rectY, 7, 7, mouseX, mouseY)) {
       PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
       PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
       return true;
@@ -170,9 +170,9 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
 
   @Override
   public boolean keyPressed(int keyCode, int scanCode, int b) {
-    InputMappings.Input mouseKey = InputMappings.getInputByCode(keyCode, scanCode);
+    InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
     if (keyCode == 256) {
-      minecraft.player.closeScreen();
+      minecraft.player.closeContainer();
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
@@ -192,8 +192,8 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
       }
     }
     //regardles of above branch, also check this
-    if (minecraft.gameSettings.keyBindInventory.isActiveAndMatches(mouseKey)) {
-      minecraft.player.closeScreen();
+    if (minecraft.options.keyInventory.isActiveAndMatches(mouseKey)) {
+      minecraft.player.closeContainer();
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     return super.keyPressed(keyCode, scanCode, b);
@@ -209,7 +209,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
 
   @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
-    return super.isPointInRegion(x, y, width, height, mouseX, mouseY);
+    return super.isHovering(x, y, width, height, mouseX, mouseY);
   }
 
   @Override

@@ -5,7 +5,7 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
@@ -30,7 +30,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
    * Updates items in the handler based on outside storage.
    */
   public void update() {
-    if (tileMain == null || tileMain.getWorld() == null) {
+    if (tileMain == null || tileMain.getLevel() == null) {
       return;
     }
     try {

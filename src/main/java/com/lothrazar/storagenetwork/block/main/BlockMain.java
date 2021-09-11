@@ -11,71 +11,71 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 public class BlockMain extends BaseBlock {
 
   public BlockMain() {
-    super(Material.IRON, "master");
+    super(Material.METAL, "master");
   }
 
   @Override
-  public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-    super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+  public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+    super.setPlacedBy(worldIn, pos, state, placer, stack);
     this.updateConnection(worldIn, pos, state);
-    if (worldIn.isRemote) {
+    if (worldIn.isClientSide) {
       return;
     }
-    TileEntity tileAtPos = worldIn.getTileEntity(pos);
+    BlockEntity tileAtPos = worldIn.getBlockEntity(pos);
     if (tileAtPos != null) {
       ((TileMain) tileAtPos).refreshNetwork();
     }
   }
 
   @Override
-  public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos,
-      PlayerEntity playerIn, Hand hand, BlockRayTraceResult result) {
-    if (worldIn.isRemote) {
-      return ActionResultType.SUCCESS;
+  public InteractionResult use(BlockState state, Level worldIn, BlockPos pos,
+      Player playerIn, InteractionHand hand, BlockHitResult result) {
+    if (worldIn.isClientSide) {
+      return InteractionResult.SUCCESS;
     }
-    TileEntity tileHere = worldIn.getTileEntity(pos);
+    BlockEntity tileHere = worldIn.getBlockEntity(pos);
     if (!(tileHere instanceof TileMain)) {
-      return ActionResultType.PASS;
+      return InteractionResult.PASS;
     }
     //    float hitX, float hitY, float hitZ;
-    if (hand == Hand.MAIN_HAND && playerIn.getHeldItem(hand).isEmpty()) {
+    if (hand == InteractionHand.MAIN_HAND && playerIn.getItemInHand(hand).isEmpty()) {
       displayConnections(playerIn, tileHere);
-      return ActionResultType.SUCCESS;
+      return InteractionResult.SUCCESS;
     }
-    return ActionResultType.PASS;
+    return InteractionResult.PASS;
   }
 
-  private void displayConnections(PlayerEntity playerIn, TileEntity tileHere) {
+  private void displayConnections(Player playerIn, BlockEntity tileHere) {
     TileMain tileMain = (TileMain) tileHere;
     int total = tileMain.getConnectablePositions().size();
     if (total == 0) {
       return;
     }
     playerIn.sendMessage(
-        new TranslationTextComponent(TextFormatting.LIGHT_PURPLE +
+        new TranslatableComponent(ChatFormatting.LIGHT_PURPLE +
             UtilTileEntity.lang("chat.main.emptyslots") + tileMain.emptySlots()),
-        playerIn.getUniqueID());
-    playerIn.sendMessage(new TranslationTextComponent(TextFormatting.DARK_AQUA +
-        UtilTileEntity.lang("chat.main.connectables") + total), playerIn.getUniqueID());
+        playerIn.getUUID());
+    playerIn.sendMessage(new TranslatableComponent(ChatFormatting.DARK_AQUA +
+        UtilTileEntity.lang("chat.main.connectables") + total), playerIn.getUUID());
     Map<String, Integer> mapNamesToCount = new HashMap<>();
     Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
     Block bl;
@@ -85,7 +85,7 @@ public class BlockMain extends BaseBlock {
       p = iter.next();
       bl = p.getBlockState().getBlock();
       //getTranslatedName client only thanks mojang lol
-      blockName = (new TranslationTextComponent(bl.getTranslationKey())).getString();
+      blockName = (new TranslatableComponent(bl.getDescriptionId())).getString();
       int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
       mapNamesToCount.put(blockName, count);
     }
@@ -101,7 +101,7 @@ public class BlockMain extends BaseBlock {
       }
     });
     for (Entry<String, Integer> e : listDisplayStrings) {
-      playerIn.sendMessage(new TranslationTextComponent(TextFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUniqueID());
+      playerIn.sendMessage(new TranslatableComponent(ChatFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUUID());
     }
   }
 
@@ -111,7 +111,7 @@ public class BlockMain extends BaseBlock {
   }
 
   @Override
-  public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
     return new TileMain();
   }
 }

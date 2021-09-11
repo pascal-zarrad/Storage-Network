@@ -7,39 +7,41 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.eventbus.api.Event.Result;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemBuilder extends Item {
 
   public static final String NBTBLOCKSTATE = "blockstate";
 
   public ItemBuilder(Properties properties) {
-    super(properties.maxStackSize(1));
+    super(properties.stacksTo(1));
   }
 
   public static void setBlockState(ItemStack wand, BlockState target) {
-    CompoundNBT encoded = NBTUtil.writeBlockState(target);
+    CompoundTag encoded = NbtUtils.writeBlockState(target);
     wand.getOrCreateTag().put(NBTBLOCKSTATE, encoded);
   }
 
@@ -47,36 +49,36 @@ public class ItemBuilder extends Item {
     if (!wand.getOrCreateTag().contains(NBTBLOCKSTATE)) {
       return null;
     }
-    return NBTUtil.readBlockState(wand.getOrCreateTag().getCompound(NBTBLOCKSTATE));
+    return NbtUtils.readBlockState(wand.getOrCreateTag().getCompound(NBTBLOCKSTATE));
   }
 
   @Override
-  public ActionResultType onItemUse(ItemUseContext context) {
-    Hand hand = context.getHand();
-    World world = context.getWorld();
-    BlockPos pos = context.getPos();
-    PlayerEntity player = context.getPlayer();
-    BlockPos buildAt = pos.offset(context.getFace());
-    if (world.getTileEntity(pos) instanceof TileMain) {
-      ItemStack stack = player.getHeldItem(hand);
-      CompoundNBT tag = stack.getOrCreateTag();
+  public InteractionResult useOn(UseOnContext context) {
+    InteractionHand hand = context.getHand();
+    Level world = context.getLevel();
+    BlockPos pos = context.getClickedPos();
+    Player player = context.getPlayer();
+    BlockPos buildAt = pos.relative(context.getClickedFace());
+    if (world.getBlockEntity(pos) instanceof TileMain) {
+      ItemStack stack = player.getItemInHand(hand);
+      CompoundTag tag = stack.getOrCreateTag();
       DimPos.putPos(stack, pos, world);
       stack.setTag(tag);
       UtilTileEntity.statusMessage(player, "item.remote.connected");
-      return ActionResultType.SUCCESS;
+      return InteractionResult.SUCCESS;
     }
-    else if (world.isAirBlock(buildAt) || world.getBlockState(buildAt).getMaterial().isLiquid()) {
-      player.swingArm(hand);
-      ItemStack stack = player.getHeldItem(hand);
+    else if (world.isEmptyBlock(buildAt) || world.getBlockState(buildAt).getMaterial().isLiquid()) {
+      player.swing(hand);
+      ItemStack stack = player.getItemInHand(hand);
       //succeed or fail
       DimPos dp = DimPos.getPosStored(stack);
-      if (dp != null && hand == Hand.MAIN_HAND && !world.isRemote) {
-        ServerWorld serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
+      if (dp != null && hand == InteractionHand.MAIN_HAND && !world.isClientSide) {
+        ServerLevel serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
           StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
-          return ActionResultType.PASS;
+          return InteractionResult.PASS;
         }
-        TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
+        BlockEntity tile = serverTargetWorld.getBlockEntity(dp.getBlockPos());
         BlockState targetState = ItemBuilder.getBlockState(stack);
         if (tile instanceof TileMain && targetState != null) {
           TileMain network = (TileMain) tile;
@@ -92,32 +94,32 @@ public class ItemBuilder extends Item {
             }
           }
           else {
-            player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound.item"), true);
+            player.displayClientMessage(new TranslatableComponent("item.remote.notfound.item"), true);
           }
         }
         else {
-          player.sendStatusMessage(new TranslationTextComponent("item.remote.notfound"), true);
+          player.displayClientMessage(new TranslatableComponent("item.remote.notfound"), true);
         }
       }
     }
     //else something non-air and non-liquid is in the way, flower etc
-    return ActionResultType.PASS;
+    return InteractionResult.PASS;
   }
 
-  private boolean placeStateSafe(World world, PlayerEntity player, BlockPos placePos, BlockState placeState) {
+  private boolean placeStateSafe(Level world, Player player, BlockPos placePos, BlockState placeState) {
     BlockState stateHere = world.getBlockState(placePos);
     if (stateHere.getBlock() == Blocks.AIR || stateHere.getMaterial().isLiquid()) {
-      return world.setBlockState(placePos, placeState, 3);
+      return world.setBlock(placePos, placeState, 3);
     }
     return false;
   }
 
   @Override
   @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    TranslationTextComponent t;
-    t = new TranslationTextComponent(getTranslationKey() + ".tooltip");
-    t.mergeStyle(TextFormatting.GRAY);
+  public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+    TranslatableComponent t;
+    t = new TranslatableComponent(getDescriptionId() + ".tooltip");
+    t.withStyle(ChatFormatting.GRAY);
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);
@@ -126,25 +128,25 @@ public class ItemBuilder extends Item {
       } // block state?
       BlockState target = ItemBuilder.getBlockState(stack);
       if (target != null) {
-        String block = target.getBlock().getTranslationKey();
-        t = new TranslationTextComponent(block);
-        t.mergeStyle(TextFormatting.AQUA);
+        String block = target.getBlock().getDescriptionId();
+        t = new TranslatableComponent(block);
+        t.withStyle(ChatFormatting.AQUA);
         tooltip.add(t);
       }
       else {
         //if it has a network connection but no blockstate saved, then
-        t = new TranslationTextComponent(getTranslationKey() + ".blockstate");
-        t.mergeStyle(TextFormatting.AQUA);
+        t = new TranslatableComponent(getDescriptionId() + ".blockstate");
+        t.withStyle(ChatFormatting.AQUA);
         tooltip.add(t);
       }
     }
   }
 
   public static void onLeftClickBlock(LeftClickBlock event) {
-    PlayerEntity player = event.getPlayer();
-    ItemStack held = player.getHeldItem(event.getHand());
+    Player player = event.getPlayer();
+    ItemStack held = player.getItemInHand(event.getHand());
     if (held.getItem() == SsnRegistry.BUILDER_REMOTE) {
-      World world = player.getEntityWorld();
+      Level world = player.getCommandSenderWorld();
       BlockState target = world.getBlockState(event.getPos());
       ItemBuilder.setBlockState(held, target);
       UtilTileEntity.statusMessage(player, target);

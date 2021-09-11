@@ -2,9 +2,9 @@ package com.lothrazar.storagenetwork.util;
 
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -21,7 +21,7 @@ public class UtilInventory {
    * @param remote
    * @return
    */
-  public static Triple<String, Integer, ItemStack> getCurioRemote(PlayerEntity player, Item remote) {
+  public static Triple<String, Integer, ItemStack> getCurioRemote(Player player, Item remote) {
     Triple<String, Integer, ItemStack> stackFound = Triple.of("", -1, ItemStack.EMPTY);
     if (ModList.get().isLoaded("curios")) {
       //check curios slots
@@ -33,25 +33,25 @@ public class UtilInventory {
     }
     //not curios, check others
     if (remote != SsnRegistry.COLLECTOR_REMOTE) {
-      for (int i = 0; i < player.getInventoryEnderChest().getSizeInventory(); i++) {
-        ItemStack temp = player.getInventoryEnderChest().getStackInSlot(i);
+      for (int i = 0; i < player.getEnderChestInventory().getContainerSize(); i++) {
+        ItemStack temp = player.getEnderChestInventory().getItem(i);
         if (isRemote(temp, remote)) {
           return Triple.of("ender", i, temp);
         }
       }
     }
-    for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-      ItemStack temp = player.inventory.getStackInSlot(i);
+    for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+      ItemStack temp = player.inventory.getItem(i);
       if (isRemote(temp, remote)) {
         return Triple.of("player", i, temp);
       }
     }
     //default
-    if (isRemote(player.getHeldItemOffhand(), remote)) {
-      return Triple.of("offhand", -1, player.getHeldItemOffhand());
+    if (isRemote(player.getOffhandItem(), remote)) {
+      return Triple.of("offhand", -1, player.getOffhandItem());
     }
-    if (isRemote(player.getHeldItemMainhand(), remote)) {
-      return Triple.of("hand", -1, player.getHeldItemMainhand());
+    if (isRemote(player.getMainHandItem(), remote)) {
+      return Triple.of("hand", -1, player.getMainHandItem());
     }
     return stackFound;
   }

@@ -7,9 +7,9 @@ import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -27,14 +27,14 @@ public class InsertMessage {
 
   public static void handle(InsertMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
-      ServerPlayerEntity player = ctx.get().getSender();
+      ServerPlayer player = ctx.get().getSender();
       TileMain root = null;
-      if (player.openContainer instanceof ContainerNetwork) {
-        root = ((ContainerNetwork) player.openContainer).getTileMain();
+      if (player.containerMenu instanceof ContainerNetwork) {
+        root = ((ContainerNetwork) player.containerMenu).getTileMain();
       }
       int rest;
       ItemStack send = ItemStack.EMPTY;
-      ItemStack stack = player.inventory.getItemStack();
+      ItemStack stack = player.inventory.getCarried();
       if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {
         rest = root.insertStack(stack, false);
         if (rest != 0) {
@@ -50,25 +50,25 @@ public class InsertMessage {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
-      player.inventory.setItemStack(send);
+      player.inventory.setCarried(send);
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
-          player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+          player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       List<ItemStack> list = root.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-          player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
-      player.openContainer.detectAndSendChanges();
+          player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+      player.containerMenu.broadcastChanges();
     });
     ctx.get().setPacketHandled(true);
   }
 
-  public static InsertMessage decode(PacketBuffer buf) {
+  public static InsertMessage decode(FriendlyByteBuf buf) {
     InsertMessage message = new InsertMessage();
     message.dim = buf.readInt();
     message.mouseButton = buf.readInt();
     return message;
   }
 
-  public static void encode(InsertMessage msg, PacketBuffer buf) {
+  public static void encode(InsertMessage msg, FriendlyByteBuf buf) {
     buf.writeInt(msg.dim);
     buf.writeInt(msg.mouseButton);
   }

@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.config.KeyBindings;
@@ -50,7 +50,7 @@ public class JeiHooks {
     return mezz.jei.Internal.getRuntime().getIngredientFilter().getFilterText();
   }
 
-  public static void testJeiKeybind(InputMappings.Input keyCode, ItemStack stackUnderMouse) {
+  public static void testJeiKeybind(InputConstants.Key keyCode, ItemStack stackUnderMouse) {
     if (!isJeiLoaded()) {
       return;
     }

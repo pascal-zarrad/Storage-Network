@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 public class ItemStackMatcher implements IItemStackMatcher {
 
@@ -22,16 +22,16 @@ public class ItemStackMatcher implements IItemStackMatcher {
 
   private ItemStackMatcher() {}
 
-  public void readFromNBT(CompoundNBT compound) {
-    CompoundNBT c = (CompoundNBT) compound.get("stack");
-    stack = ItemStack.read(c);
+  public void readFromNBT(CompoundTag compound) {
+    CompoundTag c = (CompoundTag) compound.get("stack");
+    stack = ItemStack.of(c);
     ore = compound.getBoolean("ore");
     nbt = compound.getBoolean("nbt");
   }
 
-  public CompoundNBT writeToNBT(CompoundNBT compound) {
-    CompoundNBT c = new CompoundNBT();
-    stack.write(c);
+  public CompoundTag writeToNBT(CompoundTag compound) {
+    CompoundTag c = new CompoundTag();
+    stack.save(c);
     compound.put("stack", c);
     compound.putBoolean("ore", ore);
     compound.putBoolean("nbt", nbt);
@@ -68,7 +68,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     this.nbt = nbt;
   }
 
-  public static ItemStackMatcher loadFilterItemFromNBT(CompoundNBT nbt) {
+  public static ItemStackMatcher loadFilterItemFromNBT(CompoundTag nbt) {
     ItemStackMatcher fil = new ItemStackMatcher();
     fil.readFromNBT(nbt);
     return fil.getStack() != null && fil.getStack().getItem() != null ? fil : null;
@@ -79,7 +79,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     if (stackIn.isEmpty()) {
       return false;
     }
-    if (nbt && !ItemStack.areItemStackTagsEqual(stack, stackIn)) {
+    if (nbt && !ItemStack.tagMatches(stack, stackIn)) {
       return false;
     }
     return stackIn.getItem() == stack.getItem();

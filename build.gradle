@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'checkstyle'
-
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 import net.minecraftforge.gradle.common.tasks.SignJar
 import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
@@ -31,11 +31,10 @@ checkstyleMain {
     source ='src/main/java'
 }
 
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
 
 minecraft {
-    mappings channel: 'snapshot', version: mappings_version
+mappings channel: 'official', version: '1.17.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
@@ -87,10 +86,10 @@ dependencies {
 
     implementation fg.deobf("mezz.jei:${jei_version}")
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-	  implementation fg.deobf("curse.maven:cyclic-239286:3384234")
+	//  implementation fg.deobf("curse.maven:cyclic-239286:3384234")
    // implementation fg.deobf("curse.maven:refined-storage-243076:3351933")
   
 	//  implementation fg.deobf("curse.maven:crafttweaker-239197:3183630")

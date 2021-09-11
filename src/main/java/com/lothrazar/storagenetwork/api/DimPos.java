@@ -3,37 +3,37 @@ package com.lothrazar.storagenetwork.api;
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import javax.annotation.Nullable;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.IChunk;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class DimPos implements INBTSerializable<CompoundNBT> {
+public class DimPos implements INBTSerializable<CompoundTag> {
 
   private String dimension;
   private BlockPos pos = new BlockPos(0, 0, 0);
-  private World world;
+  private Level world;
 
-  public DimPos(CompoundNBT tag) {
+  public DimPos(CompoundTag tag) {
     deserializeNBT(tag);
   }
 
-  public DimPos(World world, BlockPos pos) {
+  public DimPos(Level world, BlockPos pos) {
     this.pos = pos;
     this.setWorld(world);
     if (world != null) {
@@ -48,7 +48,7 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return new DimPos(itemStackIn.getOrCreateTag());
   }
 
-  public World getWorld() {
+  public Level getWorld() {
     return world;
   }
 
@@ -64,9 +64,9 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return getTileEntity(tileEntityClassOrInterface, getWorld());
   }
 
-  public static String dimensionToString(World w) {
+  public static String dimensionToString(Level w) {
     //example: returns "minecraft:overworld" resource location
-    return w.getDimensionKey().getLocation().toString();
+    return w.dimension().location().toString();
   }
 
   public static final String NBT_Z = "Z";
@@ -75,8 +75,8 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   public static final String NBT_DIM = "dimension";
   public static final String NBT_BOUND = "bound";
 
-  public static void putPos(ItemStack stack, BlockPos pos, World world) {
-    CompoundNBT tag = stack.getOrCreateTag();
+  public static void putPos(ItemStack stack, BlockPos pos, Level world) {
+    CompoundTag tag = stack.getOrCreateTag();
     tag.putInt(NBT_X, pos.getX());
     tag.putInt(NBT_Y, pos.getY());
     tag.putInt(NBT_Z, pos.getZ());
@@ -88,42 +88,42 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return stack.getOrCreateTag().getString(NBT_DIM);
   }
 
-  public static void putDim(ItemStack stack, World world) {
+  public static void putDim(ItemStack stack, Level world) {
     stack.getOrCreateTag().putString(NBT_DIM, DimPos.dimensionToString(world));
   }
 
-  public static ServerWorld stringDimensionLookup(String s, MinecraftServer serv) {
-    return stringDimensionLookup(ResourceLocation.tryCreate(s), serv);
+  public static ServerLevel stringDimensionLookup(String s, MinecraftServer serv) {
+    return stringDimensionLookup(ResourceLocation.tryParse(s), serv);
   }
 
-  public static ServerWorld stringDimensionLookup(ResourceLocation s, MinecraftServer serv) {
-    RegistryKey<World> worldKey = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, s);
+  public static ServerLevel stringDimensionLookup(ResourceLocation s, MinecraftServer serv) {
+    ResourceKey<Level> worldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, s);
     if (worldKey == null) {
       return null;
     }
-    return serv.getWorld(worldKey);
+    return serv.getLevel(worldKey);
   }
 
   @SuppressWarnings("unchecked")
   @Nullable
-  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, World world) {
+  public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, Level world) {
     if (world == null || getBlockPos() == null) {
       return null;
     }
     //refresh server world 
     if (dimension != null && world.getServer() != null
         && dimension.isEmpty() == false) {
-      ServerWorld dimWorld = stringDimensionLookup(this.dimension, world.getServer());
+      ServerLevel dimWorld = stringDimensionLookup(this.dimension, world.getServer());
       //reach across to the other dimension
       if (dimWorld != null) {
-        world = dimWorld.getWorld();
+        world = dimWorld.getLevel();
       }
       else {
         StorageNetwork.LOGGER.error(" Dimworld NOT FOUND for " + dimension);
       }
     }
     //end refresh srever world
-    TileEntity tileEntity = world.getTileEntity(getBlockPos());
+    BlockEntity tileEntity = world.getBlockEntity(getBlockPos());
     if (tileEntity == null) {
       return null;
     }
@@ -134,11 +134,11 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   public <V> V getCapability(Capability<V> capability, Direction side) {
-    World world = getWorld();
+    Level world = getWorld();
     if (world == null || getBlockPos() == null) {
       return null;
     }
-    TileEntity tileEntity = world.getTileEntity(getBlockPos());
+    BlockEntity tileEntity = world.getBlockEntity(getBlockPos());
     if (tileEntity == null) {
       return null;
     }
@@ -150,10 +150,10 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     if (getWorld() == null) {
       return false;
     }
-    return getWorld().isBlockLoaded(pos);
+    return getWorld().hasChunkAt(pos);
   }
 
-  public boolean equals(World world, BlockPos pos) {
+  public boolean equals(Level world, BlockPos pos) {
     //    world.dimension
     //    return dimension == world.provider.getDimension() &&
     //
@@ -188,18 +188,18 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
   }
 
   @Override
-  public CompoundNBT serializeNBT() {
+  public CompoundTag serializeNBT() {
     if (pos == null) {
       pos = new BlockPos(0, 0, 0);
     }
-    CompoundNBT result = NBTUtil.writeBlockPos(pos);
+    CompoundTag result = NbtUtils.writeBlockPos(pos);
     result.putString(NBT_DIM, dimension);
     return result;
   }
 
   @Override
-  public void deserializeNBT(CompoundNBT nbt) {
-    pos = NBTUtil.readBlockPos(nbt);
+  public void deserializeNBT(CompoundTag nbt) {
+    pos = NbtUtils.readBlockPos(nbt);
     dimension = nbt.getString(NBT_DIM);
   }
 
@@ -208,14 +208,14 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       StorageNetwork.LOGGER.info("Error: null offset in DimPos " + direction);
       return null;
     }
-    return new DimPos(getWorld(), pos.offset(direction));
+    return new DimPos(getWorld(), pos.relative(direction));
   }
 
-  public IChunk getChunk() {
+  public ChunkAccess getChunk() {
     return getWorld().getChunk(pos);
   }
 
-  public void setWorld(World world) {
+  public void setWorld(Level world) {
     this.world = world;
   }
 
@@ -223,9 +223,9 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
     return dimension;
   }
 
-  public ITextComponent makeTooltip() {
-    TranslationTextComponent t = new TranslationTextComponent("[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ", " + dimension + "]");
-    t.mergeStyle(TextFormatting.DARK_GRAY);
+  public Component makeTooltip() {
+    TranslatableComponent t = new TranslatableComponent("[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ", " + dimension + "]");
+    t.withStyle(ChatFormatting.DARK_GRAY);
     return t;
   }
 }

@@ -36,13 +36,13 @@ import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
-import net.minecraft.block.Block;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -53,10 +53,10 @@ import net.minecraftforge.registries.ObjectHolder;
 public class SsnRegistry {
 
   public static final int UPGRADE_COUNT = 4;
-  public static ItemGroup TAB = new ItemGroup(StorageNetwork.MODID) {
+  public static CreativeModeTab TAB = new CreativeModeTab(StorageNetwork.MODID) {
 
     @Override
-    public ItemStack createIcon() {
+    public ItemStack makeIcon() {
       return new ItemStack(SsnRegistry.REQUEST);
     }
   };
@@ -74,66 +74,66 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
   public static ItemUpgrade STACK_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":master")
-  public static TileEntityType<TileMain> MAINTILEENTITY;
+  public static BlockEntityType<TileMain> MAINTILEENTITY;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockMain MAIN;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
   public static Block INVENTORY;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
-  public static TileEntityType<TileInventory> INVENTORYTILE;
+  public static BlockEntityType<TileInventory> INVENTORYTILE;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
-  public static ContainerType<ContainerNetworkInventory> INVENTORYCONTAINER;
+  public static MenuType<ContainerNetworkInventory> INVENTORYCONTAINER;
   //request
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static BlockRequest REQUEST;
   @ObjectHolder(StorageNetwork.MODID + ":request")
-  public static TileEntityType<TileRequest> REQUESTTILE;
+  public static BlockEntityType<TileRequest> REQUESTTILE;
   @ObjectHolder(StorageNetwork.MODID + ":request")
-  public static ContainerType<ContainerNetworkCraftingTable> REQUESTCONTAINER;
+  public static MenuType<ContainerNetworkCraftingTable> REQUESTCONTAINER;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static BlockCable KABEL;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
-  public static TileEntityType<TileCable> KABELTILE;
+  public static BlockEntityType<TileCable> KABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":exchange")
   public static Block EXCHANGE;
   @ObjectHolder(StorageNetwork.MODID + ":exchange")
-  public static TileEntityType<TileExchange> EXCHANGETILE;
+  public static BlockEntityType<TileExchange> EXCHANGETILE;
   @ObjectHolder(StorageNetwork.MODID + ":collector")
   public static Block COLLECTOR;
   @ObjectHolder(StorageNetwork.MODID + ":collector")
-  public static TileEntityType<TileCollection> COLLECTORTILE;
+  public static BlockEntityType<TileCollection> COLLECTORTILE;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
   public static Block STORAGEKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
-  public static TileEntityType<TileCableLink> STORAGEKABELTILE;
+  public static BlockEntityType<TileCableLink> STORAGEKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
   public static Block IMPORTKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
-  public static TileEntityType<TileCableIO> IMPORTKABELTILE;
+  public static BlockEntityType<TileCableIO> IMPORTKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
   public static Block FILTERKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
-  public static TileEntityType<TileCableFilter> FILTERKABELTILE;
+  public static BlockEntityType<TileCableFilter> FILTERKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
-  public static ContainerType<ContainerCableFilter> FILTERCONTAINER;
+  public static MenuType<ContainerCableFilter> FILTERCONTAINER;
   @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
   public static Block IMPORTFILTERKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
-  public static TileEntityType<TileCableImportFilter> FILTERIMPORTKABELTILE;
+  public static BlockEntityType<TileCableImportFilter> FILTERIMPORTKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
-  public static ContainerType<ContainerCableImportFilter> FILTERIMPORTCONTAINER;
+  public static MenuType<ContainerCableImportFilter> FILTERIMPORTCONTAINER;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static Block EXPORTKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
-  public static TileEntityType<TileCableImportFilter> EXPORTKABELTILE;
+  public static BlockEntityType<TileCableImportFilter> EXPORTKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
-  public static ContainerType<ContainerCableExportFilter> FILTEREXPORTCONTAINER;
+  public static MenuType<ContainerCableExportFilter> FILTEREXPORTCONTAINER;
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
-  public static ContainerType<ContainerNetworkRemote> REMOTE;
+  public static MenuType<ContainerNetworkRemote> REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
-  public static ContainerType<ContainerNetworkCraftingRemote> CRAFTINGREMOTE;
+  public static MenuType<ContainerNetworkCraftingRemote> CRAFTINGREMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":collector")
-  public static ContainerType<ContainerCollectionFilter> COLLECTORCTR;
+  public static MenuType<ContainerCollectionFilter> COLLECTORCTR;
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class RegistryEvents {
@@ -156,7 +156,7 @@ public class SsnRegistry {
 
     @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
-      Item.Properties properties = new Item.Properties().group(SsnRegistry.TAB);
+      Item.Properties properties = new Item.Properties().tab(SsnRegistry.TAB);
       IForgeRegistry<Item> r = event.getRegistry();
       r.register(new BlockItem(SsnRegistry.INVENTORY, properties).setRegistryName("inventory"));
       r.register(new BlockItem(SsnRegistry.MAIN, properties).setRegistryName("master"));
@@ -180,41 +180,41 @@ public class SsnRegistry {
     }
 
     @SubscribeEvent
-    public static void onTileEntityRegistry(RegistryEvent.Register<TileEntityType<?>> event) {
-      IForgeRegistry<TileEntityType<?>> r = event.getRegistry();
-      r.register(TileEntityType.Builder.create(TileMain::new, SsnRegistry.MAIN).build(null).setRegistryName("master"));
-      r.register(TileEntityType.Builder.create(TileInventory::new, SsnRegistry.INVENTORY).build(null).setRegistryName("inventory"));
-      r.register(TileEntityType.Builder.create(TileRequest::new, SsnRegistry.REQUEST).build(null).setRegistryName("request"));
-      r.register(TileEntityType.Builder.create(TileCable::new, SsnRegistry.KABEL).build(null).setRegistryName("kabel"));
-      r.register(TileEntityType.Builder.create(TileCableLink::new, SsnRegistry.STORAGEKABEL).build(null).setRegistryName("storage_kabel"));
-      r.register(TileEntityType.Builder.create(TileCableIO::new, SsnRegistry.IMPORTKABEL).build(null).setRegistryName("import_kabel"));
-      r.register(TileEntityType.Builder.create(TileCableImportFilter::new, SsnRegistry.IMPORTFILTERKABEL).build(null).setRegistryName("import_filter_kabel"));
-      r.register(TileEntityType.Builder.create(TileCableFilter::new, SsnRegistry.FILTERKABEL).build(null).setRegistryName("filter_kabel"));
-      r.register(TileEntityType.Builder.create(TileCableExport::new, SsnRegistry.EXPORTKABEL).build(null).setRegistryName("export_kabel"));
-      r.register(TileEntityType.Builder.create(TileExchange::new, SsnRegistry.EXCHANGE).build(null).setRegistryName("exchange"));
-      r.register(TileEntityType.Builder.create(TileCollection::new, SsnRegistry.COLLECTOR).build(null).setRegistryName("collector"));
+    public static void onTileEntityRegistry(RegistryEvent.Register<BlockEntityType<?>> event) {
+      IForgeRegistry<BlockEntityType<?>> r = event.getRegistry();
+      r.register(BlockEntityType.Builder.of(TileMain::new, SsnRegistry.MAIN).build(null).setRegistryName("master"));
+      r.register(BlockEntityType.Builder.of(TileInventory::new, SsnRegistry.INVENTORY).build(null).setRegistryName("inventory"));
+      r.register(BlockEntityType.Builder.of(TileRequest::new, SsnRegistry.REQUEST).build(null).setRegistryName("request"));
+      r.register(BlockEntityType.Builder.of(TileCable::new, SsnRegistry.KABEL).build(null).setRegistryName("kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableLink::new, SsnRegistry.STORAGEKABEL).build(null).setRegistryName("storage_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableIO::new, SsnRegistry.IMPORTKABEL).build(null).setRegistryName("import_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableImportFilter::new, SsnRegistry.IMPORTFILTERKABEL).build(null).setRegistryName("import_filter_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableFilter::new, SsnRegistry.FILTERKABEL).build(null).setRegistryName("filter_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableExport::new, SsnRegistry.EXPORTKABEL).build(null).setRegistryName("export_kabel"));
+      r.register(BlockEntityType.Builder.of(TileExchange::new, SsnRegistry.EXCHANGE).build(null).setRegistryName("exchange"));
+      r.register(BlockEntityType.Builder.of(TileCollection::new, SsnRegistry.COLLECTOR).build(null).setRegistryName("collector"));
     }
 
     @SubscribeEvent
-    public static void onContainerRegistry(RegistryEvent.Register<ContainerType<?>> event) {
-      IForgeRegistry<ContainerType<?>> r = event.getRegistry();
+    public static void onContainerRegistry(RegistryEvent.Register<MenuType<?>> event) {
+      IForgeRegistry<MenuType<?>> r = event.getRegistry();
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkCraftingTable(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
+        return new ContainerNetworkCraftingTable(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("request"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerCollectionFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
+        return new ContainerCollectionFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("collector"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerCableFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
+        return new ContainerCableFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("filter_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerCableImportFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
+        return new ContainerCableImportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("import_filter_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerCableExportFilter(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
+        return new ContainerCableExportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("export_kabel"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkInventory(windowId, inv.player.world, data.readBlockPos(), inv, inv.player);
+        return new ContainerNetworkInventory(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("inventory"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
         return new ContainerNetworkRemote(windowId, inv.player.inventory);

@@ -5,18 +5,18 @@ import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 
-public class RequestRecipeTransferHandler<C extends Container> implements IRecipeTransferHandler<C> {
+public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> implements IRecipeTransferHandler<C> {
 
   private Class<C> clazz;
 
@@ -29,11 +29,11 @@ public class RequestRecipeTransferHandler<C extends Container> implements IRecip
     return clazz;
   }
 
-  public static CompoundNBT recipeToTag(Container container, IRecipeLayout recipeLayout) {
-    CompoundNBT nbt = new CompoundNBT();
+  public static CompoundTag recipeToTag(AbstractContainerMenu container, IRecipeLayout recipeLayout) {
+    CompoundTag nbt = new CompoundTag();
     Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs = recipeLayout.getItemStacks().getGuiIngredients();
-    for (Slot slot : container.inventorySlots) {
-      if (slot.inventory instanceof net.minecraft.inventory.CraftingInventory) {
+    for (Slot slot : container.slots) {
+      if (slot.container instanceof net.minecraft.world.inventory.CraftingContainer) {
         //for some reason it was looping like this  (int j = 1; j < 10; j++)
         IGuiIngredient<ItemStack> ingredient = inputs.get(slot.getSlotIndex() + 1);
         if (ingredient == null) {
@@ -43,15 +43,15 @@ public class RequestRecipeTransferHandler<C extends Container> implements IRecip
         if (possibleItems == null || possibleItems.isEmpty()) {
           continue;
         }
-        ListNBT invList = new ListNBT();
+        ListTag invList = new ListTag();
         for (int i = 0; i < possibleItems.size(); i++) {
           if (i >= ConfigRegistry.RECIPEMAXTAGS.get()) {
             break;
           }
           ItemStack itemStack = possibleItems.get(i);
           if (!itemStack.isEmpty()) {
-            CompoundNBT stackTag = new CompoundNBT();
-            itemStack.write(stackTag);
+            CompoundTag stackTag = new CompoundTag();
+            itemStack.save(stackTag);
             invList.add(stackTag);
           }
         }
@@ -62,10 +62,10 @@ public class RequestRecipeTransferHandler<C extends Container> implements IRecip
   }
 
   @Override
-  public IRecipeTransferError transferRecipe(C c, IRecipeLayout iRecipeLayout, PlayerEntity playerEntity,
+  public IRecipeTransferError transferRecipe(C c, IRecipeLayout iRecipeLayout, Player playerEntity,
       boolean maxTransfer, boolean doTransfer) {
     if (doTransfer) {
-      CompoundNBT nbt = RequestRecipeTransferHandler.recipeToTag(c, iRecipeLayout);
+      CompoundTag nbt = RequestRecipeTransferHandler.recipeToTag(c, iRecipeLayout);
       PacketRegistry.INSTANCE.sendToServer(new RecipeMessage(nbt));
     }
     return null;
