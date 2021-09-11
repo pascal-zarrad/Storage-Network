@@ -1,5 +1,7 @@
 package com.lothrazar.storagenetwork;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.GuiCableFilter;
@@ -23,8 +25,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fmlclient.registry.ClientRegistry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 
 @Mod(StorageNetwork.MODID)

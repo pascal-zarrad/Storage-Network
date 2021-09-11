@@ -1,10 +1,5 @@
 package com.lothrazar.storagenetwork.block.main;
 
-import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.api.DimPos;
-import com.lothrazar.storagenetwork.block.BaseBlock;
-import com.lothrazar.storagenetwork.registry.SsnRegistry;
-import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -12,23 +7,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.api.DimPos;
+import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
 
 public class BlockMain extends BaseBlock {
 
@@ -117,6 +117,7 @@ public class BlockMain extends BaseBlock {
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
     return createTickerHelper(type, SsnRegistry.MAINTILEENTITY, world.isClientSide ? TileMain::clientTick : TileMain::serverTick);
   }
+
   @Override
   public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new TileMain(pos, state);

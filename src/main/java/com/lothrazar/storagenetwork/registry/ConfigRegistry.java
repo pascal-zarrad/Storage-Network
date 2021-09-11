@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.registry;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;

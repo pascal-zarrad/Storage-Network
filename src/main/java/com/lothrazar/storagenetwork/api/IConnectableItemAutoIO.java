@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.api;
 
-import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.world.item.ItemStack;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks main. You could quite as well just expose {@link IConnectable} and do the

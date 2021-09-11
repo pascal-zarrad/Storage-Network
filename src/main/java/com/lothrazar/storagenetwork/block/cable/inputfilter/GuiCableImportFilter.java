@@ -1,5 +1,7 @@
 package com.lothrazar.storagenetwork.block.cable.inputfilter;
 
+import java.util.List;
+import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
@@ -12,15 +14,13 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 
 public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 
@@ -112,7 +112,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
           mouseX - leftPos, mouseY - topPos);
     }
     if (btnAllowIgn != null && btnAllowIgn.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent(this.isAllowlist ? "gui.storagenetwork.allowlist" : "gui.storagenetwork.ignorelist")),Optional.empty(),
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent(this.isAllowlist ? "gui.storagenetwork.allowlist" : "gui.storagenetwork.ignorelist")), Optional.empty(),
           mouseX - leftPos, mouseY - topPos);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
@@ -120,12 +120,12 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
           mouseX - leftPos, mouseY - topPos);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.priority.up")),Optional.empty(),
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.priority.up")), Optional.empty(),
           mouseX - leftPos, mouseY - topPos);
     }
     if (btnRedstone != null && btnRedstone.isMouseOver(mouseX, mouseY)) {
       renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.redstone."
-          + containerCableLink.cap.needsRedstone())), Optional.empty(),mouseX - leftPos, mouseY - topPos);
+          + containerCableLink.cap.needsRedstone())), Optional.empty(), mouseX - leftPos, mouseY - topPos);
     }
   }
 
@@ -133,7 +133,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
 
   @Override
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-//    minecraft.getTextureManager().bind(texture);
+    //    minecraft.getTextureManager().bind(texture);
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, texture);
     int xCenter = (width - imageWidth) / 2;

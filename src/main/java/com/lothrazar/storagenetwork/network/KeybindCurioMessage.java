@@ -1,15 +1,15 @@
 package com.lothrazar.storagenetwork.network;
 
+import java.util.function.Supplier;
+import org.apache.commons.lang3.tuple.Triple;
 import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilInventory;
-import java.util.function.Supplier;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import org.apache.commons.lang3.tuple.Triple;
 
 public class KeybindCurioMessage {
 

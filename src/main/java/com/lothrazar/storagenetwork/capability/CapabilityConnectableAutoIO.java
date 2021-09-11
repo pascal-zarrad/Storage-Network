@@ -1,5 +1,9 @@
 package com.lothrazar.storagenetwork.capability;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -11,16 +15,10 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -302,21 +300,20 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       return new CapabilityConnectableAutoIO(EnumStorageDirection.IN);
     }
   }
-
-//  public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
-//
-//    @Override
-//    public Tag writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
-//      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-//      return instance.serializeNBT();
-//    }
-//
-//    @Override
-//    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, Tag nbt) {
-//      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-//      instance.deserializeNBT((CompoundTag) nbt);
-//    }
-//  }
+  //  public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
+  //
+  //    @Override
+  //    public Tag writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
+  //      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
+  //      return instance.serializeNBT();
+  //    }
+  //
+  //    @Override
+  //    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, Tag nbt) {
+  //      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
+  //      instance.deserializeNBT((CompoundTag) nbt);
+  //    }
+  //  }
 
   @Override
   public boolean isStockMode() {

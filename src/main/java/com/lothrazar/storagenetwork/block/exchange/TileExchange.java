@@ -10,6 +10,8 @@ import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -68,5 +70,13 @@ public class TileExchange extends TileConnectable {
     if (this.itemHandler != null && getLevel().getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) {
       this.itemHandler.update();
     }
+  }
+
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileExchange tile) {
+    tile.tick();
+  }
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileExchange tile) {
+    tile.tick();
   }
 }

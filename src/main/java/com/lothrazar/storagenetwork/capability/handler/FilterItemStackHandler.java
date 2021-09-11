@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
-import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraft.world.item.ItemStack;
+import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 

@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.network;
 
-import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import java.util.List;
 import java.util.function.Supplier;
+import com.google.common.collect.Lists;
+import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 /**

@@ -1,10 +1,10 @@
 package com.lothrazar.storagenetwork.jei;
 
+import java.util.List;
+import java.util.Map;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import java.util.List;
-import java.util.Map;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
@@ -31,7 +31,7 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
   }
 
   @Override
-  public Class getRecipeClass() {
+  public Class<CraftingRecipe> getRecipeClass() {
     return CraftingRecipe.class;
   }
 

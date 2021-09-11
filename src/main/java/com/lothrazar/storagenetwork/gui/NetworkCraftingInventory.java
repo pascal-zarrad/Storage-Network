@@ -2,12 +2,12 @@ package com.lothrazar.storagenetwork.gui;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
 
 public class NetworkCraftingInventory extends CraftingContainer {
 

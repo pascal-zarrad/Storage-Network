@@ -3,19 +3,18 @@ package com.lothrazar.storagenetwork.block.inventory;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.network.SortClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
@@ -24,6 +23,7 @@ public class BlockInventory extends BaseBlock {
   public BlockInventory(String registryName) {
     super(Material.METAL, registryName);
   }
+
   @Override
   public RenderShape getRenderShape(BlockState bs) {
     return RenderShape.MODEL;
@@ -54,5 +54,4 @@ public class BlockInventory extends BaseBlock {
     }
     return InteractionResult.SUCCESS;
   }
-
 }

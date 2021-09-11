@@ -1,17 +1,17 @@
 package com.lothrazar.storagenetwork.block;
 
-import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
-import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.world.level.block.state.BlockState;
+import com.lothrazar.storagenetwork.block.cable.BlockCable;
+import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
+import com.lothrazar.storagenetwork.block.main.TileMain;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileCableWithFacing extends TileConnectable {

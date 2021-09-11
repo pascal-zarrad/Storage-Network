@@ -112,7 +112,7 @@ public class ButtonRequest extends Button {
       return;
     }
     Minecraft minecraft = Minecraft.getInstance();
-//    minecraft.getTextureManager().bind(getTexture());
+    //    minecraft.getTextureManager().bind(getTexture());
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, getTexture());
     int k = this.getYImage(this.isHovered());

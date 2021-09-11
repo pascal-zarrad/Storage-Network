@@ -1,13 +1,13 @@
 package com.lothrazar.storagenetwork.block.request;
 
+import java.util.List;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
-import java.util.List;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,7 +26,7 @@ public class SlotCraftingNetwork extends ResultSlot {
   @Override
   public void onTake(Player playerIn, ItemStack stack) {
     if (playerIn.level.isClientSide) {
-      return ; // stack;
+      return; // stack;
     }
     List<ItemStack> lis = Lists.newArrayList();
     for (int i = 0; i < parent.matrix.getContainerSize(); i++) {

@@ -13,6 +13,8 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -66,5 +68,13 @@ public class TileCableFilter extends TileCableWithFacing implements MenuProvider
 
   private void tick() {
     super.refreshDirection();
+  }
+
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableFilter tile) {
+    tile.tick();
+  }
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileCableFilter tile) {
+    tile.tick();
   }
 }

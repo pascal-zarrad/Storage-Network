@@ -2,11 +2,11 @@ package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.ModList;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.config.KeyBindings;
 import mezz.jei.gui.Focus;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.ModList;
 
 public class JeiHooks {
 

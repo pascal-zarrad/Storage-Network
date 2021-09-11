@@ -1,15 +1,15 @@
 package com.lothrazar.storagenetwork.network;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -50,7 +50,7 @@ public class InsertMessage {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
-//      player.getInventory().setSelected(send);
+      //      player.getInventory().setSelected(send);
       player.getInventory().setItem(player.getInventory().selected, send);
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);

@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemStackMatcher implements IItemStackMatcher {
 

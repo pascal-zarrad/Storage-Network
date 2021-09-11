@@ -1,15 +1,15 @@
 package com.lothrazar.storagenetwork.network;
 
-import com.lothrazar.storagenetwork.block.main.TileMain;
-import com.lothrazar.storagenetwork.gui.ContainerNetwork;
-import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.gui.ContainerNetwork;
+import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;

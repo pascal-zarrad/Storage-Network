@@ -1,11 +1,7 @@
 package com.lothrazar.storagenetwork.capability;
 
 import com.lothrazar.storagenetwork.api.DimPos;
-import com.lothrazar.storagenetwork.api.IConnectable;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class CapabilityConnectable extends DefaultConnectable implements INBTSerializable<CompoundTag> {
@@ -42,19 +38,18 @@ public class CapabilityConnectable extends DefaultConnectable implements INBTSer
     }
     this.needsRedstone(nbt.getBoolean("needsRedstone"));
   }
-
-//  public static class Storage implements Capability.IStorage<IConnectable> {
-//
-//    @Override
-//    public Tag writeNBT(Capability<IConnectable> capability, IConnectable instance, Direction side) {
-//      CapabilityConnectable i = (CapabilityConnectable) instance;
-//      return i.serializeNBT();
-//    }
-//
-//    @Override
-//    public void readNBT(Capability<IConnectable> capability, IConnectable instance, Direction side, Tag nbt) {
-//      CapabilityConnectable i = (CapabilityConnectable) instance;
-//      i.deserializeNBT((CompoundTag) nbt);
-//    }
-//  }
+  //  public static class Storage implements Capability.IStorage<IConnectable> {
+  //
+  //    @Override
+  //    public Tag writeNBT(Capability<IConnectable> capability, IConnectable instance, Direction side) {
+  //      CapabilityConnectable i = (CapabilityConnectable) instance;
+  //      return i.serializeNBT();
+  //    }
+  //
+  //    @Override
+  //    public void readNBT(Capability<IConnectable> capability, IConnectable instance, Direction side, Tag nbt) {
+  //      CapabilityConnectable i = (CapabilityConnectable) instance;
+  //      i.deserializeNBT((CompoundTag) nbt);
+  //    }
+  //  }
 }

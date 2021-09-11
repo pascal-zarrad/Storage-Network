@@ -2,8 +2,8 @@ package com.lothrazar.storagenetwork.gui;
 
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.util.UtilInventory;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
@@ -41,10 +41,11 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  @SuppressWarnings("deprecation")
   public void drawSlot(PoseStack ms, Font font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
-//    RenderSystem.pushMatrix();
+    //    RenderSystem.pushMatrix();
+    //
+    //
     ms.pushPose();
     if (!getStack().isEmpty()) {
       String amount;
@@ -57,23 +58,24 @@ public class ItemSlotNetwork {
         amount = UtilInventory.formatLargeNumber(size);
       }
       if (isShowNumbers()) {
-//        RenderSystem.pushMatrix();
+        //        RenderSystem.pushMatrix();
         ms.pushPose();
         ms.scale(.5f, .5f, .5f);
         //z level important to get numbers on top of items
         Minecraft.getInstance().getItemRenderer().blitOffset = -0.1F;
         Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack,
-            x * 2 + 16,
+            x * 2 + 16 - parent.getGuiLeft(),
             y * 2 + 16, amount);
-//        RenderSystem.popMatrix();
+        System.out.println(amount + " at +" + x);
+        //        RenderSystem.popMatrix();
         ms.popPose();
       }
-//      RenderSystem.pushMatrix();
+      //      RenderSystem.pushMatrix();
       ms.pushPose();
       //z level important to get numbers on top of items
       Minecraft.getInstance().getItemRenderer().blitOffset = -100F;
       Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
-//      RenderSystem.popMatrix();
+      //      RenderSystem.popMatrix();
       ms.popPose();
       if (isMouseOverSlot(mx, my)) {
         int j1 = x;
@@ -83,7 +85,7 @@ public class ItemSlotNetwork {
         RenderSystem.colorMask(true, true, true, true);
       }
     }
-//    RenderSystem.popMatrix();
+    //    RenderSystem.popMatrix();
     ms.popPose();
   }
 

@@ -1,5 +1,9 @@
 package com.lothrazar.storagenetwork.capability;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
@@ -9,16 +13,10 @@ import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.block.exchange.ExchangeItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -268,19 +266,18 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return new CapabilityConnectableLink();
     }
   }
-
-//  public static class Storage implements Capability.IStorage<IConnectableLink> {
-//
-//    @Override
-//    public Tag writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
-//      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-//      return instance.serializeNBT();
-//    }
-//
-//    @Override
-//    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, Tag nbt) {
-//      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-//      instance.deserializeNBT((CompoundTag) nbt);
-//    }
-//  }
+  //  public static class Storage implements Capability.IStorage<IConnectableLink> {
+  //
+  //    @Override
+  //    public Tag writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
+  //      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
+  //      return instance.serializeNBT();
+  //    }
+  //
+  //    @Override
+  //    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, Tag nbt) {
+  //      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
+  //      instance.deserializeNBT((CompoundTag) nbt);
+  //    }
+  //  }
 }

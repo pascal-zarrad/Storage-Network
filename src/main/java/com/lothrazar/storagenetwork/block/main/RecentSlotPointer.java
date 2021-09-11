@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.block.main;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 
 public class RecentSlotPointer {
 

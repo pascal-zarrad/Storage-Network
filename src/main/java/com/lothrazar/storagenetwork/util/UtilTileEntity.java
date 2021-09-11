@@ -1,18 +1,18 @@
 package com.lothrazar.storagenetwork.util;
 
-import com.lothrazar.storagenetwork.api.IConnectable;
-import com.lothrazar.storagenetwork.block.main.TileMain;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
-import net.minecraft.network.protocol.game.ClientboundSoundPacket;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvent;
+import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class UtilTileEntity {
 
