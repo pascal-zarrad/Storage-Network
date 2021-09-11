@@ -2,8 +2,10 @@ package com.lothrazar.storagenetwork.block.cable;
 
 import com.google.common.collect.Maps;
 import com.lothrazar.storagenetwork.api.IConnectable;
+import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import java.util.Map;
@@ -50,6 +52,14 @@ public class BlockCable extends BaseBlock {
         if (items != null) {
           for (int i = 0; i < items.getSlots(); ++i) {
             InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
+          }
+          worldIn.updateComparatorOutputLevel(pos, this);
+        }
+        IConnectableItemAutoIO connectable = tileentity.getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO).orElse(null);
+        if (connectable instanceof CapabilityConnectableAutoIO) {
+          CapabilityConnectableAutoIO filterCable = (CapabilityConnectableAutoIO) connectable;
+          for (int i = 0; i < filterCable.upgrades.getSlots(); ++i) {
+            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), filterCable.upgrades.getStackInSlot(i));
           }
           worldIn.updateComparatorOutputLevel(pos, this);
         }
