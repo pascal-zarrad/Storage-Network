@@ -62,18 +62,21 @@ public class ItemSlotNetwork {
         ms.pushPose();
         ms.scale(.5f, .5f, .5f);
         //z level important to get numbers on top of items
-        Minecraft.getInstance().getItemRenderer().blitOffset = -0.1F;
+//        Minecraft.getInstance().getItemRenderer().blitOffset = -0.1F;
+//        Minecraft.getInstance().getItemRenderer().
+        
         Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack,
-            x * 2 + 16 - parent.getGuiLeft(),
-            y * 2 + 16, amount);
-        System.out.println(amount + " at +" + x);
+            x   , //+ parent.getGuiLeft(),
+            y  , //* 2  - parent.getGuiTop(), 
+            amount);
+//        System.out.println(amount + " at +" + x);
         //        RenderSystem.popMatrix();
         ms.popPose();
       }
       //      RenderSystem.pushMatrix();
       ms.pushPose();
       //z level important to get numbers on top of items
-      Minecraft.getInstance().getItemRenderer().blitOffset = -100F;
+//      Minecraft.getInstance().getItemRenderer().blitOffset = -100F;
       Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
       //      RenderSystem.popMatrix();
       ms.popPose();
