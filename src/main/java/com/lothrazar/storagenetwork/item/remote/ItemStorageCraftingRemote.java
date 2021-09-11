@@ -169,7 +169,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     //
     if (openRemote(world, player, itemStackIn, this)) {
       // ok great 
-      return ActionResult.resultConsume(itemStackIn);
+      return ActionResult.resultSuccess(itemStackIn);
     }
     return super.onItemRightClick(world, player, hand);
   }
