@@ -9,7 +9,6 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
@@ -51,9 +50,8 @@ public class InsertMessage {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
-         player.containerMenu.setCarried(send);
+      player.containerMenu.setCarried(send);
       //
-
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       List<ItemStack> list = root.getStacks();

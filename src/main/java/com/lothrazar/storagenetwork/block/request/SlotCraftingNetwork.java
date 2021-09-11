@@ -16,9 +16,7 @@ public class SlotCraftingNetwork extends ResultSlot {
   private TileMain tileMain;
   private final ContainerNetwork parent;
 
-  public SlotCraftingNetwork(ContainerNetwork parent, Player player,
-      CraftingContainer craftingInventory, Container inventoryIn,
-      int slotIndex, int xPosition, int yPosition) {
+  public SlotCraftingNetwork(ContainerNetwork parent, Player player, CraftingContainer craftingInventory, Container inventoryIn, int slotIndex, int xPosition, int yPosition) {
     super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
     this.parent = parent;
   }
@@ -26,7 +24,7 @@ public class SlotCraftingNetwork extends ResultSlot {
   @Override
   public void onTake(Player playerIn, ItemStack stack) {
     if (playerIn.level.isClientSide) {
-      return; // stack;
+      return;
     }
     List<ItemStack> lis = Lists.newArrayList();
     for (int i = 0; i < parent.matrix.getContainerSize(); i++) {
@@ -44,7 +42,7 @@ public class SlotCraftingNetwork extends ResultSlot {
       }
     }
     parent.broadcastChanges();
-    return;// stack;
+    return;
   }
 
   public TileMain getTileMain() {

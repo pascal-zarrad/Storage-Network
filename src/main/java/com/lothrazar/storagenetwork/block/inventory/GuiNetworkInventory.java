@@ -69,7 +69,6 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
     network.searchBar.setMaxLength(30);
     network.initSearchbar();
     network.initButtons();
-   
     addRenderableWidget(network.directionBtn);
     addRenderableWidget(network.sortBtn);
     if (JeiHooks.isJeiLoaded()) {

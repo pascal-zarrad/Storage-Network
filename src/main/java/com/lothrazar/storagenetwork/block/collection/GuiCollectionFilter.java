@@ -101,7 +101,7 @@ public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollec
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    ItemStack mouse = minecraft.player.containerMenu.getCarried();   
+    ItemStack mouse = minecraft.player.containerMenu.getCarried();
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {

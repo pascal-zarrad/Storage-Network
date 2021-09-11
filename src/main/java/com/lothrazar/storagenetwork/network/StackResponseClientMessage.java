@@ -22,7 +22,7 @@ public class StackResponseClientMessage {
   }
 
   public static void handle(StackResponseClientMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> { 
+    ctx.get().enqueueWork(() -> {
       Minecraft.getInstance().player.containerMenu.setCarried(message.stack); // .setCarried(message.stack);
     });
     ctx.get().setPacketHandled(true);
