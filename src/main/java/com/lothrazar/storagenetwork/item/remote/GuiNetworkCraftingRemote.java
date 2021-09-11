@@ -99,10 +99,10 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
     network.searchBar.setMaxLength(30);
     network.initSearchbar();
     network.initButtons();
-    addWidget(network.directionBtn);
-    addWidget(network.sortBtn);
+    addRenderableWidget(network.directionBtn);
+    addRenderableWidget(network.sortBtn);
     if (JeiHooks.isJeiLoaded()) {
-      addWidget(network.jeiBtn);
+      addRenderableWidget(network.jeiBtn);
     }
   }
 

@@ -52,19 +52,19 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
   public void init() {
     super.init();
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
-    btnRedstone = addWidget(new ButtonRequest(leftPos + 4, topPos + 4, "", (p) -> {
+    btnRedstone = addRenderableWidget(new ButtonRequest(leftPos + 4, topPos + 4, "", (p) -> {
       this.syncData(0);
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
     }));
-    btnMinus = addWidget(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
+    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
       this.syncData(-1);
     }));
     btnMinus.setTextureId(TextureEnum.MINUS);
-    btnPlus = addWidget(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
+    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
       this.syncData(+1);
     }));
     btnPlus.setTextureId(TextureEnum.PLUS);
-    btnImport = addWidget(new ButtonRequest(leftPos + 80, topPos + 6, "", (p) -> {
+    btnImport = addRenderableWidget(new ButtonRequest(leftPos + 80, topPos + 6, "", (p) -> {
       importFilterSlots();
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);
