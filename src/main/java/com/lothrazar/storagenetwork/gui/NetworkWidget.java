@@ -277,7 +277,7 @@ public class NetworkWidget {
     if (player == null) {
       return;
     }
-    ItemStack stackCarriedByMouse = player.inventory.getCarried();
+    ItemStack stackCarriedByMouse = player.getInventory().getSelected(); //.getCarried();
     if (!stackUnderMouse.isEmpty()
         && (mouseButton == UtilTileEntity.MOUSE_BTN_LEFT || mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT)
         && stackCarriedByMouse.isEmpty() &&

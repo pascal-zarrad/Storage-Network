@@ -7,6 +7,7 @@ import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,12 +30,12 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
   private EnumSortType sort = EnumSortType.NAME;
   private boolean isJeiSearchSynced;
 
-  public TileRequest() {
-    super(SsnRegistry.REQUESTTILE);
+  public TileRequest(BlockPos pos, BlockState state) {
+    super(SsnRegistry.REQUESTTILE, pos, state);
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
+  public void load(CompoundTag compound) {
     setDownwards(compound.getBoolean(NBT_DIR));
     if (compound.contains(NBT_SORT)) {
       setSort(EnumSortType.values()[compound.getInt(NBT_SORT)]);
@@ -50,7 +51,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
       ItemStack s = ItemStack.of(stackTag);
       matrix.put(slot, s);
     }
-    super.load(bs, compound);
+    super.load(compound);
   }
 
   @Override

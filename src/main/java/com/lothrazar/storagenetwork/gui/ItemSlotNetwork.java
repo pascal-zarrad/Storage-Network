@@ -44,7 +44,8 @@ public class ItemSlotNetwork {
   @SuppressWarnings("deprecation")
   public void drawSlot(PoseStack ms, Font font, int mx, int my) {
     //     TODO: renderItem and keyboard isKeyDown issues
-    RenderSystem.pushMatrix();
+//    RenderSystem.pushMatrix();
+    ms.pushPose();
     if (!getStack().isEmpty()) {
       String amount;
       //cant sneak in gui
@@ -56,20 +57,24 @@ public class ItemSlotNetwork {
         amount = UtilInventory.formatLargeNumber(size);
       }
       if (isShowNumbers()) {
-        RenderSystem.pushMatrix();
-        RenderSystem.scalef(.5f, .5f, .5f);
+//        RenderSystem.pushMatrix();
+        ms.pushPose();
+        ms.scale(.5f, .5f, .5f);
         //z level important to get numbers on top of items
         Minecraft.getInstance().getItemRenderer().blitOffset = -0.1F;
         Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack,
             x * 2 + 16,
             y * 2 + 16, amount);
-        RenderSystem.popMatrix();
+//        RenderSystem.popMatrix();
+        ms.popPose();
       }
-      RenderSystem.pushMatrix();
+//      RenderSystem.pushMatrix();
+      ms.pushPose();
       //z level important to get numbers on top of items
       Minecraft.getInstance().getItemRenderer().blitOffset = -100F;
       Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
-      RenderSystem.popMatrix();
+//      RenderSystem.popMatrix();
+      ms.popPose();
       if (isMouseOverSlot(mx, my)) {
         int j1 = x;
         int k1 = y;
@@ -78,7 +83,8 @@ public class ItemSlotNetwork {
         RenderSystem.colorMask(true, true, true, true);
       }
     }
-    RenderSystem.popMatrix();
+//    RenderSystem.popMatrix();
+    ms.popPose();
   }
 
   public void drawTooltip(PoseStack ms, int mx, int my) {

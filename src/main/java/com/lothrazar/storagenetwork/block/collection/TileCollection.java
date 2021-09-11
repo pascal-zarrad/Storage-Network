@@ -6,15 +6,16 @@ import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
@@ -24,15 +25,15 @@ public class TileCollection extends TileConnectable implements MenuProvider {
 
   private CollectionItemStackHandler itemHandler;
 
-  public TileCollection() {
-    super(SsnRegistry.COLLECTORTILE);
+  public TileCollection(BlockPos pos, BlockState state) {
+    super(SsnRegistry.COLLECTORTILE, pos, state);
     itemHandler = new CollectionItemStackHandler();
     itemHandler.tile = this;
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  public void load(CompoundTag compound) {
+    super.load(compound);
   }
 
   @Override

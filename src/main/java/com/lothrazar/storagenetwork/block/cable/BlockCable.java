@@ -150,13 +150,8 @@ public class BlockCable extends BaseBlock {
   }
 
   @Override
-  public boolean hasTileEntity(BlockState state) {
-    return true;
-  }
-
-  @Override
-  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-    return new TileCable();
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return new TileCable(pos, state);
   }
 
   @Override

@@ -5,6 +5,7 @@ import com.lothrazar.storagenetwork.api.ITileNetworkSync;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.request.TileRequest;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,8 +22,8 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   private EnumSortType sort = EnumSortType.NAME;
   private boolean isJeiSearchSynced;
 
-  public TileInventory() {
-    super(SsnRegistry.INVENTORYTILE);
+  public TileInventory(BlockPos pos, BlockState state) {
+    super(SsnRegistry.INVENTORYTILE, pos, state);
   }
 
   @Override
@@ -36,8 +37,8 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  public void load(CompoundTag compound) {
+    super.load(compound);
     setDownwards(compound.getBoolean("dir"));
     setSort(EnumSortType.values()[compound.getInt("sort")]);
     if (compound.contains(NBT_JEI)) {

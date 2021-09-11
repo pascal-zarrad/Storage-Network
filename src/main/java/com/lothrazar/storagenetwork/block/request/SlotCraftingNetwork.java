@@ -24,9 +24,9 @@ public class SlotCraftingNetwork extends ResultSlot {
   }
 
   @Override
-  public ItemStack onTake(Player playerIn, ItemStack stack) {
+  public void onTake(Player playerIn, ItemStack stack) {
     if (playerIn.level.isClientSide) {
-      return stack;
+      return ; // stack;
     }
     List<ItemStack> lis = Lists.newArrayList();
     for (int i = 0; i < parent.matrix.getContainerSize(); i++) {
@@ -44,7 +44,7 @@ public class SlotCraftingNetwork extends ResultSlot {
       }
     }
     parent.broadcastChanges();
-    return stack;
+    return;// stack;
   }
 
   public TileMain getTileMain() {

@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.block.inventory;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.network.SortClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.player.Player;
@@ -15,18 +16,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 public class BlockInventory extends BaseBlock {
 
   public BlockInventory(String registryName) {
     super(Material.METAL, registryName);
   }
+  @Override
+  public RenderShape getRenderShape(BlockState bs) {
+    return RenderShape.MODEL;
+  }
 
   @Override
-  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-    return new TileInventory();
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return new TileInventory(pos, state);
   }
 
   @Override
@@ -38,8 +43,7 @@ public class BlockInventory extends BaseBlock {
       }
       //sync
       ServerPlayer sp = (ServerPlayer) player;
-      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()),
-          sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()), sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       //end sync
       if (tile instanceof MenuProvider) {
         NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tile, tile.getBlockPos());
@@ -51,8 +55,4 @@ public class BlockInventory extends BaseBlock {
     return InteractionResult.SUCCESS;
   }
 
-  @Override
-  public boolean hasTileEntity(BlockState state) {
-    return true;
-  }
 }

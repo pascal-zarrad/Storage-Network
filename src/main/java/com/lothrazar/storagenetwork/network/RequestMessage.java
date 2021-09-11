@@ -12,8 +12,8 @@ import java.util.function.Supplier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RequestMessage {
@@ -91,7 +91,7 @@ public class RequestMessage {
         }
         else {
           //when player TAKES an item, go here
-          player.inventory.setCarried(stack);
+          player.getInventory().setItem(player.getInventory().selected, stack); //.setCarried(stack);
           PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(stack),
               player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
         }

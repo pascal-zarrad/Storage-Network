@@ -125,7 +125,7 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static Block EXPORTKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
-  public static BlockEntityType<TileCableImportFilter> EXPORTKABELTILE;
+  public static BlockEntityType<TileCableExport> EXPORTKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static MenuType<ContainerCableExportFilter> FILTEREXPORTCONTAINER;
   @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
@@ -217,10 +217,10 @@ public class SsnRegistry {
         return new ContainerNetworkInventory(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("inventory"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkRemote(windowId, inv.player.inventory);
+        return new ContainerNetworkRemote(windowId, inv.player.getInventory());
       }).setRegistryName("inventory_remote"));
       r.register(IForgeContainerType.create((windowId, inv, data) -> {
-        return new ContainerNetworkCraftingRemote(windowId, inv.player.inventory);
+        return new ContainerNetworkCraftingRemote(windowId, inv.player.getInventory());
       }).setRegistryName("crafting_remote"));
     }
   }

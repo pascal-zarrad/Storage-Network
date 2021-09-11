@@ -17,12 +17,12 @@ import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.SlotTypeMessage;
@@ -58,7 +58,6 @@ public class StorageNetwork {
     MenuScreens.register(SsnRegistry.CRAFTINGREMOTE, GuiNetworkCraftingRemote::new);
     MenuScreens.register(SsnRegistry.INVENTORYCONTAINER, GuiNetworkInventory::new);
     MenuScreens.register(SsnRegistry.COLLECTORCTR, GuiCollectionFilter::new);
-    // 
     ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
   }
 

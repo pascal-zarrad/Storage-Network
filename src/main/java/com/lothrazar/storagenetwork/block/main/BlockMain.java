@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.block.main;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +13,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +28,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 public class BlockMain extends BaseBlock {
@@ -106,12 +109,16 @@ public class BlockMain extends BaseBlock {
   }
 
   @Override
-  public boolean hasTileEntity(BlockState state) {
-    return true;
+  public RenderShape getRenderShape(BlockState bs) {
+    return RenderShape.MODEL;
   }
 
   @Override
-  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-    return new TileMain();
+  public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+    return createTickerHelper(type, SsnRegistry.MAINTILEENTITY, world.isClientSide ? TileMain::clientTick : TileMain::serverTick);
+  }
+  @Override
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return new TileMain(pos, state);
   }
 }

@@ -9,11 +9,13 @@ import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
@@ -121,7 +123,9 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
 
   @Override
   public void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-    minecraft.getTextureManager().bind(texture);
+//    minecraft.getTextureManager().bind(texture);
+    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    RenderSystem.setShaderTexture(0, texture);
     int xCenter = (width - imageWidth) / 2;
     int yCenter = (height - imageHeight) / 2;
     blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);

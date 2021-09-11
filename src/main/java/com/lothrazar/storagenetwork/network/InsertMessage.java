@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InsertMessage {
@@ -34,7 +34,7 @@ public class InsertMessage {
       }
       int rest;
       ItemStack send = ItemStack.EMPTY;
-      ItemStack stack = player.inventory.getCarried();
+      ItemStack stack = player.getInventory().getSelected(); //.getCarried();
       if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {
         rest = root.insertStack(stack, false);
         if (rest != 0) {
@@ -50,7 +50,8 @@ public class InsertMessage {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
-      player.inventory.setCarried(send);
+//      player.getInventory().setSelected(send);
+      player.getInventory().setItem(player.getInventory().selected, send);
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       List<ItemStack> list = root.getStacks();

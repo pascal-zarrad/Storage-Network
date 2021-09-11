@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.block;
 
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import java.util.List;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.SoundType;
@@ -16,7 +17,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
-public abstract class BaseBlock extends Block {
+public abstract class BaseBlock extends BaseEntityBlock {
 
   public BaseBlock(Material materialIn, String registryName) {
     super(Block.Properties.of(materialIn).strength(0.5F).sound(SoundType.STONE));

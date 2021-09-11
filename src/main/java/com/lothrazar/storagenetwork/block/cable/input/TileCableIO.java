@@ -7,19 +7,21 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableIO extends TileCableWithFacing implements TickableBlockEntity {
+public class TileCableIO extends TileCableWithFacing {
 
   protected CapabilityConnectableAutoIO ioStorage;
 
-  public TileCableIO() {
-    super(SsnRegistry.IMPORTKABELTILE);
+  public TileCableIO(BlockPos pos, BlockState state) {
+    super(SsnRegistry.IMPORTKABELTILE, pos, state);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 
@@ -30,8 +32,8 @@ public class TileCableIO extends TileCableWithFacing implements TickableBlockEnt
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  public void load(CompoundTag compound) {
+    super.load(compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
   }
 
@@ -51,8 +53,7 @@ public class TileCableIO extends TileCableWithFacing implements TickableBlockEnt
     return super.getCapability(capability, facing);
   }
 
-  @Override
-  public void tick() {
+  private void tick() {
     if (this.getDirection() == null) {
       this.findNewDirection();
       if (getDirection() != null) {
@@ -61,5 +62,13 @@ public class TileCableIO extends TileCableWithFacing implements TickableBlockEnt
         level.setBlockAndUpdate(worldPosition, newState);
       }
     }
+  }
+
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableIO tile) {
+    tile.tick();
+  }
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileCableIO tile) {
+    tile.tick();
   }
 }

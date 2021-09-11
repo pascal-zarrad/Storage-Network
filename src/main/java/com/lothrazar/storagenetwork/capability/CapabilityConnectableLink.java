@@ -269,18 +269,18 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
   }
 
-  public static class Storage implements Capability.IStorage<IConnectableLink> {
-
-    @Override
-    public Tag writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
-      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-      return instance.serializeNBT();
-    }
-
-    @Override
-    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, Tag nbt) {
-      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-      instance.deserializeNBT((CompoundTag) nbt);
-    }
-  }
+//  public static class Storage implements Capability.IStorage<IConnectableLink> {
+//
+//    @Override
+//    public Tag writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
+//      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
+//      return instance.serializeNBT();
+//    }
+//
+//    @Override
+//    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, Tag nbt) {
+//      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
+//      instance.deserializeNBT((CompoundTag) nbt);
+//    }
+//  }
 }

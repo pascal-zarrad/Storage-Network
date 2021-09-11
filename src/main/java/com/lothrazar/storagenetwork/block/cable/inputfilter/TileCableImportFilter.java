@@ -7,25 +7,27 @@ import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableImportFilter extends TileCableWithFacing implements TickableBlockEntity, MenuProvider {
+public class TileCableImportFilter extends TileCableWithFacing implements MenuProvider {
 
   protected CapabilityConnectableAutoIO ioStorage;
 
-  public TileCableImportFilter() {
-    super(SsnRegistry.FILTERIMPORTKABELTILE);
+  public TileCableImportFilter(BlockPos pos, BlockState state) {
+    super(SsnRegistry.FILTERIMPORTKABELTILE, pos, state);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 
@@ -46,10 +48,10 @@ public class TileCableImportFilter extends TileCableWithFacing implements Tickab
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
+  public void load(CompoundTag compound) {
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
     ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
-    super.load(bs, compound);
+    super.load(compound);
   }
 
   @Override
@@ -73,8 +75,7 @@ public class TileCableImportFilter extends TileCableWithFacing implements Tickab
     return super.getCapability(capability, facing);
   }
 
-  @Override
-  public void tick() {
+  private void tick() {
     if (this.getDirection() == null) {
       this.findNewDirection();
       if (getDirection() != null) {
@@ -83,5 +84,13 @@ public class TileCableImportFilter extends TileCableWithFacing implements Tickab
         level.setBlockAndUpdate(worldPosition, newState);
       }
     }
+  }
+
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableImportFilter tile) {
+    tile.tick();
+  }
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileCableImportFilter tile) {
+    tile.tick();
   }
 }

@@ -8,9 +8,11 @@ import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
@@ -62,7 +64,9 @@ public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollec
 
   @Override
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-    minecraft.getTextureManager().bind(texture);
+//    minecraft.getTextureManager().bind(texture);
+    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    RenderSystem.setShaderTexture(0, texture);
     int xCenter = (width - imageWidth) / 2;
     int yCenter = (height - imageHeight) / 2;
     blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
@@ -97,7 +101,7 @@ public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollec
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    ItemStack mouse = minecraft.player.inventory.getCarried();
+    ItemStack mouse = minecraft.player.getInventory().getSelected(); //.getCarried();
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {

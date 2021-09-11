@@ -4,25 +4,25 @@ import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableFilter extends TileCableWithFacing implements TickableBlockEntity, MenuProvider {
+public class TileCableFilter extends TileCableWithFacing implements MenuProvider {
 
   protected CapabilityConnectableLink capability;
 
-  public TileCableFilter() {
-    super(SsnRegistry.FILTERKABELTILE);
+  public TileCableFilter(BlockPos pos, BlockState state) {
+    super(SsnRegistry.FILTERKABELTILE, pos, state);
     this.capability = new CapabilityConnectableLink(this);
   }
 
@@ -37,8 +37,8 @@ public class TileCableFilter extends TileCableWithFacing implements TickableBloc
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  public void load(CompoundTag compound) {
+    super.load(compound);
     this.capability.deserializeNBT(compound.getCompound("capability"));
   }
 
@@ -64,8 +64,7 @@ public class TileCableFilter extends TileCableWithFacing implements TickableBloc
     return super.getCapability(capability, facing);
   }
 
-  @Override
-  public void tick() {
+  private void tick() {
     super.refreshDirection();
   }
 }

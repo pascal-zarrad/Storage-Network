@@ -303,20 +303,20 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
   }
 
-  public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
-
-    @Override
-    public Tag writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
-      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-      return instance.serializeNBT();
-    }
-
-    @Override
-    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, Tag nbt) {
-      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-      instance.deserializeNBT((CompoundTag) nbt);
-    }
-  }
+//  public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
+//
+//    @Override
+//    public Tag writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
+//      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
+//      return instance.serializeNBT();
+//    }
+//
+//    @Override
+//    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, Tag nbt) {
+//      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
+//      instance.deserializeNBT((CompoundTag) nbt);
+//    }
+//  }
 
   @Override
   public boolean isStockMode() {

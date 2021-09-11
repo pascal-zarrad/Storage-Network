@@ -18,8 +18,8 @@ public class TileCableWithFacing extends TileConnectable {
 
   Direction direction = null;
 
-  public TileCableWithFacing(BlockEntityType<?> tileEntityTypeIn) {
-    super(tileEntityTypeIn);
+  public TileCableWithFacing(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    super(tileEntityTypeIn, pos, state);
   }
 
   public Direction getDirection() {
@@ -101,9 +101,9 @@ public class TileCableWithFacing extends TileConnectable {
     return getMain().getTileEntity(TileMain.class);
   }
 
-  @Override // read
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  @Override
+  public void load(CompoundTag compound) {
+    super.load(compound);
     if (compound.contains("direction")) {
       this.direction = Direction.values()[(compound.getInt("direction"))];
     }

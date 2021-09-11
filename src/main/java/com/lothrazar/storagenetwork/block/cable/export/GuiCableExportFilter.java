@@ -10,9 +10,12 @@ import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
@@ -49,19 +52,19 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
   public void init() {
     super.init();
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
-    btnRedstone = addButton(new ButtonRequest(leftPos + 4, topPos + 4, "", (p) -> {
+    btnRedstone = addWidget(new ButtonRequest(leftPos + 4, topPos + 4, "", (p) -> {
       this.syncData(0);
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
     }));
-    btnMinus = addButton(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
+    btnMinus = addWidget(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
       this.syncData(-1);
     }));
     btnMinus.setTextureId(TextureEnum.MINUS);
-    btnPlus = addButton(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
+    btnPlus = addWidget(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
       this.syncData(+1);
     }));
     btnPlus.setTextureId(TextureEnum.PLUS);
-    btnImport = addButton(new ButtonRequest(leftPos + 80, topPos + 6, "", (p) -> {
+    btnImport = addWidget(new ButtonRequest(leftPos + 80, topPos + 6, "", (p) -> {
       importFilterSlots();
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);
@@ -101,20 +104,23 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
   }
 
   private void drawTooltips(PoseStack ms, final int mouseX, final int mouseY) {
+//    this.renderTooltip();
     if (btnImport != null && btnImport.isMouseOver(mouseX, mouseY)) {
-      renderWrappedToolTip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.import")), mouseX - leftPos, mouseY - topPos, this.font);
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.import")), Optional.empty(),
+          mouseX - leftPos, mouseY - topPos);
     }
     if (btnMinus != null && btnMinus.isMouseOver(mouseX, mouseY)) {
-      renderWrappedToolTip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.priority.down")), mouseX - leftPos, mouseY - topPos, this.font);
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.priority.down")), Optional.empty(),
+          mouseX - leftPos, mouseY - topPos);
     }
     if (btnPlus != null && btnPlus.isMouseOver(mouseX, mouseY)) {
-      renderWrappedToolTip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.priority.up")), mouseX - leftPos, mouseY - topPos, this.font);
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.priority.up")),  Optional.empty(),
+          mouseX - leftPos, mouseY - topPos);
     }
     if (btnRedstone != null && btnRedstone.isMouseOver(mouseX, mouseY)) {
-      renderWrappedToolTip(ms, Lists.newArrayList(
-          new TranslatableComponent("gui.storagenetwork.redstone."
-              + containerCableLink.cap.needsRedstone())),
-          mouseX - leftPos, mouseY - topPos, font);
+      renderTooltip(ms, Lists.newArrayList(          new TranslatableComponent("gui.storagenetwork.redstone."
+              + containerCableLink.cap.needsRedstone())), Optional.empty(),
+          mouseX - leftPos, mouseY - topPos);
     }
   }
 
@@ -122,7 +128,9 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
 
   @Override
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-    minecraft.getTextureManager().bind(texture);
+//    minecraft.getTextureManager().bind(texture);
+    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    RenderSystem.setShaderTexture(0, texture);
     int xCenter = (width - imageWidth) / 2;
     int yCenter = (height - imageHeight) / 2;
     blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
@@ -157,7 +165,7 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    ItemStack mouse = minecraft.player.inventory.getCarried();
+    ItemStack mouse = minecraft.player.getInventory().getSelected(); //;.getCarried();
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {

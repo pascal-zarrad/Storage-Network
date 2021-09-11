@@ -7,27 +7,27 @@ import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileExchange extends TileConnectable implements TickableBlockEntity {
+public class TileExchange extends TileConnectable {
 
   private ExchangeItemStackHandler itemHandler;
 
-  public TileExchange() {
-    super(SsnRegistry.EXCHANGETILE);
+  public TileExchange(BlockPos pos, BlockState state) {
+    super(SsnRegistry.EXCHANGETILE, pos, state);
     itemHandler = new ExchangeItemStackHandler();
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  public void load(CompoundTag compound) {
+    super.load(compound);
   }
 
   @Override
@@ -64,8 +64,7 @@ public class TileExchange extends TileConnectable implements TickableBlockEntity
     return super.getCapability(cap, side);
   }
 
-  @Override
-  public void tick() {
+  private void tick() {
     if (this.itemHandler != null && getLevel().getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) {
       this.itemHandler.update();
     }

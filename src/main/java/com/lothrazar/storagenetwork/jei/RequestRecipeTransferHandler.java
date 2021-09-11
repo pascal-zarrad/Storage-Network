@@ -5,18 +5,19 @@ import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 
-public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> implements IRecipeTransferHandler<C> {
+public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> implements IRecipeTransferHandler<C, CraftingRecipe> {
 
   private Class<C> clazz;
 
@@ -27,6 +28,22 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
   @Override
   public Class<C> getContainerClass() {
     return clazz;
+  }
+
+  @Override
+  public Class getRecipeClass() {
+    return CraftingRecipe.class;
+  }
+
+  //  IRecipeTransferError transferRecipe(C container, CraftingRecipe recipe, IRecipeLayout recipeLayout, Player player, boolean maxTransfer, boolean doTransfer)
+  @Override
+  public IRecipeTransferError transferRecipe(C c, CraftingRecipe recipe, IRecipeLayout iRecipeLayout, Player playerEntity,
+      boolean maxTransfer, boolean doTransfer) {
+    if (doTransfer) {
+      CompoundTag nbt = RequestRecipeTransferHandler.recipeToTag(c, iRecipeLayout);
+      PacketRegistry.INSTANCE.sendToServer(new RecipeMessage(nbt));
+    }
+    return null;
   }
 
   public static CompoundTag recipeToTag(AbstractContainerMenu container, IRecipeLayout recipeLayout) {
@@ -59,15 +76,5 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
       }
     }
     return nbt;
-  }
-
-  @Override
-  public IRecipeTransferError transferRecipe(C c, IRecipeLayout iRecipeLayout, Player playerEntity,
-      boolean maxTransfer, boolean doTransfer) {
-    if (doTransfer) {
-      CompoundTag nbt = RequestRecipeTransferHandler.recipeToTag(c, iRecipeLayout);
-      PacketRegistry.INSTANCE.sendToServer(new RecipeMessage(nbt));
-    }
-    return null;
   }
 }

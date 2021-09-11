@@ -18,8 +18,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 public class RecipeMessage {
@@ -98,10 +98,10 @@ public class RecipeMessage {
           ItemStackMatcher itemStackMatcher = new ItemStackMatcher(stackCurrent);
           itemStackMatcher.setNbt(true);
           itemStackMatcher.setOre(isOreDict);
-          ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, true);
+          ItemStack ex = UtilInventory.extractItem(new PlayerMainInvWrapper(player.getInventory()), itemStackMatcher, 1, true);
           /*********** First try and use the players inventory **/
           if (ex != null && !ex.isEmpty() && craftMatrix.getItem(slot).isEmpty()) {
-            UtilInventory.extractItem(new PlayerMainInvWrapper(player.inventory), itemStackMatcher, 1, false);
+            UtilInventory.extractItem(new PlayerMainInvWrapper(player.getInventory()), itemStackMatcher, 1, false);
             //make sure to add the real item after the nonsimulated withdrawl is complete https://github.com/PrinceOfAmber/Storage-Network/issues/16
             craftMatrix.setItem(slot, ex);
             break;

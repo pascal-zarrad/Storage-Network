@@ -24,24 +24,25 @@ public class TileConnectable extends BlockEntity {
 
   private final CapabilityConnectable connectable;
 
-  public TileConnectable(BlockEntityType<?> tileEntityTypeIn) {
-    super(tileEntityTypeIn);
+  public TileConnectable(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    super(tileEntityTypeIn, pos, state);
     connectable = new CapabilityConnectable();
   }
 
   @Override
-  public void setPosition(BlockPos posIn) {
-    super.setPosition(posIn);
+  public void setChanged() {
+   super.setChanged();
+    // super.setPosition(posIn);
     //   StorageNetwork.log("TILE CONNECTABLE :: SET POS on the capability" + posIn + "?" + world);
     connectable.setPos(new DimPos(level, worldPosition));
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
+  public void load(CompoundTag compound) {
     if (compound.contains("connectable")) {
       connectable.deserializeNBT(compound.getCompound("connectable"));
     }
-    super.load(bs, compound);
+    super.load(compound);
   }
 
   @Override
@@ -59,7 +60,7 @@ public class TileConnectable extends BlockEntity {
 
   @Override
   public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-    load(this.getBlockState(), pkt.getTag());
+    load(pkt.getTag());
   }
 
   @Override

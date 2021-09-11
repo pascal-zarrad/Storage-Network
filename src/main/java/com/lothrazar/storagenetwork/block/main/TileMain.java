@@ -26,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
@@ -36,7 +35,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class TileMain extends BlockEntity implements TickableBlockEntity {
+public class TileMain extends BlockEntity {
 
   private Set<DimPos> connectables;
   private Map<String, DimPos> importCache = new HashMap<>();
@@ -46,8 +45,8 @@ public class TileMain extends BlockEntity implements TickableBlockEntity {
     return new DimPos(level, worldPosition);
   }
 
-  public TileMain() {
-    super(SsnRegistry.MAINTILEENTITY);
+  public TileMain(BlockPos pos, BlockState state) {
+    super(SsnRegistry.MAINTILEENTITY, pos, state);
   }
 
   public List<ItemStack> getSortedStacks() {
@@ -540,8 +539,7 @@ public class TileMain extends BlockEntity implements TickableBlockEntity {
     return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
   }
 
-  @Override
-  public void tick() {
+  private void tick() {
     if (level == null || level.isClientSide) {
       return;
     }
@@ -570,7 +568,7 @@ public class TileMain extends BlockEntity implements TickableBlockEntity {
 
   @Override
   public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-    load(this.getBlockState(), pkt.getTag());
+    load(pkt.getTag());
   }
 
   public static boolean shouldRefresh(Level world, BlockPos pos, BlockState oldState, BlockState newSate) {
@@ -592,4 +590,12 @@ public class TileMain extends BlockEntity implements TickableBlockEntity {
   public void clearCache() {
     importCache = new HashMap<>();
   }
+
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
+  }
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
+    tile.tick();
+  }
+
 }

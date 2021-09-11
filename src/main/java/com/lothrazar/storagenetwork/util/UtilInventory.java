@@ -40,8 +40,8 @@ public class UtilInventory {
         }
       }
     }
-    for (int i = 0; i < player.inventory.getContainerSize(); i++) {
-      ItemStack temp = player.inventory.getItem(i);
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack temp = player.getInventory().getItem(i);
       if (isRemote(temp, remote)) {
         return Triple.of("player", i, temp);
       }

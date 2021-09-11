@@ -25,7 +25,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
@@ -227,7 +227,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
       }
       //onTake replaced with this handcoded rewrite
       //StorageNetwork.log("[craftShift] addItemStackToInventory " + res);
-      if (!player.inventory.add(res)) {
+      if (!player.getInventory().add(res)) {
         player.drop(res, false);
       }
       NonNullList<ItemStack> remainder = recipeCurrent.getRemainingItems(this.matrix);
@@ -259,7 +259,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
             this.matrix.setItem(i, remainderCurrent);
           }
           else {
-            if (!player.inventory.add(remainderCurrent)) {
+            if (!player.getInventory().add(remainderCurrent)) {
               player.drop(remainderCurrent, false);
             }
           }

@@ -2,6 +2,8 @@ package com.lothrazar.storagenetwork.block.exchange;
 
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import java.util.List;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.item.TooltipFlag;
@@ -25,12 +27,12 @@ public class BlockExchange extends BaseBlock {
   }
 
   @Override
-  public boolean hasTileEntity(BlockState state) {
-    return true;
+  public RenderShape getRenderShape(BlockState bs) {
+    return RenderShape.MODEL;
   }
 
   @Override
-  public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-    return new TileExchange();
+  public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    return new TileExchange(pos, state);
   }
 }

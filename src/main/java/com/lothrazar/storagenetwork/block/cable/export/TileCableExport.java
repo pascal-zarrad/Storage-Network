@@ -4,29 +4,31 @@ import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
+import com.lothrazar.storagenetwork.block.cable.inputfilter.TileCableImportFilter;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import javax.annotation.Nullable;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileCableExport extends TileCableWithFacing implements TickableBlockEntity, MenuProvider {
+public class TileCableExport extends TileCableWithFacing implements MenuProvider {
 
   protected CapabilityConnectableAutoIO ioStorage;
 
-  public TileCableExport() {
-    super(SsnRegistry.EXPORTKABELTILE);
+  public TileCableExport(BlockPos pos, BlockState state) {
+    super(SsnRegistry.EXPORTKABELTILE, pos, state);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.OUT);
     this.ioStorage.getFilter().isAllowList = true;
   }
@@ -42,14 +44,14 @@ public class TileCableExport extends TileCableWithFacing implements TickableBloc
   }
 
   @Override
-  public void setDirection(@Nullable Direction direction) {
+  public void setDirection(Direction direction) {
     super.setDirection(direction);
     this.ioStorage.setInventoryFace(direction);
   }
 
   @Override
-  public void load(BlockState bs, CompoundTag compound) {
-    super.load(bs, compound);
+  public void load(CompoundTag compound) {
+    super.load(compound);
     this.ioStorage.deserializeNBT(compound.getCompound("ioStorage"));
     ioStorage.upgrades.deserializeNBT(compound.getCompound("upgrades"));
     this.ioStorage.getFilter().isAllowList = true;
@@ -63,9 +65,8 @@ public class TileCableExport extends TileCableWithFacing implements TickableBloc
     return result;
   }
 
-  @Nullable
   @Override
-  public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+  public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
     if (capability == StorageNetworkCapabilities.CONNECTABLE_AUTO_IO) {
       LazyOptional<CapabilityConnectableAutoIO> cap = LazyOptional.of(() -> ioStorage);
       return cap.cast();
@@ -73,8 +74,7 @@ public class TileCableExport extends TileCableWithFacing implements TickableBloc
     return super.getCapability(capability, facing);
   }
 
-  @Override
-  public void tick() {
+  private void tick() {
     if (this.getDirection() == null) {
       this.findNewDirection();
       if (getDirection() != null) {
@@ -84,4 +84,14 @@ public class TileCableExport extends TileCableWithFacing implements TickableBloc
       }
     }
   }
+
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableExport tile) {
+    tile.tick();
+  }
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileCableExport tile) {
+    tile.tick();
+  }
+
+
 }
