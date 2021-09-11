@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -231,14 +232,14 @@ public class NetworkWidget {
         lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_tags")); //$
         lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_clear")); //clear
         Screen screen = ((Screen) gui);
-        screen.renderWrappedToolTip(ms, lis, mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
+        screen.renderTooltip(ms, lis, Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
         return; // all done, we have our tts rendered
       }
     }
     //do we have a tooltip
     if (tooltip != null) {
       Screen screen = ((Screen) gui);
-      screen.renderWrappedToolTip(ms, Lists.newArrayList(tooltip), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop(), font);
+      screen.renderTooltip(ms, Lists.newArrayList(tooltip),Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
     }
   }
 

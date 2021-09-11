@@ -116,8 +116,9 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
   }
 
   //from WorkbenchContainer::slotChangedCraftingGrid
-  private void findMatchingRecipe(int number, Level world, Player player, CraftingContainer inventory, ResultContainer result) {
+  private void findMatchingRecipe(int containerId, Level world, Player player, CraftingContainer inventory, ResultContainer result) {
     if (!world.isClientSide) {
+      final int slotId = 0;
       ServerPlayer serverplayerentity = (ServerPlayer) player;
       ItemStack itemstack = ItemStack.EMPTY;
       Optional<CraftingRecipe> optional = world.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, inventory, world);
@@ -130,8 +131,8 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
           this.recipeCurrent = icraftingrecipe;
         }
       }
-      result.setItem(0, itemstack);
-      serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(number, 0, itemstack));
+      result.setItem(slotId, itemstack);
+      serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, this.incrementStateId(), slotId, itemstack));
     }
   }
 

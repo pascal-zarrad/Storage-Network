@@ -66,10 +66,10 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
     network.searchBar.setMaxLength(30);
     network.initSearchbar();
     network.initButtons();
-    this.addButton(network.directionBtn);
-    this.addButton(network.sortBtn);
+    addWidget(network.directionBtn);
+    addWidget(network.sortBtn);
     if (JeiHooks.isJeiLoaded()) {
-      addButton(network.jeiBtn);
+      addWidget(network.jeiBtn);
     }
   }
 
