@@ -13,16 +13,16 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 
 public class StorageNetworkCapabilities {
 
-  @CapabilityInject(IConnectableLink.class)
-  public static Capability<IConnectableLink> CONNECTABLE_ITEM_STORAGE_CAPABILITY = null;
   @CapabilityInject(IConnectable.class)
   public static Capability<IConnectable> CONNECTABLE_CAPABILITY = null;
+  @CapabilityInject(IConnectableLink.class)
+  public static Capability<IConnectableLink> CONNECTABLE_ITEM_STORAGE_CAPABILITY = null;
   @CapabilityInject(IConnectableItemAutoIO.class)
   public static Capability<IConnectableItemAutoIO> CONNECTABLE_AUTO_IO = null;
 
   public static void initCapabilities() {
-    CapabilityManager.INSTANCE.register(CapabilityConnectable.class); //, new CapabilityConnectable.Storage(), DefaultConnectable::new);
-    CapabilityManager.INSTANCE.register(CapabilityConnectableLink.class); //, new CapabilityConnectableLink.Storage(), new CapabilityConnectableLink.Factory());
-    CapabilityManager.INSTANCE.register(CapabilityConnectableAutoIO.class); //, new CapabilityConnectableAutoIO.Storage(), new CapabilityConnectableAutoIO.Factory());
+    CapabilityManager.INSTANCE.register(IConnectable.class); //, new CapabilityConnectable.Storage(), DefaultConnectable::new);
+    CapabilityManager.INSTANCE.register(IConnectableLink.class); //, new CapabilityConnectableLink.Storage(), new CapabilityConnectableLink.Factory());
+    CapabilityManager.INSTANCE.register(IConnectableItemAutoIO.class); //, new CapabilityConnectableAutoIO.Storage(), new CapabilityConnectableAutoIO.Factory());
   }
 }
