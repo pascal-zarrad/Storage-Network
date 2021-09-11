@@ -8,12 +8,14 @@ import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import java.util.List;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -60,10 +62,10 @@ public class ItemCollector extends Item {
           //
           int countUnmoved = network.insertStack(item, false);
           if (countUnmoved == 0) {
-            //  ("unmoved is zero so all gone" + item);
             item.setCount(0);
             event.getItem().setItem(item);
             event.getItem().remove();
+            UtilTileEntity.playSoundFromServer((ServerPlayerEntity) player, SoundEvents.ENTITY_ITEM_PICKUP, 0.2F);
           }
         }
         else {

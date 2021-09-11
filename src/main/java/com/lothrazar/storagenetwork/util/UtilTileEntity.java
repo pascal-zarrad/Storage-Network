@@ -7,7 +7,11 @@ import java.util.Locale;
 import java.util.Map;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.network.play.server.SPlaySoundEffectPacket;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class UtilTileEntity {
@@ -16,6 +20,13 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_LEFT = 0;
   public static final int MOUSE_BTN_RIGHT = 1;
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
+
+  public static void playSoundFromServer(ServerPlayerEntity entityIn, SoundEvent soundIn, float volume) {
+    if (soundIn == null || entityIn == null) {
+      return;
+    }
+    entityIn.connection.sendPacket(new SPlaySoundEffectPacket(soundIn, SoundCategory.PLAYERS, entityIn.lastTickPosX, entityIn.lastTickPosY, entityIn.lastTickPosZ, volume, 1.0F));
+  }
 
   public static void chatMessage(PlayerEntity player, String message) {
     if (player.world.isRemote) {
