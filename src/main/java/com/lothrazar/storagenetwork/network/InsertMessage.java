@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fmllegacy.network.NetworkDirection;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
@@ -34,7 +35,7 @@ public class InsertMessage {
       }
       int rest;
       ItemStack send = ItemStack.EMPTY;
-      ItemStack stack = player.getInventory().getSelected(); //.getCarried();
+      ItemStack stack = player.containerMenu.getCarried();
       if (message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT) {
         rest = root.insertStack(stack, false);
         if (rest != 0) {
@@ -50,8 +51,9 @@ public class InsertMessage {
           send = ItemHandlerHelper.copyStackWithSize(stack, rest);
         }
       }
-      //      player.getInventory().setSelected(send);
-      player.getInventory().setItem(player.getInventory().selected, send);
+         player.containerMenu.setCarried(send);
+      //
+
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       List<ItemStack> list = root.getStacks();

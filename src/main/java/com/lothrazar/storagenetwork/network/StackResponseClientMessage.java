@@ -22,9 +22,8 @@ public class StackResponseClientMessage {
   }
 
   public static void handle(StackResponseClientMessage message, Supplier<NetworkEvent.Context> ctx) {
-    ctx.get().enqueueWork(() -> {
-      int carried = Minecraft.getInstance().player.getInventory().selected;
-      Minecraft.getInstance().player.getInventory().setItem(carried, message.stack); // .setCarried(message.stack);
+    ctx.get().enqueueWork(() -> { 
+      Minecraft.getInstance().player.containerMenu.setCarried(message.stack); // .setCarried(message.stack);
     });
     ctx.get().setPacketHandled(true);
   }

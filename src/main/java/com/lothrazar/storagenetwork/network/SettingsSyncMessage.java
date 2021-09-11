@@ -42,7 +42,7 @@ public class SettingsSyncMessage {
         }
       }
       else {
-        ItemStack stackPlayerHeld = player.getInventory().getSelected();
+        ItemStack stackPlayerHeld = player.containerMenu.getCarried();
         if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);

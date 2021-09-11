@@ -69,7 +69,7 @@ public class ItemSlotNetwork {
             x   , //+ parent.getGuiLeft(),
             y  , //* 2  - parent.getGuiTop(), 
             amount);
-//        System.out.println(amount + " at +" + x);
+//       
         //        RenderSystem.popMatrix();
         ms.popPose();
       }

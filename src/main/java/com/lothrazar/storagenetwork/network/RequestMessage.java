@@ -91,7 +91,9 @@ public class RequestMessage {
         }
         else {
           //when player TAKES an item, go here
-          player.getInventory().setItem(player.getInventory().selected, stack); //.setCarried(stack);
+        
+          player.containerMenu.setCarried(stack); 
+        
           PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(stack),
               player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
         }
