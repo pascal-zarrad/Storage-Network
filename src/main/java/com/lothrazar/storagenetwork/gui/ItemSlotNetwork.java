@@ -41,13 +41,9 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  public void drawSlot(PoseStack ms, Font font, int mx, int my) {
-    //     TODO: renderItem and keyboard isKeyDown issues
-    //    RenderSystem.pushMatrix();
-    //
-    //
-    ms.pushPose();
+  public void drawSlot(PoseStack poseStack, Font font, int mx, int my) {
     if (!getStack().isEmpty()) {
+      //      poseStack.pushPose();
       String amount;
       //cant sneak in gui
       //default to short form, show full amount if sneak
@@ -57,38 +53,29 @@ public class ItemSlotNetwork {
       else {
         amount = UtilInventory.formatLargeNumber(size);
       }
-      if (isShowNumbers()) {
-        //        RenderSystem.pushMatrix();
-        ms.pushPose();
-        ms.scale(.5f, .5f, .5f);
-        //z level important to get numbers on top of items
-        //        Minecraft.getInstance().getItemRenderer().blitOffset = -0.1F;
-        //        Minecraft.getInstance().getItemRenderer().
-        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack,
-            x, //+ parent.getGuiLeft(),
-            y, //* 2  - parent.getGuiTop(), 
-            amount);
-        //       
-        //        RenderSystem.popMatrix();
-        ms.popPose();
+      //      poseStack.translate(999, 0, y);
+      final float scale = 0.9F;
+      PoseStack viewModelPose = RenderSystem.getModelViewStack();
+      viewModelPose.pushPose();
+      viewModelPose.translate(x + 3, y + 3, 0);
+      viewModelPose.scale(scale, scale, scale);
+      viewModelPose.translate(-1 * x, -1 * y, 0);
+      RenderSystem.applyModelViewMatrix();
+      if (isShowNumbers() && size > 1) {
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack, x, y, amount);
       }
-      //      RenderSystem.pushMatrix();
-      ms.pushPose();
-      //z level important to get numbers on top of items
-      //      Minecraft.getInstance().getItemRenderer().blitOffset = -100F;
-      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
-      //      RenderSystem.popMatrix();
-      ms.popPose();
+      viewModelPose.popPose();
+      RenderSystem.applyModelViewMatrix();
       if (isMouseOverSlot(mx, my)) {
         int j1 = x;
         int k1 = y;
         RenderSystem.colorMask(true, true, true, false);
-        parent.drawGradient(ms, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+        parent.drawGradient(poseStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
         RenderSystem.colorMask(true, true, true, true);
       }
+      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
+      //      poseStack.popPose();
     }
-    //    RenderSystem.popMatrix();
-    ms.popPose();
   }
 
   public void drawTooltip(PoseStack ms, int mx, int my) {
