@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -40,6 +41,18 @@ public class BlockCable extends BaseBlock {
         .setValue(NORTH, EnumConnectType.NONE).setValue(EAST, EnumConnectType.NONE)
         .setValue(SOUTH, EnumConnectType.NONE).setValue(WEST, EnumConnectType.NONE)
         .setValue(UP, EnumConnectType.NONE).setValue(DOWN, EnumConnectType.NONE));
+  }
+
+  // from 1.16 
+  //  @Override
+  //  public boolean allowsMovement(BlockState state, IBlockReader world, BlockPos pos, PathType type) {
+  //    return false;
+  //  }
+  //converted to 
+  @Deprecated
+  @Override
+  public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+    return false;
   }
 
   @SuppressWarnings("deprecation")

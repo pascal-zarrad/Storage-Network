@@ -53,8 +53,7 @@ public class ItemSlotNetwork {
       else {
         amount = UtilInventory.formatLargeNumber(size);
       }
-      //      poseStack.translate(999, 0, y);
-      final float scale = 0.9F;
+      final float scale = 0.85F;
       PoseStack viewModelPose = RenderSystem.getModelViewStack();
       viewModelPose.pushPose();
       viewModelPose.translate(x + 3, y + 3, 0);
@@ -74,7 +73,6 @@ public class ItemSlotNetwork {
         RenderSystem.colorMask(true, true, true, true);
       }
       Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
-      //      poseStack.popPose();
     }
   }
 
