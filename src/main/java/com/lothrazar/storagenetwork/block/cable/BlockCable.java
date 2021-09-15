@@ -51,7 +51,7 @@ public class BlockCable extends BaseBlock {
   //converted to 
   @Deprecated
   @Override
-  public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+  public boolean isPathfindable(BlockState bs, BlockGetter bg, BlockPos pos, PathComputationType path) {
     return false;
   }
 
