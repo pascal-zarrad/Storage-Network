@@ -156,7 +156,6 @@ public class BlockCable extends BaseBlock {
   }
 
   @Override
-  @SuppressWarnings("deprecation")
   public boolean allowsMovement(BlockState state, IBlockReader world, BlockPos pos, PathType type) {
     return false;
   }
