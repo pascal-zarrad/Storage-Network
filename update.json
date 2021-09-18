@@ -1,8 +1,8 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.16.5-latest": "1.4.2",
-    "1.16.5-recommended": "1.4.2"
+    "1.16.5-latest": "1.4.3",
+    "1.16.5-recommended": "1.4.3"
   },
   "1.16.5": {
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)"
@@ -19,5 +19,6 @@
   	,"1.4.0":"Sort by Name fixed to sort by clientside translated display name, not internal item ID.  JEI sync setting (green/red button) is no longer a singleton-per-player-global setting, its saved independently for each remote and block so each can have a different value.  New config jeiMaximumRecipeTags to balance between JEI recipe auto-completion and Server Packet overflow errors.  Fix data tag recipes sometimes not working on servers.  Extra warning tooltip on Network exchange interface.  Fix Server Crash When using red Builder remote.  Update pt_br.json by  Mikeliro.  Fix Import/Export putting random blocks in the Upgrade slots.  Fix tooltip and tag search.  Fix NPE when connecting Network Exchange to certain blocks. Network Exchange interface capped at 5000 instead of 134217727 (greatly reduce lag). Exchange interfaces no longer update every tick, instead relying on the autoRefreshTicks config value.  Fixed Stack Overflow crashes in Network Exchange interface. Fix Network exchange point causes crash when link cable is connected."
   	,"1.4.1":"Cable upgrades now drop from the filter cables when broken.  Collector Remote now correctly plays the item pickup sound  "
   	,"1.4.2":"Merged pull request:  Mark cables as non-transparent for pathfinder #380 by embeddedt"
+  	,"1.4.3":"Fix StackOverflowError: Exception in server tick loop when copying item stack at TimeMain:insertStack"
   }
 }

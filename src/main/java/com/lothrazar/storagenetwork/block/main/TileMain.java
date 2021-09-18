@@ -251,16 +251,8 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   /**
    * returns countUnmoved , the number of items NOT inserted.
    */
-  public int insertStack(ItemStack rawStack, boolean simulate) {
-    if (rawStack.isEmpty()) {
-      return 0;
-    }
-    ItemStack stack = ItemStack.EMPTY;
-    try {
-      stack = rawStack.copy();
-    }
-    catch (Exception excep) {
-      StorageNetwork.LOGGER.error("Error in copy stack", excep);
+  public int insertStack(ItemStack stack, boolean simulate) {
+    if (stack.isEmpty()) {
       return 0;
     }
     // 1. Try to insert into a recent slot for the same item.
