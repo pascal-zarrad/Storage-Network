@@ -19,7 +19,6 @@ import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
-import com.lothrazar.storagenetwork.capability.handler.MasterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
@@ -35,18 +34,13 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullSupplier;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileMain extends TileEntity implements ITickableTileEntity {
 
-  private Set<DimPos> connectables;
-  private MasterItemStackHandler itemHandler;
+  private Set<DimPos> connectables; 
   private Map<String, DimPos> importCache = new HashMap<>();
   private boolean shouldRefresh = true;
 
@@ -55,8 +49,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   }
 
   public TileMain() {
-    super(SsnRegistry.mainTileentity);
-    itemHandler = new MasterItemStackHandler(this);
+    super(SsnRegistry.mainTileentity); 
   }
 
   public List<ItemStack> getStacks() {
@@ -527,16 +520,5 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     importCache = new HashMap<>();
   }
   
-  
-  
-  @Override
-  public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-    if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-      itemHandler.update(); // update items in itemHandler
-      return LazyOptional.of(new NonNullSupplier<T>() {
-        public @Override @Nonnull T get() { return (T) itemHandler; }
-      });
-    }
-    return super.getCapability(cap, side);
-  }
+   
 }
