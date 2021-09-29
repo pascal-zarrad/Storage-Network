@@ -446,7 +446,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         if (realExtractedStack.isEmpty()) {
           continue;
         }
-        storage.insertStack(realExtractedStack.copy(), false);
+        storage.insertStack(realExtractedStack, false);
         break;
       }
     }
