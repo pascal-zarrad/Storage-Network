@@ -312,7 +312,6 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
   private void updateImports() {
     for (IConnectable connectable : getConnectables()) {
       if (connectable == null || connectable.getPos() == null) {
-        //        StorageNetwork.log("null connectable or pos : updateImports() ");
         continue;
       }
       IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
@@ -335,16 +334,14 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         continue;
       }
       if (storage.needsRedstone()) {
-        //    StorageNetwork.log(storage.needsRedstone() + " == needsRedstone for import ");
         boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
         if (power == false) {
-          // StorageNetwork.log(power + " IMPORT pow here ; needs yes skip me");
           continue;
         }
       }
       //
       // Then try to insert the stack into this network and store the number of remaining items in the stack
-      int countUnmoved = insertStack(stack.copy(), true);
+      int countUnmoved = insertStack(stack, true);
       // Calculate how many items in the stack actually got moved
       int countMoved = stack.getCount() - countUnmoved;
       if (countMoved <= 0) {
@@ -355,7 +352,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
       connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markDirty();
       // Then insert into our network
-      insertStack(actuallyExtracted.copy(), false);
+      insertStack(actuallyExtracted, false);
     }
   }
 
