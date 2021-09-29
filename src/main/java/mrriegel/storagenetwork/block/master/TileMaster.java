@@ -61,7 +61,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         if (stack.isEmpty()) {
           continue;
         }
-        addOrMergeIntoList(stacks, stack.copy());
+        addOrMergeIntoList(stacks, stack);
       }
     }
     return stacks;
@@ -193,11 +193,10 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
   }
 
   @Override
-  public int insertStack(ItemStack rawStack, boolean simulate) {
-    if (rawStack.isEmpty()) {
+  public int insertStack(ItemStack stack, boolean simulate) {
+    if (stack.isEmpty()) {
       return 0;
     }
-    ItemStack stack = rawStack.copy();
     // 1. Try to insert into a recent slot for the same item.
     //    We do this to avoid having to search for the appropriate inventory repeatedly.
     String key = getStackKey(stack);
@@ -268,7 +267,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       // Then try to insert the stack into this masters network and store the number of remaining items in the stack
-      int countUnmoved = this.insertStack(stack.copy(), true);
+      int countUnmoved = this.insertStack(stack, true);
       // Calculate how many items in the stack actually got moved
       int countMoved = stack.getCount() - countUnmoved;
       if (countMoved <= 0) {
@@ -278,8 +277,8 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
       // First extract from the storage
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
       storage.getPos().getChunk().markDirty();
-      // Then insert into our network
-      this.insertStack(actuallyExtracted.copy(), false);
+      // Then insert into our network 
+      this.insertStack(actuallyExtracted, false);
     }
   }
 
@@ -333,9 +332,9 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
           continue;
         }
         // The stack is available in the network, let's simulate inserting it into the storage
-        ItemStack insertedSim = storage.insertStack(requestedStack.copy(), true);
+        ItemStack insertedSim = storage.insertStack(requestedStack, true);
         // Determine the amount of items moved in the stack
-        ItemStack targetStack = requestedStack.copy();
+        ItemStack targetStack = requestedStack;
         if (!insertedSim.isEmpty()) {
           int movedItems = requestedStack.getCount() - insertedSim.getCount();
           if (movedItems <= 0) {
@@ -348,7 +347,7 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         if (realExtractedStack.isEmpty()) {
           continue;
         }
-        storage.insertStack(realExtractedStack.copy(), false);
+        storage.insertStack(realExtractedStack, false);
         break;
       }
     }

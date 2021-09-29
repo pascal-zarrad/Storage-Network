@@ -63,7 +63,7 @@ public class ItemPicker extends Item {
       return EnumActionResult.PASS;
     }
     World serverTargetWorld;
-    int x, y, z, itemStackDim;
+    int itemStackDim;
     BlockPos targetPos;
     try {
       targetPos = getBlockPosStored(itemStackIn);

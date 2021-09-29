@@ -7,8 +7,8 @@
     "1.12-recommended": "1.0.15",
     "1.12.1-latest": "1.0.15",
     "1.12.1-recommended": "1.1.1",
-    "1.12.2-latest": "1.8.0",
-    "1.12.2-recommended": "1.8.0"
+    "1.12.2-latest": "1.8.2",
+    "1.12.2-recommended": "1.8.2"
   },
   "1.11.2":{
 	"1.0.0":"First Release"
@@ -83,5 +83,6 @@
 	,"1.7.11":"Merged in a PR from charles-toller, fixing an uncommon issue where remotes may not work when very close to the network master.  "
   	,"1.8.0":"Fixed a dupe bug when using allowFastWorkBenchIntegration=true (#303).  Fix issue where escape key or inventory keybind wont close the network screen.  4 items ported down from MC1.16: Simple Cable, Storage Inventory, Network Collector, Network Picker.   "
   	,"1.8.1":"Pull Request by  itgenie98: Fix hardcoded value in TileMaster"
+  	,"1.8.2":"Performance increase: ItemStacks are no longer repeatedly copied while doing sorting/imports/exports, reducing RAM use/CPU load."
   }
 }
