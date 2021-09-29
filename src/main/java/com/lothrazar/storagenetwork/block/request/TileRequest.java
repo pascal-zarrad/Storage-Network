@@ -105,6 +105,7 @@ public class TileRequest extends TileConnectable implements INamedContainerProvi
     return isJeiSearchSynced;
   }
 
+  @Override
   public void setJeiSearchSynced(boolean val) {
     isJeiSearchSynced = val;
   }

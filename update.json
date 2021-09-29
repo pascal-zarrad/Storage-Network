@@ -20,5 +20,6 @@
   	,"1.4.1":"Cable upgrades now drop from the filter cables when broken.  Collector Remote now correctly plays the item pickup sound  "
   	,"1.4.2":"Merged pull request:  Mark cables as non-transparent for pathfinder #380 by embeddedt"
   	,"1.4.3":"Fix StackOverflowError: Exception in server tick loop when copying item stack at TimeMain:insertStack"
+  	,"1.4.4":"Cables can all be now water-loggable.  Storage Request Table now correctly drops items from crafting grid when broken."
   }
 }

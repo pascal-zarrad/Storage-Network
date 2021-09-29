@@ -12,13 +12,19 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
@@ -33,14 +39,28 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-public class BlockCable extends BaseBlock {
+public class BlockCable extends BaseBlock implements IWaterLoggable {
+
+  public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
   public BlockCable(String registryName) {
     super(Block.Properties.create(Material.ROCK).hardnessAndResistance(0.2F), registryName);
     setDefaultState(stateContainer.getBaseState()
         .with(NORTH, EnumConnectType.NONE).with(EAST, EnumConnectType.NONE)
         .with(SOUTH, EnumConnectType.NONE).with(WEST, EnumConnectType.NONE)
-        .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE));
+        .with(UP, EnumConnectType.NONE).with(DOWN, EnumConnectType.NONE).with(WATERLOGGED, false));
+  }
+
+  @Override
+  public BlockState getStateForPlacement(BlockItemUseContext context) {
+    return super.getStateForPlacement(context)
+        .with(WATERLOGGED, context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER);
+  }
+
+  @Override
+  @SuppressWarnings("deprecation")
+  public FluidState getFluidState(BlockState state) {
+    return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
   }
 
   @SuppressWarnings("deprecation")
@@ -187,11 +207,14 @@ public class BlockCable extends BaseBlock {
   @Override
   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
     super.fillStateContainer(builder);
-    builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST);
+    builder.add(UP, DOWN, NORTH, EAST, SOUTH, WEST, WATERLOGGED);
   }
 
   @Override
   public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+    if (stateIn.get(WATERLOGGED)) {
+      world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    }
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     if (facingState.getBlock() == SsnRegistry.MAIN
         || facingState.getBlock() instanceof BlockCable) {

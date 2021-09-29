@@ -7,7 +7,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -32,6 +34,31 @@ public class BlockRequest extends BaseBlock {
   @Override
   public TileEntity createTileEntity(BlockState state, IBlockReader world) {
     return new TileRequest();
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    if (state.getBlock() != newState.getBlock()) {
+      TileEntity tileentity = worldIn.getTileEntity(pos);
+      if (tileentity instanceof TileRequest) {
+        TileRequest tile = (TileRequest) tileentity;
+        for (ItemStack entry : tile.matrix.values()) {
+          if (!entry.isEmpty()) {
+            System.out.println("fixed lol " + entry);
+            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), entry);
+          }
+        }
+        //        IItemHandler items = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        //        if (items != null) {
+        //          for (int i = 0; i < items.getSlots(); ++i) {
+        //            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
+        //          }
+        //          worldIn.updateComparatorOutputLevel(pos, this);
+        //        }
+      }
+      super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
   }
 
   @Override
