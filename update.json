@@ -1,11 +1,12 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.17.1-latest": "1.4.2",
-    "1.17.1-recommended": "1.4.2"
+    "1.17.1-latest": "1.5.0",
+    "1.17.1-recommended": "1.5.0"
   },
   "1.17.1": {
     "1.4.1": "First port to 1.17.1 ",
     "1.4.2":"Scaled down font size of item stack counts"
+  	,"1.5.0":""
   }
 }

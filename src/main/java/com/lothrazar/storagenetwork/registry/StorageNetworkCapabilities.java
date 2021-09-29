@@ -5,8 +5,11 @@ import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
-import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class StorageNetworkCapabilities {
 
   @CapabilityInject(IConnectable.class)
@@ -16,10 +19,10 @@ public class StorageNetworkCapabilities {
   @CapabilityInject(IConnectableItemAutoIO.class)
   public static Capability<IConnectableItemAutoIO> CONNECTABLE_AUTO_IO = null;
 
-  public static void initCapabilities() {
-    // TODO: RegisterCapabilitiesEvent event
-    CapabilityManager.INSTANCE.register(IConnectable.class); //, new CapabilityConnectable.Storage(), DefaultConnectable::new);
-    CapabilityManager.INSTANCE.register(IConnectableLink.class); //, new CapabilityConnectableLink.Storage(), new CapabilityConnectableLink.Factory());
-    CapabilityManager.INSTANCE.register(IConnectableItemAutoIO.class); //, new CapabilityConnectableAutoIO.Storage(), new CapabilityConnectableAutoIO.Factory());
+  @SubscribeEvent
+  public static void initCapabilities(RegisterCapabilitiesEvent event) {
+    event.register(IConnectable.class);
+    event.register(IConnectableLink.class);
+    event.register(IConnectableItemAutoIO.class);
   }
 }
