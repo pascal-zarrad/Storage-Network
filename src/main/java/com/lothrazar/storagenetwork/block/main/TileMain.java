@@ -68,7 +68,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
-          addOrMergeIntoList(stacks, stack.copy());
+          addOrMergeIntoList(stacks, stack);
         }
       }
     }
@@ -96,7 +96,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
-          addOrMergeIntoList(stacks, stack.copy());
+          addOrMergeIntoList(stacks, stack);
         }
       }
     }

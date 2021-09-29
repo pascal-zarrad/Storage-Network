@@ -1,8 +1,8 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.16.5-latest": "1.4.3",
-    "1.16.5-recommended": "1.4.3"
+    "1.16.5-latest": "1.5.0",
+    "1.16.5-recommended": "1.5.0"
   },
   "1.16.5": {
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)"
@@ -20,6 +20,6 @@
   	,"1.4.1":"Cable upgrades now drop from the filter cables when broken.  Collector Remote now correctly plays the item pickup sound  "
   	,"1.4.2":"Merged pull request:  Mark cables as non-transparent for pathfinder #380 by embeddedt"
   	,"1.4.3":"Fix StackOverflowError: Exception in server tick loop when copying item stack at TimeMain:insertStack"
-  	,"1.4.4":"Cables can all be now water-loggable.  Storage Request Table now correctly drops items from crafting grid when broken."
+  	,"1.5.0":" Performance increase: ItemStacks are no longer repeatedly copied while doing sorting/imports/exports, reducing RAM use/CPU load.  Cables can all be now water-loggable. Storage Request Table now correctly drops items from crafting grid when broken."
   }
 }
