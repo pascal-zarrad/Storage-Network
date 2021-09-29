@@ -431,7 +431,7 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         }
         //     StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
         // The stack is available in the network, let's simulate inserting it into the storage
-        ItemStack insertedSim = storage.insertStack(requestedStack.copy(), true);
+        ItemStack insertedSim = storage.insertStack(requestedStack, true);
         // Determine the amount of items moved in the stack
         //        ItemStack targetStack = requestedStack.copy();
         if (!insertedSim.isEmpty()) {
