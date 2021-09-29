@@ -5,10 +5,13 @@ import com.lothrazar.storagenetwork.network.SortClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,6 +35,28 @@ public class BlockRequest extends BaseBlock {
   @Override
   public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new TileRequest(pos, state);
+  }
+
+  @SuppressWarnings("deprecation")
+  @Override
+  public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    if (!state.is(newState.getBlock())) {
+      BlockEntity blockentity = worldIn.getBlockEntity(pos);
+      if (blockentity instanceof Container) {
+        Containers.dropContents(worldIn, pos, (Container) blockentity);
+        worldIn.updateNeighbourForOutputSignal(pos, this);
+      }
+      BlockEntity tileentity = worldIn.getBlockEntity(pos);
+      if (tileentity instanceof TileRequest) {
+        TileRequest tile = (TileRequest) tileentity;
+        for (ItemStack entry : tile.matrix.values()) {
+          if (!entry.isEmpty()) {
+            Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), entry);
+          }
+        }
+      }
+      super.onRemove(state, worldIn, pos, newState, isMoving);
+    }
   }
 
   @Override

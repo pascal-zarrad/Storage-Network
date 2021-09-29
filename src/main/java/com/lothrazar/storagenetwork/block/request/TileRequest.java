@@ -25,7 +25,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
   public static final String NBT_JEI = StorageNetwork.MODID + "jei";
   private static final String NBT_DIR = StorageNetwork.MODID + "dir";
   private static final String NBT_SORT = StorageNetwork.MODID + "sort";
-  Map<Integer, ItemStack> matrix = new HashMap<>();
+  public Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;
   private boolean isJeiSearchSynced;
@@ -106,6 +106,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
     return isJeiSearchSynced;
   }
 
+  @Override
   public void setJeiSearchSynced(boolean val) {
     isJeiSearchSynced = val;
   }

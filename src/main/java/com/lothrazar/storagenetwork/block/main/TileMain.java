@@ -67,7 +67,7 @@ public class TileMain extends BlockEntity {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
-          addOrMergeIntoList(stacks, stack.copy());
+          addOrMergeIntoList(stacks, stack);
         }
       }
     }
@@ -95,7 +95,7 @@ public class TileMain extends BlockEntity {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
-          addOrMergeIntoList(stacks, stack.copy());
+          addOrMergeIntoList(stacks, stack);
         }
       }
     }
@@ -250,16 +250,8 @@ public class TileMain extends BlockEntity {
   /**
    * returns countUnmoved , the number of items NOT inserted.
    */
-  public int insertStack(ItemStack rawStack, boolean simulate) {
-    if (rawStack.isEmpty()) {
-      return 0;
-    }
-    ItemStack stack = ItemStack.EMPTY;
-    try {
-      stack = rawStack.copy();
-    }
-    catch (Exception excep) {
-      StorageNetwork.LOGGER.error("Error in copy stack", excep);
+  public int insertStack(ItemStack stack, boolean simulate) {
+    if (stack.isEmpty()) {
       return 0;
     }
     // 1. Try to insert into a recent slot for the same item.
@@ -319,7 +311,6 @@ public class TileMain extends BlockEntity {
   private void updateImports() {
     for (IConnectable connectable : getConnectables()) {
       if (connectable == null || connectable.getPos() == null) {
-        //        StorageNetwork.log("null connectable or pos : updateImports() ");
         continue;
       }
       IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
@@ -342,16 +333,14 @@ public class TileMain extends BlockEntity {
         continue;
       }
       if (storage.needsRedstone()) {
-        //    StorageNetwork.log(storage.needsRedstone() + " == needsRedstone for import ");
         boolean power = level.hasNeighborSignal(connectable.getPos().getBlockPos());
         if (power == false) {
-          // StorageNetwork.log(power + " IMPORT pow here ; needs yes skip me");
           continue;
         }
       }
       //
       // Then try to insert the stack into this network and store the number of remaining items in the stack
-      int countUnmoved = insertStack(stack.copy(), true);
+      int countUnmoved = insertStack(stack, true);
       // Calculate how many items in the stack actually got moved
       int countMoved = stack.getCount() - countUnmoved;
       if (countMoved <= 0) {
@@ -362,7 +351,7 @@ public class TileMain extends BlockEntity {
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
       connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
       // Then insert into our network
-      insertStack(actuallyExtracted.copy(), false);
+      insertStack(actuallyExtracted, false);
     }
   }
 
@@ -441,22 +430,21 @@ public class TileMain extends BlockEntity {
         }
         //     StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
         // The stack is available in the network, let's simulate inserting it into the storage
-        ItemStack insertedSim = storage.insertStack(requestedStack.copy(), true);
+        ItemStack insertedSim = storage.insertStack(requestedStack, true);
         // Determine the amount of items moved in the stack
-        ItemStack targetStack = requestedStack.copy();
         if (!insertedSim.isEmpty()) {
           int movedItems = requestedStack.getCount() - insertedSim.getCount();
           if (movedItems <= 0) {
             continue;
           }
-          targetStack.setCount(movedItems);
+          requestedStack.setCount(movedItems);
         }
         // Alright, some items got moved in the simulation. Let's do it for real this time.
-        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, false, true), targetStack.getCount(), false);
+        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, false, true), requestedStack.getCount(), false);
         if (realExtractedStack.isEmpty()) {
           continue;
         }
-        storage.insertStack(realExtractedStack.copy(), false);
+        storage.insertStack(realExtractedStack, false);
         break;
       }
     }
