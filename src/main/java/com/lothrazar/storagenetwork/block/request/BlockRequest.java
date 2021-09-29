@@ -45,17 +45,9 @@ public class BlockRequest extends BaseBlock {
         TileRequest tile = (TileRequest) tileentity;
         for (ItemStack entry : tile.matrix.values()) {
           if (!entry.isEmpty()) {
-            System.out.println("fixed lol " + entry);
             InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), entry);
           }
         }
-        //        IItemHandler items = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-        //        if (items != null) {
-        //          for (int i = 0; i < items.getSlots(); ++i) {
-        //            InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
-        //          }
-        //          worldIn.updateComparatorOutputLevel(pos, this);
-        //        }
       }
       super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
