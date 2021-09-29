@@ -186,17 +186,12 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (capabilityConnectable == null) {
         continue;
       }
-      //
       if (capabilityConnectable.getPos() == null) {
-        //  1.15 hax
-        // StorageNetwork.LOGGER.info("1.15 HAX NULL POS !! " + lookPos + "has tile " + tileHere);
-        //wait what 
+        //  1.15 hax ("1.15 HAX NULL POS !! " + lookPos + "has tile " + tileHere);
         capabilityConnectable.setPos(lookPos);
         capabilityConnectable.setMainPos(this.getDimPos());
       }
-      //
       if (capabilityConnectable != null) {
-        //        IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
         capabilityConnectable.setMainPos(getDimPos());
         DimPos realConnectablePos = capabilityConnectable.getPos();
         boolean beenHereBefore = set.contains(realConnectablePos);
@@ -395,17 +390,14 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (storage.needsRedstone()) {
         boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
         if (power == false) {
-          //  StorageNetwork.log(power + " Export pow here ; needs yes skip me");
           continue;
         }
       }
-      //
       for (IItemStackMatcher matcher : storage.getAutoExportList()) {
         boolean stockMode = storage.isStockMode();
         int amtToRequest = storage.getTransferRate();
         if (stockMode) {
           try {
-            //       StorageNetwork.log("updateExports: attempt " + matcher.getStack());
             TileEntity tileEntity = world.getTileEntity(connectable.getPos().getBlockPos().offset(storage.facingInventory()));
             IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
             //request with false to see how many even exist in there.  
@@ -421,19 +413,15 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
           }
         }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {
-          //  StorageNetwork.log("updateExports: i have empty " +amtToRequest) ;
           continue;
         }
         ItemStack requestedStack = this.request((ItemStackMatcher) matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
-          //  StorageNetwork.log("updateExports: requestedStack is empty so nothing pushed " + matcher);
           continue;
         }
-        //     StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
         // The stack is available in the network, let's simulate inserting it into the storage
         ItemStack insertedSim = storage.insertStack(requestedStack, true);
-        // Determine the amount of items moved in the stack
-        //        ItemStack targetStack = requestedStack.copy();
+        // Determine the amount of items moved in the stack 
         if (!insertedSim.isEmpty()) {
           int movedItems = requestedStack.getCount() - insertedSim.getCount();
           if (movedItems <= 0) {
