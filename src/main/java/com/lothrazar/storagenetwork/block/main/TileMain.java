@@ -433,16 +433,16 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
         // The stack is available in the network, let's simulate inserting it into the storage
         ItemStack insertedSim = storage.insertStack(requestedStack.copy(), true);
         // Determine the amount of items moved in the stack
-        ItemStack targetStack = requestedStack.copy();
+        //        ItemStack targetStack = requestedStack.copy();
         if (!insertedSim.isEmpty()) {
           int movedItems = requestedStack.getCount() - insertedSim.getCount();
           if (movedItems <= 0) {
             continue;
           }
-          targetStack.setCount(movedItems);
+          requestedStack.setCount(movedItems);
         }
         // Alright, some items got moved in the simulation. Let's do it for real this time.
-        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, false, true), targetStack.getCount(), false);
+        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, false, true), requestedStack.getCount(), false);
         if (realExtractedStack.isEmpty()) {
           continue;
         }
