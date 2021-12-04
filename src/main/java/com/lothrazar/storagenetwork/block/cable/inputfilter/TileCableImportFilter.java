@@ -55,11 +55,11 @@ public class TileCableImportFilter extends TileCableWithFacing implements MenuPr
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
-    CompoundTag result = super.save(compound);
-    result.put("ioStorage", this.ioStorage.serializeNBT());
-    result.put("upgrades", ioStorage.upgrades.serializeNBT());
-    return result;
+  public void saveAdditional(CompoundTag compound) {
+     super.saveAdditional(compound);
+    compound.put("ioStorage", this.ioStorage.serializeNBT());
+    compound.put("upgrades", ioStorage.upgrades.serializeNBT());
+
   }
 
   @Override

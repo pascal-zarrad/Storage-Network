@@ -29,10 +29,9 @@ public class TileCableLink extends TileCableWithFacing {
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
-    CompoundTag result = super.save(compound);
-    result.put("capability", itemStorage.serializeNBT());
-    return result;
+  public void saveAdditional(CompoundTag compound) {
+    super.saveAdditional(compound);
+    compound.put("capability", itemStorage.serializeNBT());
   }
 
   @Override

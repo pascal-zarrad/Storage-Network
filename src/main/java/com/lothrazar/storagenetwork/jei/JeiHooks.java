@@ -2,9 +2,6 @@ package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.mojang.blaze3d.platform.InputConstants;
-//import mezz.jei.api.recipe.IFocus;
-//import mezz.jei.config.KeyBindings;
-//import mezz.jei.gui.Focus;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 
@@ -43,22 +40,23 @@ public class JeiHooks {
   }
 
   private static void setJeiTextInternal(String s) {
-//    mezz.jei.Internal.getRuntime().getIngredientFilter().setFilterText(s);
+    //    mezz.jei.Internal.getRuntime().getIngredientFilter().setFilterText(s);
   }
 
   private static String getJeiTextInternal() {
-    return "";// mezz.jei.Internal.getRuntime().getIngredientFilter().getFilterText();
+    return "";
+    // mezz.jei.Internal.getRuntime().getIngredientFilter().getFilterText();
   }
 
   public static void testJeiKeybind(InputConstants.Key keyCode, ItemStack stackUnderMouse) {
     if (!isJeiLoaded()) {
       return;
     }
-//    final boolean showRecipe = KeyBindings.showRecipe.isActiveAndMatches(keyCode);
-//    final boolean showUses = KeyBindings.showUses.isActiveAndMatches(keyCode);
-//    if (showRecipe || showUses) {
-//      IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;
-//      mezz.jei.Internal.getRuntime().getRecipesGui().show(new Focus<ItemStack>(mode, stackUnderMouse));
-//    }
+    //    final boolean showRecipe = KeyBindings.showRecipe.isActiveAndMatches(keyCode);
+    //    final boolean showUses = KeyBindings.showUses.isActiveAndMatches(keyCode);
+    //    if (showRecipe || showUses) {
+    //      IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;
+    //      mezz.jei.Internal.getRuntime().getRecipesGui().show(new Focus<ItemStack>(mode, stackUnderMouse));
+    //    }
   }
 }

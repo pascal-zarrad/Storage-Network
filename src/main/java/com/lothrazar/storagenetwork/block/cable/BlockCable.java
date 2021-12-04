@@ -209,9 +209,9 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
 
   @Override
   public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-    if (stateIn.getValue(WATERLOGGED)) {
-      world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-    }
+//    if (stateIn.getValue(WATERLOGGED)) {
+//      world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+//    }
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     if (facingState.getBlock() == SsnRegistry.MAIN
         || facingState.getBlock() instanceof BlockCable) {

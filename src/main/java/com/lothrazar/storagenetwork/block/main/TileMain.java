@@ -349,7 +349,8 @@ public class TileMain extends BlockEntity {
       // Alright, simulation says we're good, let's do it!
       // First extract from the storage
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
+//      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
+      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).setUnsaved(false);
       // Then insert into our network
       insertStack(actuallyExtracted, false);
     }
@@ -549,9 +550,8 @@ public class TileMain extends BlockEntity {
 
   @Override
   public ClientboundBlockEntityDataPacket getUpdatePacket() {
-    CompoundTag syncData = new CompoundTag();
-    save(syncData);
-    return new ClientboundBlockEntityDataPacket(worldPosition, 1, syncData);
+    saveWithFullMetadata();
+    return ClientboundBlockEntityDataPacket.create(this); // new ClientboundBlockEntityDataPacket(worldPosition, 1, syncData);
   }
 
   @Override

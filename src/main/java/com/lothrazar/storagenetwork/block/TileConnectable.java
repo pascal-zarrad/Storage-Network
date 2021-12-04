@@ -47,15 +47,26 @@ public class TileConnectable extends BlockEntity {
 
   @Override
   public CompoundTag save(CompoundTag compound) {
-    compound.put("connectable", connectable.serializeNBT());
+    saveAdditional(compound);
     return super.save(compound);
   }
 
   @Override
+  public void saveAdditional(CompoundTag compound) {
+    compound.put("connectable", connectable.serializeNBT());
+    super.saveAdditional(compound);
+  }
+
+  @Override
   public ClientboundBlockEntityDataPacket getUpdatePacket() {
-    CompoundTag syncData = new CompoundTag();
-    save(syncData);
-    return new ClientboundBlockEntityDataPacket(worldPosition, 0, syncData);
+    return ClientboundBlockEntityDataPacket.create(this); //new ClientboundBlockEntityDataPacket(worldPosition, 0, syncData);
+  }
+
+  @Override
+  public CompoundTag getUpdateTag() {
+    CompoundTag updateTag = new CompoundTag();
+    this.saveAdditional(updateTag);
+    return updateTag;
   }
 
   @Override

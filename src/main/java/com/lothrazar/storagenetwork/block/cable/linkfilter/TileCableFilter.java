@@ -45,10 +45,10 @@ public class TileCableFilter extends TileCableWithFacing implements MenuProvider
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
-    CompoundTag result = super.save(compound);
-    result.put("capability", capability.serializeNBT());
-    return result;
+  public void saveAdditional(CompoundTag compound) {
+    super.saveAdditional(compound);
+    compound.put("capability", capability.serializeNBT());
+
   }
 
   @Override

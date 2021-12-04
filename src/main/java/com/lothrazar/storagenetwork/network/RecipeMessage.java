@@ -1,25 +1,25 @@
 package com.lothrazar.storagenetwork.network;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 public class RecipeMessage {
 
@@ -41,7 +41,8 @@ public class RecipeMessage {
   private CompoundTag nbt;
   private int index = 0;
 
-  private RecipeMessage() {}
+  private RecipeMessage() {
+  }
 
   public RecipeMessage(CompoundTag nbt) {
     this.nbt = nbt;
@@ -81,7 +82,7 @@ public class RecipeMessage {
          **********/
         boolean isOreDict;
         isOreDict = false;
-        ListTag invList = message.nbt.getList("s" + slot,9);
+        ListTag invList = message.nbt.getList("s" + slot, 9);
         for (int i = 0; i < invList.size(); i++) {
           CompoundTag stackTag = invList.getCompound(i);
           ItemStack s = ItemStack.of(stackTag);
