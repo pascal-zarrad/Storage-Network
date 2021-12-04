@@ -18,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants;
 
 public class TileRequest extends TileConnectable implements MenuProvider, ITileNetworkSync {
 
@@ -43,7 +42,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
     if (compound.contains(NBT_JEI)) {
       this.setJeiSearchSynced(compound.getBoolean(NBT_JEI));
     }
-    ListTag invList = compound.getList("matrix", Constants.NBT.TAG_COMPOUND);
+    ListTag invList = compound.getList("matrix", 9);
     matrix = new HashMap<>();
     for (int i = 0; i < invList.size(); i++) {
       CompoundTag stackTag = invList.getCompound(i);

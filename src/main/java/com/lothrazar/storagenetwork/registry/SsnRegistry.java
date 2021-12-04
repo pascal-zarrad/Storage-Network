@@ -43,7 +43,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -198,28 +198,28 @@ public class SsnRegistry {
     @SubscribeEvent
     public static void onContainerRegistry(RegistryEvent.Register<MenuType<?>> event) {
       IForgeRegistry<MenuType<?>> r = event.getRegistry();
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerNetworkCraftingTable(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("request"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerCollectionFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("collector"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerCableFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("filter_kabel"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerCableImportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("import_filter_kabel"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerCableExportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("export_kabel"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerNetworkInventory(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
       }).setRegistryName("inventory"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerNetworkRemote(windowId, inv.player.getInventory());
       }).setRegistryName("inventory_remote"));
-      r.register(IForgeContainerType.create((windowId, inv, data) -> {
+      r.register(IForgeMenuType.create((windowId, inv, data) -> {
         return new ContainerNetworkCraftingRemote(windowId, inv.player.getInventory());
       }).setRegistryName("crafting_remote"));
     }

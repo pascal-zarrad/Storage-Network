@@ -115,7 +115,7 @@ public class ButtonRequest extends Button {
     //    minecraft.getTextureManager().bind(getTexture());
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, getTexture());
-    int k = this.getYImage(this.isHovered());
+    int k = this.getYImage(this.isHovered);
     RenderSystem.enableBlend();
     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
     RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);

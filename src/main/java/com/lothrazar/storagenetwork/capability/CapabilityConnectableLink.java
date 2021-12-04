@@ -17,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -253,7 +252,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     if (operation != null) {
       operationLimit = operation.getInt("limit");
       operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
-      if (operation.contains("stack", Constants.NBT.TAG_COMPOUND)) {
+      if (operation.contains("stack")) {
         operationStack = ItemStack.of(operation.getCompound("stack"));
       }
     }

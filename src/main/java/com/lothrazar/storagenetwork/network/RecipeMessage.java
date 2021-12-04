@@ -17,9 +17,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fmllegacy.network.NetworkDirection;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
 
 public class RecipeMessage {
@@ -82,7 +81,7 @@ public class RecipeMessage {
          **********/
         boolean isOreDict;
         isOreDict = false;
-        ListTag invList = message.nbt.getList("s" + slot, Constants.NBT.TAG_COMPOUND);
+        ListTag invList = message.nbt.getList("s" + slot,9);
         for (int i = 0; i < invList.size(); i++) {
           CompoundTag stackTag = invList.getCompound(i);
           ItemStack s = ItemStack.of(stackTag);

@@ -9,7 +9,7 @@ import com.lothrazar.storagenetwork.block.cable.linkfilter.GuiCableFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 /**
  * Refresh the current screen with large data set of stacks.
