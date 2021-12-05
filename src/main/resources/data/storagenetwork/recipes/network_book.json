@@ -14,5 +14,16 @@
         "nbt": {
             "patchouli:book": "storagenetwork:network_book"
         }
-    }
+    },
+    "conditions": [
+        {
+            "values": [
+                {
+                    "modid": "patchouli",
+                    "type": "forge:mod_loaded"
+                }
+            ],
+            "type": "forge:and"
+        }
+    ]
 }

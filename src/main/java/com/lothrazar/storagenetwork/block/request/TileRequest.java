@@ -10,6 +10,7 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
@@ -42,7 +43,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
     if (compound.contains(NBT_JEI)) {
       this.setJeiSearchSynced(compound.getBoolean(NBT_JEI));
     }
-    ListTag invList = compound.getList("matrix", 9);
+    ListTag invList = compound.getList("matrix", Tag.TAG_COMPOUND);
     matrix = new HashMap<>();
     for (int i = 0; i < invList.size(); i++) {
       CompoundTag stackTag = invList.getCompound(i);

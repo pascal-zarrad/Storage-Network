@@ -1,12 +1,11 @@
 package com.lothrazar.storagenetwork.item;
 
-import java.util.List;
-import org.apache.commons.lang3.tuple.Triple;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -27,6 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import org.apache.commons.lang3.tuple.Triple;
 
 public class ItemCollector extends Item {
 
@@ -99,7 +99,9 @@ public class ItemCollector extends Item {
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);
-      tooltip.add(dp.makeTooltip());
+      if (dp != null) {
+        tooltip.add(dp.makeTooltip());
+      }
     }
   }
 }

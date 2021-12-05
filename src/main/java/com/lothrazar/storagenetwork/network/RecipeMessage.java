@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -82,7 +83,7 @@ public class RecipeMessage {
          **********/
         boolean isOreDict;
         isOreDict = false;
-        ListTag invList = message.nbt.getList("s" + slot, 9);
+        ListTag invList = message.nbt.getList("s" + slot, Tag.TAG_COMPOUND);
         for (int i = 0; i < invList.size(); i++) {
           CompoundTag stackTag = invList.getCompound(i);
           ItemStack s = ItemStack.of(stackTag);

@@ -89,7 +89,9 @@ public class ItemPicker extends Item {
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);
-      tooltip.add(dp.makeTooltip());
+      if (dp != null) {
+        tooltip.add(dp.makeTooltip());
+      }
     }
   }
 }

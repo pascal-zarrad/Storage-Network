@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api;
 
-import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -224,8 +224,9 @@ public class DimPos implements INBTSerializable<CompoundTag> {
   }
 
   public Component makeTooltip() {
-    TranslatableComponent t = new TranslatableComponent("[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ", " + dimension + "]");
-    t.withStyle(ChatFormatting.DARK_GRAY);
-    return t;
+    if (pos == null) {
+      return null;
+    }
+    return new TranslatableComponent("[" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ", " + dimension + "]").withStyle(ChatFormatting.DARK_GRAY);
   }
 }
