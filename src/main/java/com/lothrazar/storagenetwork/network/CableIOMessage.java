@@ -145,7 +145,7 @@ public class CableIOMessage {
         }
       break;
     }
-    //
+    tile.setChanged();
     player.connection.send(tile.getUpdatePacket());
     //
   }

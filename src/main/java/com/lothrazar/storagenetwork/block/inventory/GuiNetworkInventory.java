@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Base class for Request table inventory and Remote inventory
@@ -71,7 +72,7 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
     network.initButtons();
     addRenderableWidget(network.directionBtn);
     addRenderableWidget(network.sortBtn);
-    if (JeiHooks.isJeiLoaded()) {
+    if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);
     }
   }

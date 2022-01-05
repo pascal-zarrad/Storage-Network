@@ -97,9 +97,8 @@ public class CableDataMessage {
           link.setFilter(message.value, message.stack.copy());
         break;
       }
-      //
+      container.tile.setChanged();
       player.connection.send(container.tile.getUpdatePacket());
-      //
     });
     ctx.get().setPacketHandled(true);
   }

@@ -32,6 +32,7 @@ public class SortClientMessage {
         ITileNetworkSync ts = (ITileNetworkSync) tileEntity;
         ts.setDownwards(message.direction);
         ts.setSort(message.sort);
+        tileEntity.setChanged();
       }
     });
     ctx.get().setPacketHandled(true);

@@ -1,11 +1,12 @@
 package com.lothrazar.storagenetwork.item;
 
+import java.util.List;
+import org.apache.commons.lang3.tuple.Triple;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import org.apache.commons.lang3.tuple.Triple;
 
 public class ItemCollector extends Item {
 
@@ -59,13 +59,11 @@ public class ItemCollector extends Item {
         BlockEntity tile = serverTargetWorld.getBlockEntity(dp.getBlockPos());
         if (tile instanceof TileMain) {
           TileMain network = (TileMain) tile;
-
           // Create a new reference to the stack, try to insert that into the
           // network, then change the original stack size so the player picks up
           // only what remains, if anything.
           int countUnmoved = network.insertStack(item.copy(), false);
           item.setCount(countUnmoved);
-
           // We still want to play the pickup sound, even if Minecraft silently
           // deletes the stack we just emptied.
           if (countUnmoved == 0) {

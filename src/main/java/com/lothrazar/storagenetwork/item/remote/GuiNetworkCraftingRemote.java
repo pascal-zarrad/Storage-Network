@@ -21,6 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fml.ModList;
 
 public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerNetworkCraftingRemote> implements IGuiNetwork {
 
@@ -101,7 +102,7 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
     network.initButtons();
     addRenderableWidget(network.directionBtn);
     addRenderableWidget(network.sortBtn);
-    if (JeiHooks.isJeiLoaded()) {
+    if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);
     }
   }

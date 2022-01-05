@@ -10,9 +10,9 @@ import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class InsertMessage {
 
@@ -58,7 +58,7 @@ public class InsertMessage {
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       player.containerMenu.broadcastChanges();
-    });
+    }); 
     ctx.get().setPacketHandled(true);
   }
 
