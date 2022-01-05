@@ -1,12 +1,13 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.18-latest": "1.5.0"
+    "1.18.1-latest": "1.5.2"
   },
-  "1.18": {
+  "1.18.1": {
     "1.4.1": "First port to 1.17.1 ",
     "1.4.2":"Scaled down font size of item stack counts" 	
     ,"1.5.0":" Ported to 1.18.  Performance increase: ItemStacks are no longer repeatedly copied while doing sorting/imports/exports, reducing RAM use/CPU load.  Cables can all be now water-loggable. Storage Request Table now correctly drops items from crafting grid when broken."
- 
+ 	,"1.5.1":"Jei got released for 1.18 so enable that plugin"
+ 	,"1.5.2":""
   }
 }
