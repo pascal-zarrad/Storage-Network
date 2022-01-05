@@ -15,7 +15,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -60,12 +59,16 @@ public class ItemCollector extends Item {
         BlockEntity tile = serverTargetWorld.getBlockEntity(dp.getBlockPos());
         if (tile instanceof TileMain) {
           TileMain network = (TileMain) tile;
-          //
-          int countUnmoved = network.insertStack(item, false);
+
+          // Create a new reference to the stack, try to insert that into the
+          // network, then change the original stack size so the player picks up
+          // only what remains, if anything.
+          int countUnmoved = network.insertStack(item.copy(), false);
+          item.setCount(countUnmoved);
+
+          // We still want to play the pickup sound, even if Minecraft silently
+          // deletes the stack we just emptied.
           if (countUnmoved == 0) {
-            item.setCount(0);
-            event.getItem().setItem(item);
-            event.getItem().remove(Entity.RemovalReason.KILLED);
             UtilTileEntity.playSoundFromServer((ServerPlayer) player, SoundEvents.ITEM_PICKUP, 0.2F);
           }
         }
