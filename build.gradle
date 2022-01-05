@@ -1,8 +1,6 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net/' }
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
         mavenCentral()
     }
     dependencies {
@@ -31,8 +29,8 @@ checkstyleMain {
     source ='src/main/java'
 }
 
-
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+//sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
     mappings channel: 'snapshot', version: mappings_version
@@ -90,8 +88,8 @@ dependencies {
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-	  implementation fg.deobf("curse.maven:cyclic-239286:3462453")
-    implementation fg.deobf("curse.maven:refined-storage-243076:3400575")
+	//  implementation fg.deobf("curse.maven:cyclic-239286:3462453")
+   // implementation fg.deobf("curse.maven:refined-storage-243076:3400575")
   
 	//  implementation fg.deobf("curse.maven:crafttweaker-239197:3183630")
 	//  implementation fg.deobf("curse.maven:jeitweaker-368718:3188099")
@@ -118,10 +116,7 @@ repositories {
     name = "ModMaven"
     url = "https://modmaven.k-4u.nl"
   }
-     maven {
-        name = "storagedrawers"
-        url = "https://dl.bintray.com/jaquadro/dev/"
-    }
+
     
   maven { url = "https://dvs1.progwml6.com/files/maven/"  }
   maven { url = "https://modmaven.k-4u.nl"  }    

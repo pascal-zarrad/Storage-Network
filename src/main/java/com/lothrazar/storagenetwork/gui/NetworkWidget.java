@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.fml.ModList;
 
 public class NetworkWidget {
 
@@ -72,7 +73,7 @@ public class NetworkWidget {
       return;
     }
     searchBar.setText("");
-    if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
+    if (ModList.get().isLoaded("jei") && gui.isJeiSearchSynced()) {
       JeiHooks.setFilterText("");
     }
   }
@@ -186,7 +187,7 @@ public class NetworkWidget {
     searchBar.setTextColor(16777215);
     searchBar.setFocused2(StorageNetwork.CONFIG.enableAutoSearchFocus());
     try {
-      if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
+      if (ModList.get().isLoaded("jei") && gui.isJeiSearchSynced()) {
         searchBar.setText(JeiHooks.getFilterText());
       }
     }
@@ -196,7 +197,7 @@ public class NetworkWidget {
   }
 
   public void syncTextToJei() {
-    if (JeiHooks.isJeiLoaded() && gui.isJeiSearchSynced()) {
+    if (ModList.get().isLoaded("jei") && gui.isJeiSearchSynced()) {
       JeiHooks.setFilterText(searchBar.getText());
     }
   }
@@ -216,7 +217,7 @@ public class NetworkWidget {
     else if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
       tooltip = new TranslationTextComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase());
     }
-    else if (JeiHooks.isJeiLoaded() && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
+    else if (ModList.get().isLoaded("jei") && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
       tooltip = new TranslationTextComponent(gui.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
     }
     else if (this.inSearchBar(mouseX, mouseY)) {
@@ -312,7 +313,7 @@ public class NetworkWidget {
       gui.syncDataToServer();
     });
     sortBtn.setHeight(16);
-    if (JeiHooks.isJeiLoaded()) {
+    if (ModList.get().isLoaded("jei")) {
       jeiBtn = new ButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
         gui.setJeiSearchSynced(!gui.isJeiSearchSynced());
         gui.syncDataToServer();
@@ -354,7 +355,7 @@ public class NetworkWidget {
       break;
     }
     directionBtn.setTextureId(gui.getDownwards() ? TextureEnum.SORT_DOWN : TextureEnum.SORT_UP);
-    if (jeiBtn != null && JeiHooks.isJeiLoaded()) {
+    if (jeiBtn != null && ModList.get().isLoaded("jei")) {
       jeiBtn.setTextureId(gui.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);
     }
   }

@@ -10,7 +10,7 @@ import mezz.jei.gui.Focus;
 
 public class JeiHooks {
 
-  public static boolean isJeiLoaded() {
+  private static boolean isJeiLoaded() {
     return ModList.get().isLoaded("jei");
   }
 

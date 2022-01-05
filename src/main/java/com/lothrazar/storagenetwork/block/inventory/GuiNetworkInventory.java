@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.ModList;
 
 /**
  * Base class for Request table inventory and Remote inventory
@@ -69,7 +70,7 @@ public class GuiNetworkInventory extends ContainerScreen<ContainerNetworkInvento
     network.initButtons();
     this.addButton(network.directionBtn);
     this.addButton(network.sortBtn);
-    if (JeiHooks.isJeiLoaded()) {
+    if (ModList.get().isLoaded("jei")) {
       addButton(network.jeiBtn);
     }
     //    addButton(network.clearTextBtn);
