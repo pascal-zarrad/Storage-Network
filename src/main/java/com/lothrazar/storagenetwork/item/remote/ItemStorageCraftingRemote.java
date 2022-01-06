@@ -110,17 +110,18 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
 
   public static boolean openRemote(World world, PlayerEntity player, ItemStack itemStackIn, ItemStorageCraftingRemote thiss) {
     DimPos dp = DimPos.getPosStored(itemStackIn);
-    if (dp == null) {
+    if (dp == null || dp.getBlockPos() == null) {
       //unbound or invalid data
       UtilTileEntity.statusMessage(player, "item.remote.notconnected");
       return false;
     }
     //assume we are in the same world
     BlockPos posTarget = dp.getBlockPos();
-    if (ConfigRegistry.ITEMRANGE.get() != -1) {
+    if (ConfigRegistry.REMOTE_MAX_RANGE.get() != -1) {
       double distance = player.getDistanceSq(posTarget.getX() + 0.5D, posTarget.getY() + 0.5D, posTarget.getZ() + 0.5D);
-      if (distance >= ConfigRegistry.ITEMRANGE.get()) {
-        UtilTileEntity.statusMessage(player, "item.remote.outofrange");
+      int dist = (int) Math.sqrt(distance);
+      if (dist >= ConfigRegistry.REMOTE_MAX_RANGE.get()) {
+        UtilTileEntity.statusMessage(player, UtilTileEntity.lang("item.remote.outofrange"));
         return false;
       }
     }

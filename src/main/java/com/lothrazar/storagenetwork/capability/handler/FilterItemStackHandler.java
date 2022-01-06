@@ -1,6 +1,8 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.item.ItemStack;
@@ -35,7 +37,14 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
   }
 
   public List<IItemStackMatcher> getStackMatchers() {
-    return getStacks().stream().map(stack -> new ItemStackMatcher(stack, tags, nbt)).collect(Collectors.toList());
+    try {
+      // cant check for NPEs or stack overflows in stream, ?https://stackoverflow.com/questions/36656023/java-8-streams-stackoverflow-exception
+      return getStacks().stream().map(stack -> new ItemStackMatcher(stack, tags, nbt)).collect(Collectors.toList());
+    }
+    catch (Exception e) {
+      StorageNetwork.LOGGER.error("getStackMatchers bug", e);
+      return new ArrayList<>();
+    }
   }
 
   public void clear() {

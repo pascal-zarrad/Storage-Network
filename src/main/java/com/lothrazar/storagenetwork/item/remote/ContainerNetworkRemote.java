@@ -33,7 +33,6 @@ public class ContainerNetworkRemote extends ContainerNetwork {
       StorageNetwork.LOGGER.error(world.isRemote + "=client||Remote opening with null pos Stored {} ", result);
     }
     else {
-      StorageNetwork.log("CONTAINER FFFFFF" + dp.getBlockPos());
       this.root = dp.getTileEntity(TileMain.class, world);
     }
     if (root == null) {
