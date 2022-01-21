@@ -55,7 +55,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
+  public void saveAdditional(CompoundTag compound) {
     compound.putBoolean(NBT_DIR, isDownwards());
     compound.putInt(NBT_SORT, getSort().ordinal());
     compound.putBoolean(NBT_JEI, this.isJeiSearchSynced());
@@ -69,7 +69,6 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
       }
     }
     compound.put("matrix", invList);
-    return super.save(compound);
   }
 
   @Override
