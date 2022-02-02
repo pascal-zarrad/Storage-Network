@@ -47,12 +47,11 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
-    super.save(compound);
+  public void saveAdditional(CompoundTag compound) {
+    super.saveAdditional(compound);
     compound.putBoolean("dir", isDownwards());
     compound.putInt("sort", getSort().ordinal());
     compound.putBoolean(NBT_JEI, this.isJeiSearchSynced());
-    return compound;
   }
 
   @Override

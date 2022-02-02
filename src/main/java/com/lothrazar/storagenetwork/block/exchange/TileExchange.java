@@ -33,8 +33,8 @@ public class TileExchange extends TileConnectable {
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
-    return super.save(compound);
+  public void saveAdditional(CompoundTag compound) {
+    super.saveAdditional(compound);
   }
 
   @SuppressWarnings("unchecked")

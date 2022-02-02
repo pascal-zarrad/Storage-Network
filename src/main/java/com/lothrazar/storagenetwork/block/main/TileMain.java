@@ -143,7 +143,9 @@ public class TileMain extends BlockEntity {
 
   @Override
   public CompoundTag getUpdateTag() {
-    return save(new CompoundTag());
+    CompoundTag nbt = new CompoundTag();
+    this.saveAdditional(nbt);
+    return nbt;
   }
 
   /**

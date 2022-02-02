@@ -46,12 +46,6 @@ public class TileConnectable extends BlockEntity {
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
-    saveAdditional(compound);
-    return super.save(compound);
-  }
-
-  @Override
   public void saveAdditional(CompoundTag compound) {
     compound.put("connectable", connectable.serializeNBT());
     super.saveAdditional(compound);
