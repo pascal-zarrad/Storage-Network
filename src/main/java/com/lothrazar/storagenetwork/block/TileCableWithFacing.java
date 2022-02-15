@@ -113,10 +113,10 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   @Override
-  public CompoundTag save(CompoundTag compound) {
+  public void saveAdditional(CompoundTag compound) {
+    super.saveAdditional(compound);
     if (direction != null) {
       compound.putInt("direction", this.direction.ordinal());
     }
-    return super.save(compound);
   }
 }
