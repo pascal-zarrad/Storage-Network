@@ -143,7 +143,9 @@ public class TileMain extends BlockEntity {
 
   @Override
   public CompoundTag getUpdateTag() {
-    return saveAdditional(new CompoundTag());
+    CompoundTag nbt = new CompoundTag();
+    this.saveAdditional(nbt);
+    return nbt;
   }
 
   /**
@@ -349,7 +351,7 @@ public class TileMain extends BlockEntity {
       // Alright, simulation says we're good, let's do it!
       // First extract from the storage
       ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-//      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
+      //      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
       connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).setUnsaved(false);
       // Then insert into our network
       insertStack(actuallyExtracted, false);
