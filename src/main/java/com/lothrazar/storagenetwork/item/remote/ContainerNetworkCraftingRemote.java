@@ -95,4 +95,8 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   public boolean isCrafting() {
     return true;
   }
+
+  public ItemStack getRemote() {
+    return remote;
+  }
 }

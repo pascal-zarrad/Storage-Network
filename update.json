@@ -10,6 +10,6 @@
 		"1.5.1": "Jei got released for 1.18 so enable that plugin",
 		"1.5.2": "Ported to 1.18.1. Fixed cables not saving settings such as filter and priority.  Created italian translation #408 by maicol07 .  Bugfixes for Network Collector Remote #411 #394 by Samsterious  ",
 		"1.5.3": "Fix for latest forge",
-		"1.5.4": "Fix error when placing some network blocks. Updated minimum forge to 39.0.55.  "
+		"1.5.4": "Fix error when placing some network blocks. Updated minimum forge to 39.0.55.  Developed on jei-1.18.1:9.2.1.69 so similar versions are probably fine too.   Fix both remotes not syncing Sort/JEI and other settings on open/close #416   "
 	}
 }

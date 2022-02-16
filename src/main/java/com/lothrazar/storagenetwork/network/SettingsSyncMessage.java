@@ -3,6 +3,8 @@ package com.lothrazar.storagenetwork.network;
 import java.util.function.Supplier;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileNetworkSync;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -41,8 +43,16 @@ public class SettingsSyncMessage {
           tileEntity.setChanged();
         }
       }
-      else {
-        ItemStack stackPlayerHeld = player.containerMenu.getCarried();
+      else if (player.containerMenu instanceof ContainerNetworkCraftingRemote remoteContainer) {
+        ItemStack stackPlayerHeld = remoteContainer.getRemote();
+        if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
+          ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
+          ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
+          ItemStorageCraftingRemote.setJeiSearchSynced(stackPlayerHeld, message.jeiSync);
+        }
+      }
+      else if (player.containerMenu instanceof ContainerNetworkRemote rcc) { //TODO eww this bufix is ugly for both remotes, shared getremote or shared sync
+        ItemStack stackPlayerHeld = rcc.getRemote();
         if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);

@@ -20,20 +20,13 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     super(SsnRegistry.REMOTE, id);
     this.player = pInv.player;
     this.world = player.level;
-    //    if (world.isRemote) {
-    //      Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(Minecraft.getInstance().player, SsnRegistry.INVENTORY_REMOTE);
-    //      this.remote = result.getRight();
-    //    }
-    //    else {
     Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.INVENTORY_REMOTE);
     this.remote = result.getRight();
-    //    } 
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
       StorageNetwork.LOGGER.error(world.isClientSide + "=client||Remote opening with null pos Stored {} ", result);
     }
     else {
-      StorageNetwork.log("CONTAINER FFFFFF" + dp.getBlockPos());
       this.root = dp.getTileEntity(TileMain.class, world);
     }
     if (root == null) {
@@ -48,7 +41,11 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   @Override
   public boolean stillValid(Player playerIn) {
     //does not store itemstack inventory, and opens from curios so no security here. unless it dissapears
-    return !remote.isEmpty();
+    return !getRemote().isEmpty();
+  }
+
+  public ItemStack getRemote() {
+    return remote;
   }
 
   @Override

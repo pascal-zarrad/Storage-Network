@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'checkstyle'
+// apply plugin: 'checkstyle'
 apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 import net.minecraftforge.gradle.common.tasks.SignJar
 import groovy.json.JsonSlurper
@@ -21,18 +21,10 @@ version = "${mc_version}-${mod_version}"
 group = 'com.lothrazar.storagenetwork' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'SimpleStorageNetwork'
 
-checkstyle {
-    toolVersion '8.23'
-    config project.resources.text.fromUri("https://raw.githubusercontent.com/Lothrazar/Cyclic/trunk/1.18/checkstyle.xml")
-}
-checkstyleMain {
-    source ='src/main/java'
-}
-
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-mappings channel: 'official', version: '1.18.1'
+    mappings channel: 'official', version: '1.18.1'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
@@ -86,7 +78,6 @@ dependencies {
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-
 
 
 }
