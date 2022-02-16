@@ -1,15 +1,15 @@
 {
 	"homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
 	"promos": {
-		"1.18.1-latest": "1.5.3"
+		"1.18.1-latest": "1.5.4"
 	},
 	"1.18.1": {
 		"1.4.1": "First port to 1.17.1 ",
 		"1.4.2": "Scaled down font size of item stack counts",
 		"1.5.0": " Ported to 1.18.  Performance increase: ItemStacks are no longer repeatedly copied while doing sorting/imports/exports, reducing RAM use/CPU load.  Cables can all be now water-loggable. Storage Request Table now correctly drops items from crafting grid when broken.",
 		"1.5.1": "Jei got released for 1.18 so enable that plugin",
-		"1.5.2": "Ported to 1.18.1. Fixed cables not saving settings such as filter and priority.  Created italian translation #408 by maicol07 .  Bugfixes for Network Collector Remote #411 #394 by Samsterious  "
-		,"1.5.3":"Fix for latest forge",
-		"1.5.4":""
+		"1.5.2": "Ported to 1.18.1. Fixed cables not saving settings such as filter and priority.  Created italian translation #408 by maicol07 .  Bugfixes for Network Collector Remote #411 #394 by Samsterious  ",
+		"1.5.3": "Fix for latest forge",
+		"1.5.4": "Fix error when placing some network blocks. Updated minimum forge to 39.0.55.  "
 	}
 }
