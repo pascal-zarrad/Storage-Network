@@ -558,7 +558,8 @@ public class TileMain extends BlockEntity {
 
   @Override
   public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-    load(pkt.getTag());
+    load(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
+    super.onDataPacket(net, pkt);
   }
 
   public static boolean shouldRefresh(Level world, BlockPos pos, BlockState oldState, BlockState newSate) {
