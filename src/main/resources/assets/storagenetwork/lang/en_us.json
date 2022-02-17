@@ -68,8 +68,8 @@
      
     "item.storagenetwork.stock_upgrade": "Stock Upgrade",
     
-    "tooltip.storagenetwork.upgrade_1": "Activity of the cable depends on the amount of items.",
-    "tooltip.storagenetwork.upgrade_3": "Keeps a specific amount of items in the attached inventory (only in export cable).",
+    "item.storagenetwork.operation_upgrade.tooltip": "Activity of the cable depends on the amount of items.",
+    "item.storagenetwork.stock_upgrade.tooltip": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
     "item.storagenetwork.builder_remote": "Network Builder Remote",
     "item.storagenetwork.builder_remote.tooltip": "Bind to a network and a block to build",

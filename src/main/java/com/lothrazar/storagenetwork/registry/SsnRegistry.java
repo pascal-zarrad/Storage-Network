@@ -68,11 +68,14 @@ public class SsnRegistry {
   public static ItemStorageCraftingRemote CRAFTING_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":collector_remote")
   public static ItemCollector COLLECTOR_REMOTE;
-  //
   @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade")
   public static ItemUpgrade SPEED_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":stack_upgrade")
   public static ItemUpgrade STACK_UPGRADE;
+  @ObjectHolder(StorageNetwork.MODID + ":stock_upgrade")
+  public static ItemUpgrade STOCK_UPGRADE;
+  @ObjectHolder(StorageNetwork.MODID + ":operation_upgrade")
+  public static ItemUpgrade OP_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockEntityType<TileMain> MAINTILEENTITY;
   @ObjectHolder(StorageNetwork.MODID + ":master")
@@ -169,7 +172,6 @@ public class SsnRegistry {
       r.register(new BlockItem(SsnRegistry.EXPORTKABEL, properties).setRegistryName("export_kabel"));
       r.register(new BlockItem(SsnRegistry.EXCHANGE, properties).setRegistryName("exchange"));
       r.register(new BlockItem(SsnRegistry.COLLECTOR, properties).setRegistryName("collector"));
-      //
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
       r.register(new ItemStorageCraftingRemote(properties).setRegistryName("inventory_remote"));
@@ -177,6 +179,8 @@ public class SsnRegistry {
       r.register(new ItemPicker(properties).setRegistryName("picker_remote"));
       r.register(new ItemCollector(properties).setRegistryName("collector_remote"));
       r.register(new ItemBuilder(properties).setRegistryName("builder_remote"));
+      r.register(new ItemUpgrade(properties).setRegistryName("stock_upgrade"));
+      r.register(new ItemUpgrade(properties).setRegistryName("operation_upgrade"));
     }
 
     @SubscribeEvent

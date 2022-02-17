@@ -31,7 +31,7 @@ public class ContainerCableImportFilter extends ContainerCable {
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-          return stack.getItem() instanceof ItemUpgrade;
+          return stack.getItem() instanceof ItemUpgrade && stack.getItem() != SsnRegistry.STOCK_UPGRADE; // no stock in import
         }
       });
     }

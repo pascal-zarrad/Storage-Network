@@ -133,7 +133,6 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
 
   @Override
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-    //    minecraft.getTextureManager().bind(texture);
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, texture);
     int xCenter = (width - imageWidth) / 2;
@@ -166,6 +165,35 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     for (int i = 0; i < stacks.size(); i++) {
       ItemStack s = stacks.get(i);
       filter.setStackInSlot(i, s);
+    }
+  }
+
+  @Override
+  public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    if (delta != 0) {
+      for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
+        ItemSlotNetwork slot = itemSlotsGhost.get(i);
+        if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
+          scrollStack(delta, slot);
+          return true;
+        }
+      }
+    }
+    return super.mouseScrolled(mouseX, mouseY, delta);
+  }
+
+  /**
+   * TODO: shared ui lib
+   */
+  public static void scrollStack(double delta, ItemSlotNetwork slot) {
+    ItemStack changeme = slot.getStack();
+    int dir = delta > 0 ? 1 : -1;
+    changeme.grow(dir);
+    if (changeme.getCount() > 64) {
+      changeme.setCount(64);
+    }
+    if (changeme.getCount() > 0) {
+      slot.setStack(changeme);
     }
   }
 

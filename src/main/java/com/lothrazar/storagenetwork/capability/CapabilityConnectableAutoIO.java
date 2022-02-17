@@ -26,6 +26,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag>, IConnectableItemAutoIO {
 
+  public static class Factory implements Callable<IConnectableItemAutoIO> {
+
+    @Override
+    public IConnectableItemAutoIO call() throws Exception {
+      return new CapabilityConnectableAutoIO(EnumStorageDirection.IN);
+    }
+  }
+
   public final IConnectable connectable;
   public EnumStorageDirection direction;
   public final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
@@ -254,27 +262,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return ItemStack.EMPTY;
   }
 
-  private int countOps() {
-    return 0; // upgrades.getUpgradesOfType(SsnRegistry.operation_upgrade);
-  }
-
-  private boolean doesPassOperationFilterLimit(TileMain root) {
-    if (countOps() < 1) {
-      return true;
-    }
-    if (operationStack == null || operationStack.isEmpty()) {
-      return true;
-    }
-    // TODO: Investigate whether the operation limiter should consider the filter toggles
-    int availableStack = root.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
-    if (operationMustBeSmaller) {
-      return operationLimit >= availableStack;
-    }
-    else {
-      return operationLimit < availableStack;
-    }
-  }
-
   @Override
   public boolean runNow(DimPos connectablePos, TileMain main) {
     int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE) + 1, 1);
@@ -292,35 +279,37 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return filters.getStackMatchers();
   }
 
-  public static class Factory implements Callable<IConnectableItemAutoIO> {
-
-    @Override
-    public IConnectableItemAutoIO call() throws Exception {
-      return new CapabilityConnectableAutoIO(EnumStorageDirection.IN);
-    }
-  }
-  //  public static class Storage implements Capability.IStorage<IConnectableItemAutoIO> {
-  //
-  //    @Override
-  //    public Tag writeNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side) {
-  //      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-  //      return instance.serializeNBT();
-  //    }
-  //
-  //    @Override
-  //    public void readNBT(Capability<IConnectableItemAutoIO> capability, IConnectableItemAutoIO rawInstance, Direction side, Tag nbt) {
-  //      CapabilityConnectableAutoIO instance = (CapabilityConnectableAutoIO) rawInstance;
-  //      instance.deserializeNBT((CompoundTag) nbt);
-  //    }
-  //  }
-
-  @Override
-  public boolean isStockMode() {
-    return false; //TODO: make this work upgrades.getUpgradesOfType(SsnRegistry.stock_upgrade) > 0;
-  }
-
   @Override
   public Direction facingInventory() {
     return inventoryFace;
+  }
+
+  private int countOps() {
+    return upgrades.getUpgradesOfType(SsnRegistry.OP_UPGRADE);
+  }
+
+  private boolean doesPassOperationFilterLimit(TileMain root) {
+    if (countOps() < 1) {
+      return true;
+    }
+    if (operationStack == null || operationStack.isEmpty()) {
+      return true;
+    }
+    if (operationLimit == 0) {
+      //TODO:  System.out.println("set in gui oplimit");
+    }
+    // TODO: Investigate whether the operation limiter should consider the filter toggles
+    int availableStack = root.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
+    if (operationMustBeSmaller) {
+      return operationLimit >= availableStack;
+    }
+    else {
+      return operationLimit < availableStack;
+    }
+  }
+
+  @Override
+  public boolean isStockMode() {
+    return upgrades.getUpgradesOfType(SsnRegistry.STOCK_UPGRADE) > 0;
   }
 }

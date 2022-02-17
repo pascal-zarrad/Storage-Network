@@ -341,6 +341,13 @@ public class TileMain extends BlockEntity {
         }
       }
       //
+      //
+      //       if (stockMode) {
+      //    //  TODO: new upgrade similar to stock mode?
+      //      System.out.println("input has stock mode up ok so yeah");
+      //        //umm so ya
+      //      }
+      //
       // Then try to insert the stack into this network and store the number of remaining items in the stack
       int countUnmoved = insertStack(stack, true);
       // Calculate how many items in the stack actually got moved
@@ -401,34 +408,38 @@ public class TileMain extends BlockEntity {
           continue;
         }
       }
-      //
       for (IItemStackMatcher matcher : storage.getAutoExportList()) {
+        if (matcher.getStack().isEmpty()) {
+          continue;
+        }
         boolean stockMode = storage.isStockMode();
         int amtToRequest = storage.getTransferRate();
         if (stockMode) {
+          StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
+          //STOCK upgrade means
           try {
-            //       StorageNetwork.log("updateExports: attempt " + matcher.getStack());
             BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
-            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).orElse(null);
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
             //request with false to see how many even exist in there.  
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
             if (stillNeeds == 0) {
+              //they dont need any more, they have the stock they need
+              StorageNetwork.log("stockMode continnue; canc");
               continue;
             }
-            //  StorageNetwork.log("updateExports: amtToRequest " + amtToRequest);
             amtToRequest = Math.min(stillNeeds, amtToRequest);
+            StorageNetwork.log("updateExports stock mode edited value: amtToRequest = " + amtToRequest);
           }
           catch (Throwable e) {
             StorageNetwork.LOGGER.error("Error thrown from a connected block" + e);
           }
         }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {
-          //  StorageNetwork.log("updateExports: i have empty " +amtToRequest) ;
+          //either the thing is empty or we are requesting none
           continue;
         }
         ItemStack requestedStack = this.request((ItemStackMatcher) matcher, amtToRequest, true);
         if (requestedStack.isEmpty()) {
-          //  StorageNetwork.log("updateExports: requestedStack is empty so nothing pushed " + matcher);
           continue;
         }
         //     StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
