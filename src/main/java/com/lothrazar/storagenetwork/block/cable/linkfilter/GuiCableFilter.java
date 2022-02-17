@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
+import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ButtonRequest;
 import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
@@ -205,6 +206,23 @@ public class GuiCableFilter extends AbstractContainerScreen<ContainerCableFilter
       }
     }
     return super.mouseClicked(mouseX, mouseY, mouseButton);
+  }
+
+  @Override
+  public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+    if (delta != 0) {
+      for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
+        ItemSlotNetwork slot = itemSlotsGhost.get(i);
+        if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
+          ItemStack changeme = GuiCableImportFilter.scrollStack(delta, slot);
+          if (changeme != null) {
+            this.sendStackSlot(i, changeme);
+            return true;
+          }
+        }
+      }
+    }
+    return super.mouseScrolled(mouseX, mouseY, delta);
   }
 
   @Override

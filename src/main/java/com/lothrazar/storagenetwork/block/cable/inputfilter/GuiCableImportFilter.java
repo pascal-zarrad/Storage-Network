@@ -174,8 +174,11 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
         ItemSlotNetwork slot = itemSlotsGhost.get(i);
         if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
-          scrollStack(delta, slot);
-          return true;
+          ItemStack changeme = GuiCableImportFilter.scrollStack(delta, slot);
+          if (changeme != null) {
+            this.sendStackSlot(i, changeme);
+            return true;
+          }
         }
       }
     }
@@ -185,16 +188,18 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   /**
    * TODO: shared ui lib
    */
-  public static void scrollStack(double delta, ItemSlotNetwork slot) {
-    ItemStack changeme = slot.getStack();
+  public static ItemStack scrollStack(double delta, ItemSlotNetwork slot) {
+    ItemStack changeme = slot.getStack().copy();
     int dir = delta > 0 ? 1 : -1;
     changeme.grow(dir);
     if (changeme.getCount() > 64) {
       changeme.setCount(64);
     }
-    if (changeme.getCount() > 0) {
+    if (changeme.getCount() > 0 && changeme.getCount() != slot.getStack().getCount()) {
       slot.setStack(changeme);
+      return changeme;
     }
+    return null;
   }
 
   @Override

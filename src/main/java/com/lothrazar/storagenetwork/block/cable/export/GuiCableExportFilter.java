@@ -203,8 +203,11 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
       for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
         ItemSlotNetwork slot = itemSlotsGhost.get(i);
         if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
-          GuiCableImportFilter.scrollStack(delta, slot);
-          return true;
+          ItemStack changeme = GuiCableImportFilter.scrollStack(delta, slot);
+          if (changeme != null) {
+            this.sendStackSlot(i, changeme);
+            return true;
+          }
         }
       }
     }
