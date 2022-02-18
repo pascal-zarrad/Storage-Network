@@ -11,7 +11,6 @@ import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
-import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -38,9 +37,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   public EnumStorageDirection direction;
   public final UpgradesItemStackHandler upgrades = new UpgradesItemStackHandler();
   private final FilterItemStackHandler filters = new FilterItemStackHandler();
-  private ItemStack operationStack = ItemStack.EMPTY;
-  private int operationLimit = 0;
-  private boolean operationMustBeSmaller = true;
   private int priority = 0;
   private Direction inventoryFace;
   private boolean needsRedstone = false;
@@ -126,11 +122,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     CompoundTag result = new CompoundTag();
     result.put("upgrades", this.upgrades.serializeNBT());
     result.put("filters", this.filters.serializeNBT());
-    CompoundTag operation = new CompoundTag();
-    operation.put("stack", operationStack.serializeNBT());
-    operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
-    operation.putInt("limit", operationLimit);
-    result.put("operation", operation);
     result.putInt("prio", priority);
     if (inventoryFace != null) {
       result.putString("inventoryFace", inventoryFace.toString());
@@ -149,18 +140,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     if (filters != null) {
       this.filters.deserializeNBT(filters);
     }
-    CompoundTag operation = nbt.getCompound("operation");
-    operationStack = ItemStack.EMPTY;
-    if (operation != null) {
-      operationLimit = operation.getInt("limit");
-      operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
-      if (operation.contains("stack")) {
-        operationStack = ItemStack.of((CompoundTag) operation.get("stack"));
-      }
-      //      else {
-      //        operationStack = ItemStack.EMPTY;
-      //      }
-    }
     priority = nbt.getInt("prio");
     if (nbt.contains("inventoryFace")) {
       inventoryFace = Direction.byName(nbt.getString("inventoryFace"));
@@ -176,11 +155,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   @Override
   public int getPriority() {
     return priority;
-  }
-
-  @Override
-  public int getTransferRate() {
-    return upgrades.getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
   }
 
   @Override
@@ -232,7 +206,10 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   }
 
   @Override
-  public ItemStack extractNextStack(int size, boolean simulate) {
+  public ItemStack extractNextStack(final int amtToRequestIn, boolean simulate) {
+    //op mode override
+    int amtToRequest = amtToRequestIn;
+    boolean operationMode = getUpgrades().getUpgradesOfType(SsnRegistry.OP_UPGRADE) > 0;
     // If this storage is configured to only export from the network, do not
     // extract from the storage, but abort immediately.
     if (direction == EnumStorageDirection.OUT) {
@@ -256,7 +233,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       if (filters.isStackFiltered(stack)) {
         continue;
       }
-      int extractSize = Math.min(size, stack.getCount());
+      if (operationMode && filters.isAllowList) {
+        IItemStackMatcher matcher = filters.getFirstMatcher(stack);
+        //if filters are also in allow list mode
+        //then get the filter matching stack, and get the count of that filter
+        if (matcher != null && matcher.getStack().getCount() > 0) {
+          amtToRequest = matcher.getStack().getCount(); // the 63 haha
+        }
+      }
+      int extractSize = Math.min(amtToRequest, stack.getCount());
       return itemHandler.extractItem(slot, extractSize, simulate);
     }
     return ItemStack.EMPTY;
@@ -270,8 +255,8 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       speedRatio = 1;
     }
     boolean cooldownOk = (connectablePos.getWorld().getGameTime() % speedRatio == 0);
-    boolean operationLimitOk = doesPassOperationFilterLimit(main);
-    return cooldownOk && operationLimitOk;
+    //    boolean operationLimitOk = t
+    return cooldownOk; //&& operationLimitOk
   }
 
   @Override
@@ -284,32 +269,8 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return inventoryFace;
   }
 
-  private int countOps() {
-    return upgrades.getUpgradesOfType(SsnRegistry.OP_UPGRADE);
-  }
-
-  private boolean doesPassOperationFilterLimit(TileMain root) {
-    if (countOps() < 1) {
-      return true;
-    }
-    if (operationStack == null || operationStack.isEmpty()) {
-      return true;
-    }
-    if (operationLimit == 0) {
-      //TODO:  System.out.println("set in gui oplimit");
-    }
-    // TODO: Investigate whether the operation limiter should consider the filter toggles
-    int availableStack = root.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
-    if (operationMustBeSmaller) {
-      return operationLimit >= availableStack;
-    }
-    else {
-      return operationLimit < availableStack;
-    }
-  }
-
   @Override
-  public boolean isStockMode() {
-    return upgrades.getUpgradesOfType(SsnRegistry.STOCK_UPGRADE) > 0;
+  public UpgradesItemStackHandler getUpgrades() {
+    return upgrades;
   }
 }

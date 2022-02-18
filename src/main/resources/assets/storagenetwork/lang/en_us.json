@@ -61,6 +61,7 @@
     "item.storagenetwork.speed_upgrade.guide": "This upgrade can be placed in cables.  Increases the speed of imports, which normally do not happen every tick",
     "item.storagenetwork.speed_upgrade.tooltip": "Increases the speed of importing/exporting.",
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
+    "item.storagenetwork.operation_upgrade.tooltip": "Process the amount of items in the filter; can override other upgrades",
     
     "item.storagenetwork.stack_upgrade": "Stack Upgrade",
     "item.storagenetwork.stack_upgrade.tooltip": "Increases the stack size of task.",
@@ -68,7 +69,6 @@
      
     "item.storagenetwork.stock_upgrade": "Stock Upgrade",
     
-    "item.storagenetwork.operation_upgrade.tooltip": "Activity of the cable depends on the amount of items.",
     "item.storagenetwork.stock_upgrade.tooltip": "Keeps a specific amount of items in the attached inventory (only in export cable).",
 
     "item.storagenetwork.builder_remote": "Network Builder Remote",
@@ -104,9 +104,7 @@
     "item.remote.outofrange": "Out of range",
     "item.remote.notloaded": "Chunk not loaded",
 
-    "gui.storagenetwork.operate.tooltip": "Active if %s than %d %s in network",
-    "gui.storagenetwork.operate.tooltip.more": "more",
-    "gui.storagenetwork.operate.tooltip.less": "less",
+
 
     "gui.storagenetwork.refresh": "Refresh processing transactions, so if it is stuck waiting for a result, this will swap it back to recipe mode to gather ingredients.",
 

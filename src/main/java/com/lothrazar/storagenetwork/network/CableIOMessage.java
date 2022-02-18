@@ -28,6 +28,8 @@ public class CableIOMessage {
   private final int id;
   private int value = 0;
   private ItemStack stack = ItemStack.EMPTY;
+  private boolean operationMustBeSmaller;
+  private int operationLimit;
 
   public CableIOMessage(int id) {
     this.id = id;
@@ -43,6 +45,12 @@ public class CableIOMessage {
     this(id);
     this.value = value;
     stack = stackin;
+  }
+
+  public CableIOMessage(int id, boolean operationMustBeSmaller, int operationLimit) {
+    this(id);
+    this.operationMustBeSmaller = operationMustBeSmaller;
+    this.operationLimit = operationLimit;
   }
 
   @Override
@@ -125,6 +133,7 @@ public class CableIOMessage {
         if (root != null) {
           root.clearCache();
         }
+      //        link.operationMustBeSmaller = message.op
       break;
       case SAVE_FITLER:
         if (link != null) {
@@ -155,11 +164,15 @@ public class CableIOMessage {
     buffer.writeInt(msg.value);
     buffer.writeBoolean(msg.isAllowlist);
     buffer.writeNbt(msg.stack.save(new CompoundTag()));
+    buffer.writeBoolean(msg.operationMustBeSmaller);
+    buffer.writeInt(msg.operationLimit);
   }
 
   public static CableIOMessage decode(FriendlyByteBuf buffer) {
     CableIOMessage c = new CableIOMessage(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
     c.stack = ItemStack.of(buffer.readNbt());
+    c.operationMustBeSmaller = buffer.readBoolean();
+    c.operationLimit = buffer.readInt();
     return c;
   }
 }

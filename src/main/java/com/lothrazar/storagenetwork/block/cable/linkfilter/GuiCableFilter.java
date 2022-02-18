@@ -54,23 +54,24 @@ public class GuiCableFilter extends AbstractContainerScreen<ContainerCableFilter
   public void init() {
     super.init();
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
+    // TODO ?
     //    btnRedstone = addButton(new ButtonRequest(guiLeft + 4, guiTop + 4, "", (p) -> {
     //      this.syncData(0);
     //      PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
     //    }));
-    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
+    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 4, "", (p) -> {
       this.syncData(-1);
     }));
     btnMinus.setTextureId(TextureEnum.MINUS);
-    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
+    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 4, "", (p) -> {
       this.syncData(+1);
     }));
     btnPlus.setTextureId(TextureEnum.PLUS);
-    btnAllowIgn = addRenderableWidget(new ButtonRequest(leftPos + 82, topPos + 6, "", (p) -> {
+    btnAllowIgn = addRenderableWidget(new ButtonRequest(leftPos + 152, topPos + 4, "", (p) -> {
       this.isAllowlist = !this.isAllowlist;
       this.syncData(0);
     }));
-    btnImport = addRenderableWidget(new ButtonRequest(leftPos + 120, topPos + 6, "", (p) -> {
+    btnImport = addRenderableWidget(new ButtonRequest(leftPos + 120, topPos + 4, "", (p) -> {
       importFilterSlots();
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);

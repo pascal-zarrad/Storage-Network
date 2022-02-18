@@ -31,6 +31,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   private ButtonRequest btnPlus;
   private ButtonRequest btnAllowIgn;
   private ButtonRequest btnImport;
+  //  private ButtonRequest btnOperationToggle;
   private boolean isAllowlist;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
@@ -57,15 +58,15 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       this.syncData(0);
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
     }));
-    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
+    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 22, topPos + 4, "", (p) -> {
       this.syncData(-1);
     }));
     btnMinus.setTextureId(TextureEnum.MINUS);
-    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
+    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 4, "", (p) -> {
       this.syncData(+1);
     }));
     btnPlus.setTextureId(TextureEnum.PLUS);
-    btnAllowIgn = addRenderableWidget(new ButtonRequest(leftPos + 80, topPos + 22, "", (p) -> {
+    btnAllowIgn = addRenderableWidget(new ButtonRequest(leftPos + 152, topPos + 24, "", (p) -> {
       this.isAllowlist = !this.isAllowlist;
       this.syncData(0);
     }));
@@ -73,6 +74,13 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.IMPORT_FILTER.ordinal()));
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);
+    //    btnOperationToggle = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 26, "=", (p) -> {
+    //      //TODO: enum for equal?
+    //      containerCableLink.cap.operationMustBeSmaller = !containerCableLink.cap.operationMustBeSmaller;
+    //      PacketRegistry.INSTANCE.sendToServer(
+    //          new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP.ordinal(),
+    //              containerCableLink.cap.operationMustBeSmaller, containerCableLink.cap.operationLimit + 1));
+    //    }));
   }
 
   @Override
@@ -104,6 +112,11 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     }
     btnAllowIgn.setTextureId(this.isAllowlist ? TextureEnum.ALLOWLIST : TextureEnum.IGNORELIST);
     btnRedstone.setTextureId(containerCableLink.cap.needsRedstone() ? TextureEnum.REDSTONETRUE : TextureEnum.REDSTONEFALSE);
+    //    btnOperationToggle.visible = this.hasOperationUpgrade();
+    //    btnOperationToggle.active = btnOperationToggle.visible;
+    //    if (btnOperationToggle.visible) {
+    //      btnOperationToggle.setTextureId(containerCableLink.cap.operationMustBeSmaller ? TextureEnum.OPORANGE : TextureEnum.OPBLUE);
+    //    }
   }
 
   private void drawTooltips(PoseStack ms, final int mouseX, final int mouseY) {
@@ -127,6 +140,9 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.redstone."
           + containerCableLink.cap.needsRedstone())), Optional.empty(), mouseX - leftPos, mouseY - topPos);
     }
+    //    if (btnOperationToggle != null && btnOperationToggle.isMouseOver(mouseX, mouseY)) {
+    //      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.operation")), Optional.empty(), mouseX - leftPos, mouseY - topPos);
+    //    }
   }
 
   public static final int SLOT_SIZE = 18;

@@ -28,6 +28,10 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
     return 1;
   }
 
+  public boolean hasUpgradesOfType(ItemUpgrade upgradeType) {
+    return getUpgradesOfType(upgradeType) > 0;
+  }
+
   public int getUpgradesOfType(ItemUpgrade upgradeType) {
     int res = 0;
     for (ItemStack stack : getStacks()) {

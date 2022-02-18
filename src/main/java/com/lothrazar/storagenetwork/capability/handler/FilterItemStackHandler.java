@@ -50,6 +50,15 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     return getStackMatchers().stream().anyMatch(matcher -> matcher.match(stack));
   }
 
+  public IItemStackMatcher getFirstMatcher(ItemStack stack) {
+    for (IItemStackMatcher m : getStackMatchers()) {
+      if (m.match(stack)) {
+        return m;
+      }
+    }
+    return null;
+  }
+
   public boolean isStackFiltered(ItemStack stack) {
     if (isAllowList) {
       return getStackMatchers().stream().noneMatch(matcher -> matcher.match(stack));

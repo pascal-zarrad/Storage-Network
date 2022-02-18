@@ -57,15 +57,15 @@ public class GuiCableExportFilter extends AbstractContainerScreen<ContainerCable
       this.syncData(0);
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
     }));
-    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 6, "", (p) -> {
+    btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 22, topPos + 4, "", (p) -> {
       this.syncData(-1);
     }));
     btnMinus.setTextureId(TextureEnum.MINUS);
-    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 6, "", (p) -> {
+    btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 4, "", (p) -> {
       this.syncData(+1);
     }));
     btnPlus.setTextureId(TextureEnum.PLUS);
-    btnImport = addRenderableWidget(new ButtonRequest(leftPos + 80, topPos + 6, "", (p) -> {
+    btnImport = addRenderableWidget(new ButtonRequest(leftPos + 80, topPos + 4, "", (p) -> {
       importFilterSlots();
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);

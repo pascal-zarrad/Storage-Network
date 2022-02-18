@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.api;
 import java.util.Collections;
 import java.util.List;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 
@@ -19,6 +20,8 @@ public interface IConnectableItemAutoIO {
   public boolean needsRedstone();
 
   public void needsRedstone(boolean in);
+
+  public UpgradesItemStackHandler getUpgrades();
 
   /**
    * Return either IN or OUT here, but not BOTH. If you return BOTH expect weird things to happen.
@@ -59,15 +62,6 @@ public interface IConnectableItemAutoIO {
    */
   ItemStack extractNextStack(int size, boolean simulate);
 
-  /**
-   * Optional 'Stock Upgrade' mode. Meaning the export only exports if the target has less than this number, and only exports enough to meet it.
-   * 
-   * only for exports, currently.
-   * 
-   * @return
-   */
-  boolean isStockMode();
-
   Direction facingInventory();
 
   /**
@@ -76,13 +70,6 @@ public interface IConnectableItemAutoIO {
    * @return Return the priority here
    */
   int getPriority();
-
-  /**
-   * Get transfer rate from 0-64. This is literally the amount of items that can be transferred per operation.
-   *
-   * @return max stacksize to transfer per operation
-   */
-  int getTransferRate();
 
   /**
    * Called every tick to see if an operation should be processed now, i.e. this can be used to add cooldown times or disable operations via redstone signal.
