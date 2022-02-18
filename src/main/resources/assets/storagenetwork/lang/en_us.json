@@ -60,21 +60,23 @@
     "item.storagenetwork.speed_upgrade": "Speed Upgrade",
     "item.storagenetwork.speed_upgrade.guide": "This upgrade can be placed in cables.  Increases the speed of imports, which normally do not happen every tick",
     "item.storagenetwork.speed_upgrade.tooltip": "Increases the speed of importing/exporting.",
+    
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
     "item.storagenetwork.operation_upgrade.tooltip": "Process the amount of items in the filter; can override other upgrades",
+    "item.storagenetwork.operation_upgrade.guide": "If this is in a filtering cable with AllowMode on, it will try to import or export the exact number of items set in the filter and ignore Stack and Stock upgrades.  For example, a filter with 7 stone and 3 dirt allowed will export that many per cycle instead of the default 4. ",
     
     "item.storagenetwork.stack_upgrade": "Stack Upgrade",
     "item.storagenetwork.stack_upgrade.tooltip": "Increases the stack size of task.",
     "item.storagenetwork.stack_upgrade.guide": "This upgrade can be placed in the import or exporting cables.  Increases it to pulling a full stack up to 64 every time the cable fires, instead of only a few items",
      
     "item.storagenetwork.stock_upgrade": "Stock Upgrade",
-    
-    "item.storagenetwork.stock_upgrade.tooltip": "Keeps a specific amount of items in the attached inventory (only in export cable).",
+    "item.storagenetwork.stock_upgrade.tooltip": "Keeps a a consistent stock of items in the attached inventory (only in export cable).",
+    "item.storagenetwork.stock_upgrade.guide": "If this is in an export cable, then for each unique item in the filter, it will only export until the target inventory has less then the stack size of the filter.  For example, if the inventory has 50 items and the filter has that item set at 53, it will try to export 3 more of that item.",
 
     "item.storagenetwork.builder_remote": "Network Builder Remote",
     "item.storagenetwork.builder_remote.tooltip": "Bind to a network and a block to build",
     "item.storagenetwork.builder_remote.guide": "This remote binds as normal but does not have a screen.  Instead, it searches for the block you clicked on, and tries to build a copy of it using a matching item in the network",
-   "item.storagenetwork.builder_remote.blockstate": "No blockstate selected; attack to select",
+    "item.storagenetwork.builder_remote.blockstate": "No blockstate selected; attack to select",
    
     "item.storagenetwork.inventory_remote": "Storage Remote",
     "item.storagenetwork.inventory_remote.tooltip": "Use on the Network Root for remote inventory access.",
