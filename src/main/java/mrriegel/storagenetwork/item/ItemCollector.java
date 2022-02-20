@@ -1,5 +1,7 @@
 package mrriegel.storagenetwork.item;
 
+import baubles.api.cap.BaublesCapabilities;
+import baubles.api.cap.IBaublesItemHandler;
 import java.util.List;
 import javax.annotation.Nullable;
 import mrriegel.storagenetwork.CreativeTab;
@@ -9,6 +11,7 @@ import mrriegel.storagenetwork.data.EnumSortType;
 import mrriegel.storagenetwork.util.NBTHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,11 +24,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ItemCollector extends Item {
+@Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true)
+public class ItemCollector extends Item implements baubles.api.IBauble {
 
   public ItemCollector() {
     super();
@@ -52,6 +57,21 @@ public class ItemCollector extends Item {
       if (itemstack.getItem() == item) {
         return itemstack;
       }
+    }
+    try {
+      // fml.common.Loader replaced in future with fml.ModList
+      if(net.minecraftforge.fml.common.Loader.isModLoaded("baubles")) {
+        net.minecraftforge.common.capabilities.Capability<IBaublesItemHandler> b = BaublesCapabilities.CAPABILITY_BAUBLES;
+        if (player.hasCapability(b, null)) {
+          baubles.api.cap.IBaublesItemHandler baubles = player.getCapability(b, null);
+          for (int i = 0; i < baubles.getSlots(); i++) {
+            if (baubles.getStackInSlot(i).getItem() instanceof ItemCollector) {
+              return baubles.getStackInSlot(i);
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
     }
     return ItemStack.EMPTY;
   }
@@ -105,5 +125,29 @@ public class ItemCollector extends Item {
       return EnumActionResult.SUCCESS;
     }
     return super.onItemUse(player, world, pos, hand, side, hitX, hitY, hitZ);
+  }
+
+  @Override
+  @Optional.Method(modid = "baubles")
+  public void onEquipped(ItemStack arg0, EntityLivingBase arg1) {
+  }
+
+  @Override
+  @Optional.Method(modid = "baubles")
+  public void onUnequipped(ItemStack arg0, EntityLivingBase arg1) {
+  }
+
+  @Override
+  @Optional.Method(modid = "baubles")
+  public void onWornTick(ItemStack stack, EntityLivingBase plr) {
+  }
+
+  @Override
+  @Optional.Method(modid = "baubles")
+  public baubles.api.BaubleType getBaubleType(ItemStack arg0) {
+    if (baubles.api.BaubleType.values().length >= 4) { //length is 4 if trinket. legacy baubles compat
+      return baubles.api.BaubleType.TRINKET;
+    }
+    return baubles.api.BaubleType.RING;
   }
 }

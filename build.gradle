@@ -28,6 +28,7 @@ minecraft {
 	replaceIn "StorageNetwork.java"
     replace "@VERSION@", "${mod_version}"
 }
+
 task signJar(type: SignJar, dependsOn: reobfJar) {
 
      // Skips if the keyStore property is missing.
