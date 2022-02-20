@@ -75,24 +75,19 @@ public class ItemCollector extends Item {
         //        World serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getMinecraftServer());
         if (serverTargetWorld == null) {
           StorageNetwork.instance.logger.error("Missing dimension key " + itemStackDim);
-          return;//ActionResultType.PASS;
+          return;
         }
         TileEntity tile = serverTargetWorld.getTileEntity(targetPos);
         if (tile instanceof TileMaster) {
           TileMaster network = (TileMaster) tile;
           //
-          int countUnmoved = network.insertStack(item, false);
+          int countUnmoved = network.insertStack(item.copy(), false);
           if (countUnmoved == 0) {
-            StorageNetwork.log("unmoved is zero so all gone" + item);
             item.setCount(0);
             event.getItem().setItem(item);
             world.removeEntity(event.getItem());
-            //            event.getItem().remove();
           }
         }
-        //        else {
-        //          StorageNetwork.log("item.remote.notfound");
-        //        }
       }
     }
   }

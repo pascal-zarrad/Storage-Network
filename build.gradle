@@ -45,25 +45,30 @@ task signJar(type: SignJar, dependsOn: reobfJar) {
     inputFile = jar.archivePath
     outputFile = jar.archivePath
 }
-// Runs this task automatically when build is ran.
-build.dependsOn signJar
 
-repositories {
-    maven { // JEI
-        url "http://dvs1.progwml6.com/files/maven"
-    }
-    maven { //Guide API
-        url "http://tehnut.info/maven/"
-    }
-    maven {
-        url = "http://minecraft.curseforge.com/api/maven/"
-    }
-}
 dependencies {
    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
    deobfCompile "fastworkbench:FastWorkbench:${mc_version}:${fb_version}"
+
+    // fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+
+   deobfCompile  "vazkii.patchouli:Patchouli:${patchouli_version}"
+   deobfCompile "baubles:Baubles:1.12:${baubles_version}"
 //  optional:
 //   deobfCompile "compact-machines:compactmachines3-${mc_version}:${cm_version}:${cm_build}" 
+}
+repositories {
+    maven { url "https://dvs1.progwml6.com/files/maven"    }
+    maven { url "https://modmaven.k-4u.nl"  }
+    maven { url "https://maven.theillusivec4.top/"    }
+    maven { url "https://maven.blamejared.com" }
+    maven { url "https://maven.blamejared.com/vazkii" }
+    maven { url "http://minecraft.curseforge.com/api/maven/"    }
+    maven { url 'https://www.cursemaven.com'  }
+// ?? http://maven.thiakil.com/com/azanor/baubles/Baubles/
+    // ?? https://files.minecraftforge.net/maven/
+    //   maven {   url "https://tehnut.info/maven/"    } // 404s
+
 }
 
 processResources {
@@ -76,4 +81,17 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+build.dependsOn signJar
+
+task copyJar(type: Copy) {
+    from jar
+    into "${dist_folder}"
+}
+
+build.finalizedBy copyJar
+
+task cleanJar {
+    delete 'build/libs'
 }
