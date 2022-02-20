@@ -1,9 +1,5 @@
 package com.lothrazar.storagenetwork.capability;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -14,6 +10,10 @@ import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -247,6 +247,19 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return ItemStack.EMPTY;
   }
 
+  @Override public boolean isStockMode() {
+    return getUpgrades().hasUpgradesOfType(SsnRegistry.STOCK_UPGRADE);
+  }
+
+  @Override public boolean isOperationMode() {
+    return getUpgrades().hasUpgradesOfType(SsnRegistry.OP_UPGRADE);
+  }
+
+  @Override
+  public int getTransferRate() {
+    return getUpgrades().hasUpgradesOfType(SsnRegistry.STACK_UPGRADE) ? 64 : 4;
+  }
+
   @Override
   public boolean runNow(DimPos connectablePos, TileMain main) {
     int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE) + 1, 1);
@@ -269,7 +282,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return inventoryFace;
   }
 
-  @Override
   public UpgradesItemStackHandler getUpgrades() {
     return upgrades;
   }

@@ -29,7 +29,12 @@ public class UpgradesItemStackHandler extends ItemStackHandlerEx {
   }
 
   public boolean hasUpgradesOfType(ItemUpgrade upgradeType) {
-    return getUpgradesOfType(upgradeType) > 0;
+    for (ItemStack stack : getStacks()) {
+      if (stack.getItem() == upgradeType) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public int getUpgradesOfType(ItemUpgrade upgradeType) {

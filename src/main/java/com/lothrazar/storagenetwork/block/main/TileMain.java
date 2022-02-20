@@ -1,12 +1,5 @@
 package com.lothrazar.storagenetwork.block.main;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
@@ -20,6 +13,13 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -329,7 +329,9 @@ public class TileMain extends BlockEntity {
       if (!storage.runNow(connectable.getPos(), this)) {
         continue;
       }
-      int amtToRequest = storage.getUpgrades().getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
+      int amtToRequest = storage.getTransferRate();
+      //TODO
+      // storage.getUpgrades().getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
       // Do a simulation first and abort if we got an empty stack,
       //(filters used internally in extractNextStack)
       ItemStack stack = storage.extractNextStack(amtToRequest, true);
@@ -414,40 +416,37 @@ public class TileMain extends BlockEntity {
           continue;
         }
         //default amt to request. can be overriden by other upgrades
-        int amtToRequest = storage.getUpgrades().getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
+        int amtToRequest = storage.getTransferRate();
         //check operations upgrade 
         //        upgrades.getUpgradesOfType(SsnRegistry.OP_UPGRADE);
-        boolean operationMode = storage.getUpgrades().getUpgradesOfType(SsnRegistry.OP_UPGRADE) > 0;
+        boolean operationMode = storage.isOperationMode();
         //if we are exporting
         //with the OPERATION . always request EXACT NUMBER
         //ignore stock, ignore stack. this overrides all
-        boolean stockMode = storage.getUpgrades().getUpgradesOfType(SsnRegistry.STOCK_UPGRADE) > 0;
-        //        }
-        //        int amtToRequest = storage.getTransferRate();
+        boolean stockMode = storage.isStockMode();  //storage.getUpgrades().getUpgradesOfType(SsnRegistry.STOCK_UPGRADE) > 0;
         if (operationMode) {
           amtToRequest = matcher.getStack().getCount(); // the 63 haha
         }
-        else
-          if (stockMode) {
-            StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
-            //STOCK upgrade means
-            try {
-              BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
-              IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
-              //request with false to see how many even exist in there.  
-              int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
-              if (stillNeeds == 0) {
-                //they dont need any more, they have the stock they need
-                StorageNetwork.log("stockMode continnue; canc");
-                continue;
-              }
-              amtToRequest = Math.min(stillNeeds, amtToRequest);
-              StorageNetwork.log("updateExports stock mode edited value: amtToRequest = " + amtToRequest);
+        else if (stockMode) {
+          StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
+          //STOCK upgrade means
+          try {
+            BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
+            //request with false to see how many even exist in there.
+            int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
+            if (stillNeeds == 0) {
+              //they dont need any more, they have the stock they need
+              StorageNetwork.log("stockMode continnue; canc");
+              continue;
             }
-            catch (Throwable e) {
-              StorageNetwork.LOGGER.error("Error thrown from a connected block" + e);
-            }
+            amtToRequest = Math.min(stillNeeds, amtToRequest);
+            StorageNetwork.log("updateExports stock mode edited value: amtToRequest = " + amtToRequest);
           }
+          catch (Throwable e) {
+            StorageNetwork.LOGGER.error("Error thrown from a connected block" + e);
+          }
+        }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {
           //either the thing is empty or we are requesting none
           continue;
@@ -607,7 +606,8 @@ public class TileMain extends BlockEntity {
     importCache = new HashMap<>();
   }
 
-  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {}
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
+  }
 
   public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
     tile.tick();
