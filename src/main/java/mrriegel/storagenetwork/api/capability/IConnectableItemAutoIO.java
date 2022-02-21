@@ -6,8 +6,10 @@ import mrriegel.storagenetwork.api.data.DimPos;
 import mrriegel.storagenetwork.api.data.EnumStorageDirection;
 import mrriegel.storagenetwork.api.data.IItemStackMatcher;
 import mrriegel.storagenetwork.api.network.INetworkMaster;
+import mrriegel.storagenetwork.util.inventory.FilterItemStackHandler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.IItemHandler;
 
 /**
  * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks master. You could quite as well just expose {@link IConnectable} and do the
@@ -66,7 +68,16 @@ public interface IConnectableItemAutoIO {
    *          Whether or not this is just a simulation
    * @return The stack that has been requested, if you have it
    */
+  @Deprecated
   ItemStack extractNextStack(int size, boolean simulate);
+
+  default IItemHandler getItemHandler() {
+    return null;
+  }
+
+  default FilterItemStackHandler getFilters() {
+    return null;
+  }
 
   /**
    * Optional 'Stock Upgrade' mode. Meaning the export only exports if the target has less than this number, and only exports enough to meet it.

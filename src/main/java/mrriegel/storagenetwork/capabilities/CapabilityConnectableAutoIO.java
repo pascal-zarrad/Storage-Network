@@ -164,35 +164,22 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<NBTTagCompo
     }
     return result;
   }
+  @Override public FilterItemStackHandler getFilters() {
+    return filters;
+  }
 
   @Override
-  public ItemStack extractNextStack(int size, boolean simulate) {
-    // If this storage is configured to only export from the network, do not
-    // extract from the storage, but abort immediately.
-    if (direction == EnumStorageDirection.OUT) {
-      return ItemStack.EMPTY;
-    }
-    if (inventoryFace == null) {
-      return ItemStack.EMPTY;
+  public IItemHandler getItemHandler() {
+    if (inventoryFace == null || direction == EnumStorageDirection.OUT) {
+      return null;
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
-    // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
-    if (itemHandler == null) {
-      return ItemStack.EMPTY;
-    }
-    for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-      ItemStack stack = itemHandler.getStackInSlot(slot);
-      if (stack == null || stack.isEmpty()) {
-        continue;
-      }
-      // Ignore stacks that are filtered
-      if (this.filters.isStackFiltered(stack)) {
-        continue;
-      }
-      int extractSize = Math.min(size, stack.getCount());
-      return itemHandler.extractItem(slot, extractSize, simulate);
-    }
+    return inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+  }
+
+  @Deprecated
+  @Override
+  public ItemStack extractNextStack(int size, boolean simulate) {
     return ItemStack.EMPTY;
   }
 

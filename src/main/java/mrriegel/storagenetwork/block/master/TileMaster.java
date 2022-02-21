@@ -262,23 +262,38 @@ public class TileMaster extends TileEntity implements ITickable, INetworkMaster 
         continue;
       }
       // Do a simulation first and abort if we got an empty stack,
-      ItemStack stack = storage.extractNextStack(storage.getTransferRate(), true);
-      if (stack.isEmpty()) {
+      IItemHandler itemHandler = storage.getItemHandler();
+      if (itemHandler == null) {
         continue;
       }
-      // Then try to insert the stack into this masters network and store the number of remaining items in the stack
-      int countUnmoved = this.insertStack(stack, true);
-      // Calculate how many items in the stack actually got moved
-      int countMoved = stack.getCount() - countUnmoved;
-      if (countMoved <= 0) {
-        continue;
+      for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+        ItemStack stack = itemHandler.getStackInSlot(slot);
+        if (stack == null || stack.isEmpty()) {
+          continue;
+        }
+        // Ignore stacks that are filtered
+        if (storage.getFilters() == null || !storage.getFilters().isStackFiltered(stack)) {
+          int extractSize = Math.min(storage.getTransferRate(), stack.getCount());
+          ItemStack stackToImport = itemHandler.extractItem(slot, extractSize, true); //simulate to grab a reference
+          if (stackToImport.isEmpty()) {
+            continue; //continue back to itemHandler
+          }
+          // Then try to insert the stack into this masters network and store the number of remaining items in the stack
+          int countUnmoved = this.insertStack(stackToImport, true);
+          // Calculate how many items in the stack actually got moved
+          int countMoved = stackToImport.getCount() - countUnmoved;
+          if (countMoved <= 0) {
+            continue; //continue back to itemHandler
+          }
+          // Alright, simulation says we're good, let's do it!
+          // First extract from the storage
+          ItemStack actuallyExtracted = itemHandler.extractItem(slot, countMoved, false); // storage.extractNextStack(countMoved, false);
+          storage.getPos().getChunk().markDirty();
+          // Then insert into our network
+          this.insertStack(actuallyExtracted, false);
+          break; // break out of itemHandler loop, done processing this cable, so move to next
+        } //end of checking on filter for this stack
       }
-      // Alright, simulation says we're good, let's do it!
-      // First extract from the storage
-      ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      storage.getPos().getChunk().markDirty();
-      // Then insert into our network 
-      this.insertStack(actuallyExtracted, false);
     }
   }
 
