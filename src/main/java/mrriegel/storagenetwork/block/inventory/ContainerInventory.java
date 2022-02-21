@@ -23,14 +23,13 @@ public class ContainerInventory extends ContainerNetworkBase {
     this.isSimple = true;
     bindPlayerInvo(playerInv);
     bindHotbar();
-    this.onCraftMatrixChanged(this.matrix);
   }
 
   @Override
   public void bindHotbar() {
     //player hotbar
     for (int i = 0; i < 9; ++i) {
-      this.addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 232 + 40));
+      this.addSlotToContainer(new Slot(playerInv, i, 8 + i * 18, 232));
     }
   }
 
