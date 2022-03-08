@@ -59,13 +59,15 @@ public class ItemCollector extends Item {
         TileEntity tile = serverTargetWorld.getTileEntity(dp.getBlockPos());
         if (tile instanceof TileMain) {
           TileMain network = (TileMain) tile;
-          //
-          int countUnmoved = network.insertStack(item, false);
+          int countUnmoved = network.insertStack(item.copy(), false);
           if (countUnmoved == 0) {
             item.setCount(0);
             event.getItem().setItem(item);
             event.getItem().remove();
             UtilTileEntity.playSoundFromServer((ServerPlayerEntity) player, SoundEvents.ENTITY_ITEM_PICKUP, 0.2F);
+          }
+          else {
+            StorageNetwork.log("info: unmoved items from collector " + countUnmoved + " " + item);
           }
         }
         else {

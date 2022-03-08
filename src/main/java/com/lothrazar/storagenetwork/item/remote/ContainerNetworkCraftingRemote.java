@@ -7,13 +7,14 @@ import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkCraftingInventory;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import com.lothrazar.storagenetwork.util.UtilInventory;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import org.apache.commons.lang3.tuple.Triple;
 
 public class ContainerNetworkCraftingRemote extends ContainerNetwork {
 
@@ -23,9 +24,13 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
 
   public ContainerNetworkCraftingRemote(int id, PlayerInventory pInv) {
     super(SsnRegistry.CRAFTINGREMOTE, id);
-    this.remote = pInv.player.getHeldItemMainhand();
     this.player = pInv.player;
     this.world = player.world;
+    this.remote = player.getHeldItemMainhand();
+    if (this.remote.getItem() != SsnRegistry.CRAFTING_REMOTE) {
+      Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(player, SsnRegistry.CRAFTING_REMOTE);
+      this.remote = result.getRight();
+    }
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
       StorageNetwork.LOGGER.error("Remote opening with null pos Stored {} ", remote);
@@ -39,21 +44,16 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     bindGrid();
     bindPlayerInvo(this.playerInv);
     bindHotbar();
-    for (int i = 0; i < matrix.getSizeInventory(); i++) {
-      if (remote.hasTag() && remote.getTag().contains("matrix" + i)) {
-        CompoundNBT tag = remote.getTag().getCompound("matrix" + i);
-        ItemStack stackSaved = ItemStack.read(tag);
-        if (!stackSaved.isEmpty()) {
-          matrix.setInventorySlotContents(i, stackSaved);
-        }
-      }
-    }
     onCraftMatrixChanged(matrix);
+  }
+
+  public ItemStack getRemote() {
+    return remote;
   }
 
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
-    return remote == player.getHeldItemMainhand();
+    return !remote.isEmpty();
   }
 
   @Override
@@ -80,11 +80,8 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   @Override
   public void onContainerClosed(PlayerEntity playerIn) {
     super.onContainerClosed(playerIn);
-    ItemStack me;
     for (int i = 0; i < matrix.getSizeInventory(); i++) {
-      me = matrix.getStackInSlot(i);
-      CompoundNBT here = me.write(new CompoundNBT());
-      this.remote.getTag().put("matrix" + i, here);
+      UtilInventory.dropItem(world, playerIn.getPosition(), matrix.getStackInSlot(i));
     }
   }
 

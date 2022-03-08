@@ -1,10 +1,12 @@
 package com.lothrazar.storagenetwork.api;
 
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraftforge.items.IItemHandler;
 
 /**
  * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks main. You could quite as well just expose {@link IConnectable} and do the
@@ -19,6 +21,20 @@ public interface IConnectableItemAutoIO {
   public boolean needsRedstone();
 
   public void needsRedstone(boolean in);
+
+  /**
+   * Return the position of this connectable.
+   *
+   * This is used to traverse the network and might be different from the actual block position. For example the Compact Machines mod bridges capabilities across dimensions and we need to continue
+   * traversing the network inside the compact machine and not at the machine block itself.
+   *
+   * You should simply return the position of your block here, or .connectable.getPos();
+   *
+   * @return
+   */
+  default DimPos getPos() {
+    return null;
+  }
 
   /**
    * Return either IN or OUT here, but not BOTH. If you return BOTH expect weird things to happen.
@@ -57,7 +73,16 @@ public interface IConnectableItemAutoIO {
    *          Whether or not this is just a simulation
    * @return The stack that has been requested, if you have it
    */
+  @Deprecated
   ItemStack extractNextStack(int size, boolean simulate);
+
+  default IItemHandler getItemHandler() {
+    return null;
+  }
+
+  default FilterItemStackHandler getFilters() {
+    return null;
+  }
 
   /**
    * Optional 'Stock Upgrade' mode. Meaning the export only exports if the target has less than this number, and only exports enough to meet it.

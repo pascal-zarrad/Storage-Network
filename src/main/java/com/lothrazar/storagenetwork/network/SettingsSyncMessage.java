@@ -2,6 +2,8 @@ package com.lothrazar.storagenetwork.network;
 
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileNetworkSync;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
+import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import java.util.function.Supplier;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -41,8 +43,16 @@ public class SettingsSyncMessage {
           tileEntity.markDirty();
         }
       }
-      else {
-        ItemStack stackPlayerHeld = player.inventory.getCurrentItem();
+      else if (player.openContainer instanceof ContainerNetworkCraftingRemote) {
+        ItemStack stackPlayerHeld = ((ContainerNetworkCraftingRemote) player.openContainer).getRemote();
+        if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
+          ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
+          ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
+          ItemStorageCraftingRemote.setJeiSearchSynced(stackPlayerHeld, message.jeiSync);
+        }
+      }
+      else if (player.openContainer instanceof ContainerNetworkRemote) { //TODO eww this bufix 
+        ItemStack stackPlayerHeld = ((ContainerNetworkRemote) player.openContainer).getRemote();
         if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);

@@ -113,6 +113,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     if (dp == null || dp.getBlockPos() == null) {
       //unbound or invalid data
       UtilTileEntity.statusMessage(player, "item.remote.notconnected");
+      StorageNetwork.log("Remote not connected " + itemStackIn.getTag());
       return false;
     }
     //assume we are in the same world

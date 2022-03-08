@@ -1,10 +1,12 @@
 package com.lothrazar.storagenetwork.util;
 
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
-import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -31,13 +33,11 @@ public class UtilInventory {
         return Triple.of("curios", equipped.middle, equipped.right);
       }
     }
-    //not curios, check others
-    if (remote != SsnRegistry.COLLECTOR_REMOTE) {
-      for (int i = 0; i < player.getInventoryEnderChest().getSizeInventory(); i++) {
-        ItemStack temp = player.getInventoryEnderChest().getStackInSlot(i);
-        if (isRemote(temp, remote)) {
-          return Triple.of("ender", i, temp);
-        }
+    //not curios, check others 
+    for (int i = 0; i < player.getInventoryEnderChest().getSizeInventory(); i++) {
+      ItemStack temp = player.getInventoryEnderChest().getStackInSlot(i);
+      if (isRemote(temp, remote)) {
+        return Triple.of("ender", i, temp);
       }
     }
     for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
@@ -115,5 +115,12 @@ public class UtilInventory {
       }
     }
     return ItemStack.EMPTY;
+  }
+
+  public static void dropItem(World world, BlockPos pos, ItemStack stack) {
+    if (pos == null || world.isRemote || stack.isEmpty()) {
+      return;
+    }
+    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
   }
 }

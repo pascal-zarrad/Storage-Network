@@ -1,7 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/simple-storage-network",
   "promos": {
-    "1.16.5-latest": "1.5.1"
+    "1.16.5-latest": "1.5.2"
   },
   "1.16.5": {
    	"1.0.1":"Ported to the latest forge version to fix rendering issues (tooltips, player models transparent, etc)"
@@ -21,5 +21,6 @@
   	,"1.4.3":"Fix StackOverflowError: Exception in server tick loop when copying item stack at TimeMain:insertStack"
   	,"1.5.0":" Performance increase: ItemStacks are no longer repeatedly copied while doing sorting/imports/exports, reducing RAM use/CPU load.  Cables can all be now water-loggable. Storage Request Table now correctly drops items from crafting grid when broken."
   	,"1.5.1":"Mod no longer crashes if JEI is not installed.  Fix remoteMaxRange config.  Created italian translation #408 by maicol07  "
+  	,"1.5.2":"Fix #416 remotes not saving options settings. Fixed Network Collector Remote Void Items #414.  Crafting remote no longer saves crafting grid data, drops 3x3 on close (Fixes #434 and other isses).  This allows a new feature where the Crafting Remote can go into the ender chest or Curios slot and be opened by the key binding (i default). Patched some stackOverflow errors, please report if more come up.  Fix #254 Import Cables stuck on not importable items. "
   }
 }

@@ -44,6 +44,10 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     bindHotbar();
   }
 
+  public ItemStack getRemote() {
+    return remote;
+  }
+
   @Override
   public boolean canInteractWith(PlayerEntity playerIn) {
     //does not store itemstack inventory, and opens from curios so no security here. unless it dissapears

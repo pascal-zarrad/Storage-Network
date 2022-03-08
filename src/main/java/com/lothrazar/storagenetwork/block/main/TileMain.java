@@ -13,6 +13,7 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
@@ -305,7 +307,8 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
    * Pull into the network from the relevant linked cables
    */
   private void updateImports() {
-    for (IConnectable connectable : getConnectables()) {
+    Set<IConnectable> conSet = getConnectables();
+    for (IConnectable connectable : conSet) {
       if (connectable == null || connectable.getPos() == null) {
         continue;
       }
@@ -323,31 +326,59 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
       if (!storage.runNow(connectable.getPos(), this)) {
         continue;
       }
-      // Do a simulation first and abort if we got an empty stack,
-      ItemStack stack = storage.extractNextStack(storage.getTransferRate(), true);
-      if (stack.isEmpty()) {
-        continue;
-      }
       if (storage.needsRedstone()) {
         boolean power = world.isBlockPowered(connectable.getPos().getBlockPos());
         if (power == false) {
           continue;
         }
       }
-      //
-      // Then try to insert the stack into this network and store the number of remaining items in the stack
-      int countUnmoved = insertStack(stack, true);
-      // Calculate how many items in the stack actually got moved
-      int countMoved = stack.getCount() - countUnmoved;
-      if (countMoved <= 0) {
+      // Do a simulation first and abort if we got an empty stack,
+      IItemHandler itemHandler = storage.getItemHandler();
+      if (itemHandler == null) {
         continue;
       }
-      // Alright, simulation says we're good, let's do it!
-      // First extract from the storage
-      ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markDirty();
-      // Then insert into our network
-      insertStack(actuallyExtracted, false);
+      for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+        ItemStack stack = itemHandler.getStackInSlot(slot);
+        if (stack == null || stack.isEmpty()) {
+          continue;
+        }
+        // Ignore stacks that are filtered
+        if (storage.getFilters() == null || !storage.getFilters().isStackFiltered(stack)) {
+          int extractSize = Math.min(storage.getTransferRate(), stack.getCount());
+          ItemStack stackToImport = itemHandler.extractItem(slot, extractSize, true); //simulate to grab a reference
+          if (stackToImport.isEmpty()) {
+            continue; //continue back to itemHandler
+          }
+          // Then try to insert the stack into this masters network and store the number of remaining items in the stack
+          int countUnmoved = this.insertStack(stackToImport, true);
+          // Calculate how many items in the stack actually got moved
+          int countMoved = stackToImport.getCount() - countUnmoved;
+          if (countMoved <= 0) {
+            continue; //continue back to itemHandler
+          }
+          // Alright, simulation says we're good, let's do it!
+          // First extract from the storage
+          ItemStack actuallyExtracted = itemHandler.extractItem(slot, countMoved, false); // storage.extractNextStack(countMoved, false);
+          //          storage.getPos().getChunk().markDirty();
+          // Then insert into our network
+          this.insertStack(actuallyExtracted, false);
+          break; // break out of itemHandler loop, done processing this cable, so move to next
+        } //end of checking on filter for this stack
+      }
+      //
+      // Then try to insert the stack into this network and store the number of remaining items in the stack
+      //      int countUnmoved = insertStack(stack, true);
+      //      // Calculate how many items in the stack actually got moved
+      //      int countMoved = stack.getCount() - countUnmoved;
+      //      if (countMoved <= 0) {
+      //        continue;
+      //      }
+      //      // Alright, simulation says we're good, let's do it!
+      //      // First extract from the storage
+      //      ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
+      //      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markDirty();
+      //      // Then insert into our network
+      //      insertStack(actuallyExtracted, false);
     }
   }
 
@@ -369,7 +400,8 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
    * push OUT of the network to attached export cables
    */
   private void updateExports() {
-    for (IConnectable connectable : getConnectables()) {
+    Set<IConnectable> getCon = getConnectables();
+    for (IConnectable connectable : getCon) {
       if (connectable == null || connectable.getPos() == null) {
         //        StorageNetwork.log("null connectable or pos : updateExports() ");
         continue;
@@ -490,9 +522,26 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     return result;
   }
 
+  private List<IConnectableLink> getSortedConnectableStorage() {
+    try {
+      Set<IConnectableLink> storage = getConnectableStorage();
+      Stream<IConnectableLink> stream = storage.stream();
+      List<IConnectableLink> sorted = stream.sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
+      return sorted;
+    }
+    catch (Exception e) {
+      //trying to avoid 
+      //java.lang.StackOverflowError: Ticking block entity
+      //and similar issues
+      StorageNetwork.LOGGER.error("Error: network get sorted by priority error, some network components are disconnected ", e);
+      return new ArrayList<>();
+    }
+  }
+
   private Set<IConnectableLink> getConnectableStorage() {
     Set<IConnectableLink> result = new HashSet<>();
-    for (DimPos dimpos : getConnectablePositions()) {
+    Set<DimPos> connectablePositions = getConnectablePositions();
+    for (DimPos dimpos : connectablePositions) {
       if (!dimpos.isLoaded()) {
         continue;
       }
@@ -513,17 +562,14 @@ public class TileMain extends TileEntity implements ITickableTileEntity {
     return result;
   }
 
-  private List<IConnectableLink> getSortedConnectableStorage() {
-    return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
-  }
-
   @Override
   public void tick() {
     if (world == null || world.isRemote) {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (world.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) || shouldRefresh) {
+    if ((world.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0)
+        || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;

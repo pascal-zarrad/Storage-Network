@@ -123,7 +123,11 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
       }
     }
     //end refresh srever world
-    TileEntity tileEntity = world.getTileEntity(getBlockPos());
+    BlockPos tilePos = getBlockPos();
+    if (tilePos == null) {
+      return null;
+    }
+    TileEntity tileEntity = world.getTileEntity(tilePos);
     if (tileEntity == null) {
       return null;
     }
@@ -147,10 +151,10 @@ public class DimPos implements INBTSerializable<CompoundNBT> {
 
   @SuppressWarnings("deprecation")
   public boolean isLoaded() {
-    if (getWorld() == null) {
+    if (world == null) {
       return false;
     }
-    return getWorld().isBlockLoaded(pos);
+    return world.isBlockLoaded(pos);
   }
 
   public boolean equals(World world, BlockPos pos) {

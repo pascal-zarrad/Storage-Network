@@ -46,6 +46,11 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   @Override
+  public DimPos getPos() {
+    return this.connectable.getPos();
+  }
+
+  @Override
   public void toggleNeedsRedstone() {
     needsRedstone = !needsRedstone;
   }
@@ -164,6 +169,20 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
   }
 
   @Override
+  public FilterItemStackHandler getFilters() {
+    return filters;
+  }
+
+  @Override
+  public IItemHandler getItemHandler() {
+    if (inventoryFace == null || direction == EnumStorageDirection.OUT) {
+      return null;
+    }
+    DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
+    return inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+  }
+
+  @Override
   public EnumStorageDirection ioDirection() {
     return direction;
   }
@@ -226,6 +245,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundNBT
     return result;
   }
 
+  @Deprecated
   @Override
   public ItemStack extractNextStack(int size, boolean simulate) {
     // If this storage is configured to only export from the network, do not
