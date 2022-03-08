@@ -3,10 +3,12 @@ package com.lothrazar.storagenetwork.util;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
-import com.lothrazar.storagenetwork.registry.SsnRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -26,38 +28,37 @@ public class UtilInventory {
     if (ModList.get().isLoaded("curios")) {
       //check curios slots
       final ImmutableTriple<String, Integer, ItemStack> equipped = CuriosApi.getCuriosHelper().findEquippedCurio(remote, player).orElse(null);
-      if (equipped != null && isRemote(equipped.right, remote)) {
+      if (equipped != null && isRemoteWithData(equipped.right, remote)) {
         //success: try to insert items to network thru this remote 
         return Triple.of("curios", equipped.middle, equipped.right);
       }
     }
     //not curios, check others
-    if (remote != SsnRegistry.COLLECTOR_REMOTE) {
-      for (int i = 0; i < player.getEnderChestInventory().getContainerSize(); i++) {
-        ItemStack temp = player.getEnderChestInventory().getItem(i);
-        if (isRemote(temp, remote)) {
-          return Triple.of("ender", i, temp);
-        }
+    for (int i = 0; i < player.getEnderChestInventory().getContainerSize(); i++) {
+      ItemStack temp = player.getEnderChestInventory().getItem(i);
+      if (isRemoteWithData(temp, remote)) {
+        return Triple.of("ender", i, temp);
       }
     }
     for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
       ItemStack temp = player.getInventory().getItem(i);
-      if (isRemote(temp, remote)) {
+      if (isRemoteWithData(temp, remote)) {
         return Triple.of("player", i, temp);
       }
     }
     //default
-    if (isRemote(player.getOffhandItem(), remote)) {
+    if (isRemoteWithData(player.getOffhandItem(), remote)) {
       return Triple.of("offhand", -1, player.getOffhandItem());
     }
-    if (isRemote(player.getMainHandItem(), remote)) {
+    if (isRemoteWithData(player.getMainHandItem(), remote)) {
       return Triple.of("hand", -1, player.getMainHandItem());
     }
     return stackFound;
   }
 
-  private static boolean isRemote(ItemStack temp, Item remote) {
-    return temp.getItem() == remote;
+  private static boolean isRemoteWithData(ItemStack stack, Item remote) {
+    //if it has a tag, assume pos to network is valid
+    return stack.getItem() == remote && stack.hasTag();
   }
 
   public static String formatLargeNumber(int size) {
@@ -115,5 +116,12 @@ public class UtilInventory {
       }
     }
     return ItemStack.EMPTY;
+  }
+
+  public static void dropItem(Level world, BlockPos pos, ItemStack stack) {
+    if (pos == null || world.isClientSide || stack.isEmpty()) {
+      return;
+    }
+    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack));
   }
 }

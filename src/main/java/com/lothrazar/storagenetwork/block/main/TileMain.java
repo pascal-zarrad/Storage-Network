@@ -1,5 +1,14 @@
 package com.lothrazar.storagenetwork.block.main;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
@@ -13,13 +22,6 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -334,8 +336,8 @@ public class TileMain extends BlockEntity {
       // storage.getUpgrades().getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
       // Do a simulation first and abort if we got an empty stack,
       //(filters used internally in extractNextStack)
-      ItemStack stack = storage.extractNextStack(amtToRequest, true);
-      if (stack.isEmpty()) {
+      IItemHandler itemHandler = storage.getItemHandler();
+      if (itemHandler == null) {
         continue;
       }
       if (storage.needsRedstone()) {
@@ -344,27 +346,40 @@ public class TileMain extends BlockEntity {
           continue;
         }
       }
-      //
-      //
-      //      boolean stockMode = storage.getUpgrades().getUpgradesOfType(SsnRegistry.STOCK_UPGRADE) > 0;
-      //      if (stockMode) {
-      //        //  TODO: how would this even work
-      //      }
-      //
-      // Then try to insert the stack into this network and store the number of remaining items in the stack
-      int countUnmoved = insertStack(stack, true);
-      // Calculate how many items in the stack actually got moved
-      int countMoved = stack.getCount() - countUnmoved;
-      if (countMoved <= 0) {
-        continue;
+      for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+        ItemStack stack = itemHandler.getStackInSlot(slot);
+        if (stack == null || stack.isEmpty()) {
+          continue;
+        }
+        // Ignore stacks that are filtered
+        if (storage.getFilters() == null || !storage.getFilters().isStackFiltered(stack)) {
+          int extractSize = Math.min(storage.getTransferRate(), stack.getCount());
+          ItemStack stackToImport = itemHandler.extractItem(slot, extractSize, true); //simulate to grab a reference
+          if (stackToImport.isEmpty()) {
+            continue; //continue back to itemHandler
+          }
+          // Then try to insert the stack into this masters network and store the number of remaining items in the stack
+          int countUnmoved = this.insertStack(stackToImport, true);
+          // Calculate how many items in the stack actually got moved
+          int countMoved = stackToImport.getCount() - countUnmoved;
+          if (countMoved <= 0) {
+            continue; //continue back to itemHandler
+          }
+          // Alright, simulation says we're good, let's do it!
+          // First extract from the storage
+          ItemStack actuallyExtracted = itemHandler.extractItem(slot, countMoved, false); // storage.extractNextStack(countMoved, false);
+          //          storage.getPos().getChunk().markDirty();
+          // Then insert into our network
+          this.insertStack(actuallyExtracted, false);
+          break; // break out of itemHandler loop, done processing this cable, so move to next
+        } //end of checking on filter for this stack
       }
-      // Alright, simulation says we're good, let's do it!
-      // First extract from the storage
-      ItemStack actuallyExtracted = storage.extractNextStack(countMoved, false);
-      //      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).markUnsaved();
-      connectable.getPos().getWorld().getChunkAt(connectable.getPos().getBlockPos()).setUnsaved(false);
-      // Then insert into our network
-      insertStack(actuallyExtracted, false);
+      //    }
+      //      //
+      //      //
+      //      if (storage.isStockMode()) {
+      //        //  TODO: how would this even work
+      //      } 
     }
   }
 
@@ -386,7 +401,8 @@ public class TileMain extends BlockEntity {
    * push OUT of the network to attached export cables
    */
   private void updateExports() {
-    for (IConnectable connectable : getConnectables()) {
+    Set<IConnectable> conSet = getConnectables();
+    for (IConnectable connectable : conSet) {
       if (connectable == null || connectable.getPos() == null) {
         //        StorageNetwork.log("null connectable or pos : updateExports() ");
         continue;
@@ -417,13 +433,12 @@ public class TileMain extends BlockEntity {
         }
         //default amt to request. can be overriden by other upgrades
         int amtToRequest = storage.getTransferRate();
-        //check operations upgrade 
-        //        upgrades.getUpgradesOfType(SsnRegistry.OP_UPGRADE);
+        //check operations upgrade for export
         boolean operationMode = storage.isOperationMode();
         //if we are exporting
         //with the OPERATION . always request EXACT NUMBER
         //ignore stock, ignore stack. this overrides all
-        boolean stockMode = storage.isStockMode();  //storage.getUpgrades().getUpgradesOfType(SsnRegistry.STOCK_UPGRADE) > 0;
+        boolean stockMode = storage.isStockMode(); // export can also use stock upgrade
         if (operationMode) {
           amtToRequest = matcher.getStack().getCount(); // the 63 haha
         }
@@ -529,7 +544,8 @@ public class TileMain extends BlockEntity {
 
   private Set<IConnectableLink> getConnectableStorage() {
     Set<IConnectableLink> result = new HashSet<>();
-    for (DimPos dimpos : getConnectablePositions()) {
+    Set<DimPos> conSet = getConnectablePositions();
+    for (DimPos dimpos : conSet) {
       if (!dimpos.isLoaded()) {
         continue;
       }
@@ -551,7 +567,19 @@ public class TileMain extends BlockEntity {
   }
 
   private List<IConnectableLink> getSortedConnectableStorage() {
-    return getConnectableStorage().stream().sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
+    try {
+      Set<IConnectableLink> storage = getConnectableStorage();
+      Stream<IConnectableLink> stream = storage.stream();
+      List<IConnectableLink> sorted = stream.sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
+      return sorted;
+    }
+    catch (Exception e) {
+      //trying to avoid 
+      //java.lang.StackOverflowError: Ticking block entity
+      //and similar issues
+      StorageNetwork.LOGGER.error("Error: network get sorted by priority error, some network components are disconnected ", e);
+      return new ArrayList<>();
+    }
   }
 
   private void tick() {
@@ -559,7 +587,8 @@ public class TileMain extends BlockEntity {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if (getConnectablePositions() == null || (level.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) || shouldRefresh) {
+    if ((level.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0)
+        || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
         shouldRefresh = false;
@@ -606,8 +635,7 @@ public class TileMain extends BlockEntity {
     importCache = new HashMap<>();
   }
 
-  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
-  }
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {}
 
   public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
     tile.tick();

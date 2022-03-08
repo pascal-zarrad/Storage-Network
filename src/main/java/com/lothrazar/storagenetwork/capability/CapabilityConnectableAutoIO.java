@@ -1,5 +1,9 @@
 package com.lothrazar.storagenetwork.capability;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -10,10 +14,6 @@ import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -206,10 +206,25 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   }
 
   @Override
+  public FilterItemStackHandler getFilters() {
+    return filters;
+  }
+
+  @Override
+  public IItemHandler getItemHandler() {
+    if (inventoryFace == null || direction == EnumStorageDirection.OUT) {
+      return null;
+    }
+    DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
+    return inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+  }
+
+  @Deprecated
+  @Override
   public ItemStack extractNextStack(final int amtToRequestIn, boolean simulate) {
     //op mode override
     int amtToRequest = amtToRequestIn;
-    boolean operationMode = getUpgrades().getUpgradesOfType(SsnRegistry.OP_UPGRADE) > 0;
+    boolean operationMode = isOperationMode();
     // If this storage is configured to only export from the network, do not
     // extract from the storage, but abort immediately.
     if (direction == EnumStorageDirection.OUT) {
@@ -247,12 +262,14 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return ItemStack.EMPTY;
   }
 
-  @Override public boolean isStockMode() {
+  @Override
+  public boolean isStockMode() {
     return getUpgrades().hasUpgradesOfType(SsnRegistry.STOCK_UPGRADE);
   }
 
-  @Override public boolean isOperationMode() {
-    return getUpgrades().hasUpgradesOfType(SsnRegistry.OP_UPGRADE);
+  @Override
+  public boolean isOperationMode() {
+    return false; // getUpgrades().hasUpgradesOfType(SsnRegistry.OP_UPGRADE);
   }
 
   @Override

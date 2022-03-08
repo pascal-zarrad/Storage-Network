@@ -1,11 +1,12 @@
 package com.lothrazar.storagenetwork.api;
 
-import com.lothrazar.storagenetwork.block.main.TileMain;
-import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import java.util.Collections;
 import java.util.List;
+import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
 
 /**
  * Only expose this capability if you want your cable/block to auto-export and import blocks controlled by the networks main. You could quite as well just expose {@link IConnectable} and do the
@@ -36,8 +37,10 @@ public interface IConnectableItemAutoIO {
    * <p>
    * If your ioDirection is set to OUT, this should never get called, unless another malicious mod is doing it.
    *
-   * @param stack    The stack being inserted into your storage
-   * @param simulate Whether or not this is just a simulation
+   * @param stack
+   *          The stack being inserted into your storage
+   * @param simulate
+   *          Whether or not this is just a simulation
    * @return The remainder of the stack if not all of it fit into your storage
    */
   ItemStack insertStack(ItemStack stack, boolean simulate);
@@ -50,11 +53,22 @@ public interface IConnectableItemAutoIO {
    * <p>
    * If your ioDirection is set to IN, this should never get called, unless another malicious mod is doing it.
    *
-   * @param size     The size of the stack that should be extracted
-   * @param simulate Whether or not this is just a simulation
+   * @param size
+   *          The size of the stack that should be extracted
+   * @param simulate
+   *          Whether or not this is just a simulation
    * @return The stack that has been requested, if you have it
    */
+  @Deprecated
   ItemStack extractNextStack(int size, boolean simulate);
+
+  default IItemHandler getItemHandler() {
+    return null;
+  }
+
+  default FilterItemStackHandler getFilters() {
+    return null;
+  }
 
   /**
    * Optional 'Stock Upgrade' mode. Meaning the export only exports if the target has less than this number, and only exports enough to meet it.
@@ -90,8 +104,10 @@ public interface IConnectableItemAutoIO {
   /**
    * Called every tick to see if an operation should be processed now, i.e. this can be used to add cooldown times or disable operations via redstone signal.
    *
-   * @param connectablePos The position of your block, including the world
-   * @param main           The network main. Use this to e.g. query amount of items.
+   * @param connectablePos
+   *          The position of your block, including the world
+   * @param main
+   *          The network main. Use this to e.g. query amount of items.
    * @return Whether or not this IConnectableLink should be processed this tick.
    */
   boolean runNow(DimPos connectablePos, TileMain main);

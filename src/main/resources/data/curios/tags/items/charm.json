@@ -2,6 +2,7 @@
   "replace": "false",
   "values": [
     "storagenetwork:inventory_remote",
+    "storagenetwork:crafting_remote",
     "storagenetwork:collector_remote"
   ]
 }

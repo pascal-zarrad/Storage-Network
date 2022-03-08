@@ -19,10 +19,17 @@ public class KeybindCurioMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayer player = ctx.get().getSender();
       ServerLevel serverWorld = player.getLevel();
-      Triple<String, Integer, ItemStack> searchResult = UtilInventory.getCurioRemote(player, SsnRegistry.INVENTORY_REMOTE);
-      ItemStack curioRemote = searchResult.getRight();
-      if (!curioRemote.isEmpty() && curioRemote.getItem() instanceof ItemStorageCraftingRemote) {
-        ItemStorageCraftingRemote.openRemote(serverWorld, player, curioRemote, (ItemStorageCraftingRemote) curioRemote.getItem());
+      Triple<String, Integer, ItemStack> searchCrafting = UtilInventory.getCurioRemote(player, SsnRegistry.CRAFTING_REMOTE);
+      ItemStack craftingRemote = searchCrafting.getRight();
+      if (!craftingRemote.isEmpty()) {
+        ItemStorageCraftingRemote.openRemote(serverWorld, player, craftingRemote, SsnRegistry.CRAFTING_REMOTE);
+      }
+      else { //crafting is the upgrade, so otherwise do regular 
+        Triple<String, Integer, ItemStack> searchResult = UtilInventory.getCurioRemote(player, SsnRegistry.INVENTORY_REMOTE);
+        ItemStack curioRemote = searchResult.getRight();
+        if (!curioRemote.isEmpty()) {
+          ItemStorageCraftingRemote.openRemote(serverWorld, player, curioRemote, SsnRegistry.INVENTORY_REMOTE);
+        }
       }
     });
     ctx.get().setPacketHandled(true);

@@ -74,8 +74,8 @@ public class SsnRegistry {
   public static ItemUpgrade STACK_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":stock_upgrade")
   public static ItemUpgrade STOCK_UPGRADE;
-  @ObjectHolder(StorageNetwork.MODID + ":operation_upgrade")
-  public static ItemUpgrade OP_UPGRADE;
+  //  @ObjectHolder(StorageNetwork.MODID + ":operation_upgrade")
+  //  public static ItemUpgrade OP_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockEntityType<TileMain> MAINTILEENTITY;
   @ObjectHolder(StorageNetwork.MODID + ":master")

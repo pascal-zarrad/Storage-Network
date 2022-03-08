@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.api;
 
+import javax.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.lothrazar.storagenetwork.StorageNetwork;
-import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,10 +42,10 @@ public class DimPos implements INBTSerializable<CompoundTag> {
   }
 
   public static DimPos getPosStored(ItemStack itemStackIn) {
-    if (itemStackIn.getTag() == null || !itemStackIn.getOrCreateTag().getBoolean(NBT_BOUND)) {
+    if (itemStackIn.getTag() == null || !itemStackIn.getTag().getBoolean(NBT_BOUND)) {
       return null;
     }
-    return new DimPos(itemStackIn.getOrCreateTag());
+    return new DimPos(itemStackIn.getTag());
   }
 
   public Level getWorld() {
@@ -107,7 +107,8 @@ public class DimPos implements INBTSerializable<CompoundTag> {
   @SuppressWarnings("unchecked")
   @Nullable
   public <V> V getTileEntity(Class<V> tileEntityClassOrInterface, Level world) {
-    if (world == null || getBlockPos() == null) {
+    BlockPos tilePos = getBlockPos();
+    if (world == null || tilePos == null) {
       return null;
     }
     //refresh server world 
@@ -123,7 +124,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
       }
     }
     //end refresh srever world
-    BlockEntity tileEntity = world.getBlockEntity(getBlockPos());
+    BlockEntity tileEntity = world.getBlockEntity(tilePos);
     if (tileEntity == null) {
       return null;
     }
@@ -145,18 +146,14 @@ public class DimPos implements INBTSerializable<CompoundTag> {
     return tileEntity.getCapability(capability, side).orElse(null);
   }
 
-  @SuppressWarnings("deprecation")
   public boolean isLoaded() {
-    if (getWorld() == null) {
-      return false;
-    }
-    return getWorld().hasChunkAt(pos);
+    return world == null ? false : world.hasChunkAt(pos);
   }
 
   public boolean equals(Level world, BlockPos pos) {
     //    world.dimension
     //    return dimension == world.provider.getDimension() &&
-    //
+    // TODO ^^
     return pos.equals(this.pos);
   }
 
@@ -204,15 +201,15 @@ public class DimPos implements INBTSerializable<CompoundTag> {
   }
 
   public DimPos offset(Direction direction) {
-    if (pos == null || direction == null) {
+    if (pos == null || direction == null || pos == null) {
       StorageNetwork.LOGGER.info("Error: null offset in DimPos " + direction);
       return null;
     }
-    return new DimPos(getWorld(), pos.relative(direction));
+    return new DimPos(world, pos.relative(direction));
   }
 
   public ChunkAccess getChunk() {
-    return getWorld().getChunk(pos);
+    return world == null ? null : world.getChunk(pos);
   }
 
   public void setWorld(Level world) {
