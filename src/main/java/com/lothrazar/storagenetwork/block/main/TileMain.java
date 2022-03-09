@@ -346,6 +346,12 @@ public class TileMain extends BlockEntity {
           continue;
         }
       }
+      if (storage.isStockMode()) {
+        System.out.println("TODO: stock mode import");
+      }
+      if (storage.isOperationMode()) {
+        System.out.println("TODO: OPERATION import");
+      }
       for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
         ItemStack stack = itemHandler.getStackInSlot(slot);
         if (stack == null || stack.isEmpty()) {
@@ -377,9 +383,6 @@ public class TileMain extends BlockEntity {
       //    }
       //      //
       //      //
-      //      if (storage.isStockMode()) {
-      //        //  TODO: how would this even work
-      //      } 
     }
   }
 
@@ -435,14 +438,12 @@ public class TileMain extends BlockEntity {
         int amtToRequest = storage.getTransferRate();
         //check operations upgrade for export
         boolean operationMode = storage.isOperationMode();
-        //if we are exporting
-        //with the OPERATION . always request EXACT NUMBER
-        //ignore stock, ignore stack. this overrides all
-        boolean stockMode = storage.isStockMode(); // export can also use stock upgrade
-        if (operationMode) {
-          amtToRequest = matcher.getStack().getCount(); // the 63 haha
-        }
-        else if (stockMode) {
+        boolean stockMode = storage.isStockMode();
+        //        if (operationMode) {
+        //          amtToRequest = matcher.getStack().getCount(); // the 63 haha
+        //        }
+        //        else
+        if (stockMode) {
           StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
           //STOCK upgrade means
           try {

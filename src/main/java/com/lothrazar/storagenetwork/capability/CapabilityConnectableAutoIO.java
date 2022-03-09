@@ -269,7 +269,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
 
   @Override
   public boolean isOperationMode() {
-    return false; // getUpgrades().hasUpgradesOfType(SsnRegistry.OP_UPGRADE);
+    return getUpgrades().hasUpgradesOfType(SsnRegistry.OP_UPGRADE);
   }
 
   @Override
