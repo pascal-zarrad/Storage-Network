@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
+import com.lothrazar.storagenetwork.api.OpCompareType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -45,8 +46,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   private boolean needsRedstone = false;
   public ItemStack operationStack = ItemStack.EMPTY;
   public int operationLimit = 0;
-  // TODO: ENUM: < > <= >=
-  public boolean operationMustBeSmaller = true;
+  public int operationType = OpCompareType.LESS.ordinal();
 
   CapabilityConnectableAutoIO(EnumStorageDirection direction) {
     connectable = new CapabilityConnectable();
@@ -136,7 +136,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     result.putBoolean("needsRedstone", this.needsRedstone());
     CompoundTag operation = new CompoundTag();
     operation.put("stack", operationStack.serializeNBT());
-    operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
+    operation.putInt("operationType", operationType);
     operation.putInt("limit", operationLimit);
     result.put("operation", operation);
     return result;
@@ -159,7 +159,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     this.needsRedstone(nbt.getBoolean("needsRedstone"));
     CompoundTag operation = nbt.getCompound("operation");
     this.operationLimit = operation.getInt("limit");
-    this.operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
+    this.operationType = operation.getInt("operationType");
     if (operation.contains("stack")) {
       this.operationStack = ItemStack.of(operation.getCompound("stack"));
     }
@@ -306,15 +306,19 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       return true;
     }
     // TODO: Investigate whether the operation limiter should consider the filter toggles
-    int availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
-    if (operationMustBeSmaller) {
-      System.out.println(operationLimit + " ?  > " + availableStack + operationStack.getItem());
-      return operationLimit > availableStack;
+    int countYourItemInNetwork = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
+    System.out.println("checkop::" + operationType);
+    switch (OpCompareType.get(operationType)) {
+      case EQUAL:
+        return countYourItemInNetwork == operationLimit;
+      case GREATER:
+        //true yes allowed to run if SLOT > textbox
+        return countYourItemInNetwork > operationLimit;
+      case LESS:
+        //true yes allowed to run if SLOT < textbox
+        return countYourItemInNetwork < operationLimit;
     }
-    else {
-      System.out.println(operationLimit + " ? < " + availableStack + operationStack.getItem());
-      return operationLimit < availableStack;
-    }
+    return false;
   }
 
   @Override

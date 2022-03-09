@@ -38,9 +38,7 @@ public class TextboxInteger extends EditBox {
   }
 
   private void saveValue() {
-    System.out.println("TODO: save value ");
     PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP_TEXT.ordinal(), this.getCurrent(), false));
-    //    PacketRegistry.INSTANCE.sendToServer(new PacketTileData(this.tileFieldId, this.getCurrent(), pos));
   }
 
   @Override

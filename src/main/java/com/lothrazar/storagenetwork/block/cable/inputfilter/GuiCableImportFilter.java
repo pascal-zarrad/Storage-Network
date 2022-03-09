@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
+import com.lothrazar.storagenetwork.api.OpCompareType;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ButtonRequest;
 import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
@@ -78,15 +79,17 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.IMPORT_FILTER.ordinal()));
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);
-    txtHeight = new TextboxInteger(this.font, leftPos + 6, topPos + 26, 20);
+    txtHeight = new TextboxInteger(this.font, leftPos + 48, topPos + 26, 36);
+    txtHeight.setMaxLength(4);
     txtHeight.setValue("" + containerCableLink.cap.operationLimit);
     this.addRenderableWidget(txtHeight);
     btnOperationToggle = addRenderableWidget(new ButtonRequest(leftPos + 29, topPos + 26, "=", (p) -> {
-      //TODO: enum for equal?
-      containerCableLink.cap.operationMustBeSmaller = !containerCableLink.cap.operationMustBeSmaller;
+      //      containerCableLink.cap.operationType = containerCableLink.cap.operationType.toggle();
+      OpCompareType old = OpCompareType.get(containerCableLink.cap.operationType);
+      containerCableLink.cap.operationType = old.toggle().ordinal();
       PacketRegistry.INSTANCE.sendToServer(
           new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP.ordinal(),
-              containerCableLink.cap.operationMustBeSmaller));
+              containerCableLink.cap.operationType, false));
     }));
     txtHeight.visible = btnOperationToggle.visible = false;
   }
@@ -98,9 +101,9 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
         50 - font.width(String.valueOf(priority)) / 2,
         12,
         4210752);
-    if (btnOperationToggle != null) {
-      String s = containerCableLink.cap.operationMustBeSmaller ? "<" : ">";
-      btnOperationToggle.setMessage(new TextComponent(s));
+    if (btnOperationToggle != null && this.isOperationMode()) {
+      OpCompareType t = OpCompareType.get(containerCableLink.cap.operationType);
+      btnOperationToggle.setMessage(new TextComponent(t.symbol()));
     }
     this.drawTooltips(ms, mouseX, mouseY);
   }
@@ -158,13 +161,12 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
           + containerCableLink.cap.needsRedstone())), Optional.empty(), mouseX - leftPos, mouseY - topPos);
     }
     if (btnOperationToggle != null && btnOperationToggle.isMouseOver(mouseX, mouseY)) {
-      String two = "gui.storagenetwork.operate.tooltip." + (this.containerCableLink.cap.operationMustBeSmaller ? "less" : "more");
-      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.operate.tooltip"), new TranslatableComponent(two)),
+      OpCompareType t = OpCompareType.get(containerCableLink.cap.operationType);
+      String two = "gui.storagenetwork.operate.tooltip." + t.word();
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.operate.tooltip"),
+          new TranslatableComponent(two)),
           Optional.empty(), mouseX - leftPos, mouseY - topPos);
     }
-    //    if (btnOperationToggle != null && btnOperationToggle.isMouseOver(mouseX, mouseY)) {
-    //      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.operation")), Optional.empty(), mouseX - leftPos, mouseY - topPos);
-    //    }
   }
 
   public static final int SLOT_SIZE = 18;
@@ -195,7 +197,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       //move down to second row
       y += SLOT_SIZE;
     }
-    x = leftPos + 48;
+    x = leftPos + 6;
     y = topPos + 26;
     operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, x, y, size, leftPos, topPos, false);
     for (ItemSlotNetwork s : itemSlotsGhost) {

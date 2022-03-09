@@ -28,7 +28,6 @@ public class CableIOMessage {
   private final int id;
   private int value = 0;
   private ItemStack stack = ItemStack.EMPTY;
-  private boolean operationMustBeSmaller;
 
   public CableIOMessage(int id) {
     this.id = id;
@@ -44,11 +43,6 @@ public class CableIOMessage {
     this(id);
     this.value = value;
     stack = stackin;
-  }
-
-  public CableIOMessage(int id, boolean operationMustBeSmaller) {
-    this(id);
-    this.operationMustBeSmaller = operationMustBeSmaller;
   }
 
   public CableIOMessage(int id, ItemStack s) {
@@ -157,7 +151,7 @@ public class CableIOMessage {
         }
       break;
       case SYNC_OP:
-        link.operationMustBeSmaller = message.operationMustBeSmaller;
+        link.operationType = message.value;
       break;
       case SYNC_OP_STACK:
         link.operationStack = message.stack;
@@ -170,7 +164,6 @@ public class CableIOMessage {
     }
     tile.setChanged();
     player.connection.send(tile.getUpdatePacket());
-    //
   }
 
   public static void encode(CableIOMessage msg, FriendlyByteBuf buffer) {
@@ -178,15 +171,11 @@ public class CableIOMessage {
     buffer.writeInt(msg.value);
     buffer.writeBoolean(msg.isAllowlist);
     buffer.writeNbt(msg.stack.save(new CompoundTag()));
-    buffer.writeBoolean(msg.operationMustBeSmaller);
-    //    buffer.writeInt(msg.operationLimit);
   }
 
   public static CableIOMessage decode(FriendlyByteBuf buffer) {
     CableIOMessage c = new CableIOMessage(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
     c.stack = ItemStack.of(buffer.readNbt());
-    c.operationMustBeSmaller = buffer.readBoolean();
-    //    c.operationLimit = buffer.readInt();
     return c;
   }
 }
