@@ -109,7 +109,9 @@ public class ButtonRequest extends Button {
   @Override
   public void renderButton(PoseStack ms, int mouseX, int mouseY, float partial) {
     if (texture == null) {
+      System.out.println("Button is fixed?");
       super.renderButton(ms, mouseX, mouseY, partial);
+      //      drawCenteredString(ms, Minecraft.getInstance().font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2,4210752);
       return;
     }
     Minecraft minecraft = Minecraft.getInstance();
@@ -127,6 +129,9 @@ public class ButtonRequest extends Button {
       this.blit(ms, this.x, this.y,
           textureId.getX(), textureId.getY(),
           width, height);
+    }
+    else {
+      drawCenteredString(ms, Minecraft.getInstance().font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, 2210752);
     }
     this.renderBg(ms, minecraft, mouseX, mouseY);
   }

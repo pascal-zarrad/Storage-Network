@@ -40,6 +40,9 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   private int priority = 0;
   private Direction inventoryFace;
   private boolean needsRedstone = false;
+  public ItemStack operationStack = ItemStack.EMPTY;
+  public int operationLimit = 0;
+  public boolean operationMustBeSmaller = true;
 
   CapabilityConnectableAutoIO(EnumStorageDirection direction) {
     connectable = new CapabilityConnectable();
@@ -127,6 +130,11 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       result.putString("inventoryFace", inventoryFace.toString());
     }
     result.putBoolean("needsRedstone", this.needsRedstone());
+    CompoundTag operation = new CompoundTag();
+    operation.put("stack", operationStack.serializeNBT());
+    operation.putBoolean("mustBeSmaller", operationMustBeSmaller);
+    operation.putInt("limit", operationLimit);
+    result.put("operation", operation);
     return result;
   }
 
@@ -145,6 +153,15 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       inventoryFace = Direction.byName(nbt.getString("inventoryFace"));
     }
     this.needsRedstone(nbt.getBoolean("needsRedstone"));
+    CompoundTag operation = nbt.getCompound("operation");
+    this.operationLimit = operation.getInt("limit");
+    this.operationMustBeSmaller = operation.getBoolean("mustBeSmaller");
+    if (operation.contains("stack")) {
+      this.operationStack = ItemStack.of(operation.getCompound("stack"));
+    }
+    else {
+      this.operationStack = ItemStack.EMPTY;
+    }
   }
 
   @Override

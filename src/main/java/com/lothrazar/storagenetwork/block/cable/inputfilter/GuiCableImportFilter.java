@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ButtonRequest;
 import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
+import com.lothrazar.storagenetwork.gui.TextboxInteger;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
@@ -17,6 +18,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -31,9 +33,11 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   private ButtonRequest btnPlus;
   private ButtonRequest btnAllowIgn;
   private ButtonRequest btnImport;
-  //  private ButtonRequest btnOperationToggle;
+  private ButtonRequest btnOperationToggle;
   private boolean isAllowlist;
   private List<ItemSlotNetwork> itemSlotsGhost;
+  private ItemSlotNetwork operationItemSlot;
+  private TextboxInteger txtHeight;
 
   public GuiCableImportFilter(ContainerCableImportFilter containerCableFilter, Inventory inv, Component name) {
     super(containerCableFilter, inv, name);
@@ -74,13 +78,19 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.IMPORT_FILTER.ordinal()));
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);
-    //    btnOperationToggle = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 26, "=", (p) -> {
-    //      //TODO: enum for equal?
-    //      containerCableLink.cap.operationMustBeSmaller = !containerCableLink.cap.operationMustBeSmaller;
-    //      PacketRegistry.INSTANCE.sendToServer(
-    //          new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP.ordinal(),
-    //              containerCableLink.cap.operationMustBeSmaller, containerCableLink.cap.operationLimit + 1));
-    //    }));
+    //containerCableLink.tile.getBlockPos(), CableMessageType.SYNC_OP_TEXT.ordinal()
+    //    txtHeight.setTooltip(UtilChat.lang("TODO.height.tooltip"));
+    btnOperationToggle = addRenderableWidget(new ButtonRequest(leftPos + 26, topPos + 26, "=", (p) -> {
+      //TODO: enum for equal?
+      containerCableLink.cap.operationMustBeSmaller = !containerCableLink.cap.operationMustBeSmaller;
+      PacketRegistry.INSTANCE.sendToServer(
+          new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP.ordinal(),
+              containerCableLink.cap.operationMustBeSmaller));
+    }));
+    txtHeight = new TextboxInteger(this.font, leftPos + 48, topPos + 26, 20);
+    txtHeight.setValue("" + containerCableLink.cap.operationLimit);
+    this.addRenderableWidget(txtHeight);
+    txtHeight.visible = btnOperationToggle.visible = false;
   }
 
   @Override
@@ -90,6 +100,10 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
         50 - font.width(String.valueOf(priority)) / 2,
         12,
         4210752);
+    if (btnOperationToggle != null) {
+      String s = containerCableLink.cap.operationMustBeSmaller ? "<" : ">";
+      btnOperationToggle.setMessage(new TextComponent(s));
+    }
     this.drawTooltips(ms, mouseX, mouseY);
   }
 
@@ -112,11 +126,16 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     }
     btnAllowIgn.setTextureId(this.isAllowlist ? TextureEnum.ALLOWLIST : TextureEnum.IGNORELIST);
     btnRedstone.setTextureId(containerCableLink.cap.needsRedstone() ? TextureEnum.REDSTONETRUE : TextureEnum.REDSTONEFALSE);
-    //    btnOperationToggle.visible = this.hasOperationUpgrade();
-    //    btnOperationToggle.active = btnOperationToggle.visible;
-    //    if (btnOperationToggle.visible) {
-    //      btnOperationToggle.setTextureId(containerCableLink.cap.operationMustBeSmaller ? TextureEnum.OPORANGE : TextureEnum.OPBLUE);
-    //    }
+    btnOperationToggle.visible = this.isOperationMode();
+    txtHeight.visible = btnOperationToggle.active = btnOperationToggle.visible;
+    if (btnOperationToggle.visible) {
+      //??
+      //      btnOperationToggle.setTextureId(containerCableLink.cap.operationMustBeSmaller ? TextureEnum.OPORANGE : TextureEnum.OPBLUE);
+    }
+  }
+
+  private boolean isOperationMode() {
+    return this.containerCableLink.cap.isOperationMode();
   }
 
   private void drawTooltips(PoseStack ms, final int mouseX, final int mouseY) {
@@ -140,6 +159,11 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.redstone."
           + containerCableLink.cap.needsRedstone())), Optional.empty(), mouseX - leftPos, mouseY - topPos);
     }
+    if (btnOperationToggle != null && btnOperationToggle.isMouseOver(mouseX, mouseY)) {
+      String two = "gui.storagenetwork.operate.tooltip." + (this.containerCableLink.cap.operationMustBeSmaller ? "less" : "more");
+      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.operate.tooltip"), new TranslatableComponent(two)),
+          Optional.empty(), mouseX - leftPos, mouseY - topPos);
+    }
     //    if (btnOperationToggle != null && btnOperationToggle.isMouseOver(mouseX, mouseY)) {
     //      renderTooltip(ms, Lists.newArrayList(new TranslatableComponent("gui.storagenetwork.operation")), Optional.empty(), mouseX - leftPos, mouseY - topPos);
     //    }
@@ -151,6 +175,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, texture);
+    //    this.txtHeight.ren
     int xCenter = (width - imageWidth) / 2;
     int yCenter = (height - imageHeight) / 2;
     blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
@@ -171,9 +196,11 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       //move down to second row
       y += SLOT_SIZE;
     }
+    operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, leftPos + 6, topPos + 26, 18, leftPos, topPos, false);
     for (ItemSlotNetwork s : itemSlotsGhost) {
       s.drawSlot(ms, font, mouseX, mouseY);
     }
+    operationItemSlot.drawSlot(ms, font, mouseX, mouseY);
   }
 
   public void setFilterItems(List<ItemStack> stacks) {
@@ -220,7 +247,11 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
 
   @Override
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    ItemStack mouse = minecraft.player.containerMenu.getCarried();
+    ItemStack stackCarriedByMouse = minecraft.player.containerMenu.getCarried();
+    if (operationItemSlot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
+      PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP_STACK.ordinal(), stackCarriedByMouse));
+      return true;
+    }
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
       ItemSlotNetwork slot = itemSlotsGhost.get(i);
       if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
@@ -242,8 +273,8 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
         }
         else {
           //i hit an empty slot, save what im holding
-          slot.setStack(mouse.copy());
-          this.sendStackSlot(i, mouse.copy());
+          slot.setStack(stackCarriedByMouse.copy());
+          this.sendStackSlot(i, stackCarriedByMouse.copy());
           return true;
         }
       }

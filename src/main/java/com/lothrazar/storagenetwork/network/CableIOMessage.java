@@ -21,7 +21,7 @@ import net.minecraftforge.network.NetworkEvent;
 public class CableIOMessage {
 
   public enum CableMessageType {
-    SYNC_DATA, IMPORT_FILTER, SAVE_FITLER, REDSTONE;
+    SYNC_DATA, IMPORT_FILTER, SAVE_FITLER, REDSTONE, SYNC_OP, SYNC_OP_TEXT, SYNC_OP_STACK;
   }
 
   private boolean isAllowlist;
@@ -29,7 +29,6 @@ public class CableIOMessage {
   private int value = 0;
   private ItemStack stack = ItemStack.EMPTY;
   private boolean operationMustBeSmaller;
-  private int operationLimit;
 
   public CableIOMessage(int id) {
     this.id = id;
@@ -47,10 +46,14 @@ public class CableIOMessage {
     stack = stackin;
   }
 
-  public CableIOMessage(int id, boolean operationMustBeSmaller, int operationLimit) {
+  public CableIOMessage(int id, boolean operationMustBeSmaller) {
     this(id);
     this.operationMustBeSmaller = operationMustBeSmaller;
-    this.operationLimit = operationLimit;
+  }
+
+  public CableIOMessage(int id, ItemStack s) {
+    this(id);
+    this.stack = s;
   }
 
   @Override
@@ -153,6 +156,17 @@ public class CableIOMessage {
           connectable.toggleNeedsRedstone();
         }
       break;
+      case SYNC_OP:
+        link.operationMustBeSmaller = message.operationMustBeSmaller;
+      break;
+      case SYNC_OP_STACK:
+        link.operationStack = message.stack;
+      break;
+      case SYNC_OP_TEXT:
+        link.operationLimit = message.value;
+      break;
+      default:
+      break;
     }
     tile.setChanged();
     player.connection.send(tile.getUpdatePacket());
@@ -165,14 +179,14 @@ public class CableIOMessage {
     buffer.writeBoolean(msg.isAllowlist);
     buffer.writeNbt(msg.stack.save(new CompoundTag()));
     buffer.writeBoolean(msg.operationMustBeSmaller);
-    buffer.writeInt(msg.operationLimit);
+    //    buffer.writeInt(msg.operationLimit);
   }
 
   public static CableIOMessage decode(FriendlyByteBuf buffer) {
     CableIOMessage c = new CableIOMessage(buffer.readInt(), buffer.readInt(), buffer.readBoolean());
     c.stack = ItemStack.of(buffer.readNbt());
     c.operationMustBeSmaller = buffer.readBoolean();
-    c.operationLimit = buffer.readInt();
+    //    c.operationLimit = buffer.readInt();
     return c;
   }
 }

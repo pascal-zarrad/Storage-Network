@@ -439,11 +439,11 @@ public class TileMain extends BlockEntity {
         //check operations upgrade for export
         boolean operationMode = storage.isOperationMode();
         boolean stockMode = storage.isStockMode();
-        //        if (operationMode) {
-        //          amtToRequest = matcher.getStack().getCount(); // the 63 haha
-        //        }
-        //        else
-        if (stockMode) {
+        if (operationMode) {
+          //check whats present in the current inventory
+          // if (greater than or whatever) then halt
+        }
+        else if (stockMode) {
           StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
           //STOCK upgrade means
           try {
