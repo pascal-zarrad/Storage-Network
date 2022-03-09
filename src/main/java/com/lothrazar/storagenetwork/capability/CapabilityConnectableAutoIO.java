@@ -11,6 +11,7 @@ import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
+import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.UpgradesItemStackHandler;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -24,6 +25,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag>, IConnectableItemAutoIO {
+
+  private static final int IO_MAX_SPEED = 30; // TODO CONFIG
 
   public static class Factory implements Callable<IConnectableItemAutoIO> {
 
@@ -42,6 +45,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   private boolean needsRedstone = false;
   public ItemStack operationStack = ItemStack.EMPTY;
   public int operationLimit = 0;
+  // TODO: ENUM: < > <= >=
   public boolean operationMustBeSmaller = true;
 
   CapabilityConnectableAutoIO(EnumStorageDirection direction) {
@@ -294,16 +298,42 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return getUpgrades().hasUpgradesOfType(SsnRegistry.STACK_UPGRADE) ? 64 : 4;
   }
 
+  private boolean doesPassOperationFilterLimit(TileMain master) {
+    if (upgrades.getUpgradesOfType(SsnRegistry.OP_UPGRADE) < 1) {
+      return true;
+    }
+    if (operationStack == null || operationStack.isEmpty()) {
+      return true;
+    }
+    // TODO: Investigate whether the operation limiter should consider the filter toggles
+    int availableStack = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
+    if (operationMustBeSmaller) {
+      System.out.println(operationLimit + " ?  > " + availableStack + operationStack.getItem());
+      return operationLimit > availableStack;
+    }
+    else {
+      System.out.println(operationLimit + " ? < " + availableStack + operationStack.getItem());
+      return operationLimit < availableStack;
+    }
+  }
+
   @Override
   public boolean runNow(DimPos connectablePos, TileMain main) {
     int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE) + 1, 1);
-    int speedRatio = (30 / speed);
-    if (speedRatio <= 1) {
+    int speedRatio = (IO_MAX_SPEED / speed);
+    if (speedRatio < 1) {
       speedRatio = 1;
     }
     boolean cooldownOk = (connectablePos.getWorld().getGameTime() % speedRatio == 0);
-    //    boolean operationLimitOk = t
-    return cooldownOk; //&& operationLimitOk
+    if (!cooldownOk) {
+      return false;
+    }
+    //opt: dont check operation count if the cooldown is bad anyway
+    boolean operationLimitOk = doesPassOperationFilterLimit(main);
+    if (!operationLimitOk) {
+      System.out.println("op CANCEL " + connectablePos);
+    }
+    return operationLimitOk;
   }
 
   @Override

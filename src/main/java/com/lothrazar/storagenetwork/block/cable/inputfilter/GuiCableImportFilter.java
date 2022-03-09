@@ -78,18 +78,16 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.IMPORT_FILTER.ordinal()));
     }));
     btnImport.setTextureId(TextureEnum.IMPORT);
-    //containerCableLink.tile.getBlockPos(), CableMessageType.SYNC_OP_TEXT.ordinal()
-    //    txtHeight.setTooltip(UtilChat.lang("TODO.height.tooltip"));
-    btnOperationToggle = addRenderableWidget(new ButtonRequest(leftPos + 26, topPos + 26, "=", (p) -> {
+    txtHeight = new TextboxInteger(this.font, leftPos + 6, topPos + 26, 20);
+    txtHeight.setValue("" + containerCableLink.cap.operationLimit);
+    this.addRenderableWidget(txtHeight);
+    btnOperationToggle = addRenderableWidget(new ButtonRequest(leftPos + 29, topPos + 26, "=", (p) -> {
       //TODO: enum for equal?
       containerCableLink.cap.operationMustBeSmaller = !containerCableLink.cap.operationMustBeSmaller;
       PacketRegistry.INSTANCE.sendToServer(
           new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP.ordinal(),
               containerCableLink.cap.operationMustBeSmaller));
     }));
-    txtHeight = new TextboxInteger(this.font, leftPos + 48, topPos + 26, 20);
-    txtHeight.setValue("" + containerCableLink.cap.operationLimit);
-    this.addRenderableWidget(txtHeight);
     txtHeight.visible = btnOperationToggle.visible = false;
   }
 
@@ -183,6 +181,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     //TODO: shared with GuiCableIO
     final int rows = 2;
     final int cols = 9;
+    int size = 18;
     int index = 0;
     int x;
     int y = 45;
@@ -196,12 +195,21 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       //move down to second row
       y += SLOT_SIZE;
     }
-    operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, leftPos + 6, topPos + 26, 18, leftPos, topPos, false);
+    x = leftPos + 48;
+    y = topPos + 26;
+    operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, x, y, size, leftPos, topPos, false);
     for (ItemSlotNetwork s : itemSlotsGhost) {
       s.drawSlot(ms, font, mouseX, mouseY);
     }
-    operationItemSlot.drawSlot(ms, font, mouseX, mouseY);
+    if (this.isOperationMode()) {
+      operationItemSlot.drawSlot(ms, font, mouseX, mouseY);
+      //      RenderSystem.setShader(GameRenderer::getPositionTexShader);
+      RenderSystem.setShaderTexture(0, SLOT);
+      blit(ms, x - 1, y - 1, 0, 0, size, size, size, size);
+    }
   }
+
+  public static final ResourceLocation SLOT = new ResourceLocation(StorageNetwork.MODID, "textures/gui/slot.png");
 
   public void setFilterItems(List<ItemStack> stacks) {
     FilterItemStackHandler filter = this.containerCableLink.cap.getFilter();
