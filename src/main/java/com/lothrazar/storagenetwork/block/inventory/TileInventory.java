@@ -78,6 +78,7 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
     return isJeiSearchSynced;
   }
 
+  @Override
   public void setJeiSearchSynced(boolean val) {
     isJeiSearchSynced = val;
   }

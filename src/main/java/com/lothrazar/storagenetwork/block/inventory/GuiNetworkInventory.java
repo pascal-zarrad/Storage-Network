@@ -30,8 +30,7 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
-  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID,
-      "textures/gui/inventory.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/inventory.png");
   final NetworkWidget network;
   private TileInventory tile;
 
