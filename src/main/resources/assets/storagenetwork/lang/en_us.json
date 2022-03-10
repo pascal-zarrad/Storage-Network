@@ -58,7 +58,7 @@
     "block.storagenetwork.collector.tooltip": "Items inserted enter the network",
     
     "item.storagenetwork.speed_upgrade": "Speed Upgrade",
-    "item.storagenetwork.speed_upgrade.guide": "This upgrade can be placed in cables.  Increases the speed of imports, which normally do not happen every tick",
+    "item.storagenetwork.speed_upgrade.guide": "This upgrade can be placed in cables.  Increases the speed of imports, which normally do not happen every tick. by decreasing the tick delay between operations.  Will cause any Slowness upgrades to be ignored if both are present.  ",
     "item.storagenetwork.speed_upgrade.tooltip": "Increases the speed of importing/exporting",
     
     "item.storagenetwork.operation_upgrade": "Operation Upgrade",
@@ -72,6 +72,10 @@
     "item.storagenetwork.single_upgrade": "Singleton Upgrade",
     "item.storagenetwork.single_upgrade.tooltip": "Sets stack size of the task to 1",
     "item.storagenetwork.single_upgrade.guide": "This upgrade can be placed in the import or exporting cables.  Decreases it to pulling 1 every time the cable fires instead of 4. Will override the Stack upgrade if both are present",
+     
+    "item.storagenetwork.slow_upgrade": "Slowness Upgrade",
+    "item.storagenetwork.slow_upgrade.tooltip": "Slows down the speed of importing/exporting ",
+    "item.storagenetwork.slow_upgrade.guide": "This upgrade can be placed in the import or exporting cables.  Increases ticks between each operation which slows down the overall process. ",
      
     "item.storagenetwork.stock_upgrade": "Stock Upgrade",
     "item.storagenetwork.stock_upgrade.tooltip": "Keeps a a consistent stock of items in the attached inventory (only in export cable)",

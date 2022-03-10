@@ -81,10 +81,20 @@ public class UtilInventory {
     return size + "";
   }
 
-  public static int containsAtLeastHowManyNeeded(IItemHandler inv, ItemStack stack, int minimumCount) {
+  public static int countHowMany(IItemHandler inv, ItemStack stackIn) {
     int found = 0;
     for (int i = 0; i < inv.getSlots(); i++) {
-      if (ItemHandlerHelper.canItemStacksStack(inv.getStackInSlot(i), stack)) {
+      if (ItemHandlerHelper.canItemStacksStack(inv.getStackInSlot(i), stackIn)) {
+        found += inv.getStackInSlot(i).getCount();
+      }
+    }
+    return found;
+  }
+
+  public static int containsAtLeastHowManyNeeded(IItemHandler inv, ItemStack stackIn, int minimumCount) {
+    int found = 0;
+    for (int i = 0; i < inv.getSlots(); i++) {
+      if (ItemHandlerHelper.canItemStacksStack(inv.getStackInSlot(i), stackIn)) {
         found += inv.getStackInSlot(i).getCount();
       }
     }

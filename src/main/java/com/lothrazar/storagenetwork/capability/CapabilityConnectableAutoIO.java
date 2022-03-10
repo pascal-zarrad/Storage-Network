@@ -335,6 +335,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       speedRatio = IO_DEFAULT_SPEED / (speedUpgrades + 1);
     }
     else if (slowUpgrades > 0) {
+      //meaning IF one or more speed upgrades are present, then all slowness upgrades are IGNORED
       //so 1 Slow upgrade is run every 30*2=60t, two is 30*3=90 ticks 
       speedRatio = IO_DEFAULT_SPEED * (slowUpgrades + 1);
     }

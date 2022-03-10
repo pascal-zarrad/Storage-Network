@@ -346,17 +346,35 @@ public class TileMain extends BlockEntity {
           continue;
         }
       }
-      if (storage.isStockMode()) {
-        System.out.println("TODO: stock mode import");
-      }
       for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
-        ItemStack stack = itemHandler.getStackInSlot(slot);
-        if (stack == null || stack.isEmpty()) {
+        if (itemHandler.getStackInSlot(slot).isEmpty()) {
           continue;
         }
+        ItemStack stackCurrent = itemHandler.getStackInSlot(slot).copy();
         // Ignore stacks that are filtered
-        if (storage.getFilters() == null || !storage.getFilters().isStackFiltered(stack)) {
-          int extractSize = Math.min(storage.getTransferRate(), stack.getCount());
+        if (storage.getFilters() == null || !storage.getFilters().isStackFiltered(stackCurrent)) {
+          if (storage.isStockMode()) {
+            System.out.println("TODO: stock mode import");
+            BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
+            //request with false to see how many even exist in there.
+            int chestHowMany = UtilInventory.countHowMany(targetInventory, stackCurrent.copy());
+            //so if chest=37 items of that kind
+            //and the filter is say stackCurrent.getCount() == 20
+            //we SHOULD import 37
+            //as we want the STOCK of the chest to not go less than the filter number , just down to it
+            if (chestHowMany > stackCurrent.getCount()) {
+              int realSize = Math.min(chestHowMany - stackCurrent.getCount(), 64);
+              System.out.println(" : stock mode import  chestHowMany = " + chestHowMany);
+              System.out.println(" : stock mode import  filter  = " + stackCurrent.getCount());
+              System.out.println(" : stock mode import  realSize = " + realSize);
+              stackCurrent.setCount(realSize);
+            }
+          }
+          //
+          //
+          //
+          int extractSize = Math.min(storage.getTransferRate(), stackCurrent.getCount());
           ItemStack stackToImport = itemHandler.extractItem(slot, extractSize, true); //simulate to grab a reference
           if (stackToImport.isEmpty()) {
             continue; //continue back to itemHandler
@@ -433,14 +451,9 @@ public class TileMain extends BlockEntity {
         }
         //default amt to request. can be overriden by other upgrades
         int amtToRequest = storage.getTransferRate();
-        //check operations upgrade for export
-        boolean operationMode = storage.isOperationMode();
+        //check operations upgrade for export 
         boolean stockMode = storage.isStockMode();
-        if (operationMode) {
-          //check whats present in the current inventory
-          // if (greater than or whatever) then halt
-        }
-        else if (stockMode) {
+        if (stockMode) {
           StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
           //STOCK upgrade means
           try {
