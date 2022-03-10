@@ -78,8 +78,8 @@
     "item.storagenetwork.slow_upgrade.guide": "This upgrade can be placed in the import or exporting cables.  Increases ticks between each operation which slows down the overall process. ",
      
     "item.storagenetwork.stock_upgrade": "Stock Upgrade",
-    "item.storagenetwork.stock_upgrade.tooltip": "Keeps a a consistent stock of items in the attached inventory (only in export cable)",
-    "item.storagenetwork.stock_upgrade.guide": "If this is in an export cable, then for each unique item in the filter, it will only export until the target inventory has less then the stack size of the filter.  For example, if the inventory has 50 items and the filter has that item set at 53, it will try to export 3 more of that item",
+    "item.storagenetwork.stock_upgrade.tooltip": "Keeps a a consistent stock of items in the attached inventory",
+    "item.storagenetwork.stock_upgrade.guide": "If this is in an export cable, then for each unique item in the filter, it will only export until the target inventory has less then the stack size of the filter to fill it up to the target size from the filter.  In the opposite way, Import cables with a stock upgrade will keep a consistent stock in the linked chest based, reducing it down and stopping at the filter stack sizes. ",
 
     "item.storagenetwork.builder_remote": "Network Builder Remote",
     "item.storagenetwork.builder_remote.tooltip": "Bind to a network and a block to build",

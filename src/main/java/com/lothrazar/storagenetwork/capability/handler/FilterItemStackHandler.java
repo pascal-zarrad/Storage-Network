@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class FilterItemStackHandler extends ItemStackHandlerEx {
 
@@ -95,5 +96,15 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     rulesTag.putBoolean("whitelist", isAllowList);
     result.put("rules", rulesTag);
     return result;
+  }
+
+  public int getStackCount(ItemStack stackCurrent) {
+    int s = 0;
+    for (IItemStackMatcher m : getStackMatchers()) {
+      if (ItemHandlerHelper.canItemStacksStack(stackCurrent, m.getStack())) {
+        return s += m.getStack().getCount();
+      }
+    }
+    return s;
   }
 }

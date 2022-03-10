@@ -354,21 +354,23 @@ public class TileMain extends BlockEntity {
         // Ignore stacks that are filtered
         if (storage.getFilters() == null || !storage.getFilters().isStackFiltered(stackCurrent)) {
           if (storage.isStockMode()) {
-            System.out.println("TODO: stock mode import");
+            int filterSize = storage.getFilters().getStackCount(stackCurrent);
             BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
             IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
             //request with false to see how many even exist in there.
-            int chestHowMany = UtilInventory.countHowMany(targetInventory, stackCurrent.copy());
+            int chestHowMany = UtilInventory.countHowMany(targetInventory, stackCurrent);
             //so if chest=37 items of that kind
-            //and the filter is say stackCurrent.getCount() == 20
+            //and the filter is say filterSize == 20
             //we SHOULD import 37
             //as we want the STOCK of the chest to not go less than the filter number , just down to it
-            if (chestHowMany > stackCurrent.getCount()) {
-              int realSize = Math.min(chestHowMany - stackCurrent.getCount(), 64);
-              System.out.println(" : stock mode import  chestHowMany = " + chestHowMany);
-              System.out.println(" : stock mode import  filter  = " + stackCurrent.getCount());
-              System.out.println(" : stock mode import  realSize = " + realSize);
+            if (chestHowMany > filterSize) {
+              int realSize = Math.min(chestHowMany - filterSize, 64);
+              StorageNetwork.log(" : stock mode import  realSize = " + realSize);
               stackCurrent.setCount(realSize);
+            }
+            else {
+              StorageNetwork.log(" : stock mode CANCEL: ITS NOT ENOUGH chestHowMany <= filter size ");
+              continue;
             }
           }
           //
