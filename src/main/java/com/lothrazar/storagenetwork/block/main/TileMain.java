@@ -331,7 +331,7 @@ public class TileMain extends BlockEntity {
       if (!storage.runNow(connectable.getPos(), this)) {
         continue;
       }
-      int amtToRequest = storage.getTransferRate();
+      //      int amtToRequest = storage.getTransferRate();
       //TODO
       // storage.getUpgrades().getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
       // Do a simulation first and abort if we got an empty stack,
@@ -348,9 +348,6 @@ public class TileMain extends BlockEntity {
       }
       if (storage.isStockMode()) {
         System.out.println("TODO: stock mode import");
-      }
-      if (storage.isOperationMode()) {
-        System.out.println("TODO: OPERATION import");
       }
       for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
         ItemStack stack = itemHandler.getStackInSlot(slot);

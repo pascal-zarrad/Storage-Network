@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -28,7 +29,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag>, IConnectableItemAutoIO {
 
   public static final int DEFAULT_ITEMS_PER = 4;
-  public static final int IO_MAX_SPEED = 30; // TODO CONFIG
+  public static final int IO_DEFAULT_SPEED = 30; // TODO CONFIG
 
   public static class Factory implements Callable<IConnectableItemAutoIO> {
 
@@ -326,10 +327,19 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
 
   @Override
   public boolean runNow(DimPos connectablePos, TileMain main) {
-    int speed = Math.max(upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE) + 1, 1);
-    int speedRatio = (IO_MAX_SPEED / speed);
+    int speedUpgrades = upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE);
+    int slowUpgrades = upgrades.getUpgradesOfType(SsnRegistry.SLOW_UPGRADE);
+    int speedRatio = IO_DEFAULT_SPEED; // no upgrades
+    if (speedUpgrades > 0) {
+      //so 1 speed upgrade is run every 30/2=15t, two is 30/3 ticks etc
+      speedRatio = IO_DEFAULT_SPEED / (speedUpgrades + 1);
+    }
+    else if (slowUpgrades > 0) {
+      //so 1 Slow upgrade is run every 30*2=60t, two is 30*3=90 ticks 
+      speedRatio = IO_DEFAULT_SPEED * (slowUpgrades + 1);
+    }
     if (speedRatio < 1) {
-      speedRatio = 1;
+      speedRatio = 1; // 0 wont happen but idk maybe
     }
     boolean cooldownOk = (connectablePos.getWorld().getGameTime() % speedRatio == 0);
     if (!cooldownOk) {
@@ -337,7 +347,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     //opt: dont check operation count if the cooldown is bad anyway
     boolean operationLimitOk = doesPassOperationFilterLimit(main);
-    System.out.println("op allowed to runNow = " + operationLimitOk);
+    StorageNetwork.log("OP allowed to runNow = " + operationLimitOk);
     return operationLimitOk;
   }
 

@@ -12,6 +12,7 @@ import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.gui.TextboxInteger;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
+import com.lothrazar.storagenetwork.registry.ClientEventRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -34,9 +35,9 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   private ButtonRequest btnPlus;
   private ButtonRequest btnAllowIgn;
   private ButtonRequest btnImport;
-  private ButtonRequest btnOperationToggle;
   private boolean isAllowlist;
   private List<ItemSlotNetwork> itemSlotsGhost;
+  private ButtonRequest btnOperationToggle;
   private ItemSlotNetwork operationItemSlot;
   private TextboxInteger txtHeight;
 
@@ -130,7 +131,6 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     btnOperationToggle.visible = this.isOperationMode();
     txtHeight.visible = btnOperationToggle.active = btnOperationToggle.visible;
     if (btnOperationToggle.visible) {
-      //??
       //      btnOperationToggle.setTextureId(containerCableLink.cap.operationMustBeSmaller ? TextureEnum.OPORANGE : TextureEnum.OPBLUE);
     }
   }
@@ -199,19 +199,17 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     }
     x = leftPos + 6;
     y = topPos + 26;
-    operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, x, y, size, leftPos, topPos, false);
     for (ItemSlotNetwork s : itemSlotsGhost) {
       s.drawSlot(ms, font, mouseX, mouseY);
     }
+    operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, x, y, size, leftPos, topPos, false);
     if (this.isOperationMode()) {
       operationItemSlot.drawSlot(ms, font, mouseX, mouseY);
       //      RenderSystem.setShader(GameRenderer::getPositionTexShader);
-      RenderSystem.setShaderTexture(0, SLOT);
+      RenderSystem.setShaderTexture(0, ClientEventRegistry.SLOT);
       blit(ms, x - 1, y - 1, 0, 0, size, size, size, size);
     }
   }
-
-  public static final ResourceLocation SLOT = new ResourceLocation(StorageNetwork.MODID, "textures/gui/slot.png");
 
   public void setFilterItems(List<ItemStack> stacks) {
     FilterItemStackHandler filter = this.containerCableLink.cap.getFilter();
@@ -259,7 +257,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     ItemStack stackCarriedByMouse = minecraft.player.containerMenu.getCarried();
     if (operationItemSlot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
-      PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP_STACK.ordinal(), stackCarriedByMouse));
+      PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP_STACK.ordinal(), stackCarriedByMouse.copy()));
       return true;
     }
     for (int i = 0; i < this.itemSlotsGhost.size(); i++) {

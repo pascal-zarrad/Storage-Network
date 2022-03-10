@@ -18,7 +18,6 @@
 	}
   },
   "result": {
-    "item": "storagenetwork:stock_upgrade",
-	 "count": 4
+    "item": "storagenetwork:stock_upgrade"
   }
 }

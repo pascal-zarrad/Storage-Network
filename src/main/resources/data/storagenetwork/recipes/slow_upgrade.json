@@ -14,10 +14,10 @@
 	  "item": "storagenetwork:kabel"
 	},
     "g":  {
-	  "item": "minecraft:coal"
+	  "item": "minecraft:copper_ingot"
 	}
   },
   "result": {
-    "item": "storagenetwork:single_upgrade"
+    "item": "storagenetwork:slow_upgrade"
   }
 }

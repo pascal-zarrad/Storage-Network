@@ -68,6 +68,8 @@ public class SsnRegistry {
   public static ItemStorageCraftingRemote CRAFTING_REMOTE;
   @ObjectHolder(StorageNetwork.MODID + ":collector_remote")
   public static ItemCollector COLLECTOR_REMOTE;
+  @ObjectHolder(StorageNetwork.MODID + ":slow_upgrade")
+  public static ItemUpgrade SLOW_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":speed_upgrade")
   public static ItemUpgrade SPEED_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":single_upgrade")
@@ -176,6 +178,7 @@ public class SsnRegistry {
       r.register(new BlockItem(SsnRegistry.COLLECTOR, properties).setRegistryName("collector"));
       r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
+      r.register(new ItemUpgrade(properties).setRegistryName("slow_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("stock_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("operation_upgrade"));
       r.register(new ItemUpgrade(properties).setRegistryName("single_upgrade"));
