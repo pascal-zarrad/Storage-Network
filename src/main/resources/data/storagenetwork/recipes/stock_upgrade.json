@@ -8,13 +8,13 @@
   ],
   "key": {
     "c": {
-      "item": "minecraft:chest"
+      "tag": "forge:dusts/redstone"
     },
     "i":  {
 	  "item": "storagenetwork:kabel"
 	},
     "g":  {
-	  "item": "minecraft:redstone"
+	  "item": "minecraft:chest"
 	}
   },
   "result": {

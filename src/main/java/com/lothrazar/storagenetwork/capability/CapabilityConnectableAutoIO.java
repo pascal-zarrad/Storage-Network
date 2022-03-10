@@ -27,7 +27,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag>, IConnectableItemAutoIO {
 
-  private static final int IO_MAX_SPEED = 30; // TODO CONFIG
+  public static final int DEFAULT_ITEMS_PER = 4;
+  public static final int IO_MAX_SPEED = 30; // TODO CONFIG
 
   public static class Factory implements Callable<IConnectableItemAutoIO> {
 
@@ -295,7 +296,10 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
 
   @Override
   public int getTransferRate() {
-    return getUpgrades().hasUpgradesOfType(SsnRegistry.STACK_UPGRADE) ? 64 : 4;
+    if (upgrades.hasUpgradesOfType(SsnRegistry.SINGLE_UPGRADE)) {
+      return 1; //override both others
+    }
+    return upgrades.hasUpgradesOfType(SsnRegistry.STACK_UPGRADE) ? 64 : DEFAULT_ITEMS_PER;
   }
 
   private boolean doesPassOperationFilterLimit(TileMain master) {
@@ -307,7 +311,6 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     // TODO: Investigate whether the operation limiter should consider the filter toggles
     int countYourItemInNetwork = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
-    System.out.println("checkop::" + operationType);
     switch (OpCompareType.get(operationType)) {
       case EQUAL:
         return countYourItemInNetwork == operationLimit;
@@ -334,9 +337,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     //opt: dont check operation count if the cooldown is bad anyway
     boolean operationLimitOk = doesPassOperationFilterLimit(main);
-    if (!operationLimitOk) {
-      System.out.println("op CANCEL " + connectablePos);
-    }
+    System.out.println("op allowed to runNow = " + operationLimitOk);
     return operationLimitOk;
   }
 
