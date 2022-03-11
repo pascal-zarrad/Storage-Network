@@ -10,7 +10,7 @@
       "item": "storagenetwork:kabel"
     },
     "d": {
-      "tag": "forge:storage_blocks/quartz"
+      "item": "minecraft:quartz"
     },
     "c": {
       "tag": "forge:gems/diamond"

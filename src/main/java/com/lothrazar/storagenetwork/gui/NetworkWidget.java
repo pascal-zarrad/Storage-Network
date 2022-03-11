@@ -45,6 +45,7 @@ public class NetworkWidget {
   public ButtonRequest directionBtn;
   public ButtonRequest sortBtn;
   public ButtonRequest jeiBtn;
+  public ButtonRequest focusBtn;
 
   public NetworkWidget(IGuiNetwork gui) {
     this.gui = gui;
@@ -186,7 +187,7 @@ public class NetworkWidget {
     searchBar.setBordered(false);
     searchBar.setVisible(true);
     searchBar.setTextColor(16777215);
-    searchBar.setFocus(StorageNetwork.CONFIG.enableAutoSearchFocus());
+    //    searchBar.setFocus(StorageNetwork.CONFIG.enableAutoSearchFocus());
     if (ModList.get().isLoaded("jei")) {
       initJei();
     }
@@ -223,6 +224,9 @@ public class NetworkWidget {
     }
     else if (sortBtn != null && sortBtn.isMouseOver(mouseX, mouseY)) {
       tooltip = new TranslatableComponent("gui.storagenetwork.req.tooltip_" + gui.getSort().name().toLowerCase());
+    }
+    else if (focusBtn != null && focusBtn.isMouseOver(mouseX, mouseY)) {
+      tooltip = new TranslatableComponent("gui.storagenetwork.autofocus.tooltip." + gui.getAutoFocus());
     }
     else if (ModList.get().isLoaded("jei") && jeiBtn != null && jeiBtn.isMouseOver(mouseX, mouseY)) {
       tooltip = new TranslatableComponent(gui.isJeiSearchSynced() ? "gui.storagenetwork.fil.tooltip_jei_on" : "gui.storagenetwork.fil.tooltip_jei_off");
@@ -309,13 +313,13 @@ public class NetworkWidget {
 
   public void initButtons() {
     int y = this.searchBar.y - 4;
-    this.directionBtn = new ButtonRequest(
+    directionBtn = new ButtonRequest(
         gui.getGuiLeft() + 6, y, "", (p) -> {
           gui.setDownwards(!gui.getDownwards());
           gui.syncDataToServer();
         });
     directionBtn.setHeight(16);
-    this.sortBtn = new ButtonRequest(gui.getGuiLeft() + 22, y, "", (p) -> {
+    sortBtn = new ButtonRequest(gui.getGuiLeft() + 22, y, "", (p) -> {
       gui.setSort(gui.getSort().next());
       gui.syncDataToServer();
     });
@@ -327,6 +331,14 @@ public class NetworkWidget {
       });
       jeiBtn.setHeight(16);
     }
+    focusBtn = new ButtonRequest(
+        gui.getGuiLeft() + 166, y + 2, "", (p) -> {
+          gui.setAutoFocus(!gui.getAutoFocus());
+          gui.syncDataToServer();
+          System.out.println("Syncinc focus " + gui.getAutoFocus());
+        });
+    focusBtn.setHeight(11);
+    focusBtn.setWidth(6);
   }
 
   public void sortStackWrappers(List<ItemStack> stacksToDisplay) {
@@ -361,6 +373,7 @@ public class NetworkWidget {
         sortBtn.setTextureId(TextureEnum.SORT_NAME);
       break;
     }
+    focusBtn.setTextureId(gui.getAutoFocus() ? TextureEnum.RED : TextureEnum.GREY);
     directionBtn.setTextureId(gui.getDownwards() ? TextureEnum.SORT_DOWN : TextureEnum.SORT_UP);
     if (jeiBtn != null && ModList.get().isLoaded("jei")) {
       jeiBtn.setTextureId(gui.isJeiSearchSynced() ? TextureEnum.JEI_GREEN : TextureEnum.JEI_RED);

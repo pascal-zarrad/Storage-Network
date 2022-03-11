@@ -18,7 +18,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
@@ -36,7 +35,7 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
   public GuiNetworkCraftingRemote(ContainerNetworkCraftingRemote screenContainer, Inventory inv, Component titleIn) {
     super(screenContainer, inv, titleIn);
     //since the rightclick action forces only MAIN_HAND openings, is ok
-    this.remote = inv.player.getItemInHand(InteractionHand.MAIN_HAND);
+    this.remote = screenContainer.getRemote();// inv.player.getItemInHand(InteractionHand.MAIN_HAND);
     network = new NetworkWidget(this);
     network.setLines(4);
     this.imageWidth = WIDTH;
@@ -75,6 +74,16 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
   }
 
   @Override
+  public boolean getAutoFocus() {
+    return ItemStorageCraftingRemote.getAutoFocus(remote);
+  }
+
+  @Override
+  public void setAutoFocus(boolean b) {
+    ItemStorageCraftingRemote.setAutoFocus(remote, b);
+  }
+
+  @Override
   public void setDownwards(boolean val) {
     ItemStorageCraftingRemote.setDownwards(remote, val);
   }
@@ -102,6 +111,10 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
     network.initButtons();
     addRenderableWidget(network.directionBtn);
     addRenderableWidget(network.sortBtn);
+    addRenderableWidget(network.focusBtn);
+    if (this.getAutoFocus()) {
+      network.searchBar.setFocus(true);
+    }
     if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);
     }
@@ -213,6 +226,6 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(null, getDownwards(), getSort(), this.isJeiSearchSynced()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(null, getDownwards(), getSort(), this.isJeiSearchSynced(), this.getAutoFocus()));
   }
 }

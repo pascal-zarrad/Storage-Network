@@ -145,7 +145,8 @@
     "gui.storagenetwork.fil.tooltip_tooltip": "Prefix #: Search for tooltip",
     "gui.storagenetwork.fil.tooltip_tags": "Prefix $: Search for block tags",
     "gui.storagenetwork.fil.tooltip_clear": "Clear text with right-click",
- 
+ 	"gui.storagenetwork.autofocus.tooltip.true":"Auto-Focus search bar",
+ 	"gui.storagenetwork.autofocus.tooltip.false":"No auto-focus",
     "gui.storagenetwork.tooltip_clear": "Clear Search",
     "gui.storagenetwork.fil.tooltip_jei_on": "JEI search enabled",
     "gui.storagenetwork.fil.tooltip_jei_off": "JEI search disabled",

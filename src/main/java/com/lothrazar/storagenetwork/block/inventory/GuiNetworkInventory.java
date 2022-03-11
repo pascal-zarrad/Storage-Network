@@ -71,6 +71,10 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
     network.initButtons();
     addRenderableWidget(network.directionBtn);
     addRenderableWidget(network.sortBtn);
+    addRenderableWidget(network.focusBtn);
+    if (this.getAutoFocus()) {
+      network.searchBar.setFocus(true);
+    }
     if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);
     }
@@ -87,7 +91,7 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), this.isJeiSearchSynced()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), isJeiSearchSynced(), tile.getAutoFocus()));
   }
 
   @Override
@@ -223,5 +227,15 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
   @Override
   public void setJeiSearchSynced(boolean val) {
     tile.setJeiSearchSynced(val);
+  }
+
+  @Override
+  public boolean getAutoFocus() {
+    return tile.getAutoFocus();
+  }
+
+  @Override
+  public void setAutoFocus(boolean b) {
+    tile.setAutoFocus(b);
   }
 }

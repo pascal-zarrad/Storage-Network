@@ -20,4 +20,8 @@ public interface IGuiNetwork extends IGuiPrivate {
   void syncDataToServer();
 
   void setSort(EnumSortType val);
+
+  boolean getAutoFocus();
+
+  void setAutoFocus(boolean b);
 }

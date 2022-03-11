@@ -8,17 +8,16 @@
   ],
   "key": {
     "c": {
-      "item": "minecraft:comparator"
+      "tag": "forge:dusts/redstone"
     },
     "i":  {
 	  "item": "storagenetwork:kabel"
 	},
     "g":  {
-	  "item": "minecraft:redstone"
+      "item": "minecraft:comparator"
 	}
   },
   "result": {
-    "item": "storagenetwork:operation_upgrade",
-	 "count": 4
+    "item": "storagenetwork:operation_upgrade"
   }
 }

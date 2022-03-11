@@ -164,12 +164,7 @@ public class ItemStorageCraftingRemote extends Item implements MenuProvider {
 
   @Override
   public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
-    if (hand != InteractionHand.MAIN_HAND) {
-      //no offhand openings
-      return super.use(world, player, hand);
-    }
     ItemStack itemStackIn = player.getItemInHand(hand);
-    //
     if (openRemote(world, player, itemStackIn, this)) {
       // ok great 
       return InteractionResultHolder.success(itemStackIn);
@@ -191,5 +186,13 @@ public class ItemStorageCraftingRemote extends Item implements MenuProvider {
     else {
       return new ContainerNetworkRemote(id, inv);
     }
+  }
+
+  public static void setAutoFocus(ItemStack stack, boolean autoFocus) {
+    stack.getOrCreateTag().putBoolean("autoFocus", autoFocus);
+  }
+
+  public static boolean getAutoFocus(ItemStack stack) {
+    return stack.getOrCreateTag().getBoolean("autoFocus");
   }
 }

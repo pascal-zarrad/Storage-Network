@@ -21,6 +21,7 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;
   private boolean isJeiSearchSynced;
+  private boolean autoFocus = true;
 
   public TileInventory(BlockPos pos, BlockState state) {
     super(SsnRegistry.INVENTORYTILE, pos, state);
@@ -39,6 +40,7 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   @Override
   public void load(CompoundTag compound) {
     super.load(compound);
+    autoFocus = compound.getBoolean("autoFocus");
     setDownwards(compound.getBoolean("dir"));
     setSort(EnumSortType.values()[compound.getInt("sort")]);
     if (compound.contains(NBT_JEI)) {
@@ -51,6 +53,7 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
     super.saveAdditional(compound);
     compound.putBoolean("dir", isDownwards());
     compound.putInt("sort", getSort().ordinal());
+    compound.putBoolean("autoFocus", autoFocus);
     compound.putBoolean(NBT_JEI, this.isJeiSearchSynced());
   }
 
@@ -81,5 +84,14 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   @Override
   public void setJeiSearchSynced(boolean val) {
     isJeiSearchSynced = val;
+  }
+
+  public boolean getAutoFocus() {
+    return autoFocus;
+  }
+
+  @Override
+  public void setAutoFocus(boolean autoFocus) {
+    this.autoFocus = autoFocus;
   }
 }

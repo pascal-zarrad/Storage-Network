@@ -69,6 +69,10 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
     network.initButtons();
     addRenderableWidget(network.directionBtn);
     addRenderableWidget(network.sortBtn);
+    addRenderableWidget(network.focusBtn);
+    if (this.getAutoFocus()) {
+      network.searchBar.setFocus(true);
+    }
     if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);
     }
@@ -85,7 +89,7 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
 
   @Override
   public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), this.isJeiSearchSynced()));
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), this.isJeiSearchSynced(), tile.getAutoFocus()));
   }
 
   @Override
@@ -224,5 +228,15 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     // because its protected and apparently sometimes abstract when compiled
     return super.isHovering(x, y, width, height, mouseX, mouseY);
+  }
+
+  @Override
+  public boolean getAutoFocus() {
+    return tile.getAutoFocus();
+  }
+
+  @Override
+  public void setAutoFocus(boolean b) {
+    tile.setAutoFocus(b);
   }
 }

@@ -20,14 +20,16 @@ public class SettingsSyncMessage {
   private EnumSortType sort;
   private boolean targetTileEntity;
   private boolean jeiSync;
+  private boolean autoFocus;
 
   private SettingsSyncMessage() {}
 
-  public SettingsSyncMessage(BlockPos pos, boolean direction, EnumSortType sort, boolean jeiSync) {
+  public SettingsSyncMessage(BlockPos pos, boolean direction, EnumSortType sort, boolean jeiSync, boolean autoFocus) {
     this.pos = pos;
     this.direction = direction;
     this.sort = sort;
     this.jeiSync = jeiSync;
+    this.autoFocus = autoFocus;
   }
 
   public static void handle(SettingsSyncMessage message, Supplier<NetworkEvent.Context> ctx) {
@@ -40,6 +42,7 @@ public class SettingsSyncMessage {
           tile.setSort(message.sort);
           tile.setDownwards(message.direction);
           tile.setJeiSearchSynced(message.jeiSync);
+          tile.setAutoFocus(message.autoFocus);
           tileEntity.setChanged();
         }
       }
@@ -49,6 +52,7 @@ public class SettingsSyncMessage {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
           ItemStorageCraftingRemote.setJeiSearchSynced(stackPlayerHeld, message.jeiSync);
+          ItemStorageCraftingRemote.setAutoFocus(stackPlayerHeld, message.autoFocus);
         }
       }
       else if (player.containerMenu instanceof ContainerNetworkRemote rcc) { //TODO eww this bufix is ugly for both remotes, shared getremote or shared sync
@@ -57,6 +61,8 @@ public class SettingsSyncMessage {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
           ItemStorageCraftingRemote.setJeiSearchSynced(stackPlayerHeld, message.jeiSync);
+          System.out.println("Save autofocus for non crafting remote " + message.autoFocus + " " + rcc.getRemote());
+          ItemStorageCraftingRemote.setAutoFocus(stackPlayerHeld, message.autoFocus);
         }
       }
     });
@@ -71,6 +77,7 @@ public class SettingsSyncMessage {
     message.targetTileEntity = buf.readBoolean();
     message.pos = buf.readBlockPos();
     message.jeiSync = buf.readBoolean();
+    message.autoFocus = buf.readBoolean();
     return message;
   }
 
@@ -86,5 +93,6 @@ public class SettingsSyncMessage {
       buf.writeBlockPos(BlockPos.ZERO);
     }
     buf.writeBoolean(msg.jeiSync);
+    buf.writeBoolean(msg.autoFocus);
   }
 }

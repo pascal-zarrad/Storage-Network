@@ -20,7 +20,6 @@ public class ConfigRegistry {
   public static IntValue EXCHANGEBUFFER;
   private static BooleanValue RELOADONCHUNK;
   private static ConfigValue<List<String>> IGNORELIST;
-  private static BooleanValue ENABLEAUTOSEARCHFOCUS;
   public static IntValue ITEMRANGE;
   public static IntValue RECIPEMAXTAGS;
   static {
@@ -42,12 +41,8 @@ public class ConfigRegistry {
     EXCHANGEBUFFER = COMMON_BUILDER.comment("\r\n How many itemstacks from the network are visible to external connections through the storagenetwork:exchange.  "
         + "Too low and not all items can pass through, too large and there will be packet/buffer overflows.")
         .defineInRange("exchangeBufferSize", 1024, 1, 5000);
-    ENABLEAUTOSEARCHFOCUS = COMMON_BUILDER.comment("\r\n Set to false to disable the automatic focus of the searchbar - client gui screen")
-        .define("enableAutoSearchFocus", true);
-    //
     ITEMRANGE = COMMON_BUILDER.comment("\r\n Maximum range of the Storage Remote and Crafting Remote.   -1 means unlimited.")
         .defineInRange("remoteMaxRange", -1, -1, Integer.MAX_VALUE / 256);
-    //
     RECIPEMAXTAGS = COMMON_BUILDER.comment("\r\n When matching items to recipes in the JEI + button, this is the maximum number of tags to serialize over the network when on a server.  Reduce if you get errors relating to Packet Sizes being too large (Minecraft 1.12.2 had this hardcoded at 5).")
         .defineInRange("jeiMaximumRecipeTags", 64, 5, 128);
     COMMON_BUILDER.pop();
@@ -78,9 +73,5 @@ public class ConfigRegistry {
 
   public List<String> ignorelist() {
     return IGNORELIST.get();
-  }
-
-  public boolean enableAutoSearchFocus() {
-    return ENABLEAUTOSEARCHFOCUS.get();
   }
 }

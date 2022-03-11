@@ -10,4 +10,6 @@ public interface ITileNetworkSync {
   void setSort(EnumSortType sort);
 
   void setJeiSearchSynced(boolean val);
+
+  void setAutoFocus(boolean autoFocus);
 }
