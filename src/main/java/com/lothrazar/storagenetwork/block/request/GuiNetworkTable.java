@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
+import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -33,6 +34,7 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
   private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private final NetworkWidget network;
   private TileRequest tile;
+  private int topOffset;
 
   public GuiNetworkTable(ContainerNetworkCraftingTable container, Inventory inv, Component name) {
     super(container, inv, name);
@@ -58,12 +60,19 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
   }
 
   @Override
+  public int getGuiTopFixJei() {
+    return super.getGuiTop() + topOffset;
+  }
+
+  @Override
   public void init() {
     super.init();
-    if(this.topPos < 0) {
+    if (ModList.get().isLoaded("jei") &&
+        ConfigRegistry.JEINEGATIVECRASH.get() && this.topPos < 0) {
+      this.topOffset = topPos;
       this.topPos = 0;//If the window size is below the image size then it'll produce negative values which JEI will crash on
     }
-    int searchLeft = leftPos + 81, searchTop = topPos + 96, width = 85;
+    int searchLeft = leftPos + 81, searchTop = getGuiTopFixJei() + 96, width = 85;
     network.searchBar = new EditBox(font,
         searchLeft, searchTop,
         width, font.lineHeight, null);

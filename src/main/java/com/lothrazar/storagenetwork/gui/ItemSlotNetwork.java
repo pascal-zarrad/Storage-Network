@@ -80,7 +80,7 @@ public class ItemSlotNetwork {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
       parent.renderStackTooltip(ms, getStack(),
           mx - parent.getGuiLeft(),
-          my - parent.getGuiTop());
+          my - parent.getGuiTopFixJei());
     }
   }
 

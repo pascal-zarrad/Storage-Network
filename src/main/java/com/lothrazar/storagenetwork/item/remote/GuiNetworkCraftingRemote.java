@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
+import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -31,6 +32,7 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
   private final ResourceLocation textureCraft = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
   private final NetworkWidget network;
   private final ItemStack remote;
+  private int topOffset;
 
   public GuiNetworkCraftingRemote(ContainerNetworkCraftingRemote screenContainer, Inventory inv, Component titleIn) {
     super(screenContainer, inv, titleIn);
@@ -99,9 +101,19 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
   }
 
   @Override
+  public int getGuiTopFixJei() {
+    return super.getGuiTop() + topOffset;
+  }
+
+  @Override
   public void init() {
     super.init();
-    int searchLeft = leftPos + 81, searchTop = topPos + 160, width = 85;
+    if (ModList.get().isLoaded("jei") &&
+        ConfigRegistry.JEINEGATIVECRASH.get() && this.topPos < 0) {
+      this.topOffset = topPos;
+      this.topPos = 0;//If the window size is below the image size then it'll produce negative values which JEI will crash on
+    }
+    int searchLeft = leftPos + 81, searchTop = getGuiTopFixJei() + 160, width = 85;
     searchTop = topPos + 96;
     network.searchBar = new EditBox(font,
         searchLeft, searchTop,

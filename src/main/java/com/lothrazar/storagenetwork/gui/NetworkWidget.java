@@ -168,9 +168,9 @@ public class NetworkWidget {
         //        StorageNetwork.LOGGER.info(in + "GUI STORAGE rebuildItemSlots "+stacksToDisplay.get(in));
         slots.add(new ItemSlotNetwork(gui, stacksToDisplay.get(in),
             gui.getGuiLeft() + 8 + col * 18,
-            gui.getGuiTop() + 10 + row * 18,
+            gui.getGuiTopFixJei() + 10 + row * 18,
             stacksToDisplay.get(in).getCount(),
-            gui.getGuiLeft(), gui.getGuiTop(), true));
+            gui.getGuiLeft(), gui.getGuiTopFixJei(), true));
         index++;
       }
     }
@@ -178,7 +178,7 @@ public class NetworkWidget {
 
   public boolean inSearchBar(double mouseX, double mouseY) {
     return gui.isInRegion(
-        searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTop(), // x, y
+        searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTopFixJei(), // x, y
         searchBar.getWidth(), searchBar.getHeight(), // width, height
         mouseX, mouseY);
   }
@@ -243,14 +243,14 @@ public class NetworkWidget {
         lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_tags")); //$
         lis.add(new TranslatableComponent("gui.storagenetwork.fil.tooltip_clear")); //clear
         Screen screen = ((Screen) gui);
-        screen.renderTooltip(ms, lis, Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+        screen.renderTooltip(ms, lis, Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTopFixJei());
         return; // all done, we have our tts rendered
       }
     }
     //do we have a tooltip
     if (tooltip != null) {
       Screen screen = ((Screen) gui);
-      screen.renderTooltip(ms, Lists.newArrayList(tooltip), Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTop());
+      screen.renderTooltip(ms, Lists.newArrayList(tooltip), Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTopFixJei());
     }
   }
 
@@ -308,7 +308,7 @@ public class NetworkWidget {
 
   private boolean inField(int mouseX, int mouseY) {
     return mouseX > (gui.getGuiLeft() + 7) && mouseX < (gui.getGuiLeft() + GuiNetworkTable.WIDTH - 7)
-        && mouseY > (gui.getGuiTop() + 7) && mouseY < (gui.getGuiTop() + fieldHeight);
+        && mouseY > (gui.getGuiTopFixJei() + 7) && mouseY < (gui.getGuiTopFixJei() + fieldHeight);
   }
 
   public void initButtons() {
