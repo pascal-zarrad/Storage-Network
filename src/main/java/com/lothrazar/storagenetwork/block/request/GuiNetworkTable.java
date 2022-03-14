@@ -60,6 +60,9 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
   @Override
   public void init() {
     super.init();
+    if(this.topPos < 0) {
+      this.topPos = 0;//If the window size is below the image size then it'll produce negative values which JEI will crash on
+    }
     int searchLeft = leftPos + 81, searchTop = topPos + 96, width = 85;
     network.searchBar = new EditBox(font,
         searchLeft, searchTop,
