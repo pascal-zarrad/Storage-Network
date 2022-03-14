@@ -1,12 +1,13 @@
 package com.lothrazar.storagenetwork.jei;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
-import mezz.jei.api.gui.IRecipeLayout;
-import mezz.jei.api.gui.ingredient.IGuiIngredient;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.gui.ingredient.IRecipeSlotView;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -37,26 +38,27 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
 
   //  IRecipeTransferError transferRecipe(C container, CraftingRecipe recipe, IRecipeLayout recipeLayout, Player player, boolean maxTransfer, boolean doTransfer)
   @Override
-  public IRecipeTransferError transferRecipe(C c, CraftingRecipe recipe, IRecipeLayout iRecipeLayout, Player playerEntity,
-      boolean maxTransfer, boolean doTransfer) {
+  public IRecipeTransferError transferRecipe(C c, CraftingRecipe recipe, IRecipeSlotsView recipeSlots, Player playerEntity,
+                                             boolean maxTransfer, boolean doTransfer) {
     if (doTransfer) {
-      CompoundTag nbt = RequestRecipeTransferHandler.recipeToTag(c, iRecipeLayout);
+      CompoundTag nbt = RequestRecipeTransferHandler.recipeToTag(c, recipeSlots);
       PacketRegistry.INSTANCE.sendToServer(new RecipeMessage(nbt));
     }
     return null;
   }
 
-  public static CompoundTag recipeToTag(AbstractContainerMenu container, IRecipeLayout recipeLayout) {
+  public static CompoundTag recipeToTag(AbstractContainerMenu container, IRecipeSlotsView recipeSlots) {
     CompoundTag nbt = new CompoundTag();
-    Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs = recipeLayout.getItemStacks().getGuiIngredients();
+//    Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs = recipeSlots.getItemStacks().getGuiIngredients();
+    List<IRecipeSlotView> slotsViewList = recipeSlots.getSlotViews();
     for (Slot slot : container.slots) {
       if (slot.container instanceof net.minecraft.world.inventory.CraftingContainer) {
         //for some reason it was looping like this  (int j = 1; j < 10; j++)
-        IGuiIngredient<ItemStack> ingredient = inputs.get(slot.getSlotIndex() + 1);
-        if (ingredient == null) {
+        IRecipeSlotView slotView = slotsViewList.get(slot.getSlotIndex() + 1);
+        if (slotView == null) {
           continue;
         }
-        List<ItemStack> possibleItems = ingredient.getAllIngredients();
+        List<ItemStack> possibleItems = slotView.getIngredients(VanillaTypes.ITEM).collect(Collectors.toList());
         if (possibleItems == null || possibleItems.isEmpty()) {
           continue;
         }

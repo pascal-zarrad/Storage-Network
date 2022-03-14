@@ -96,7 +96,7 @@ public class NetworkWidget {
     }
     else if (searchText.startsWith("$")) { // search tags
       List<String> joiner = new ArrayList<>();
-      for (ResourceLocation oreId : stack.getItem().getTags()) {
+      for (ResourceLocation oreId : stack.getTags().map((tagKey) -> tagKey.location()).collect(Collectors.toList())) {
         String oreName = oreId.toString();
         joiner.add(oreName);
       }

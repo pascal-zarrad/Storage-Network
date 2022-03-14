@@ -2,7 +2,9 @@ package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.mojang.blaze3d.platform.InputConstants;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.config.KeyBindings;
 import mezz.jei.gui.Focus;
 import net.minecraft.world.item.ItemStack;
@@ -59,8 +61,9 @@ public class JeiHooks {
     final boolean showUses = KeyBindings.showUses.get(0).isActiveAndMatches(keyCode)
         || KeyBindings.showUses.get(1).isActiveAndMatches(keyCode);
     if (showRecipe || showUses) {
-      IFocus.Mode mode = showRecipe ? IFocus.Mode.OUTPUT : IFocus.Mode.INPUT;
-      mezz.jei.Internal.getRuntime().getRecipesGui().show(new Focus<ItemStack>(mode, stackUnderMouse));
+      RecipeIngredientRole mode = showRecipe ? RecipeIngredientRole.OUTPUT : RecipeIngredientRole.INPUT;
+      var focus = mezz.jei.Internal.getRuntime().getJeiHelpers().getFocusFactory().createFocus(mode, VanillaTypes.ITEM, stackUnderMouse);
+      mezz.jei.Internal.getRuntime().getRecipesGui().show(focus);
     }
   }
 }
