@@ -11,7 +11,6 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'checkstyle'
 
 import net.minecraftforge.gradle.common.tasks.SignJar
 import groovy.json.JsonSlurper
@@ -21,13 +20,7 @@ version = "${mc_version}-${mod_version}"
 group = 'com.lothrazar.storagenetwork' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'SimpleStorageNetwork'
 
-checkstyle {
-    toolVersion '8.23'
-    config project.resources.text.fromUri("https://raw.githubusercontent.com/Lothrazar/Cyclic/trunk/1.16/checkstyle.xml")
-}
-checkstyleMain {
-    source ='src/main/java'
-}
+
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 //sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
@@ -103,34 +96,11 @@ dependencies {
 
 
 repositories {
-  maven {
-    url = "https://repo.refinedmods.com/"
-  }
-  maven {
-    // location of the maven that hosts JEI files
-    name = "Progwml6 maven"
-    url = "https://dvs1.progwml6.com/files/maven/"
-  }
-  maven {
-    // location of a maven mirror for JEI files, as a fallback
-    name = "ModMaven"
-    url = "https://modmaven.k-4u.nl"
-  }
-
-    
   maven { url = "https://dvs1.progwml6.com/files/maven/"  }
-  maven { url = "https://modmaven.k-4u.nl"  }    
   maven { url = "https://maven.theillusivec4.top/"    }
   maven { url 'https://maven.blamejared.com' }    
   maven { url 'https://www.cursemaven.com'  } 
-    maven {
-        name "Modmaven"
-        url "https://modmaven.dev/"
-        // For Gradle 5.1 and above, limit it to just AE2
-    //    content {
-    //        includeGroup 'appeng'
-    //    }
-    }
+
 }
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
@@ -188,6 +158,6 @@ task copyJar(type: Copy) {
 
 // build.finalizedBy copyJar
 
-cleanJar {
+task cleanJar {
   delete 'build/libs'
 }

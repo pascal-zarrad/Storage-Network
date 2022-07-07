@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
  * <p>
  * also as ghost/filter items in the cable filter slots
  */
+@SuppressWarnings("deprecation")
 public class ItemSlotNetwork {
 
   private final int x;
