@@ -104,7 +104,7 @@ public class ItemStorageCraftingRemote extends Item implements INamedContainerPr
     tooltip.add(t);
     if (stack.hasTag()) {
       DimPos dp = DimPos.getPosStored(stack);
-      tooltip.add(dp.makeTooltip());
+      if (dp != null) tooltip.add(dp.makeTooltip());
     }
   }
 
