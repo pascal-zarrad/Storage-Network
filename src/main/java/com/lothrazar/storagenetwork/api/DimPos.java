@@ -146,6 +146,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
     return tileEntity.getCapability(capability, side).orElse(null);
   }
 
+  @SuppressWarnings("deprecation")
   public boolean isLoaded() {
     return world == null ? false : world.hasChunkAt(pos);
   }

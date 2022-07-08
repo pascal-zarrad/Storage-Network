@@ -22,16 +22,12 @@ public class ConfigRegistry {
   private static ConfigValue<List<String>> IGNORELIST;
   public static IntValue ITEMRANGE;
   public static IntValue RECIPEMAXTAGS;
-  public static BooleanValue JEINEGATIVECRASH;
   static {
     initConfig();
   }
 
   private static void initConfig() {
     COMMON_BUILDER.comment("General settings").push(StorageNetwork.MODID);
-    JEINEGATIVECRASH = COMMON_BUILDER.comment("If true, this will prevent jei from crashing on smaller gui scale/screen resolutions because -8<0, and instead pushes the players items down off the screen a bit.  "
-        + "False means everything will try to render perfectly as in older verisons but will not try to prevent any possible crashes")
-        .define("offsetItemsPreventJeiCrashNegativeNumbers", true);
     LOGSPAM = COMMON_BUILDER.comment("Enable very spammy logs.  Sometimes useful for debugging. ").define("logSpam", false);
     RELOADONCHUNK = COMMON_BUILDER.comment(
         "\r\n If this is true, reload network when a chunk unloads, this keeps your network always up to date.  It has been reported that this cause lag and chunk load issues on servers, "

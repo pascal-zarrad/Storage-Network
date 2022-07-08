@@ -269,9 +269,11 @@ public class TileMain extends BlockEntity {
         importCache.remove(key);
       }
       else {
+        //(!(storage instanceof ExchangeItemStackHandler)) &&
         // But if it is, we test whether it can still import that particular stack and do so if it does.
         boolean canStillImport = storage.getSupportedTransferDirection().match(EnumStorageDirection.IN);
-        if (canStillImport && storage.insertStack(stack, true).getCount() < stack.getCount()) {
+        if (canStillImport &&
+            storage.insertStack(stack, true).getCount() < stack.getCount()) {
           stack = storage.insertStack(stack, simulate);
         }
         else {

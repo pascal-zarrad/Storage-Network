@@ -39,7 +39,7 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
   //  IRecipeTransferError transferRecipe(C container, CraftingRecipe recipe, IRecipeLayout recipeLayout, Player player, boolean maxTransfer, boolean doTransfer)
   @Override
   public IRecipeTransferError transferRecipe(C c, CraftingRecipe recipe, IRecipeSlotsView recipeSlots, Player playerEntity,
-                                             boolean maxTransfer, boolean doTransfer) {
+      boolean maxTransfer, boolean doTransfer) {
     if (doTransfer) {
       CompoundTag nbt = RequestRecipeTransferHandler.recipeToTag(c, recipeSlots);
       PacketRegistry.INSTANCE.sendToServer(new RecipeMessage(nbt));
@@ -49,7 +49,7 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
 
   public static CompoundTag recipeToTag(AbstractContainerMenu container, IRecipeSlotsView recipeSlots) {
     CompoundTag nbt = new CompoundTag();
-//    Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs = recipeSlots.getItemStacks().getGuiIngredients();
+    //    Map<Integer, ? extends IGuiIngredient<ItemStack>> inputs = recipeSlots.getItemStacks().getGuiIngredients();
     List<IRecipeSlotView> slotsViewList = recipeSlots.getSlotViews();
     for (Slot slot : container.slots) {
       if (slot.container instanceof net.minecraft.world.inventory.CraftingContainer) {
@@ -58,7 +58,7 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
         if (slotView == null) {
           continue;
         }
-        List<ItemStack> possibleItems = slotView.getIngredients(VanillaTypes.ITEM).collect(Collectors.toList());
+        List<ItemStack> possibleItems = slotView.getIngredients(VanillaTypes.ITEM_STACK).collect(Collectors.toList());
         if (possibleItems == null || possibleItems.isEmpty()) {
           continue;
         }

@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork.util;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import net.minecraft.core.BlockPos;
@@ -13,6 +12,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.SlotResult;
 
 public class UtilInventory {
 
@@ -27,10 +27,11 @@ public class UtilInventory {
     Triple<String, Integer, ItemStack> stackFound = Triple.of("", -1, ItemStack.EMPTY);
     if (ModList.get().isLoaded("curios")) {
       //check curios slots
-      final ImmutableTriple<String, Integer, ItemStack> equipped = CuriosApi.getCuriosHelper().findEquippedCurio(remote, player).orElse(null);
-      if (equipped != null && isRemoteWithData(equipped.right, remote)) {
+      //      final ImmutableTriple<String, Integer, ItemStack> equipped = CuriosApi.getCuriosHelper().findEquippedCurio(remote, player).orElse(null);
+      SlotResult first = CuriosApi.getCuriosHelper().findFirstCurio(player, remote).orElse(null);
+      if (first != null && isRemoteWithData(first.stack(), remote)) {
         //success: try to insert items to network thru this remote 
-        return Triple.of("curios", equipped.middle, equipped.right);
+        return Triple.of("curios", first.slotContext().index(), first.stack());
       }
     }
     //not curios, check others

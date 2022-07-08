@@ -9,7 +9,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
- * @author ajsnarr98 Created MasterItemStackHandler * ItemStackHandler used for interfacing with TileMain like a chest. https://github.com/ajsnarr98/Storage-Network/tree/ajsnarr98-inventory
+ * @author ajsnarr98 Created MasterItemStackHandler
+ * 
+ * @info
+ * 
+ *       ItemStackHandler used for interfacing with TileMain like a chest.
+ * 
+ *       used by TileExchange
+ * 
+ *       use restricted in CapabilityConnectableLink::extractStack
+ * 
+ *       https://github.com/ajsnarr98/Storage-Network/tree/ajsnarr98-inventory
  * 
  */
 public class ExchangeItemStackHandler extends ItemStackHandlerEx {

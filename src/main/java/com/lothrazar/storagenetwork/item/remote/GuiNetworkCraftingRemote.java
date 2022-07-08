@@ -9,7 +9,6 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
-import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -108,11 +107,6 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
   @Override
   public void init() {
     super.init();
-    if (ModList.get().isLoaded("jei") &&
-        ConfigRegistry.JEINEGATIVECRASH.get() && this.topPos < 0) {
-      this.topOffset = topPos;
-      this.topPos = 0;//If the window size is below the image size then it'll produce negative values which JEI will crash on
-    }
     int searchLeft = leftPos + 81, searchTop = getGuiTopFixJei() + 160, width = 85;
     searchTop = topPos + 96;
     network.searchBar = new EditBox(font,
