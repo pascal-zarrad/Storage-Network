@@ -18,8 +18,8 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class BlockCableImportFilter extends BlockCable {
 
-  public BlockCableImportFilter(String registryName) {
-    super(registryName);
+  public BlockCableImportFilter() {
+    super();
   }
 
   @Override

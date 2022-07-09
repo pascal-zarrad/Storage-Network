@@ -47,17 +47,22 @@ import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
+import net.minecraftforge.registries.RegistryObject;
 
 public class SsnRegistry {
 
-  public static final int UPGRADE_COUNT = 4;
+  public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StorageNetwork.MODID);
+  public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StorageNetwork.MODID);
+  public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StorageNetwork.MODID);
   public static CreativeModeTab TAB = new CreativeModeTab(StorageNetwork.MODID) {
 
     @Override
     public ItemStack makeIcon() {
-      return new ItemStack(SsnRegistry.REQUEST);
+      return new ItemStack(SsnRegistry.Items.REQUEST.get());
     }
   };
   @ObjectHolder(StorageNetwork.MODID + ":builder_remote")
@@ -90,15 +95,26 @@ public class SsnRegistry {
   public static BlockEntityType<TileInventory> INVENTORYTILE;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
   public static MenuType<ContainerNetworkInventory> INVENTORYCONTAINER;
-  //request
-  @ObjectHolder(StorageNetwork.MODID + ":request")
-  public static BlockRequest REQUEST;
+  //?/?////////////
+
+  @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class Blocks {
+
+    public static final RegistryObject<Block> REQUEST = BLOCKS.register("request", () -> new BlockRequest());
+    public static final RegistryObject<Block> KABEL = BLOCKS.register("kabel", () -> new BlockCable());
+  }
+
+  @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class Items {
+
+    public static final RegistryObject<Item> REQUEST = ITEMS.register("request", () -> new BlockItem(Blocks.REQUEST.get(), new Item.Properties().tab(TAB)));
+    public static final RegistryObject<Item> KABEL = ITEMS.register("kabel", () -> new BlockItem(Blocks.KABEL.get(), new Item.Properties().tab(TAB)));
+  }
+
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static BlockEntityType<TileRequest> REQUESTTILE;
   @ObjectHolder(StorageNetwork.MODID + ":request")
   public static MenuType<ContainerNetworkCraftingTable> REQUESTCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":kabel")
-  public static BlockCable KABEL;
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static BlockEntityType<TileCable> KABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":exchange")
@@ -148,17 +164,15 @@ public class SsnRegistry {
     @SubscribeEvent
     public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
       IForgeRegistry<Block> r = event.getRegistry();
-      r.register(new BlockMain());
-      r.register(new BlockRequest());
-      r.register(new BlockCable("kabel"));
-      r.register(new BlockCableLink("storage_kabel"));
-      r.register(new BlockCableIO("import_kabel"));
-      r.register(new BlockCableImportFilter("import_filter_kabel"));
-      r.register(new BlockCableFilter("filter_kabel"));
-      r.register(new BlockCableExport("export_kabel"));
-      r.register(new BlockInventory("inventory"));
-      r.register(new BlockExchange());
-      r.register(new BlockCollection());
+      r.register(new BlockMain().setRegistryName("master"));
+      r.register(new BlockCableLink().setRegistryName("storage_kabel"));
+      r.register(new BlockCableIO().setRegistryName("import_kabel"));
+      r.register(new BlockCableImportFilter().setRegistryName("import_filter_kabel"));
+      r.register(new BlockCableFilter().setRegistryName("filter_kabel"));
+      r.register(new BlockCableExport().setRegistryName("export_kabel"));
+      r.register(new BlockInventory().setRegistryName("inventory"));
+      r.register(new BlockExchange().setRegistryName("exchange"));
+      r.register(new BlockCollection().setRegistryName("collector"));
     }
 
     @SubscribeEvent
@@ -167,8 +181,6 @@ public class SsnRegistry {
       IForgeRegistry<Item> r = event.getRegistry();
       r.register(new BlockItem(SsnRegistry.INVENTORY, properties).setRegistryName("inventory"));
       r.register(new BlockItem(SsnRegistry.MAIN, properties).setRegistryName("master"));
-      r.register(new BlockItem(SsnRegistry.REQUEST, properties).setRegistryName("request"));
-      r.register(new BlockItem(SsnRegistry.KABEL, properties).setRegistryName("kabel"));
       r.register(new BlockItem(SsnRegistry.STORAGEKABEL, properties).setRegistryName("storage_kabel"));
       r.register(new BlockItem(SsnRegistry.IMPORTKABEL, properties).setRegistryName("import_kabel"));
       r.register(new BlockItem(SsnRegistry.IMPORTFILTERKABEL, properties).setRegistryName("import_filter_kabel"));
@@ -194,8 +206,8 @@ public class SsnRegistry {
       IForgeRegistry<BlockEntityType<?>> r = event.getRegistry();
       r.register(BlockEntityType.Builder.of(TileMain::new, SsnRegistry.MAIN).build(null).setRegistryName("master"));
       r.register(BlockEntityType.Builder.of(TileInventory::new, SsnRegistry.INVENTORY).build(null).setRegistryName("inventory"));
-      r.register(BlockEntityType.Builder.of(TileRequest::new, SsnRegistry.REQUEST).build(null).setRegistryName("request"));
-      r.register(BlockEntityType.Builder.of(TileCable::new, SsnRegistry.KABEL).build(null).setRegistryName("kabel"));
+      r.register(BlockEntityType.Builder.of(TileRequest::new, SsnRegistry.Blocks.REQUEST.get()).build(null).setRegistryName("request"));
+      r.register(BlockEntityType.Builder.of(TileCable::new, SsnRegistry.Blocks.KABEL.get()).build(null).setRegistryName("kabel"));
       r.register(BlockEntityType.Builder.of(TileCableLink::new, SsnRegistry.STORAGEKABEL).build(null).setRegistryName("storage_kabel"));
       r.register(BlockEntityType.Builder.of(TileCableIO::new, SsnRegistry.IMPORTKABEL).build(null).setRegistryName("import_kabel"));
       r.register(BlockEntityType.Builder.of(TileCableImportFilter::new, SsnRegistry.IMPORTFILTERKABEL).build(null).setRegistryName("import_filter_kabel"));

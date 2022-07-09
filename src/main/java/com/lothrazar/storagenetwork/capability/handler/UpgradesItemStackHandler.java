@@ -1,24 +1,18 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
-import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.world.item.ItemStack;
 
 public class UpgradesItemStackHandler extends ItemStackHandlerEx {
 
   public UpgradesItemStackHandler() {
-    super(SsnRegistry.UPGRADE_COUNT);
-  }
-
-  public UpgradesItemStackHandler(int size) {
-    this();
-    //    super(SsnRegistry.UPGRADE_COUNT);
+    super(4);
   }
 
   @Override
   protected void validateSlotIndex(int slot) {
     if (stacks.size() == 1) {
-      this.setSize(SsnRegistry.UPGRADE_COUNT);
+      this.setSize(4);
     }
     super.validateSlotIndex(slot);
   }

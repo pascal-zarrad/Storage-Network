@@ -18,8 +18,8 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class BlockCableExport extends BlockCable {
 
-  public BlockCableExport(String registryName) {
-    super(registryName);
+  public BlockCableExport() {
+    super();
   }
 
   @Override

@@ -13,7 +13,9 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -24,7 +26,7 @@ import net.minecraftforge.network.NetworkHooks;
 public class BlockRequest extends BaseBlock {
 
   public BlockRequest() {
-    super(Material.METAL, "request");
+    super(Block.Properties.of(Material.METAL).strength(0.5F).sound(SoundType.STONE));
   }
 
   @Override

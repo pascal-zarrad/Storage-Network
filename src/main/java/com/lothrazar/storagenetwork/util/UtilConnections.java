@@ -29,7 +29,7 @@ public class UtilConnections {
     return facingState.getBlock() == SsnRegistry.MAIN
         || facingState.is(SsnRegistry.EXCHANGE)
         || facingState.is(SsnRegistry.COLLECTOR)
-        || facingState.is(SsnRegistry.KABEL);
+        || facingState.is(SsnRegistry.Blocks.KABEL.get());
   }
 
   public static boolean isInventory(Direction facing, LevelAccessor world, BlockPos facingPos) {

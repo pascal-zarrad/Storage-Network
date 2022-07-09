@@ -1,6 +1,5 @@
 package com.lothrazar.storagenetwork;
 
-import net.minecraftforge.client.ClientRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
@@ -17,7 +16,9 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnEvents;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -38,6 +39,10 @@ public class StorageNetwork {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.RegistryEvents());
     MinecraftForge.EVENT_BUS.register(new SsnEvents());
+    IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    SsnRegistry.BLOCKS.register(bus);
+    SsnRegistry.ITEMS.register(bus);
+    SsnRegistry.TILES.register(bus);
   }
 
   private static void setup(FMLCommonSetupEvent event) {

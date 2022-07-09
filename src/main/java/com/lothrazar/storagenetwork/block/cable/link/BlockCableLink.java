@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockCableLink extends BlockCable {
 
-  public BlockCableLink(String registryName) {
-    super(registryName);
+  public BlockCableLink() {
+    super();
   }
 
   @Override

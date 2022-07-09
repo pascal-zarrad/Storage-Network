@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockCableIO extends BlockCable {
 
-  public BlockCableIO(String registryName) {
-    super(registryName);
+  public BlockCableIO() {
+    super();
   }
 
   @Override
