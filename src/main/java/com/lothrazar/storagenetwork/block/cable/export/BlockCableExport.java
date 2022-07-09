@@ -29,7 +29,7 @@ public class BlockCableExport extends BlockCable {
 
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-    return createTickerHelper(type, SsnRegistry.EXPORTKABELTILE, world.isClientSide ? TileCableExport::clientTick : TileCableExport::serverTick);
+    return createTickerHelper(type, SsnRegistry.Tiles.EXPORT_KABEL.get(), world.isClientSide ? TileCableExport::clientTick : TileCableExport::serverTick);
   }
 
   @Override

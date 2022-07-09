@@ -19,7 +19,7 @@ public class TileCableIO extends TileCableWithFacing {
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableIO(BlockPos pos, BlockState state) {
-    super(SsnRegistry.IMPORTKABELTILE, pos, state);
+    super(SsnRegistry.Tiles.IMPORT_KABEL.get(), pos, state);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 

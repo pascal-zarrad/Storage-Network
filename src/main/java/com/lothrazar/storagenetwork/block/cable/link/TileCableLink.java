@@ -18,7 +18,7 @@ public class TileCableLink extends TileCableWithFacing {
   protected CapabilityConnectableLink itemStorage;
 
   public TileCableLink(BlockPos pos, BlockState state) {
-    super(SsnRegistry.STORAGEKABELTILE, pos, state);
+    super(SsnRegistry.Tiles.STORAGE_KABEL.get(), pos, state);
     this.itemStorage = new CapabilityConnectableLink(this);
   }
 

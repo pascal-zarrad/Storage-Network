@@ -47,7 +47,7 @@ public class TileMain extends BlockEntity {
   }
 
   public TileMain(BlockPos pos, BlockState state) {
-    super(SsnRegistry.MAINTILEENTITY, pos, state);
+    super(SsnRegistry.Tiles.MASTER.get(), pos, state);
   }
 
   public List<ItemStack> getSortedStacks() {

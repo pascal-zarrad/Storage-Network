@@ -25,7 +25,7 @@ public class TileCableImportFilter extends TileCableWithFacing implements MenuPr
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableImportFilter(BlockPos pos, BlockState state) {
-    super(SsnRegistry.FILTERIMPORTKABELTILE, pos, state);
+    super(SsnRegistry.Tiles.IMPORT_FILTER_KABEL.get(), pos, state);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.IN);
   }
 

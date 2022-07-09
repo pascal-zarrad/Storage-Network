@@ -23,7 +23,7 @@ public class TileExchange extends TileConnectable {
   private ExchangeItemStackHandler itemHandler;
 
   public TileExchange(BlockPos pos, BlockState state) {
-    super(SsnRegistry.EXCHANGETILE, pos, state);
+    super(SsnRegistry.Tiles.EXCHANGE.get(), pos, state);
     itemHandler = new ExchangeItemStackHandler();
   }
 

@@ -26,7 +26,7 @@ public class TileCollection extends TileConnectable implements MenuProvider {
   private CollectionItemStackHandler itemHandler;
 
   public TileCollection(BlockPos pos, BlockState state) {
-    super(SsnRegistry.COLLECTORTILE, pos, state);
+    super(SsnRegistry.Tiles.COLLECTOR.get(), pos, state);
     itemHandler = new CollectionItemStackHandler();
     itemHandler.tile = this;
   }

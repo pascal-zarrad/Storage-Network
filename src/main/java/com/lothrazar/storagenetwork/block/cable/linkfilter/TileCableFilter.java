@@ -24,7 +24,7 @@ public class TileCableFilter extends TileCableWithFacing implements MenuProvider
   protected CapabilityConnectableLink capability;
 
   public TileCableFilter(BlockPos pos, BlockState state) {
-    super(SsnRegistry.FILTERKABELTILE, pos, state);
+    super(SsnRegistry.Tiles.FILTER_KABEL.get(), pos, state);
     this.capability = new CapabilityConnectableLink(this);
   }
 

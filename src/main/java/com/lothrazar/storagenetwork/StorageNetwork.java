@@ -37,12 +37,13 @@ public class StorageNetwork {
   public StorageNetwork() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-    MinecraftForge.EVENT_BUS.register(new SsnRegistry.RegistryEvents());
+    MinecraftForge.EVENT_BUS.register(new SsnRegistry.Tiles());
     MinecraftForge.EVENT_BUS.register(new SsnEvents());
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
     SsnRegistry.BLOCKS.register(bus);
     SsnRegistry.ITEMS.register(bus);
     SsnRegistry.TILES.register(bus);
+    SsnRegistry.CONTAINERS.register(bus);
   }
 
   private static void setup(FMLCommonSetupEvent event) {

@@ -29,7 +29,7 @@ public class BlockCableImportFilter extends BlockCable {
 
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-    return createTickerHelper(type, SsnRegistry.FILTERIMPORTKABELTILE, world.isClientSide ? TileCableImportFilter::clientTick : TileCableImportFilter::serverTick);
+    return createTickerHelper(type, SsnRegistry.Tiles.IMPORT_FILTER_KABEL.get(), world.isClientSide ? TileCableImportFilter::clientTick : TileCableImportFilter::serverTick);
   }
 
   @Override

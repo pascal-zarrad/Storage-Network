@@ -32,7 +32,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
   private boolean autoFocus = true;
 
   public TileRequest(BlockPos pos, BlockState state) {
-    super(SsnRegistry.REQUESTTILE, pos, state);
+    super(SsnRegistry.Tiles.REQUEST.get(), pos, state);
   }
 
   @Override

@@ -24,7 +24,7 @@ public class TileInventory extends TileConnectable implements MenuProvider, ITil
   private boolean autoFocus = true;
 
   public TileInventory(BlockPos pos, BlockState state) {
-    super(SsnRegistry.INVENTORYTILE, pos, state);
+    super(SsnRegistry.Tiles.INVENTORY.get(), pos, state);
   }
 
   @Override

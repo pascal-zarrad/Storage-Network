@@ -25,7 +25,7 @@ public class TileCableExport extends TileCableWithFacing implements MenuProvider
   protected CapabilityConnectableAutoIO ioStorage;
 
   public TileCableExport(BlockPos pos, BlockState state) {
-    super(SsnRegistry.EXPORTKABELTILE, pos, state);
+    super(SsnRegistry.Tiles.EXPORT_KABEL.get(), pos, state);
     this.ioStorage = new CapabilityConnectableAutoIO(this, EnumStorageDirection.OUT);
     this.ioStorage.getFilter().isAllowList = true;
   }

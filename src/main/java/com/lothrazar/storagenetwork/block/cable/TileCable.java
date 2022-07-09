@@ -12,6 +12,6 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileCable extends TileConnectable {
 
   public TileCable(BlockPos pos, BlockState state) {
-    super(SsnRegistry.KABELTILE, pos, state);
+    super(SsnRegistry.Tiles.KABEL.get(), pos, state);
   }
 }

@@ -116,7 +116,7 @@ public class BlockMain extends BaseBlock {
 
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-    return createTickerHelper(type, SsnRegistry.MAINTILEENTITY, world.isClientSide ? TileMain::clientTick : TileMain::serverTick);
+    return createTickerHelper(type, SsnRegistry.Tiles.MASTER.get(), world.isClientSide ? TileMain::clientTick : TileMain::serverTick);
   }
 
   @Override
