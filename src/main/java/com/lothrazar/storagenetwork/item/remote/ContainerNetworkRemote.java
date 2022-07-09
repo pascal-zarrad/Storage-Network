@@ -20,7 +20,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     super(SsnRegistry.REMOTE, id);
     this.player = pInv.player;
     this.world = player.level;
-    Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.INVENTORY_REMOTE);
+    Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.Items.INVENTORY_REMOTE.get());
     this.remote = result.getRight();
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {

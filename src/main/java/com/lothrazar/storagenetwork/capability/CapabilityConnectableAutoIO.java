@@ -287,24 +287,24 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
 
   @Override
   public boolean isStockMode() {
-    return getUpgrades().hasUpgradesOfType(SsnRegistry.STOCK_UPGRADE);
+    return getUpgrades().hasUpgradesOfType(SsnRegistry.Items.STOCK_UPGRADE.get());
   }
 
   @Override
   public boolean isOperationMode() {
-    return getUpgrades().hasUpgradesOfType(SsnRegistry.OP_UPGRADE);
+    return getUpgrades().hasUpgradesOfType(SsnRegistry.Items.OP_U.get());
   }
 
   @Override
   public int getTransferRate() {
-    if (upgrades.hasUpgradesOfType(SsnRegistry.SINGLE_UPGRADE)) {
+    if (upgrades.hasUpgradesOfType(SsnRegistry.Items.SINGLE_UPGRADE.get())) {
       return 1; //override both others
     }
-    return upgrades.hasUpgradesOfType(SsnRegistry.STACK_UPGRADE) ? 64 : DEFAULT_ITEMS_PER;
+    return upgrades.hasUpgradesOfType(SsnRegistry.Items.STACK_UPGRADE.get()) ? 64 : DEFAULT_ITEMS_PER;
   }
 
   private boolean doesPassOperationFilterLimit(TileMain master) {
-    if (upgrades.getUpgradesOfType(SsnRegistry.OP_UPGRADE) < 1) {
+    if (upgrades.getUpgradesOfType(SsnRegistry.Items.OP_U.get()) < 1) {
       return true;
     }
     if (operationStack == null || operationStack.isEmpty()) {
@@ -327,8 +327,8 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
 
   @Override
   public boolean runNow(DimPos connectablePos, TileMain main) {
-    int speedUpgrades = upgrades.getUpgradesOfType(SsnRegistry.SPEED_UPGRADE);
-    int slowUpgrades = upgrades.getUpgradesOfType(SsnRegistry.SLOW_UPGRADE);
+    int speedUpgrades = upgrades.getUpgradesOfType(SsnRegistry.Items.SPEED_UPGRADE.get());
+    int slowUpgrades = upgrades.getUpgradesOfType(SsnRegistry.Items.SLOW_UPGRADE.get());
     int speedRatio = IO_DEFAULT_SPEED; // no upgrades
     if (speedUpgrades > 0) {
       //so 1 speed upgrade is run every 30/2=15t, two is 30/3 ticks etc

@@ -26,8 +26,8 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     super(SsnRegistry.CRAFTINGREMOTE, id);
     this.player = pInv.player;
     this.remote = pInv.player.getMainHandItem();
-    if (this.remote.getItem() != SsnRegistry.CRAFTING_REMOTE) {
-      Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(player, SsnRegistry.CRAFTING_REMOTE);
+    if (this.remote.getItem() != SsnRegistry.Items.CRAFTING_REMOTE.get()) {
+      Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(player, SsnRegistry.Items.CRAFTING_REMOTE.get());
       this.remote = result.getRight();
     }
     this.world = player.level;

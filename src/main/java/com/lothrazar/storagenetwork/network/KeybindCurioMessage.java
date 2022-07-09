@@ -19,16 +19,16 @@ public class KeybindCurioMessage {
     ctx.get().enqueueWork(() -> {
       ServerPlayer player = ctx.get().getSender();
       ServerLevel serverWorld = player.getLevel();
-      Triple<String, Integer, ItemStack> searchCrafting = UtilInventory.getCurioRemote(player, SsnRegistry.CRAFTING_REMOTE);
+      Triple<String, Integer, ItemStack> searchCrafting = UtilInventory.getCurioRemote(player, SsnRegistry.Items.CRAFTING_REMOTE.get());
       ItemStack craftingRemote = searchCrafting.getRight();
       if (!craftingRemote.isEmpty()) {
-        ItemStorageCraftingRemote.openRemote(serverWorld, player, craftingRemote, SsnRegistry.CRAFTING_REMOTE);
+        ItemStorageCraftingRemote.openRemote(serverWorld, player, craftingRemote, SsnRegistry.Items.CRAFTING_REMOTE.get());
       }
       else { //crafting is the upgrade, so otherwise do regular 
-        Triple<String, Integer, ItemStack> searchResult = UtilInventory.getCurioRemote(player, SsnRegistry.INVENTORY_REMOTE);
+        Triple<String, Integer, ItemStack> searchResult = UtilInventory.getCurioRemote(player, SsnRegistry.Items.INVENTORY_REMOTE.get());
         ItemStack curioRemote = searchResult.getRight();
         if (!curioRemote.isEmpty()) {
-          ItemStorageCraftingRemote.openRemote(serverWorld, player, curioRemote, SsnRegistry.INVENTORY_REMOTE);
+          ItemStorageCraftingRemote.openRemote(serverWorld, player, curioRemote, SsnRegistry.Items.INVENTORY_REMOTE.get());
         }
       }
     });

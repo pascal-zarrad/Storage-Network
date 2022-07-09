@@ -179,7 +179,7 @@ public class ItemStorageCraftingRemote extends Item implements MenuProvider {
 
   @Override
   public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-    boolean crafting = (this == SsnRegistry.CRAFTING_REMOTE);
+    boolean crafting = (this == SsnRegistry.Items.CRAFTING_REMOTE.get());
     if (crafting) {
       return new ContainerNetworkCraftingRemote(id, inv);
     }

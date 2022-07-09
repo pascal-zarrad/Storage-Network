@@ -143,7 +143,7 @@ public class ItemBuilder extends Item {
   public static void onLeftClickBlock(LeftClickBlock event) {
     Player player = event.getPlayer();
     ItemStack held = player.getItemInHand(event.getHand());
-    if (held.getItem() == SsnRegistry.BUILDER_REMOTE) {
+    if (held.getItem() == SsnRegistry.Items.BUILDER_REMOTE.get()) {
       Level world = player.getCommandSenderWorld();
       BlockState target = world.getBlockState(event.getPos());
       ItemBuilder.setBlockState(held, target);
