@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block;
 
 import java.util.List;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -44,6 +45,7 @@ public abstract class BaseBlock extends BaseEntityBlock {
       facingState = worldIn.getBlockState(facingPos);
       if (facingState.getBlock() instanceof BlockCable) {
         BlockCable c = (BlockCable) facingState.getBlock();
+        StorageNetwork.log("blockcable updateconnection override");
         c.updateShape(facingState, d.getOpposite(), stateIn, worldIn, facingPos, pos);
       }
     }

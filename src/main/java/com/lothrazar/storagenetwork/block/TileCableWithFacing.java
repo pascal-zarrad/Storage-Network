@@ -6,10 +6,8 @@ import com.lothrazar.storagenetwork.block.main.TileMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileCableWithFacing extends TileConnectable {
 
@@ -33,17 +31,19 @@ public class TileCableWithFacing extends TileConnectable {
 
   //TODO: merge this with is valid inventory in BlockCable
   protected boolean isValidLinkNeighbor(Direction facing) {
-    if (facing == null) {
-      return false;
-    }
-    if (!TileMain.isTargetAllowed(level.getBlockState(worldPosition.relative(facing)))) {
-      return false;
-    }
-    BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing));
-    if (neighbor != null && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
-      return true;
-    }
-    return false;
+    BlockPos relative = worldPosition.relative(facing);
+    return BlockCable.isInventory(facing, level, relative);
+    //    if (facing == null) {
+    //      return false;
+    //    }
+    //    if (!TileMain.isTargetAllowed(level.getBlockState(worldPosition.relative(facing)))) {
+    //      return false;
+    //    }
+    //    BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing));
+    //    if (neighbor != null && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
+    //      return true;
+    //    }
+    //    return false;
   }
 
   public void findNewDirection() {

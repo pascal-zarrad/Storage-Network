@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.block.cable;
 
 import java.util.Map;
 import com.google.common.collect.Maps;
+import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
@@ -185,20 +186,28 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
 
   @Override
   public void setPlacedBy(Level worldIn, BlockPos pos, BlockState stateIn, LivingEntity placer, ItemStack stack) {
+    super.setPlacedBy(worldIn, pos, stateIn, placer, stack);
+    this.updateConnection(worldIn, pos, stateIn);
     BlockState facingState;
     for (Direction d : Direction.values()) {
       BlockPos posoff = pos.relative(d);
       facingState = worldIn.getBlockState(posoff);
       BlockEntity tileOffset = worldIn.getBlockEntity(posoff);
-      IConnectable cap = null;
-      if (tileOffset != null) {
-        cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
-      }
-      if (cap != null
-          || facingState.getBlock() == SsnRegistry.MAIN) {
+      if (facingState.getBlock() == SsnRegistry.MAIN) {
+        StorageNetwork.log("Main override");
         stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockAndUpdate(pos, stateIn);
+        break;
       }
+      //      IConnectable cap = null;
+      //      if (tileOffset != null) {
+      //        cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
+      //      }
+      //      if (cap != null
+      //          || facingState.getBlock() == SsnRegistry.MAIN) {
+      //        stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
+      //        worldIn.setBlockAndUpdate(pos, stateIn);
+      //      }
     }
   }
 
@@ -216,22 +225,21 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
       return stateIn.setValue(property, EnumConnectType.CABLE);
     }
     //based on capability you have, edit connection type
-    BlockEntity tileOffset = world.getBlockEntity(facingPos);
+    BlockEntity tileOffset = world.getBlockEntity(facingPos); //if i have zero other inventories, and this is one now, ok go invo
+    if (!this.hasInventoryAlready(stateIn)
+        && isInventory(facing, world, facingPos)) {
+      return stateIn.setValue(property, EnumConnectType.INVENTORY);
+    }
     IConnectable cap = null;
     if (tileOffset != null) {
       cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
     }
     if (cap != null) {
-      if (cap.getMainPos() != null) {
-        //its a network bock of some type, knows where network is but not exactly inventory
-        return stateIn.setValue(property, EnumConnectType.INVENTORY);
-      }
+      //      if (cap.getMainPos() != null) {
+      //        //its a network bock of some type, knows where network is but not exactly inventory
+      //        return stateIn.setValue(property, EnumConnectType.INVENTORY);
+      //      }
       return stateIn.setValue(property, EnumConnectType.CABLE);
-    }
-    //if i have zero other inventories, and this is one now, ok go invo
-    if (!this.hasInventoryAlready(stateIn)
-        && isInventory(stateIn, facing, facingState, world, currentPos, facingPos)) {
-      return stateIn.setValue(property, EnumConnectType.INVENTORY);
     }
     return stateIn.setValue(property, EnumConnectType.NONE);
   }
@@ -245,15 +253,22 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
     }
     return false;
   }
+  //todo is kabel with exchnage etc
 
   //TODO: tilecablewithfacing :: isvalidlink :: mix it up
-  private static boolean isInventory(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+  public static boolean isInventory(Direction facing, LevelAccessor world, BlockPos facingPos) {
     if (facing == null) {
       return false;
     }
-    if (!TileMain.isTargetAllowed(facingState)) {
+    BlockState blockState = world.getBlockState(facingPos);
+    if (blockState.is(SsnRegistry.EXCHANGE) || blockState.is(SsnRegistry.COLLECTOR)) {
+      StorageNetwork.log("no inventory for exhnage");
       return false;
     }
+    if (!TileMain.isTargetAllowed(blockState)) {
+      return false;
+    }
+    //TODO: not inventory if exchange or whatever
     BlockEntity neighbor = world.getBlockEntity(facingPos);
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
