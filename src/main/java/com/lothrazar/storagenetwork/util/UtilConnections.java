@@ -26,9 +26,9 @@ public class UtilConnections {
   }
 
   public static boolean isCableOverride(BlockState facingState) {
-    return facingState.getBlock() == SsnRegistry.MAIN
-        || facingState.is(SsnRegistry.EXCHANGE)
-        || facingState.is(SsnRegistry.COLLECTOR)
+    return facingState.getBlock() == SsnRegistry.Blocks.MASTER.get()
+        || facingState.is(SsnRegistry.Blocks.EXCHANGE.get())
+        || facingState.is(SsnRegistry.Blocks.COLLECTOR.get())
         || facingState.is(SsnRegistry.Blocks.KABEL.get());
   }
 
@@ -37,7 +37,7 @@ public class UtilConnections {
       return false;
     }
     BlockState blockState = world.getBlockState(facingPos);
-    if (blockState.is(SsnRegistry.EXCHANGE) || blockState.is(SsnRegistry.COLLECTOR)) {
+    if (blockState.is(SsnRegistry.Blocks.EXCHANGE.get()) || blockState.is(SsnRegistry.Blocks.COLLECTOR.get())) {
       //   got it   StorageNetwork.log("no inventory for exhnage");
       return false;
     }

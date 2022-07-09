@@ -87,21 +87,25 @@ public class SsnRegistry {
   public static ItemUpgrade OP_UPGRADE;
   @ObjectHolder(StorageNetwork.MODID + ":master")
   public static BlockEntityType<TileMain> MAINTILEENTITY;
-  @ObjectHolder(StorageNetwork.MODID + ":master")
-  public static BlockMain MAIN;
-  @ObjectHolder(StorageNetwork.MODID + ":inventory")
-  public static Block INVENTORY;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
   public static BlockEntityType<TileInventory> INVENTORYTILE;
   @ObjectHolder(StorageNetwork.MODID + ":inventory")
   public static MenuType<ContainerNetworkInventory> INVENTORYCONTAINER;
-  //?/?////////////
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class Blocks {
 
     public static final RegistryObject<Block> REQUEST = BLOCKS.register("request", () -> new BlockRequest());
     public static final RegistryObject<Block> KABEL = BLOCKS.register("kabel", () -> new BlockCable());
+    public static final RegistryObject<Block> MASTER = BLOCKS.register("master", () -> new BlockMain());
+    public static final RegistryObject<Block> STORAGE_KABEL = BLOCKS.register("storage_kabel", () -> new BlockCableLink());
+    public static final RegistryObject<Block> IMPORT_KABEL = BLOCKS.register("import_kabel", () -> new BlockCableIO());
+    public static final RegistryObject<Block> IMPORT_FILTER_KABEL = BLOCKS.register("import_filter_kabel", () -> new BlockCableImportFilter());
+    public static final RegistryObject<Block> FILTER_KABEL = BLOCKS.register("filter_kabel", () -> new BlockCableFilter());
+    public static final RegistryObject<Block> EXPORT_KABEL = BLOCKS.register("export_kabel", () -> new BlockCableExport());
+    public static final RegistryObject<Block> INVENTORY = BLOCKS.register("inventory", () -> new BlockInventory());
+    public static final RegistryObject<Block> EXCHANGE = BLOCKS.register("exchange", () -> new BlockExchange());
+    public static final RegistryObject<Block> COLLECTOR = BLOCKS.register("collector", () -> new BlockCollection());
   }
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -118,35 +122,21 @@ public class SsnRegistry {
   @ObjectHolder(StorageNetwork.MODID + ":kabel")
   public static BlockEntityType<TileCable> KABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":exchange")
-  public static Block EXCHANGE;
-  @ObjectHolder(StorageNetwork.MODID + ":exchange")
   public static BlockEntityType<TileExchange> EXCHANGETILE;
-  @ObjectHolder(StorageNetwork.MODID + ":collector")
-  public static Block COLLECTOR;
   @ObjectHolder(StorageNetwork.MODID + ":collector")
   public static BlockEntityType<TileCollection> COLLECTORTILE;
   @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
-  public static Block STORAGEKABEL;
-  @ObjectHolder(StorageNetwork.MODID + ":storage_kabel")
   public static BlockEntityType<TileCableLink> STORAGEKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
-  public static Block IMPORTKABEL;
-  @ObjectHolder(StorageNetwork.MODID + ":import_kabel")
   public static BlockEntityType<TileCableIO> IMPORTKABELTILE;
-  @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
-  public static Block FILTERKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
   public static BlockEntityType<TileCableFilter> FILTERKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
   public static MenuType<ContainerCableFilter> FILTERCONTAINER;
   @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
-  public static Block IMPORTFILTERKABEL;
-  @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
   public static BlockEntityType<TileCableImportFilter> FILTERIMPORTKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
   public static MenuType<ContainerCableImportFilter> FILTERIMPORTCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
-  public static Block EXPORTKABEL;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
   public static BlockEntityType<TileCableExport> EXPORTKABELTILE;
   @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
@@ -162,59 +152,44 @@ public class SsnRegistry {
   public static class RegistryEvents {
 
     @SubscribeEvent
-    public static void onBlocksRegistry(RegistryEvent.Register<Block> event) {
-      IForgeRegistry<Block> r = event.getRegistry();
-      r.register(new BlockMain().setRegistryName("master"));
-      r.register(new BlockCableLink().setRegistryName("storage_kabel"));
-      r.register(new BlockCableIO().setRegistryName("import_kabel"));
-      r.register(new BlockCableImportFilter().setRegistryName("import_filter_kabel"));
-      r.register(new BlockCableFilter().setRegistryName("filter_kabel"));
-      r.register(new BlockCableExport().setRegistryName("export_kabel"));
-      r.register(new BlockInventory().setRegistryName("inventory"));
-      r.register(new BlockExchange().setRegistryName("exchange"));
-      r.register(new BlockCollection().setRegistryName("collector"));
-    }
-
-    @SubscribeEvent
     public static void onItemsRegistry(RegistryEvent.Register<Item> event) {
-      Item.Properties properties = new Item.Properties().tab(SsnRegistry.TAB);
       IForgeRegistry<Item> r = event.getRegistry();
-      r.register(new BlockItem(SsnRegistry.INVENTORY, properties).setRegistryName("inventory"));
-      r.register(new BlockItem(SsnRegistry.MAIN, properties).setRegistryName("master"));
-      r.register(new BlockItem(SsnRegistry.STORAGEKABEL, properties).setRegistryName("storage_kabel"));
-      r.register(new BlockItem(SsnRegistry.IMPORTKABEL, properties).setRegistryName("import_kabel"));
-      r.register(new BlockItem(SsnRegistry.IMPORTFILTERKABEL, properties).setRegistryName("import_filter_kabel"));
-      r.register(new BlockItem(SsnRegistry.FILTERKABEL, properties).setRegistryName("filter_kabel"));
-      r.register(new BlockItem(SsnRegistry.EXPORTKABEL, properties).setRegistryName("export_kabel"));
-      r.register(new BlockItem(SsnRegistry.EXCHANGE, properties).setRegistryName("exchange"));
-      r.register(new BlockItem(SsnRegistry.COLLECTOR, properties).setRegistryName("collector"));
-      r.register(new ItemUpgrade(properties).setRegistryName("stack_upgrade"));
-      r.register(new ItemUpgrade(properties).setRegistryName("speed_upgrade"));
-      r.register(new ItemUpgrade(properties).setRegistryName("slow_upgrade"));
-      r.register(new ItemUpgrade(properties).setRegistryName("stock_upgrade"));
-      r.register(new ItemUpgrade(properties).setRegistryName("operation_upgrade"));
-      r.register(new ItemUpgrade(properties).setRegistryName("single_upgrade"));
-      r.register(new ItemStorageCraftingRemote(properties).setRegistryName("inventory_remote"));
-      r.register(new ItemStorageCraftingRemote(properties).setRegistryName("crafting_remote"));
-      r.register(new ItemPicker(properties).setRegistryName("picker_remote"));
-      r.register(new ItemCollector(properties).setRegistryName("collector_remote"));
-      r.register(new ItemBuilder(properties).setRegistryName("builder_remote"));
+      r.register(new BlockItem(Blocks.INVENTORY.get(), new Item.Properties().tab(TAB)).setRegistryName("inventory"));
+      r.register(new BlockItem(Blocks.MASTER.get(), new Item.Properties().tab(TAB)).setRegistryName("master"));
+      r.register(new BlockItem(Blocks.STORAGE_KABEL.get(), new Item.Properties().tab(TAB)).setRegistryName("storage_kabel"));
+      r.register(new BlockItem(Blocks.IMPORT_KABEL.get(), new Item.Properties().tab(TAB)).setRegistryName("import_kabel"));
+      r.register(new BlockItem(Blocks.IMPORT_FILTER_KABEL.get(), new Item.Properties().tab(TAB)).setRegistryName("import_filter_kabel"));
+      r.register(new BlockItem(Blocks.FILTER_KABEL.get(), new Item.Properties().tab(TAB)).setRegistryName("filter_kabel"));
+      r.register(new BlockItem(Blocks.EXPORT_KABEL.get(), new Item.Properties().tab(TAB)).setRegistryName("export_kabel"));
+      r.register(new BlockItem(Blocks.EXCHANGE.get(), new Item.Properties().tab(TAB)).setRegistryName("exchange"));
+      r.register(new BlockItem(Blocks.COLLECTOR.get(), new Item.Properties().tab(TAB)).setRegistryName("collector"));
+      r.register(new ItemUpgrade(new Item.Properties().tab(TAB)).setRegistryName("stack_upgrade"));
+      r.register(new ItemUpgrade(new Item.Properties().tab(TAB)).setRegistryName("speed_upgrade"));
+      r.register(new ItemUpgrade(new Item.Properties().tab(TAB)).setRegistryName("slow_upgrade"));
+      r.register(new ItemUpgrade(new Item.Properties().tab(TAB)).setRegistryName("stock_upgrade"));
+      r.register(new ItemUpgrade(new Item.Properties().tab(TAB)).setRegistryName("operation_upgrade"));
+      r.register(new ItemUpgrade(new Item.Properties().tab(TAB)).setRegistryName("single_upgrade"));
+      r.register(new ItemStorageCraftingRemote(new Item.Properties().tab(TAB)).setRegistryName("inventory_remote"));
+      r.register(new ItemStorageCraftingRemote(new Item.Properties().tab(TAB)).setRegistryName("crafting_remote"));
+      r.register(new ItemPicker(new Item.Properties().tab(TAB)).setRegistryName("picker_remote"));
+      r.register(new ItemCollector(new Item.Properties().tab(TAB)).setRegistryName("collector_remote"));
+      r.register(new ItemBuilder(new Item.Properties().tab(TAB)).setRegistryName("builder_remote"));
     }
 
     @SubscribeEvent
     public static void onTileEntityRegistry(RegistryEvent.Register<BlockEntityType<?>> event) {
       IForgeRegistry<BlockEntityType<?>> r = event.getRegistry();
-      r.register(BlockEntityType.Builder.of(TileMain::new, SsnRegistry.MAIN).build(null).setRegistryName("master"));
-      r.register(BlockEntityType.Builder.of(TileInventory::new, SsnRegistry.INVENTORY).build(null).setRegistryName("inventory"));
-      r.register(BlockEntityType.Builder.of(TileRequest::new, SsnRegistry.Blocks.REQUEST.get()).build(null).setRegistryName("request"));
+      r.register(BlockEntityType.Builder.of(TileMain::new, Blocks.MASTER.get()).build(null).setRegistryName("master"));
+      r.register(BlockEntityType.Builder.of(TileInventory::new, Blocks.INVENTORY.get()).build(null).setRegistryName("inventory"));
+      r.register(BlockEntityType.Builder.of(TileRequest::new, Blocks.REQUEST.get()).build(null).setRegistryName("request"));
       r.register(BlockEntityType.Builder.of(TileCable::new, SsnRegistry.Blocks.KABEL.get()).build(null).setRegistryName("kabel"));
-      r.register(BlockEntityType.Builder.of(TileCableLink::new, SsnRegistry.STORAGEKABEL).build(null).setRegistryName("storage_kabel"));
-      r.register(BlockEntityType.Builder.of(TileCableIO::new, SsnRegistry.IMPORTKABEL).build(null).setRegistryName("import_kabel"));
-      r.register(BlockEntityType.Builder.of(TileCableImportFilter::new, SsnRegistry.IMPORTFILTERKABEL).build(null).setRegistryName("import_filter_kabel"));
-      r.register(BlockEntityType.Builder.of(TileCableFilter::new, SsnRegistry.FILTERKABEL).build(null).setRegistryName("filter_kabel"));
-      r.register(BlockEntityType.Builder.of(TileCableExport::new, SsnRegistry.EXPORTKABEL).build(null).setRegistryName("export_kabel"));
-      r.register(BlockEntityType.Builder.of(TileExchange::new, SsnRegistry.EXCHANGE).build(null).setRegistryName("exchange"));
-      r.register(BlockEntityType.Builder.of(TileCollection::new, SsnRegistry.COLLECTOR).build(null).setRegistryName("collector"));
+      r.register(BlockEntityType.Builder.of(TileCableLink::new, Blocks.STORAGE_KABEL.get()).build(null).setRegistryName("storage_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableIO::new, Blocks.IMPORT_KABEL.get()).build(null).setRegistryName("import_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableImportFilter::new, Blocks.IMPORT_FILTER_KABEL.get()).build(null).setRegistryName("import_filter_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableFilter::new, Blocks.FILTER_KABEL.get()).build(null).setRegistryName("filter_kabel"));
+      r.register(BlockEntityType.Builder.of(TileCableExport::new, Blocks.EXPORT_KABEL.get()).build(null).setRegistryName("export_kabel"));
+      r.register(BlockEntityType.Builder.of(TileExchange::new, Blocks.EXCHANGE.get()).build(null).setRegistryName("exchange"));
+      r.register(BlockEntityType.Builder.of(TileCollection::new, Blocks.COLLECTOR.get()).build(null).setRegistryName("collector"));
     }
 
     @SubscribeEvent
