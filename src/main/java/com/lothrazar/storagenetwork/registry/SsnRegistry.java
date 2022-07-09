@@ -44,13 +44,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.ObjectHolder;
 import net.minecraftforge.registries.RegistryObject;
 
 public class SsnRegistry {
@@ -59,7 +55,7 @@ public class SsnRegistry {
   public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StorageNetwork.MODID);
   public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StorageNetwork.MODID);
   public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, StorageNetwork.MODID);
-  public static CreativeModeTab TAB = new CreativeModeTab(StorageNetwork.MODID) {
+  public static final CreativeModeTab TAB = new CreativeModeTab(StorageNetwork.MODID) {
 
     @Override
     public ItemStack makeIcon() {
@@ -124,51 +120,34 @@ public class SsnRegistry {
     public static final RegistryObject<BlockEntityType<TileCableExport>> EXPORT_KABEL = TILES.register("export_kabel", () -> BlockEntityType.Builder.of(TileCableExport::new, Blocks.EXPORT_KABEL.get()).build(null));
     public static final RegistryObject<BlockEntityType<TileExchange>> EXCHANGE = TILES.register("exchange", () -> BlockEntityType.Builder.of(TileExchange::new, Blocks.EXCHANGE.get()).build(null));
     public static final RegistryObject<BlockEntityType<TileCollection>> COLLECTOR = TILES.register("collector", () -> BlockEntityType.Builder.of(TileCollection::new, Blocks.COLLECTOR.get()).build(null));
-
-    @SubscribeEvent
-    public static void onContainerRegistry(RegistryEvent.Register<MenuType<?>> event) {
-      IForgeRegistry<MenuType<?>> r = event.getRegistry();
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerNetworkCraftingTable(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
-      }).setRegistryName("request"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerCollectionFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
-      }).setRegistryName("collector"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerCableFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
-      }).setRegistryName("filter_kabel"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerCableImportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
-      }).setRegistryName("import_filter_kabel"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerCableExportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
-      }).setRegistryName("export_kabel"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerNetworkInventory(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
-      }).setRegistryName("inventory"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerNetworkRemote(windowId, inv.player.getInventory());
-      }).setRegistryName("inventory_remote"));
-      r.register(IForgeMenuType.create((windowId, inv, data) -> {
-        return new ContainerNetworkCraftingRemote(windowId, inv.player.getInventory());
-      }).setRegistryName("crafting_remote"));
-    }
   }
 
-  @ObjectHolder(StorageNetwork.MODID + ":inventory")
-  public static MenuType<ContainerNetworkInventory> INVENTORYCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":request")
-  public static MenuType<ContainerNetworkCraftingTable> REQUESTCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":filter_kabel")
-  public static MenuType<ContainerCableFilter> FILTERCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":import_filter_kabel")
-  public static MenuType<ContainerCableImportFilter> FILTERIMPORTCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":export_kabel")
-  public static MenuType<ContainerCableExportFilter> FILTEREXPORTCONTAINER;
-  @ObjectHolder(StorageNetwork.MODID + ":inventory_remote")
-  public static MenuType<ContainerNetworkRemote> REMOTE;
-  @ObjectHolder(StorageNetwork.MODID + ":crafting_remote")
-  public static MenuType<ContainerNetworkCraftingRemote> CRAFTINGREMOTE;
-  @ObjectHolder(StorageNetwork.MODID + ":collector")
-  public static MenuType<ContainerCollectionFilter> COLLECTORCTR;
+  @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class Menus {
+
+    public static final RegistryObject<MenuType<ContainerNetworkCraftingTable>> REQUEST = CONTAINERS.register("request", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerNetworkCraftingTable(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+    }));
+    public static final RegistryObject<MenuType<ContainerCollectionFilter>> COLLECTOR = CONTAINERS.register("collector", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerCollectionFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+    }));
+    public static final RegistryObject<MenuType<ContainerCableFilter>> FILTER_KABEL = CONTAINERS.register("filter_kabel", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerCableFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+    }));
+    public static final RegistryObject<MenuType<ContainerCableImportFilter>> IMPORT_FILTER_KABEL = CONTAINERS.register("import_filter_kabel", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerCableImportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+    }));
+    public static final RegistryObject<MenuType<ContainerCableExportFilter>> EXPORT_KABEL = CONTAINERS.register("export_kabel", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerCableExportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+    }));
+    public static final RegistryObject<MenuType<ContainerNetworkInventory>> INVENTORY = CONTAINERS.register("inventory", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerNetworkInventory(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+    }));
+    public static final RegistryObject<MenuType<ContainerNetworkRemote>> INVENTORY_REMOTE = CONTAINERS.register("inventory_remote", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerNetworkRemote(windowId, inv.player.getInventory());
+    }));
+    public static final RegistryObject<MenuType<ContainerNetworkCraftingRemote>> CRAFTING_REMOTE = CONTAINERS.register("crafting_remote", () -> IForgeMenuType.create((windowId, inv, data) -> {
+      return new ContainerNetworkCraftingRemote(windowId, inv.player.getInventory());
+    }));
+  }
 }

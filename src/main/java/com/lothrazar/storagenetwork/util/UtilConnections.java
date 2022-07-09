@@ -26,9 +26,11 @@ public class UtilConnections {
   }
 
   public static boolean isCableOverride(BlockState facingState) {
-    return facingState.getBlock() == SsnRegistry.Blocks.MASTER.get()
+    return facingState.is(SsnRegistry.Blocks.MASTER.get())
         || facingState.is(SsnRegistry.Blocks.EXCHANGE.get())
         || facingState.is(SsnRegistry.Blocks.COLLECTOR.get())
+        || facingState.is(SsnRegistry.Blocks.INVENTORY.get())
+        || facingState.is(SsnRegistry.Blocks.REQUEST.get())
         || facingState.is(SsnRegistry.Blocks.KABEL.get());
   }
 

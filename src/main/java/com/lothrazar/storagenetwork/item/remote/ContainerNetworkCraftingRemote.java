@@ -23,7 +23,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   private ItemStack remote;
 
   public ContainerNetworkCraftingRemote(int id, Inventory pInv) {
-    super(SsnRegistry.CRAFTINGREMOTE, id);
+    super(SsnRegistry.Menus.CRAFTING_REMOTE.get(), id);
     this.player = pInv.player;
     this.remote = pInv.player.getMainHandItem();
     if (this.remote.getItem() != SsnRegistry.Items.CRAFTING_REMOTE.get()) {

@@ -152,7 +152,6 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
         StorageNetwork.log("Main override setplacedby " + facingState);
         stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockAndUpdate(pos, stateIn);
-        break;
       }
       //      IConnectable cap = null;
       //      if (tileOffset != null) {

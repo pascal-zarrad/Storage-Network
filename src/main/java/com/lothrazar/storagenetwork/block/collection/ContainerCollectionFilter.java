@@ -18,7 +18,7 @@ public class ContainerCollectionFilter extends ContainerCable {
   public CapabilityConnectable cap;
 
   public ContainerCollectionFilter(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
-    super(SsnRegistry.COLLECTORCTR, windowId);
+    super(SsnRegistry.Menus.COLLECTOR.get(), windowId);
     tile = (TileCollection) world.getBlockEntity(pos);
     tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).ifPresent(h -> {
       this.cap = (CapabilityConnectable) h;

@@ -53,14 +53,14 @@ public class StorageNetwork {
   }
 
   private void setupClient(final FMLClientSetupEvent event) {
-    MenuScreens.register(SsnRegistry.REQUESTCONTAINER, GuiNetworkTable::new);
-    MenuScreens.register(SsnRegistry.FILTERCONTAINER, GuiCableFilter::new);
-    MenuScreens.register(SsnRegistry.FILTERIMPORTCONTAINER, GuiCableImportFilter::new);
-    MenuScreens.register(SsnRegistry.FILTEREXPORTCONTAINER, GuiCableExportFilter::new);
-    MenuScreens.register(SsnRegistry.REMOTE, GuiNetworkRemote::new);
-    MenuScreens.register(SsnRegistry.CRAFTINGREMOTE, GuiNetworkCraftingRemote::new);
-    MenuScreens.register(SsnRegistry.INVENTORYCONTAINER, GuiNetworkInventory::new);
-    MenuScreens.register(SsnRegistry.COLLECTORCTR, GuiCollectionFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.REQUEST.get(), GuiNetworkTable::new);
+    MenuScreens.register(SsnRegistry.Menus.FILTER_KABEL.get(), GuiCableFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.IMPORT_FILTER_KABEL.get(), GuiCableImportFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.EXPORT_KABEL.get(), GuiCableExportFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.INVENTORY_REMOTE.get(), GuiNetworkRemote::new);
+    MenuScreens.register(SsnRegistry.Menus.CRAFTING_REMOTE.get(), GuiNetworkCraftingRemote::new);
+    MenuScreens.register(SsnRegistry.Menus.INVENTORY.get(), GuiNetworkInventory::new);
+    MenuScreens.register(SsnRegistry.Menus.COLLECTOR.get(), GuiCollectionFilter::new);
     ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
   }
 

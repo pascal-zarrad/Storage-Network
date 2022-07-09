@@ -17,7 +17,7 @@ public class ContainerCableFilter extends ContainerCable {
   public CapabilityConnectableLink cap;
 
   public ContainerCableFilter(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
-    super(SsnRegistry.FILTERCONTAINER, windowId);
+    super(SsnRegistry.Menus.FILTER_KABEL.get(), windowId);
     tile = (TileCableFilter) world.getBlockEntity(pos);
     IConnectableLink rawLink = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
     if (!(rawLink instanceof CapabilityConnectableLink)) {

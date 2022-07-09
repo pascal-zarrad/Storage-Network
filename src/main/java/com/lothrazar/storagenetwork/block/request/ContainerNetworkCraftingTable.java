@@ -14,7 +14,7 @@ public class ContainerNetworkCraftingTable extends ContainerNetwork {
   private final TileRequest tileRequest;
 
   public ContainerNetworkCraftingTable(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
-    super(SsnRegistry.REQUESTCONTAINER, windowId);
+    super(SsnRegistry.Menus.REQUEST.get(), windowId);
     tileRequest = (TileRequest) world.getBlockEntity(pos);
     matrix = new NetworkCraftingInventory(this, tileRequest.matrix);
     this.playerInv = playerInv;

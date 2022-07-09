@@ -13,7 +13,7 @@ public class ContainerNetworkInventory extends ContainerNetwork {
   final TileInventory tile;
 
   public ContainerNetworkInventory(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
-    super(SsnRegistry.INVENTORYCONTAINER, windowId);
+    super(SsnRegistry.Menus.INVENTORY.get(), windowId);
     tile = (TileInventory) world.getBlockEntity(pos);
     this.playerInv = playerInv;
     bindPlayerInvo(this.playerInv);

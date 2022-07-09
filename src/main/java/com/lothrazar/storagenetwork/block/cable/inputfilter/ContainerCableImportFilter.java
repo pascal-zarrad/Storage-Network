@@ -18,7 +18,7 @@ public class ContainerCableImportFilter extends ContainerCable {
   public CapabilityConnectableAutoIO cap;
 
   public ContainerCableImportFilter(int windowId, Level world, BlockPos pos, Inventory playerInv, Player player) {
-    super(SsnRegistry.FILTERIMPORTCONTAINER, windowId);
+    super(SsnRegistry.Menus.IMPORT_FILTER_KABEL.get(), windowId);
     tile = (TileCableImportFilter) world.getBlockEntity(pos);
     this.cap = tile.ioStorage;
     for (int i = 0; i < cap.upgrades.getSlots(); i++) {

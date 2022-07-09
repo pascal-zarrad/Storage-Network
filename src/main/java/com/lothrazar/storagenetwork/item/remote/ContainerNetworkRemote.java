@@ -17,7 +17,7 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   private ItemStack remote;
 
   public ContainerNetworkRemote(int id, Inventory pInv) {
-    super(SsnRegistry.REMOTE, id);
+    super(SsnRegistry.Menus.INVENTORY_REMOTE.get(), id);
     this.player = pInv.player;
     this.world = player.level;
     Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.Items.INVENTORY_REMOTE.get());
