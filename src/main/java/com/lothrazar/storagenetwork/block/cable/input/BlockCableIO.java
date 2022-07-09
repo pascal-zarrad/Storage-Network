@@ -4,7 +4,6 @@ import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,11 +13,6 @@ public class BlockCableIO extends BlockCable {
 
   public BlockCableIO(String registryName) {
     super(registryName);
-  }
-
-  @Override
-  public RenderShape getRenderShape(BlockState bs) {
-    return RenderShape.MODEL;
   }
 
   @Override

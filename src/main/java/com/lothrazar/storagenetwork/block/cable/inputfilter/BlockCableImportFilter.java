@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,11 +25,6 @@ public class BlockCableImportFilter extends BlockCable {
   @Override
   public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
     return new TileCableImportFilter(pos, state);
-  }
-
-  @Override
-  public RenderShape getRenderShape(BlockState bs) {
-    return RenderShape.MODEL;
   }
 
   @Override

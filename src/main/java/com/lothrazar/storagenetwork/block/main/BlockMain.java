@@ -39,7 +39,7 @@ public class BlockMain extends BaseBlock {
   @Override
   public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
     super.setPlacedBy(worldIn, pos, state, placer, stack);
-    this.updateConnection(worldIn, pos, state);
+    //    this.updateConnection(worldIn, pos, state);
     if (worldIn.isClientSide) {
       return;
     }

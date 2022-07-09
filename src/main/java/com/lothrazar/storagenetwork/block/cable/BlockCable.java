@@ -141,7 +141,8 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
   @Override
   public void setPlacedBy(Level worldIn, BlockPos pos, BlockState stateIn, LivingEntity placer, ItemStack stack) {
     super.setPlacedBy(worldIn, pos, stateIn, placer, stack);
-    this.updateConnection(worldIn, pos, stateIn);
+    //    StorageNetwork.log("blockcable updateconnection  ");
+    //    this.updateConnection(worldIn, pos, stateIn);
     BlockState facingState;
     for (Direction d : Direction.values()) {
       BlockPos posoff = pos.relative(d);
