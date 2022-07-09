@@ -3,7 +3,6 @@ package com.lothrazar.storagenetwork.capability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
@@ -105,6 +104,10 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       if (itemHandler == null) {
         return stack;
       }
+      if (itemHandler instanceof ExchangeItemStackHandler) {
+        StorageNetwork.log("cannot loop back a network insert into ExchangeItemStackHandler");
+        return stack;
+      }
       return ItemHandlerHelper.insertItemStacked(itemHandler, stack, simulate);
     }
     catch (Exception e) {
@@ -134,6 +137,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return ItemStack.EMPTY;
     }
     if (itemHandler instanceof ExchangeItemStackHandler) {
+      StorageNetwork.log("cannot loop back a network extract into ExchangeItemStackHandler");
       return ItemStack.EMPTY;
     }
     ItemStack firstMatchedStack = ItemStack.EMPTY;
@@ -257,26 +261,4 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       }
     }
   }
-
-  public static class Factory implements Callable<IConnectableLink> {
-
-    @Override
-    public IConnectableLink call() throws Exception {
-      return new CapabilityConnectableLink();
-    }
-  }
-  //  public static class Storage implements Capability.IStorage<IConnectableLink> {
-  //
-  //    @Override
-  //    public Tag writeNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side) {
-  //      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-  //      return instance.serializeNBT();
-  //    }
-  //
-  //    @Override
-  //    public void readNBT(Capability<IConnectableLink> capability, IConnectableLink rawInstance, Direction side, Tag nbt) {
-  //      CapabilityConnectableLink instance = (CapabilityConnectableLink) rawInstance;
-  //      instance.deserializeNBT((CompoundTag) nbt);
-  //    }
-  //  }
 }
