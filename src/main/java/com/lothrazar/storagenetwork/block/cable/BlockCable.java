@@ -158,16 +158,16 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
     if (shapeConnects(state, DOWN)) {
       shape = Shapes.joinUnoptimized(shape, AABB_DOWN, BooleanOp.OR);
     }
-    if (state.getValue(WEST).equals(EnumConnectType.CABLE)) {
+    if (shapeConnects(state, WEST)) {
       shape = Shapes.joinUnoptimized(shape, AABB_WEST, BooleanOp.OR);
     }
-    if (state.getValue(EAST).equals(EnumConnectType.CABLE)) {
+    if (shapeConnects(state, EAST)) {
       shape = Shapes.joinUnoptimized(shape, AABB_EAST, BooleanOp.OR);
     }
-    if (state.getValue(NORTH).equals(EnumConnectType.CABLE)) {
+    if (shapeConnects(state, NORTH)) {
       shape = Shapes.joinUnoptimized(shape, AABB_NORTH, BooleanOp.OR);
     }
-    if (state.getValue(SOUTH).equals(EnumConnectType.CABLE)) {
+    if (shapeConnects(state, SOUTH)) {
       shape = Shapes.joinUnoptimized(shape, AABB_SOUTH, BooleanOp.OR);
     }
     return shape;
@@ -246,6 +246,7 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
     return false;
   }
 
+  //TODO: tilecablewithfacing :: isvalidlink :: mix it up
   private static boolean isInventory(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
     if (facing == null) {
       return false;

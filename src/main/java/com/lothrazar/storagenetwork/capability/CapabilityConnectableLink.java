@@ -9,7 +9,6 @@ import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
-import com.lothrazar.storagenetwork.block.exchange.ExchangeItemStackHandler;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.core.Direction;
@@ -103,10 +102,10 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       if (itemHandler == null) {
         return stack;
       }
-      if (itemHandler instanceof ExchangeItemStackHandler) {
-        StorageNetwork.log("cannot loop back a network insert into ExchangeItemStackHandler");
-        return stack;
-      }
+      //      if (itemHandler instanceof ExchangeItemStackHandler) {
+      //        StorageNetwork.log("cannot loop back a network insert into ExchangeItemStackHandler");
+      //        return stack;
+      //      }
       return ItemHandlerHelper.insertItemStacked(itemHandler, stack, simulate);
     }
     catch (Exception e) {
@@ -135,10 +134,10 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     if (itemHandler == null) {
       return ItemStack.EMPTY;
     }
-    if (itemHandler instanceof ExchangeItemStackHandler) {
-      StorageNetwork.log("cannot loop back a network extract into ExchangeItemStackHandler");
-      return ItemStack.EMPTY;
-    }
+    //    if (itemHandler instanceof ExchangeItemStackHandler) {
+    //      StorageNetwork.log("cannot loop back a network extract into ExchangeItemStackHandler");
+    //      return ItemStack.EMPTY;
+    //    }
     ItemStack firstMatchedStack = ItemStack.EMPTY;
     int remaining = size;
     for (int slot = 0; slot < itemHandler.getSlots(); slot++) {

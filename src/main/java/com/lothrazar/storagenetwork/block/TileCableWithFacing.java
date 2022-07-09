@@ -1,8 +1,5 @@
 package com.lothrazar.storagenetwork.block;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -34,6 +31,7 @@ public class TileCableWithFacing extends TileConnectable {
     this.direction = direction;
   }
 
+  //TODO: merge this with is valid inventory in BlockCable
   protected boolean isValidLinkNeighbor(Direction facing) {
     if (facing == null) {
       return false;
@@ -49,9 +47,6 @@ public class TileCableWithFacing extends TileConnectable {
   }
 
   public void findNewDirection() {
-    //    if (isValidLinkNeighbor(direction)) {
-    //      return;
-    //    }
     for (Direction facing : Direction.values()) {
       if (isValidLinkNeighbor(facing)) {
         setDirection(facing);
@@ -59,28 +54,6 @@ public class TileCableWithFacing extends TileConnectable {
       }
     }
     setDirection(null);
-  }
-
-  public void rotate() {
-    Direction previous = direction;
-    List<Direction> targetFaces = Arrays.asList(Direction.values());
-    Collections.shuffle(targetFaces);
-    for (Direction facing : Direction.values()) {
-      if (previous == facing) {
-        continue;
-      }
-      if (isValidLinkNeighbor(facing)) {
-        setDirection(facing);
-        this.setChanged();
-        if (previous != direction) {
-          TileMain mainNode = getTileMain();
-          if (mainNode != null) {
-            mainNode.refreshNetwork();
-          }
-        }
-        return;
-      }
-    }
   }
 
   public void refreshDirection() {

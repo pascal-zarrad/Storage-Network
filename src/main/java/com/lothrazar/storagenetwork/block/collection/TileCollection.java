@@ -61,9 +61,6 @@ public class TileCollection extends TileConnectable implements MenuProvider {
         TileMain tileMain = m.getTileEntity(TileMain.class);
         itemHandler.setMain(tileMain);
       }
-      //      else {
-      //        StorageNetwork.log("Found NO CAP!!! for collector ");
-      //      }
       return LazyOptional.of(new NonNullSupplier<T>() {
 
         public @Override T get() {
