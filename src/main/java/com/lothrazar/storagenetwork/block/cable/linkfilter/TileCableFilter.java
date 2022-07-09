@@ -65,15 +65,9 @@ public class TileCableFilter extends TileCableWithFacing implements MenuProvider
     return super.getCapability(capability, facing);
   }
 
-  private void tick() {
-    super.refreshDirection();
-  }
-
-  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableFilter tile) {
-    tile.tick();
-  }
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableFilter tile) {}
 
   public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileCableFilter tile) {
-    tile.tick();
+    tile.refreshInventoryDirection();
   }
 }

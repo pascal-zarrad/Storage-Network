@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.util;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -12,7 +13,9 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class UtilTileEntity {
 
@@ -20,6 +23,20 @@ public class UtilTileEntity {
   public static final int MOUSE_BTN_LEFT = 0;
   public static final int MOUSE_BTN_RIGHT = 1;
   public static final int MOUSE_BTN_MIDDLE_CLICK = 2;
+
+  public static void addOrMergeIntoList(List<ItemStack> list, ItemStack stackToAdd) {
+    boolean added = false;
+    for (ItemStack stack : list) {
+      if (ItemHandlerHelper.canItemStacksStack(stackToAdd, stack)) {
+        stack.setCount(stack.getCount() + stackToAdd.getCount());
+        added = true;
+        break;
+      }
+    }
+    if (!added) {
+      list.add(stackToAdd);
+    }
+  }
 
   public static void playSoundFromServer(ServerPlayer entityIn, SoundEvent soundIn, float volume) {
     if (soundIn == null || entityIn == null) {

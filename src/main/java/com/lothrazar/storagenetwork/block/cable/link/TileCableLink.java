@@ -49,15 +49,9 @@ public class TileCableLink extends TileCableWithFacing {
     return super.getCapability(capability, facing);
   }
 
-  private void tick() {
-    super.refreshDirection();
-  }
-
-  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableLink tile) {
-    tile.tick();
-  }
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileCableLink tile) {}
 
   public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileCableLink tile) {
-    tile.tick();
+    tile.refreshInventoryDirection();
   }
 }

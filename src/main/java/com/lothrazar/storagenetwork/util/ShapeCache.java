@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cable;
+package com.lothrazar.storagenetwork.util;
 
 import java.util.HashMap;
 import java.util.Map;

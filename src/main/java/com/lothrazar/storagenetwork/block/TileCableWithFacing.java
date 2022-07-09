@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.block;
 import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
+import com.lothrazar.storagenetwork.util.UtilConnections;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,10 +18,6 @@ public class TileCableWithFacing extends TileConnectable {
     super(tileEntityTypeIn, pos, state);
   }
 
-  public Direction getDirection() {
-    return direction;
-  }
-
   public BlockPos getFacingPosition() {
     return this.getBlockPos().relative(direction);
   }
@@ -29,26 +26,10 @@ public class TileCableWithFacing extends TileConnectable {
     this.direction = direction;
   }
 
-  //TODO: merge this with is valid inventory in BlockCable
-  protected boolean isValidLinkNeighbor(Direction facing) {
-    BlockPos relative = worldPosition.relative(facing);
-    return BlockCable.isInventory(facing, level, relative);
-    //    if (facing == null) {
-    //      return false;
-    //    }
-    //    if (!TileMain.isTargetAllowed(level.getBlockState(worldPosition.relative(facing)))) {
-    //      return false;
-    //    }
-    //    BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(facing));
-    //    if (neighbor != null && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {
-    //      return true;
-    //    }
-    //    return false;
-  }
-
   public void findNewDirection() {
     for (Direction facing : Direction.values()) {
-      if (isValidLinkNeighbor(facing)) {
+      BlockPos relative = worldPosition.relative(facing);
+      if (UtilConnections.isInventory(facing, level, relative)) {
         setDirection(facing);
         return;
       }
@@ -56,12 +37,12 @@ public class TileCableWithFacing extends TileConnectable {
     setDirection(null);
   }
 
-  public void refreshDirection() {
-    if (this.getDirection() == null) {
+  public void refreshInventoryDirection() {
+    if (direction == null) {
       this.findNewDirection();
-      if (getDirection() != null) {
+      if (direction != null) {
         BlockState newState = BlockCable.cleanBlockState(this.getBlockState());
-        newState = newState.setValue(BlockCable.FACING_TO_PROPERTY_MAP.get(getDirection()), EnumConnectType.INVENTORY);
+        newState = newState.setValue(BlockCable.FACING_TO_PROPERTY_MAP.get(direction), EnumConnectType.INVENTORY);
         level.setBlockAndUpdate(worldPosition, newState);
       }
     }

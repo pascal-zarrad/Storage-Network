@@ -21,6 +21,7 @@ import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
+import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,7 +29,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -68,7 +68,7 @@ public class TileMain extends BlockEntity {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
-          addOrMergeIntoList(stacks, stack);
+          UtilTileEntity.addOrMergeIntoList(stacks, stack);
         }
       }
     }
@@ -96,7 +96,7 @@ public class TileMain extends BlockEntity {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
-          addOrMergeIntoList(stacks, stack);
+          UtilTileEntity.addOrMergeIntoList(stacks, stack);
         }
       }
     }
@@ -106,21 +106,7 @@ public class TileMain extends BlockEntity {
     return stacks;
   }
 
-  private static void addOrMergeIntoList(List<ItemStack> list, ItemStack stackToAdd) {
-    boolean added = false;
-    for (ItemStack stack : list) {
-      if (ItemHandlerHelper.canItemStacksStack(stackToAdd, stack)) {
-        stack.setCount(stack.getCount() + stackToAdd.getCount());
-        added = true;
-        break;
-      }
-    }
-    if (!added) {
-      list.add(stackToAdd);
-    }
-  }
-
-  int emptySlots() {
+  public int emptySlots() {
     int countEmpty = 0;
     for (IConnectableLink storage : getSortedConnectableStorage()) {
       countEmpty += storage.getEmptySlots();
@@ -188,17 +174,12 @@ public class TileMain extends BlockEntity {
       if (capabilityConnectable == null) {
         continue;
       }
-      //
       if (capabilityConnectable.getPos() == null) {
-        //  1.15 hax
-        // StorageNetwork.LOGGER.info("1.15 HAX NULL POS !! " + lookPos + "has tile " + tileHere);
-        //wait what 
         capabilityConnectable.setPos(lookPos);
         capabilityConnectable.setMainPos(this.getDimPos());
       }
       //
       if (capabilityConnectable != null) {
-        //        IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite());
         capabilityConnectable.setMainPos(getDimPos());
         DimPos realConnectablePos = capabilityConnectable.getPos();
         boolean beenHereBefore = set.contains(realConnectablePos);
@@ -206,7 +187,6 @@ public class TileMain extends BlockEntity {
           continue;
         }
         if (realConnectablePos.getWorld() == null) {
-          // StorageNetwork.LOGGER.info("1.15 realConnectablePos HAX NULL WORLD  " + realConnectablePos);
           realConnectablePos.setWorld(sourcePos.getWorld());
         }
         set.add(realConnectablePos);
@@ -220,19 +200,6 @@ public class TileMain extends BlockEntity {
   private static void nukeAndDrop(DimPos lookPos) {
     lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
     lookPos.getWorld().removeBlockEntity(lookPos.getBlockPos());
-  }
-
-  public static boolean isTargetAllowed(BlockState state) {
-    if (state.getBlock() == Blocks.AIR) {
-      return false;
-    }
-    String blockId = state.getBlock().getRegistryName().toString();
-    for (String s : StorageNetwork.CONFIG.ignorelist()) {
-      if (blockId.equals(s)) {
-        return false;
-      }
-    }
-    return true;
   }
 
   public void refreshNetwork() {
