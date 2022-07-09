@@ -17,7 +17,6 @@ import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
-import com.lothrazar.storagenetwork.block.exchange.TileExchange;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -333,11 +332,6 @@ public class TileMain extends BlockEntity {
       if (!storage.runNow(connectable.getPos(), this)) {
         continue;
       }
-      //      int amtToRequest = storage.getTransferRate();
-      //TODO
-      // storage.getUpgrades().getUpgradesOfType(SsnRegistry.STACK_UPGRADE) > 0 ? 64 : 4;
-      // Do a simulation first and abort if we got an empty stack,
-      //(filters used internally in extractNextStack)
       IItemHandler itemHandler = storage.getItemHandler();
       if (itemHandler == null) {
         continue;
@@ -511,7 +505,6 @@ public class TileMain extends BlockEntity {
     if (size == 0 || matcher == null) {
       return ItemStack.EMPTY;
     }
-    // TODO: Test against storage drawers. There was some issue with it: https://github.com/PrinceOfAmber/Storage-Network/issues/19
     IItemStackMatcher usedMatcher = matcher;
     int alreadyTransferred = 0;
     for (IConnectableLink storage : getSortedConnectableStorage()) {
@@ -571,10 +564,6 @@ public class TileMain extends BlockEntity {
       IConnectableLink capConnect = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
       if (capConnect == null) {
         continue;
-      }
-      if (tileEntity instanceof TileExchange) {
-        StorageNetwork.log("keep going??main tile exhchange bandaid");
-        //        continue;
       }
       result.add(capConnect);
     }

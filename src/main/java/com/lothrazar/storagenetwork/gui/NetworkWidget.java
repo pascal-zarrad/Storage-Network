@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.api.EnumSearchPrefix;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
 import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
@@ -32,20 +33,21 @@ import net.minecraftforge.fml.ModList;
 
 public class NetworkWidget {
 
-  private final IGuiNetwork gui;
-  public EditBox searchBar;
-  long lastClick;
-  int page = 1, maxPage = 1;
-  public List<ItemStack> stacks;
-  List<ItemSlotNetwork> slots;
-  private int lines = 4;
-  private int columns = 9;
   public ItemStack stackUnderMouse = ItemStack.EMPTY;
-  public int fieldHeight = 90;
+  public List<ItemStack> stacks;
+  public EditBox searchBar;
   public ButtonRequest directionBtn;
   public ButtonRequest sortBtn;
   public ButtonRequest jeiBtn;
   public ButtonRequest focusBtn;
+  public int fieldHeight = 90;
+  private List<ItemSlotNetwork> slots;
+  private final IGuiNetwork gui;
+  private long lastClick;
+  private int page = 1;
+  private int maxPage = 1;
+  private int lines = 4;
+  private final int columns = 9;
 
   public NetworkWidget(IGuiNetwork gui) {
     this.gui = gui;
@@ -82,11 +84,11 @@ public class NetworkWidget {
 
   private boolean doesStackMatchSearch(ItemStack stack) {
     String searchText = searchBar.getValue();
-    if (searchText.startsWith("@")) { // TODO: ENUM //search modname 
+    if (searchText.startsWith(EnumSearchPrefix.MOD.getPrefix())) { //  search modname 
       String name = UtilTileEntity.getModNameForItem(stack.getItem());
       return name.toLowerCase().contains(searchText.toLowerCase().substring(1));
     }
-    else if (searchText.startsWith("#")) { // search tooltips
+    else if (searchText.startsWith(EnumSearchPrefix.TOOLTIP.getPrefix())) { // search tooltips
       String tooltipString;
       Minecraft mc = Minecraft.getInstance();
       List<Component> tooltip = stack.getTooltipLines(mc.player, TooltipFlag.Default.NORMAL);
@@ -94,7 +96,7 @@ public class NetworkWidget {
       tooltipString = Joiner.on(' ').join(unformattedTooltip).toLowerCase().trim();
       return tooltipString.contains(searchText.toLowerCase().substring(1));
     }
-    else if (searchText.startsWith("$")) { // search tags
+    else if (searchText.startsWith(EnumSearchPrefix.TAG.getPrefix())) { // search tags
       List<String> joiner = new ArrayList<>();
       for (ResourceLocation oreId : stack.getTags().map((tagKey) -> tagKey.location()).collect(Collectors.toList())) {
         String oreName = oreId.toString();
@@ -122,10 +124,6 @@ public class NetworkWidget {
 
   public void setLines(int v) {
     lines = v;
-  }
-
-  void setColumns(int v) {
-    columns = v;
   }
 
   public void applyScrollPaging(List<ItemStack> stacksToDisplay) {
@@ -335,7 +333,6 @@ public class NetworkWidget {
         gui.getGuiLeft() + 166, y + 2, "", (p) -> {
           gui.setAutoFocus(!gui.getAutoFocus());
           gui.syncDataToServer();
-          System.out.println("Syncinc focus " + gui.getAutoFocus());
         });
     focusBtn.setHeight(11);
     focusBtn.setWidth(6);

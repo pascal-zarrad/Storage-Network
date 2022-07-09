@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.block.cable.export;
 
+import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -58,10 +58,9 @@ public class TileCableExport extends TileCableWithFacing implements MenuProvider
 
   @Override
   public void saveAdditional(CompoundTag compound) {
-     super.saveAdditional(compound);
+    super.saveAdditional(compound);
     compound.put("ioStorage", this.ioStorage.serializeNBT());
     compound.put("upgrades", ioStorage.upgrades.serializeNBT());
-
   }
 
   @Override

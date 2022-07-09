@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.block.cable;
 
 import java.util.Map;
 import com.google.common.collect.Maps;
+import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
 import com.lothrazar.storagenetwork.block.BaseBlock;
@@ -209,23 +210,18 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
 
   @Override
   public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
-//    if (stateIn.getValue(WATERLOGGED)) {
-//      world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-//    }
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     if (facingState.getBlock() == SsnRegistry.MAIN
         || facingState.getBlock() instanceof BlockCable) {
-      //      StorageNetwork.log("plain cable" + facingState.getBlock());
       return stateIn.setValue(property, EnumConnectType.CABLE);
-    } //
-      //based on capability you have, edit connection type
+    }
+    //based on capability you have, edit connection type
     BlockEntity tileOffset = world.getBlockEntity(facingPos);
     IConnectable cap = null;
     if (tileOffset != null) {
       cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
     }
     if (cap != null) {
-      //      StorageNetwork.log("EARLY EXIT block" + facingState.getBlock() + " has cap " + cap);
       if (cap.getMainPos() != null) {
         //its a network bock of some type, knows where network is but not exactly inventory
         return stateIn.setValue(property, EnumConnectType.INVENTORY);

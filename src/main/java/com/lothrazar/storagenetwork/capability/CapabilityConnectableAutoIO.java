@@ -74,7 +74,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return filters;
   }
 
-  //TODO: shrae with ConnectableLink  @Override
+  //TODO: share with ConnectableLink  @Override
   public List<ItemStack> getStoredStacks(boolean isFiltered) {
     if (inventoryFace == null) {
       return Collections.emptyList();
@@ -100,7 +100,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return result;
   }
 
-  //TODO: shrae with ConnectableLink
+  //TODO: share with ConnectableLink
   public void setPriority(int value) {
     this.priority = value;
   }

@@ -54,11 +54,6 @@ public class GuiCableFilter extends AbstractContainerScreen<ContainerCableFilter
   public void init() {
     super.init();
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
-    // TODO ?
-    //    btnRedstone = addButton(new ButtonRequest(guiLeft + 4, guiTop + 4, "", (p) -> {
-    //      this.syncData(0);
-    //      PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
-    //    }));
     btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 4, "", (p) -> {
       this.syncData(-1);
     }));

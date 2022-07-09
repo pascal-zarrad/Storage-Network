@@ -35,6 +35,7 @@ public class SettingsSyncMessage {
   public static void handle(SettingsSyncMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayer player = ctx.get().getSender();
+      //TODO: how to refactor this
       if (message.targetTileEntity) {
         BlockEntity tileEntity = player.level.getBlockEntity(message.pos);
         if (tileEntity instanceof ITileNetworkSync) {
@@ -55,13 +56,12 @@ public class SettingsSyncMessage {
           ItemStorageCraftingRemote.setAutoFocus(stackPlayerHeld, message.autoFocus);
         }
       }
-      else if (player.containerMenu instanceof ContainerNetworkRemote rcc) { //TODO eww this bufix is ugly for both remotes, shared getremote or shared sync
+      else if (player.containerMenu instanceof ContainerNetworkRemote rcc) {
         ItemStack stackPlayerHeld = rcc.getRemote();
         if (stackPlayerHeld.getItem() instanceof ItemStorageCraftingRemote) {
           ItemStorageCraftingRemote.setSort(stackPlayerHeld, message.sort);
           ItemStorageCraftingRemote.setDownwards(stackPlayerHeld, message.direction);
           ItemStorageCraftingRemote.setJeiSearchSynced(stackPlayerHeld, message.jeiSync);
-          System.out.println("Save autofocus for non crafting remote " + message.autoFocus + " " + rcc.getRemote());
           ItemStorageCraftingRemote.setAutoFocus(stackPlayerHeld, message.autoFocus);
         }
       }

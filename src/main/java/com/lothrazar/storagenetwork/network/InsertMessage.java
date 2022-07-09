@@ -58,7 +58,7 @@ public class InsertMessage {
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       player.containerMenu.broadcastChanges();
-    }); 
+    });
     ctx.get().setPacketHandled(true);
   }
 

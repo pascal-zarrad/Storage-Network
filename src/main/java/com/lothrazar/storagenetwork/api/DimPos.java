@@ -154,7 +154,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
   public boolean equals(Level world, BlockPos pos) {
     //    world.dimension
     //    return dimension == world.provider.getDimension() &&
-    // TODO ^^
+    // TODO dimension testing stuff? is it needed ^^
     return pos.equals(this.pos);
   }
 

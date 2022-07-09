@@ -14,7 +14,7 @@ public class NetworkCraftingInventory extends CraftingContainer {
   /** stupid thing is private with no getter so overwrite */
   private final NonNullList<ItemStack> stackList;
   private final AbstractContainerMenu eventHandler;
-  public boolean skipEvents;
+  private boolean skipEvents;
 
   private NetworkCraftingInventory(AbstractContainerMenu eventHandlerIn, int width, int height) {
     super(eventHandlerIn, width, height);

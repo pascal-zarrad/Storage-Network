@@ -78,7 +78,7 @@ public class CableIOMessage {
     CapabilityConnectableAutoIO link = null;
     TileConnectable tile = null;
     CapabilityConnectable connectable = null;
-    //super super HACK TODO: this is hacky
+    //TODO: how to refactor
     if (player.containerMenu instanceof ContainerCableExportFilter) {
       ContainerCableExportFilter ctr = (ContainerCableExportFilter) player.containerMenu;
       link = ctr.cap;

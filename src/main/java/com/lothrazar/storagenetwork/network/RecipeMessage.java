@@ -42,8 +42,7 @@ public class RecipeMessage {
   private CompoundTag nbt;
   private int index = 0;
 
-  private RecipeMessage() {
-  }
+  private RecipeMessage() {}
 
   public RecipeMessage(CompoundTag nbt) {
     this.nbt = nbt;

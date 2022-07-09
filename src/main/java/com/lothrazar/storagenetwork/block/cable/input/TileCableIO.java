@@ -1,9 +1,9 @@
 package com.lothrazar.storagenetwork.block.cable.input;
 
+import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.block.TileCableWithFacing;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
-import com.lothrazar.storagenetwork.block.cable.EnumConnectType;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
@@ -41,7 +41,6 @@ public class TileCableIO extends TileCableWithFacing {
   public void saveAdditional(CompoundTag compound) {
     super.saveAdditional(compound);
     compound.put("ioStorage", this.ioStorage.serializeNBT());
-
   }
 
   @Override

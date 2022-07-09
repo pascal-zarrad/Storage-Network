@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.cable;
+package com.lothrazar.storagenetwork.api;
 
 import java.util.Locale;
 import net.minecraft.util.StringRepresentable;
