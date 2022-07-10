@@ -30,8 +30,9 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 
 public class NetworkModule {
 
-  Set<DimPos> connectables = new HashSet<>();
-  boolean shouldRefresh = true;
+  NetworkCache ch = new NetworkCache();
+  private Set<DimPos> connectables = new HashSet<>();
+  private boolean shouldRefresh = true;
 
   public void setShouldRefresh() {
     shouldRefresh = true;
@@ -264,5 +265,9 @@ public class NetworkModule {
     catch (Throwable e) {
       StorageNetworkMod.LOGGER.info("Refresh network error ", e);
     }
+  }
+
+  public boolean shouldRefresh() {
+    return this.shouldRefresh;
   }
 }

@@ -27,7 +27,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileMain extends BlockEntity {
 
-  private NetworkCache ch = new NetworkCache();
+  //currently this has one network
   public NetworkModule nw = new NetworkModule();
 
   public TileMain(BlockPos pos, BlockState state) {
@@ -39,7 +39,7 @@ public class TileMain extends BlockEntity {
   }
 
   public void clearCache() {
-    ch.clearCache();
+    nw.ch.clearCache();
   }
 
   @Override
@@ -59,25 +59,23 @@ public class TileMain extends BlockEntity {
     // 1. Try to insert into a recent slot for the same item.
     //    We do this to avoid having to search for the appropriate inventory repeatedly.
     String key = UtilInventory.getStackKey(stack);
-    StorageNetworkMod.log(ch.size() + " ?cacheattempt " + key);
-    if (ch.hasCachedSlot(stack)) {
-      DimPos cachedStoragePos = ch.getCachedSlot(stack);
+    if (nw.ch.hasCachedSlot(stack)) {
+      DimPos cachedStoragePos = nw.ch.getCachedSlot(stack);
       IConnectableLink storage = cachedStoragePos.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null);
       if (storage == null) {
         // The block at the cached position is not even an IConnectableLink anymore
-        ch.remove(key);
+        nw.ch.remove(key);
       }
       else {
         // But if it is, we test whether it can still import that particular stack and do so if it does.
         boolean canStillImport = storage.getSupportedTransferDirection().match(EnumStorageDirection.IN);
-        StorageNetworkMod.log(canStillImport + " cacheattempt " + key);
         if (canStillImport &&
             storage.insertStack(stack, true).getCount() < stack.getCount()) {
           stack = storage.insertStack(stack, simulate);
           StorageNetworkMod.log("cache success used on a insertStack " + key);
         }
         else {
-          ch.remove(key);
+          nw.ch.remove(key);
         }
       }
     }
@@ -99,7 +97,7 @@ public class TileMain extends BlockEntity {
         }
         // If it can we need to know, i.e. store the remainder
         stack = storage.insertStack(stack, simulate);
-        ch.put(key, storage.getPos());
+        nw.ch.put(key, storage.getPos());
       }
       catch (Exception e) {
         StorageNetworkMod.LOGGER.error("insertStack container issue", e);
@@ -326,7 +324,7 @@ public class TileMain extends BlockEntity {
     }
     //refresh time in config, default 200 ticks aka 10 seconds
     if ((level.getGameTime() % StorageNetworkMod.CONFIG.refreshTicks() == 0)
-        || nw.shouldRefresh) {
+        || nw.shouldRefresh()) {
       nw.doRefresh(this.getDimPos());
     }
     updateImports();
