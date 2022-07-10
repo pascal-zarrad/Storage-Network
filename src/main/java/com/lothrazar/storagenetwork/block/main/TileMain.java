@@ -1,13 +1,11 @@
 package com.lothrazar.storagenetwork.block.main;
 
-import java.util.List;
 import java.util.Set;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
-import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
@@ -23,7 +21,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileMain extends BlockEntity {
 
@@ -34,14 +31,6 @@ public class TileMain extends BlockEntity {
     super(SsnRegistry.Tiles.MASTER.get(), pos, state);
   }
 
-  public DimPos getDimPos() {
-    return new DimPos(level, worldPosition);
-  }
-
-  public void clearCache() {
-    nw.ch.clearCache();
-  }
-
   @Override
   public CompoundTag getUpdateTag() {
     CompoundTag nbt = new CompoundTag();
@@ -49,61 +38,35 @@ public class TileMain extends BlockEntity {
     return nbt;
   }
 
+  @Override
+  public ClientboundBlockEntityDataPacket getUpdatePacket() {
+    saveWithFullMetadata();
+    return ClientboundBlockEntityDataPacket.create(this); // new ClientboundBlockEntityDataPacket(worldPosition, 1, syncData);
+  }
+
+  @Override
+  public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+    load(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
+    super.onDataPacket(net, pkt);
+  }
+
   /**
    * returns countUnmoved , the number of items NOT inserted.
    */
   public int insertStack(ItemStack stack, boolean simulate) {
-    if (stack.isEmpty()) {
-      return 0;
-    }
-    // 1. Try to insert into a recent slot for the same item.
-    //    We do this to avoid having to search for the appropriate inventory repeatedly.
-    String key = UtilInventory.getStackKey(stack);
-    if (nw.ch.hasCachedSlot(stack)) {
-      DimPos cachedStoragePos = nw.ch.getCachedSlot(stack);
-      IConnectableLink storage = cachedStoragePos.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null);
-      if (storage == null) {
-        // The block at the cached position is not even an IConnectableLink anymore
-        nw.ch.remove(key);
-      }
-      else {
-        // But if it is, we test whether it can still import that particular stack and do so if it does.
-        boolean canStillImport = storage.getSupportedTransferDirection().match(EnumStorageDirection.IN);
-        if (canStillImport &&
-            storage.insertStack(stack, true).getCount() < stack.getCount()) {
-          stack = storage.insertStack(stack, simulate);
-          StorageNetworkMod.log("cache success used on a insertStack " + key);
-        }
-        else {
-          nw.ch.remove(key);
-        }
-      }
-    }
-    // 2. If everything got transferred into the cached storage, end here
-    if (stack.isEmpty()) {
-      return 0;
-    }
-    // 3. Otherwise try to find a new inventory that can take the remainder of the itemstack
-    List<IConnectableLink> storages = nw.getSortedConnectableStorage();
-    for (IConnectableLink storage : storages) {
-      try {
-        // Ignore storages that can not import
-        if (!storage.getSupportedTransferDirection().match(EnumStorageDirection.IN)) {
-          continue;
-        }
-        // The given import-capable storage can not import this particular stack
-        if (storage.insertStack(stack, true).getCount() >= stack.getCount()) {
-          continue;
-        }
-        // If it can we need to know, i.e. store the remainder
-        stack = storage.insertStack(stack, simulate);
-        nw.ch.put(key, storage.getPos());
-      }
-      catch (Exception e) {
-        StorageNetworkMod.LOGGER.error("insertStack container issue", e);
-      }
-    }
-    return stack.getCount();
+    return nw.insertStack(stack, simulate);
+  }
+
+  public ItemStack request(ItemStackMatcher matcher, int size, boolean simulate) {
+    return nw.request(matcher, size, simulate);
+  }
+
+  public DimPos getDimPos() {
+    return new DimPos(level, worldPosition);
+  }
+
+  public void clearCache() {
+    nw.ch.clearCache();
   }
 
   /**
@@ -165,9 +128,6 @@ public class TileMain extends BlockEntity {
               continue;
             }
           }
-          //
-          //
-          //
           int extractSize = Math.min(storage.getTransferRate(), stackCurrent.getCount());
           ItemStack stackToImport = itemHandler.extractItem(slot, extractSize, true); //simulate to grab a reference
           if (stackToImport.isEmpty()) {
@@ -206,7 +166,8 @@ public class TileMain extends BlockEntity {
   }
 
   /**
-   * push OUT of the network to attached export cables
+   * push OUT of the network to attached export cables.
+   * 
    */
   private void updateExports() {
     Set<IConnectable> conSet = nw.getConnectables();
@@ -293,29 +254,10 @@ public class TileMain extends BlockEntity {
     }
   }
 
-  public ItemStack request(ItemStackMatcher matcher, int size, boolean simulate) {
-    if (size == 0 || matcher == null) {
-      return ItemStack.EMPTY;
-    }
-    IItemStackMatcher usedMatcher = matcher;
-    int alreadyTransferred = 0;
-    for (IConnectableLink storage : nw.getSortedConnectableStorage()) {
-      int req = size - alreadyTransferred;
-      ItemStack simExtract = storage.extractStack(usedMatcher, req, simulate);
-      if (simExtract.isEmpty()) {
-        continue;
-      }
-      // Do not stack items of different types together, i.e. make the filter rules more strict for all further items
-      usedMatcher = new ItemStackMatcher(simExtract, matcher.isOre(), matcher.isNbt());
-      alreadyTransferred += simExtract.getCount();
-      if (alreadyTransferred >= size) {
-        break;
-      }
-    }
-    if (alreadyTransferred <= 0) {
-      return ItemStack.EMPTY;
-    }
-    return ItemHandlerHelper.copyStackWithSize(usedMatcher.getStack(), alreadyTransferred);
+  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {}
+
+  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
+    tile.tick();
   }
 
   private void tick() {
@@ -330,23 +272,5 @@ public class TileMain extends BlockEntity {
     updateImports();
     updateExports();
     updateProcess();
-  }
-
-  @Override
-  public ClientboundBlockEntityDataPacket getUpdatePacket() {
-    saveWithFullMetadata();
-    return ClientboundBlockEntityDataPacket.create(this); // new ClientboundBlockEntityDataPacket(worldPosition, 1, syncData);
-  }
-
-  @Override
-  public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-    load(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
-    super.onDataPacket(net, pkt);
-  }
-
-  public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {}
-
-  public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
-    tile.tick();
   }
 }
