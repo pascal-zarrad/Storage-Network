@@ -47,7 +47,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
       //      StorageNetwork.log("exchange update started");
       this.stacks.clear();
       int i = 0;
-      for (ItemStack stack : tileMain.getStacks()) {
+      for (ItemStack stack : tileMain.nw.getStacks()) {
         if (i >= this.stacks.size()) {
           break;
         }

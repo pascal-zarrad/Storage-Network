@@ -70,9 +70,9 @@ public class ItemCollector extends Item {
             UtilTileEntity.playSoundFromServer((ServerPlayer) player, SoundEvents.ITEM_PICKUP, 0.2F);
           }
         }
-        else {
-          StorageNetworkMod.LOGGER.error("item.remote.notfound");
-        }
+        //        else {
+        //          StorageNetworkMod.LOGGER.error("item.remote.notfound");
+        //        }
       }
     }
   }

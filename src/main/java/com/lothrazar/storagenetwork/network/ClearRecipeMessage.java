@@ -67,7 +67,7 @@ public class ClearRecipeMessage {
           }
         }
         if (doRefresh) {
-          List<ItemStack> list = root.getStacks();
+          List<ItemStack> list = root.nw.getStacks();
           PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
               player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
           container.broadcastChanges();

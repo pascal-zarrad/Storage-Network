@@ -12,9 +12,9 @@ import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class RequestMessage {
 
@@ -57,7 +57,7 @@ public class RequestMessage {
         StorageNetworkMod.log("Request message cancelled, null tile");
         return;
       }
-      int in = root.getAmount(new ItemStackMatcher(message.stack, false, true));
+      int in = root.nw.getAmount(new ItemStackMatcher(message.stack, false, true));
       ItemStack stack;
       boolean isLeftClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_LEFT;
       boolean isRightClick = message.mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT;
@@ -96,7 +96,7 @@ public class RequestMessage {
               player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
         }
       }
-      List<ItemStack> list = root.getSortedStacks();
+      List<ItemStack> list = root.nw.getSortedStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
           player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       player.containerMenu.broadcastChanges();

@@ -6,6 +6,7 @@ import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.config.KeyBindings;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
 
 public class JeiHooks {
@@ -52,6 +53,9 @@ public class JeiHooks {
 
   public static void testJeiKeybind(InputConstants.Key keyCode, ItemStack stackUnderMouse) {
     if (!isJeiLoaded()) {
+      return;
+    }
+    if (stackUnderMouse.is(Items.AIR)) {
       return;
     }
     final boolean showRecipe = KeyBindings.showRecipe.get(0).isActiveAndMatches(keyCode)

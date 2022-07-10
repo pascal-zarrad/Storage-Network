@@ -39,7 +39,7 @@ public class BlockMain extends BaseBlock {
     }
     BlockEntity tileAtPos = worldIn.getBlockEntity(pos);
     if (tileAtPos != null) {
-      ((TileMain) tileAtPos).setShouldRefresh();
+      ((TileMain) tileAtPos).nw.setShouldRefresh();
     }
   }
 
@@ -63,17 +63,17 @@ public class BlockMain extends BaseBlock {
 
   private void displayConnections(Player playerIn, BlockEntity tileHere) {
     TileMain tileMain = (TileMain) tileHere;
-    int total = tileMain.getConnectableSize();
+    int total = tileMain.nw.getConnectableSize();
     if (total == 0) {
       return;
     }
     playerIn.sendMessage(
         new TranslatableComponent(ChatFormatting.LIGHT_PURPLE +
-            UtilTileEntity.lang("chat.main.emptyslots") + tileMain.emptySlots()),
+            UtilTileEntity.lang("chat.main.emptyslots") + tileMain.nw.emptySlots()),
         playerIn.getUUID());
     playerIn.sendMessage(new TranslatableComponent(ChatFormatting.DARK_AQUA +
         UtilTileEntity.lang("chat.main.connectables") + total), playerIn.getUUID());
-    List<Entry<String, Integer>> listDisplayStrings = tileMain.getDisplayStrings();
+    List<Entry<String, Integer>> listDisplayStrings = tileMain.nw.getDisplayStrings();
     for (Entry<String, Integer> e : listDisplayStrings) {
       playerIn.sendMessage(new TranslatableComponent(ChatFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUUID());
     }

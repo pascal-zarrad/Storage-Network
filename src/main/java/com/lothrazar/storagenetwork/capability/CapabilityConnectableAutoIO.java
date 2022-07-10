@@ -310,7 +310,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       return true;
     }
     // TODO: Investigate whether the operation limiter should consider the filter toggles
-    int countYourItemInNetwork = master.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
+    int countYourItemInNetwork = master.nw.getAmount(new ItemStackMatcher(operationStack, filters.tags, filters.nbt));
     switch (OpCompareType.get(operationType)) {
       case EQUAL:
         return countYourItemInNetwork == operationLimit;
