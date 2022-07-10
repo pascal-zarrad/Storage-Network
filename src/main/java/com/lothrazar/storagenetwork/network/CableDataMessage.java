@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.network;
 
 import java.util.function.Supplier;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.cable.linkfilter.ContainerCableFilter;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableLink;
@@ -80,7 +80,7 @@ public class CableDataMessage {
               }
             }
             catch (Exception ex) {
-              StorageNetwork.LOGGER.error("Exception saving filter slot ", message);
+              StorageNetworkMod.LOGGER.error("Exception saving filter slot ", message);
             }
           }
           PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),

@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.gui;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -104,7 +104,7 @@ public class ButtonRequest extends Button {
 
   public ButtonRequest(int xPos, int yPos, String displayString, OnPress handler) {
     super(xPos, yPos, SIZE, SIZE, new TranslatableComponent(displayString), handler);
-    texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
+    texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/cable.png");
   }
 
   @Override

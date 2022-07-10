@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.registry;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.network.CableDataMessage;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.network.CableLimitMessage;
@@ -23,7 +23,7 @@ public class PacketRegistry {
   private static final String PROTOCOL_VERSION = Integer.toString(1);
   //??https://wiki.mcjty.eu/modding/index.php?title=Tut14_Ep10 
   public static final SimpleChannel INSTANCE = NetworkRegistry.ChannelBuilder
-      .named(new ResourceLocation(StorageNetwork.MODID, "main_channel"))
+      .named(new ResourceLocation(StorageNetworkMod.MODID, "main_channel"))
       .clientAcceptedVersions(PROTOCOL_VERSION::equals)
       .serverAcceptedVersions(PROTOCOL_VERSION::equals)
       .networkProtocolVersion(() -> PROTOCOL_VERSION)

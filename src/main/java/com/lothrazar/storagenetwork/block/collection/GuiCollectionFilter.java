@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.collection;
 
 import java.util.List;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollectionFilter> implements IGuiPrivate {
 
-  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/plain_filter.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/plain_filter.png");
   ContainerCollectionFilter containerCableLink;
   private List<ItemSlotNetwork> itemSlotsGhost;
 

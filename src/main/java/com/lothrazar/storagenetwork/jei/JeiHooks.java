@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.jei;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.mojang.blaze3d.platform.InputConstants;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -21,7 +21,7 @@ public class JeiHooks {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found " + e);
+      StorageNetworkMod.LOGGER.info(" mezz.jei.Internal not found " + e);
     }
     return "";
   }
@@ -38,7 +38,7 @@ public class JeiHooks {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.info(" mezz.jei.Internal not found " + e);
+      StorageNetworkMod.LOGGER.info(" mezz.jei.Internal not found " + e);
     }
   }
 

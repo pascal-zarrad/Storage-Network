@@ -12,6 +12,9 @@ import net.minecraft.world.item.ItemStack;
  */
 public interface IConnectableLink {
 
+  //forwarded to the IConnectable
+  DimPos getPos();
+
   /**
    * Use this method to return all stacks that are stored via this {@link IConnectableLink}. This should be a filtered list, i.e. if you offer some sort of item filter for your storage, apply the
    * filters here or players will see the item in their control panel.

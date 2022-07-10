@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.jei;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
 import mezz.jei.api.IModPlugin;
@@ -12,7 +12,7 @@ public class JeiPlugin implements IModPlugin {
 
   @Override
   public ResourceLocation getPluginUid() {
-    return new ResourceLocation(StorageNetwork.MODID, "jei");
+    return new ResourceLocation(StorageNetworkMod.MODID, "jei");
   }
 
   @Override

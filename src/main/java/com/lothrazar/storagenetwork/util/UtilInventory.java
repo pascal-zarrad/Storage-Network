@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.util;
 
 import org.apache.commons.lang3.tuple.Triple;
+import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -15,6 +16,15 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 
 public class UtilInventory {
+
+  public static void nukeAndDrop(DimPos lookPos) {
+    lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
+    lookPos.getWorld().removeBlockEntity(lookPos.getBlockPos());
+  }
+
+  public static String getStackKey(ItemStack stackInCopy) {
+    return stackInCopy.getItem().getRegistryName().toString();
+  }
 
   /**
    * First check curios. Then ender chest, Then player inventory. Then left/right hands

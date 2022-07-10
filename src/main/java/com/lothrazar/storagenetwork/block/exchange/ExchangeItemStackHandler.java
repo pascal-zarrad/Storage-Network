@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -57,7 +57,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
       //      StorageNetwork.log("exchange updated " + i);
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error("Exchange update error ", e);
+      StorageNetworkMod.LOGGER.error("Exchange update error ", e);
     }
   }
 
@@ -84,7 +84,7 @@ public class ExchangeItemStackHandler extends ItemStackHandlerEx {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error("insertStack error ", e);
+      StorageNetworkMod.LOGGER.error("insertStack error ", e);
     }
     update();
     return ItemStack.EMPTY;

@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.util;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,7 +17,7 @@ public class UtilConnections {
       return false;
     }
     String blockId = state.getBlock().getRegistryName().toString();
-    for (String s : StorageNetwork.CONFIG.ignorelist()) {
+    for (String s : StorageNetworkMod.CONFIG.ignorelist()) {
       if (blockId.equals(s)) {
         return false;
       }

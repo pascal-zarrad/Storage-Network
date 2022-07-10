@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -60,14 +60,14 @@ public class TileExchange extends TileConnectable {
         });
       }
       catch (Exception e) {
-        StorageNetwork.LOGGER.error("Exchange caught error from a mod", e);
+        StorageNetworkMod.LOGGER.error("Exchange caught error from a mod", e);
       }
     }
     return super.getCapability(cap, side);
   }
 
   private void tick() {
-    if (this.itemHandler != null && getLevel().getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0) {
+    if (this.itemHandler != null && getLevel().getGameTime() % StorageNetworkMod.CONFIG.refreshTicks() == 0) {
       this.itemHandler.update();
     }
   }

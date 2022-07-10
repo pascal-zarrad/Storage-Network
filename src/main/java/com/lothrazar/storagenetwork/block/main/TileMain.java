@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -44,15 +44,27 @@ import net.minecraftforge.items.ItemHandlerHelper;
 public class TileMain extends BlockEntity {
 
   private Set<DimPos> connectables = new HashSet<>();
-  private Map<String, DimPos> importCache = new HashMap<>();
   private boolean shouldRefresh = true;
+  private NetworkCache ch = new NetworkCache();
+
+  public TileMain(BlockPos pos, BlockState state) {
+    super(SsnRegistry.Tiles.MASTER.get(), pos, state);
+  }
 
   private DimPos getDimPos() {
     return new DimPos(level, worldPosition);
   }
 
-  public TileMain(BlockPos pos, BlockState state) {
-    super(SsnRegistry.Tiles.MASTER.get(), pos, state);
+  public void setShouldRefresh() {
+    shouldRefresh = true;
+  }
+
+  public int getConnectableSize() {
+    return connectables == null ? 0 : connectables.size();
+  }
+
+  public void clearCache() {
+    ch.clearCache();
   }
 
   public List<ItemStack> getSortedStacks() {
@@ -65,7 +77,7 @@ public class TileMain extends BlockEntity {
     catch (Exception e) {
       //since this has external mod connections, if they break then catch it
       //      for example, AE2 can break with  Ticking GridNode
-      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
+      StorageNetworkMod.LOGGER.info("3rd party storage mod has an error", e);
     }
     try {
       for (IConnectableLink storage : getSortedConnectableStorage()) {
@@ -78,7 +90,7 @@ public class TileMain extends BlockEntity {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
+      StorageNetworkMod.LOGGER.info("3rd party storage mod has an error", e);
     }
     return stacks;
   }
@@ -96,7 +108,7 @@ public class TileMain extends BlockEntity {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
+      StorageNetworkMod.LOGGER.info("3rd party storage mod has an error", e);
     }
     return stacks;
   }
@@ -158,7 +170,7 @@ public class TileMain extends BlockEntity {
       // Prevent having multiple  on a network and break all others.
       TileMain maybeMain = lookPos.getTileEntity(TileMain.class);
       if (maybeMain != null && !lookPos.equals(level, worldPosition)) {
-        nukeAndDrop(lookPos);
+        UtilInventory.nukeAndDrop(lookPos);
         continue;
       }
       BlockEntity tileHere = lookPos.getTileEntity(BlockEntity.class);
@@ -192,19 +204,6 @@ public class TileMain extends BlockEntity {
     }
   }
 
-  private static void nukeAndDrop(DimPos lookPos) {
-    lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
-    lookPos.getWorld().removeBlockEntity(lookPos.getBlockPos());
-  }
-
-  private boolean hasCachedSlot(ItemStack stack) {
-    return importCache.containsKey(getStackKey(stack));
-  }
-
-  private DimPos getCachedSlot(ItemStack stack) {
-    return importCache.get(getStackKey(stack));
-  }
-
   /**
    * returns countUnmoved , the number of items NOT inserted.
    */
@@ -214,24 +213,26 @@ public class TileMain extends BlockEntity {
     }
     // 1. Try to insert into a recent slot for the same item.
     //    We do this to avoid having to search for the appropriate inventory repeatedly.
-    String key = getStackKey(stack);
-    if (hasCachedSlot(stack)) {
-      DimPos cachedStoragePos = getCachedSlot(stack);
+    String key = UtilInventory.getStackKey(stack);
+    StorageNetworkMod.log(ch.size() + " ?cacheattempt " + key);
+    if (ch.hasCachedSlot(stack)) {
+      DimPos cachedStoragePos = ch.getCachedSlot(stack);
       IConnectableLink storage = cachedStoragePos.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null);
       if (storage == null) {
         // The block at the cached position is not even an IConnectableLink anymore
-        importCache.remove(key);
+        ch.remove(key);
       }
       else {
-        //(!(storage instanceof ExchangeItemStackHandler)) &&
         // But if it is, we test whether it can still import that particular stack and do so if it does.
         boolean canStillImport = storage.getSupportedTransferDirection().match(EnumStorageDirection.IN);
+        StorageNetworkMod.log(canStillImport + " cacheattempt " + key);
         if (canStillImport &&
             storage.insertStack(stack, true).getCount() < stack.getCount()) {
           stack = storage.insertStack(stack, simulate);
+          StorageNetworkMod.log("cache success used on a insertStack " + key);
         }
         else {
-          importCache.remove(key);
+          ch.remove(key);
         }
       }
     }
@@ -253,16 +254,13 @@ public class TileMain extends BlockEntity {
         }
         // If it can we need to know, i.e. store the remainder
         stack = storage.insertStack(stack, simulate);
+        ch.put(key, storage.getPos());
       }
       catch (Exception e) {
-        StorageNetwork.LOGGER.error("insertStack container issue", e);
+        StorageNetworkMod.LOGGER.error("insertStack container issue", e);
       }
     }
     return stack.getCount();
-  }
-
-  private static String getStackKey(ItemStack stackInCopy) {
-    return stackInCopy.getItem().getRegistryName().toString();
   }
 
   /**
@@ -316,11 +314,11 @@ public class TileMain extends BlockEntity {
             //as we want the STOCK of the chest to not go less than the filter number , just down to it
             if (chestHowMany > filterSize) {
               int realSize = Math.min(chestHowMany - filterSize, 64);
-              StorageNetwork.log(" : stock mode import  realSize = " + realSize);
+              StorageNetworkMod.log(" : stock mode import  realSize = " + realSize);
               stackCurrent.setCount(realSize);
             }
             else {
-              StorageNetwork.log(" : stock mode CANCEL: ITS NOT ENOUGH chestHowMany <= filter size ");
+              StorageNetworkMod.log(" : stock mode CANCEL: ITS NOT ENOUGH chestHowMany <= filter size ");
               continue;
             }
           }
@@ -341,16 +339,12 @@ public class TileMain extends BlockEntity {
           }
           // Alright, simulation says we're good, let's do it!
           // First extract from the storage
-          ItemStack actuallyExtracted = itemHandler.extractItem(slot, countMoved, false); // storage.extractNextStack(countMoved, false);
-          //          storage.getPos().getChunk().markDirty();
+          ItemStack actuallyExtracted = itemHandler.extractItem(slot, countMoved, false);
           // Then insert into our network
           this.insertStack(actuallyExtracted, false);
           break; // break out of itemHandler loop, done processing this cable, so move to next
         } //end of checking on filter for this stack
       }
-      //    }
-      //      //
-      //      //
     }
   }
 
@@ -407,7 +401,7 @@ public class TileMain extends BlockEntity {
         //check operations upgrade for export 
         boolean stockMode = storage.isStockMode();
         if (stockMode) {
-          StorageNetwork.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
+          StorageNetworkMod.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
           //STOCK upgrade means
           try {
             BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
@@ -416,14 +410,14 @@ public class TileMain extends BlockEntity {
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
             if (stillNeeds == 0) {
               //they dont need any more, they have the stock they need
-              StorageNetwork.log("stockMode continnue; canc");
+              StorageNetworkMod.log("stockMode continnue; canc");
               continue;
             }
             amtToRequest = Math.min(stillNeeds, amtToRequest);
-            StorageNetwork.log("updateExports stock mode edited value: amtToRequest = " + amtToRequest);
+            StorageNetworkMod.log("updateExports stock mode edited value: amtToRequest = " + amtToRequest);
           }
           catch (Throwable e) {
-            StorageNetwork.LOGGER.error("Error thrown from a connected block" + e);
+            StorageNetworkMod.LOGGER.error("Error thrown from a connected block" + e);
           }
         }
         if (matcher.getStack().isEmpty() || amtToRequest == 0) {
@@ -494,7 +488,7 @@ public class TileMain extends BlockEntity {
       }
       IConnectable cap = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
       if (cap == null) {
-        StorageNetwork.LOGGER.info("Somehow stored a dimpos that is not connectable... Skipping " + pos);
+        StorageNetworkMod.LOGGER.info("Somehow stored a dimpos that is not connectable... Skipping " + pos);
         continue;
       }
       result.add(cap);
@@ -533,7 +527,7 @@ public class TileMain extends BlockEntity {
       //trying to avoid 
       //java.lang.StackOverflowError: Ticking block entity
       //and similar issues
-      StorageNetwork.LOGGER.error("Error: network get sorted by priority error, some network components are disconnected ", e);
+      StorageNetworkMod.LOGGER.error("Error: network get sorted by priority error, some network components are disconnected ", e);
       return new ArrayList<>();
     }
   }
@@ -543,7 +537,7 @@ public class TileMain extends BlockEntity {
       return;
     }
     //refresh time in config, default 200 ticks aka 10 seconds
-    if ((level.getGameTime() % StorageNetwork.CONFIG.refreshTicks() == 0)
+    if ((level.getGameTime() % StorageNetworkMod.CONFIG.refreshTicks() == 0)
         || shouldRefresh) {
       try {
         connectables = getConnectables(getDimPos());
@@ -551,7 +545,7 @@ public class TileMain extends BlockEntity {
         level.getChunk(worldPosition).setUnsaved(true);
       }
       catch (Throwable e) {
-        StorageNetwork.LOGGER.info("Refresh network error ", e);
+        StorageNetworkMod.LOGGER.info("Refresh network error ", e);
       }
     }
     updateImports();
@@ -571,22 +565,10 @@ public class TileMain extends BlockEntity {
     super.onDataPacket(net, pkt);
   }
 
-  public void clearCache() {
-    importCache = new HashMap<>();
-  }
-
   public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {}
 
   public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
     tile.tick();
-  }
-
-  public void setShouldRefresh() {
-    shouldRefresh = true;
-  }
-
-  public int getConnectableSize() {
-    return connectables == null ? 0 : connectables.size();
   }
 
   public List<Entry<String, Integer>> getDisplayStrings() {

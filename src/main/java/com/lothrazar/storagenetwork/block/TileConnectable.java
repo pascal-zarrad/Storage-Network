@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectable;
@@ -71,7 +71,7 @@ public class TileConnectable extends BlockEntity {
   @Override
   public void onChunkUnloaded() {
     super.onChunkUnloaded();
-    if (StorageNetwork.CONFIG.doReloadOnChunk() && connectable != null && connectable.getMainPos() != null) {
+    if (StorageNetworkMod.CONFIG.doReloadOnChunk() && connectable != null && connectable.getMainPos() != null) {
       try {
         TileMain maybe = UtilTileEntity.getTileMainForConnectable(connectable);
         if (maybe != null) {
@@ -79,7 +79,7 @@ public class TileConnectable extends BlockEntity {
         }
       }
       catch (Exception e) {
-        StorageNetwork.LOGGER.info("Error on chunk unload " + e);
+        StorageNetworkMod.LOGGER.info("Error on chunk unload " + e);
       }
     }
   }

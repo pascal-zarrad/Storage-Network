@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.item;
 
 import java.util.List;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
@@ -73,7 +73,7 @@ public class ItemBuilder extends Item {
       if (dp != null && hand == InteractionHand.MAIN_HAND && !world.isClientSide) {
         ServerLevel serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
         if (serverTargetWorld == null) {
-          StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
+          StorageNetworkMod.LOGGER.error("Missing dimension key " + dp.getDimension());
           return InteractionResult.PASS;
         }
         BlockEntity tile = serverTargetWorld.getBlockEntity(dp.getBlockPos());

@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.registry;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.cable.BlockCable;
 import com.lothrazar.storagenetwork.block.cable.TileCable;
 import com.lothrazar.storagenetwork.block.cable.export.BlockCableExport;
@@ -51,11 +51,11 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class SsnRegistry {
 
-  public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StorageNetwork.MODID);
-  public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StorageNetwork.MODID);
-  public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StorageNetwork.MODID);
-  public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, StorageNetwork.MODID);
-  public static final CreativeModeTab TAB = new CreativeModeTab(StorageNetwork.MODID) {
+  public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StorageNetworkMod.MODID);
+  public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StorageNetworkMod.MODID);
+  public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StorageNetworkMod.MODID);
+  public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, StorageNetworkMod.MODID);
+  public static final CreativeModeTab TAB = new CreativeModeTab(StorageNetworkMod.MODID) {
 
     @Override
     public ItemStack makeIcon() {

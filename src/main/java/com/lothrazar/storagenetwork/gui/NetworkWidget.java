@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumSearchPrefix;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
@@ -198,7 +198,7 @@ public class NetworkWidget {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error("Search bar error ", e);
+      StorageNetworkMod.LOGGER.error("Search bar error ", e);
     }
   }
 

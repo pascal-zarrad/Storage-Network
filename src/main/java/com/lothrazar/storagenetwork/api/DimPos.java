@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.api;
 
 import javax.annotation.Nullable;
 import com.google.common.base.Objects;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -120,7 +120,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
         world = dimWorld.getLevel();
       }
       else {
-        StorageNetwork.LOGGER.error(" Dimworld NOT FOUND for " + dimension);
+        StorageNetworkMod.LOGGER.error(" Dimworld NOT FOUND for " + dimension);
       }
     }
     //end refresh srever world
@@ -204,7 +204,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
 
   public DimPos offset(Direction direction) {
     if (pos == null || direction == null || pos == null) {
-      StorageNetwork.LOGGER.info("Error: null offset in DimPos " + direction);
+      StorageNetworkMod.LOGGER.info("Error: null offset in DimPos " + direction);
       return null;
     }
     return new DimPos(world, pos.relative(direction));

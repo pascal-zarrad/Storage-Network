@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.block.cable.linkfilter;
 import java.util.List;
 import java.util.Optional;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class GuiCableFilter extends AbstractContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
-  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/cable.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/cable.png");
   ContainerCableFilter containerCableLink;
   private ButtonRequest btnRedstone;
   private ButtonRequest btnMinus;

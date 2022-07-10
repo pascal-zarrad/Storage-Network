@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.network.StackRefreshClientMessage;
@@ -52,6 +52,8 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
     return matrix;
   }
 
+  public abstract boolean isCrafting();
+
   protected void bindPlayerInvo(Inventory playerInv) {
     this.player = playerInv.player;
     //player inventory
@@ -96,7 +98,6 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
   @Override
   public void slotsChanged(Container inventoryIn) {
     if (recipeLocked) {
-      //      StorageNetwork.log("recipe locked so onCraftMatrixChanged cancelled");
       return;
     }
     super.slotsChanged(inventoryIn);
@@ -124,8 +125,6 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
         CraftingRecipe icraftingrecipe = optional.get();
         if (result.setRecipeUsed(world, serverplayerentity, icraftingrecipe)) {
           itemstack = icraftingrecipe.assemble(inventory);
-          //          itemstack = icraftingrecipe.assemble(inventory);
-          //save for next time
           this.recipeCurrent = icraftingrecipe;
         }
       }
@@ -133,8 +132,6 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
       serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, this.incrementStateId(), slotId, itemstack));
     }
   }
-
-  public abstract boolean isCrafting();
 
   @Override
   public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
@@ -207,7 +204,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
     }
     ItemStack res = recipeCurrent.assemble(matrix);
     if (res.isEmpty()) {
-      StorageNetwork.LOGGER.error("err Recipe output is an empty stack " + recipeCurrent);
+      StorageNetworkMod.LOGGER.error("err Recipe output is an empty stack " + recipeCurrent);
       return;
     }
     int sizePerCraft = res.getCount();

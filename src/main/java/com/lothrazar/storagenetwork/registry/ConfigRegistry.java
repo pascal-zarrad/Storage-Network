@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -27,7 +27,7 @@ public class ConfigRegistry {
   }
 
   private static void initConfig() {
-    COMMON_BUILDER.comment("General settings").push(StorageNetwork.MODID);
+    COMMON_BUILDER.comment("General settings").push(StorageNetworkMod.MODID);
     LOGSPAM = COMMON_BUILDER.comment("Enable very spammy logs.  Sometimes useful for debugging. ").define("logSpam", false);
     RELOADONCHUNK = COMMON_BUILDER.comment(
         "\r\n If this is true, reload network when a chunk unloads, this keeps your network always up to date.  It has been reported that this cause lag and chunk load issues on servers, "

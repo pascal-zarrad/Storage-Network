@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
@@ -50,11 +50,11 @@ public class RequestMessage {
         root = ctr.getTileMain();
       }
       else {
-        StorageNetwork.log("Bad container");
+        StorageNetworkMod.log("Bad container");
       }
       if (root == null) {
         //maybe the table broke after doing this, rare case
-        StorageNetwork.log("Request message cancelled, null tile");
+        StorageNetworkMod.log("Request message cancelled, null tile");
         return;
       }
       int in = root.getAmount(new ItemStackMatcher(message.stack, false, true));

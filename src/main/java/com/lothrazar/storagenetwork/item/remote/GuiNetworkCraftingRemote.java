@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
 import java.util.List;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
@@ -28,7 +28,7 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
   private static final int KEY_ESC = 256;
   private static final int HEIGHT = 256;
   private static final int WIDTH = 176;
-  private final ResourceLocation textureCraft = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
+  private final ResourceLocation textureCraft = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/request.png");
   private final NetworkWidget network;
   private final ItemStack remote;
   private int topOffset;
@@ -206,7 +206,7 @@ public class GuiNetworkCraftingRemote extends AbstractContainerScreen<ContainerN
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
-        StorageNetwork.LOGGER.error("JEI compat issue ", e);
+        StorageNetworkMod.LOGGER.error("JEI compat issue ", e);
       }
     }
     //Regardless of above branch, also check this

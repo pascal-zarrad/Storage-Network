@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.request;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.ITileNetworkSync;
 import com.lothrazar.storagenetwork.block.TileConnectable;
@@ -22,9 +22,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TileRequest extends TileConnectable implements MenuProvider, ITileNetworkSync {
 
-  public static final String NBT_JEI = StorageNetwork.MODID + "jei";
-  private static final String NBT_DIR = StorageNetwork.MODID + "dir";
-  private static final String NBT_SORT = StorageNetwork.MODID + "sort";
+  public static final String NBT_JEI = StorageNetworkMod.MODID + "jei";
+  private static final String NBT_DIR = StorageNetworkMod.MODID + "dir";
+  private static final String NBT_SORT = StorageNetworkMod.MODID + "sort";
   public Map<Integer, ItemStack> matrix = new HashMap<>();
   private boolean downwards;
   private EnumSortType sort = EnumSortType.NAME;

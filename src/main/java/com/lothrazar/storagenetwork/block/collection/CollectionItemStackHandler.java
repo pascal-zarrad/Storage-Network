@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.collection;
 
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -66,7 +66,7 @@ public class CollectionItemStackHandler extends ItemStackHandlerEx {
       }
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error("insertStack error ", e);
+      StorageNetworkMod.LOGGER.error("insertStack error ", e);
     }
     // if succesful, update internal list
     //      super.insertItem(slot, stack, simulate);

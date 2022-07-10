@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.item.remote;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.tuple.Triple;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.block.request.SlotCraftingNetwork;
@@ -32,7 +32,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     }
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
-      StorageNetwork.LOGGER.error("Remote opening with null pos Stored {} ", remote);
+      StorageNetworkMod.LOGGER.error("Remote opening with null pos Stored {} ", remote);
     }
     else {
       this.root = dp.getTileEntity(TileMain.class, player.level);

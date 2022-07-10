@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.cable;
 
 import java.util.Map;
 import com.google.common.collect.Maps;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
@@ -149,7 +149,7 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
       facingState = worldIn.getBlockState(posoff);
       //      BlockEntity tileOffset = worldIn.getBlockEntity(posoff);
       if (UtilConnections.isCableOverride(facingState)) {
-        StorageNetwork.log("Main override setplacedby " + facingState);
+        StorageNetworkMod.log("Main override setplacedby " + facingState);
         stateIn = stateIn.setValue(FACING_TO_PROPERTY_MAP.get(d), EnumConnectType.CABLE);
         worldIn.setBlockAndUpdate(pos, stateIn);
       }
@@ -175,19 +175,19 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
   public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
     EnumProperty<EnumConnectType> property = FACING_TO_PROPERTY_MAP.get(facing);
     if (UtilConnections.isCableOverride(facingState)) {
-      StorageNetwork.log("isCableOverride override " + facingState);
+      StorageNetworkMod.log("isCableOverride override " + facingState);
       return stateIn.setValue(property, EnumConnectType.CABLE);
     }
     //based on capability you have, edit connection type
     BlockEntity tileOffset = world.getBlockEntity(facingPos); //if i have zero other inventories, and this is one now, ok go invo
     if (!hasInventoryAlready(stateIn) && UtilConnections.isInventory(facing, world, facingPos)) {
-      StorageNetwork.log("new Inventory from updateShape " + facingState);
+      StorageNetworkMod.log("new Inventory from updateShape " + facingState);
       return stateIn.setValue(property, EnumConnectType.INVENTORY);
     }
     if (tileOffset != null) {
       IConnectable cap = tileOffset.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY).orElse(null);
       if (cap != null) {
-        StorageNetwork.log("Normal network item  " + facingState);
+        StorageNetworkMod.log("Normal network item  " + facingState);
         return stateIn.setValue(property, EnumConnectType.CABLE);
       }
     }

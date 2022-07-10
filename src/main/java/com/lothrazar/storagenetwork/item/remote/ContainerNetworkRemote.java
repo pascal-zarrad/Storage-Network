@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
 import org.apache.commons.lang3.tuple.Triple;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.gui.ContainerNetwork;
@@ -23,14 +23,14 @@ public class ContainerNetworkRemote extends ContainerNetwork {
     this.remote = result.getRight();
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
-      StorageNetwork.LOGGER.error(player.level.isClientSide + "=client||Remote opening with null pos Stored {} ", result);
+      StorageNetworkMod.LOGGER.error(player.level.isClientSide + "=client||Remote opening with null pos Stored {} ", result);
     }
     else {
       this.root = dp.getTileEntity(TileMain.class, player.level);
     }
     if (root == null) {
       //maybe the table broke after doing this, rare case
-      StorageNetwork.log("CONTAINER NETWORK REMOTE null tile");
+      StorageNetworkMod.log("CONTAINER NETWORK REMOTE null tile");
     }
     this.playerInv = pInv;
     bindPlayerInvo(this.playerInv);

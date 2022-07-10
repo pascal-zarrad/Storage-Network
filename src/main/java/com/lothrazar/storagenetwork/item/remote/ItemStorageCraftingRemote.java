@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
 import java.util.List;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -137,18 +137,18 @@ public class ItemStorageCraftingRemote extends Item implements MenuProvider {
     try {
       serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());
       if (serverTargetWorld == null) {
-        StorageNetwork.LOGGER.error("Missing dimension key " + dp.getDimension());
+        StorageNetworkMod.LOGGER.error("Missing dimension key " + dp.getDimension());
       }
     }
     catch (Exception e) {
       //
-      StorageNetwork.LOGGER.error("unknown exception on dim " + dp.getDimension(), e);
+      StorageNetworkMod.LOGGER.error("unknown exception on dim " + dp.getDimension(), e);
       return false;
     }
     //now check is the area chunk loaded
     if (!serverTargetWorld.isAreaLoaded(posTarget, 1)) {
       UtilTileEntity.chatMessage(player, "item.remote.notloaded");
-      StorageNetwork.LOGGER.info(UtilTileEntity.lang("item.remote.notloaded") + posTarget);
+      StorageNetworkMod.LOGGER.info(UtilTileEntity.lang("item.remote.notloaded") + posTarget);
       return false;
     }
     BlockEntity tile = serverTargetWorld.getBlockEntity(posTarget);

@@ -3,7 +3,7 @@ package com.lothrazar.storagenetwork.capability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -39,6 +39,11 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   public CapabilityConnectableLink(BlockEntity tile) {
     connectable = tile.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, null).orElse(null);
     filters.setIsAllowlist(false);
+  }
+
+  @Override
+  public DimPos getPos() {
+    return connectable == null ? null : connectable.getPos();
   }
 
   public FilterItemStackHandler getFilter() {
@@ -109,7 +114,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       return ItemHandlerHelper.insertItemStacked(itemHandler, stack, simulate);
     }
     catch (Exception e) {
-      StorageNetwork.LOGGER.error("Insert stack error from other block ", e);
+      StorageNetworkMod.LOGGER.error("Insert stack error from other block ", e);
       return stack;
     }
   }

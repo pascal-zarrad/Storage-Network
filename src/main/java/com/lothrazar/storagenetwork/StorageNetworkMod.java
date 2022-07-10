@@ -27,15 +27,15 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import top.theillusivec4.curios.api.SlotTypeMessage;
 
-@Mod(StorageNetwork.MODID)
-public class StorageNetwork {
+@Mod(StorageNetworkMod.MODID)
+public class StorageNetworkMod {
 
   public static final String MODID = "storagenetwork";
   public static final Logger LOGGER = LogManager.getLogger();
   public static ConfigRegistry CONFIG;
 
-  public StorageNetwork() {
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetwork::setup);
+  public StorageNetworkMod() {
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetworkMod::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.Tiles());
     MinecraftForge.EVENT_BUS.register(new SsnEvents());

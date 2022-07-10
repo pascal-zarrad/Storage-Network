@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.block.request;
 
 import java.util.List;
-import com.lothrazar.storagenetwork.StorageNetwork;
+import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
@@ -30,7 +30,7 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
-  private final ResourceLocation texture = new ResourceLocation(StorageNetwork.MODID, "textures/gui/request.png");
+  private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/request.png");
   private final NetworkWidget network;
   private TileRequest tile;
   private int topOffset;
@@ -210,7 +210,7 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
       catch (Throwable e) {
-        StorageNetwork.LOGGER.error("JEI compat issue ", e);
+        StorageNetworkMod.LOGGER.error("JEI compat issue ", e);
         //its ok JEI not installed for maybe an addon mod is ok
       }
     }
