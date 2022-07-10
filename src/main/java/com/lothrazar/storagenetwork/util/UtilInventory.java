@@ -25,6 +25,10 @@ public class UtilInventory {
    */
   public static Triple<String, Integer, ItemStack> getCurioRemote(Player player, Item remote) {
     Triple<String, Integer, ItemStack> stackFound = Triple.of("", -1, ItemStack.EMPTY);
+    //MAIN hand first 
+    if (isRemoteWithData(player.getMainHandItem(), remote)) {
+      return Triple.of("hand", -1, player.getMainHandItem());
+    }
     if (ModList.get().isLoaded("curios")) {
       //check curios slots
       //      final ImmutableTriple<String, Integer, ItemStack> equipped = CuriosApi.getCuriosHelper().findEquippedCurio(remote, player).orElse(null);
@@ -50,9 +54,6 @@ public class UtilInventory {
     //default
     if (isRemoteWithData(player.getOffhandItem(), remote)) {
       return Triple.of("offhand", -1, player.getOffhandItem());
-    }
-    if (isRemoteWithData(player.getMainHandItem(), remote)) {
-      return Triple.of("hand", -1, player.getMainHandItem());
     }
     return stackFound;
   }

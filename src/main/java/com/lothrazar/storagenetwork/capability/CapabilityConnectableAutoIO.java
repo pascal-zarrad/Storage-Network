@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
-import com.lothrazar.storagenetwork.StorageNetwork;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
 import com.lothrazar.storagenetwork.api.IConnectable;
@@ -348,7 +347,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     //opt: dont check operation count if the cooldown is bad anyway
     boolean operationLimitOk = doesPassOperationFilterLimit(main);
-    StorageNetwork.log("OP allowed to runNow = " + operationLimitOk);
+    //    StorageNetwork.log("OP allowed to runNow = " + operationLimitOk);
     return operationLimitOk;
   }
 

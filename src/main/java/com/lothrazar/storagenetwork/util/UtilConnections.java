@@ -40,13 +40,11 @@ public class UtilConnections {
     }
     BlockState blockState = world.getBlockState(facingPos);
     if (blockState.is(SsnRegistry.Blocks.EXCHANGE.get()) || blockState.is(SsnRegistry.Blocks.COLLECTOR.get())) {
-      //   got it   StorageNetwork.log("no inventory for exhnage");
       return false;
     }
     if (!UtilConnections.isTargetAllowed(blockState)) {
       return false;
     }
-    //TODO: not inventory if exchange or whatever
     BlockEntity neighbor = world.getBlockEntity(facingPos);
     if (neighbor != null
         && neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null) != null) {

@@ -1,11 +1,14 @@
 package com.lothrazar.storagenetwork.block.main;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,9 +29,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
@@ -38,7 +43,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class TileMain extends BlockEntity {
 
-  private Set<DimPos> connectables;
+  private Set<DimPos> connectables = new HashSet<>();
   private Map<String, DimPos> importCache = new HashMap<>();
   private boolean shouldRefresh = true;
 
@@ -53,8 +58,8 @@ public class TileMain extends BlockEntity {
   public List<ItemStack> getSortedStacks() {
     List<ItemStack> stacks = Lists.newArrayList();
     try {
-      if (getConnectablePositions() == null) {
-        refreshNetwork();
+      if (connectables == null) {
+        setShouldRefresh();
       }
     }
     catch (Exception e) {
@@ -80,16 +85,6 @@ public class TileMain extends BlockEntity {
 
   public List<ItemStack> getStacks() {
     List<ItemStack> stacks = Lists.newArrayList();
-    try {
-      if (getConnectablePositions() == null) {
-        refreshNetwork();
-      }
-    }
-    catch (Exception e) {
-      //since this has external mod connections, if they break then catch it
-      //      for example, AE2 can break with  Ticking GridNode
-      StorageNetwork.LOGGER.info("3rd party storage mod has an error", e);
-    }
     try {
       for (IConnectableLink storage : getConnectableStorage()) {
         for (ItemStack stack : storage.getStoredStacks(true)) {
@@ -200,13 +195,6 @@ public class TileMain extends BlockEntity {
   private static void nukeAndDrop(DimPos lookPos) {
     lookPos.getWorld().destroyBlock(lookPos.getBlockPos(), true);
     lookPos.getWorld().removeBlockEntity(lookPos.getBlockPos());
-  }
-
-  public void refreshNetwork() {
-    if (level.isClientSide) {
-      return;
-    }
-    shouldRefresh = true;
   }
 
   private boolean hasCachedSlot(ItemStack stack) {
@@ -494,10 +482,7 @@ public class TileMain extends BlockEntity {
   }
 
   private Set<IConnectable> getConnectables() {
-    Set<DimPos> positions = getConnectablePositions();
-    if (positions == null) {
-      return new HashSet<>();
-    }
+    Set<DimPos> positions = new HashSet<>(connectables);
     Set<IConnectable> result = new HashSet<>();
     for (DimPos pos : positions) {
       if (!pos.isLoaded()) {
@@ -518,8 +503,8 @@ public class TileMain extends BlockEntity {
   }
 
   private Set<IConnectableLink> getConnectableStorage() {
+    Set<DimPos> conSet = new HashSet<>(connectables);
     Set<IConnectableLink> result = new HashSet<>();
-    Set<DimPos> conSet = getConnectablePositions();
     for (DimPos dimpos : conSet) {
       if (!dimpos.isLoaded()) {
         continue;
@@ -586,22 +571,6 @@ public class TileMain extends BlockEntity {
     super.onDataPacket(net, pkt);
   }
 
-  public static boolean shouldRefresh(Level world, BlockPos pos, BlockState oldState, BlockState newSate) {
-    return oldState.getBlock() != newSate.getBlock();
-  }
-
-  /**
-   * dont create an iterator over the original one that is being modified
-   *
-   * @return
-   */
-  public Set<DimPos> getConnectablePositions() {
-    if (connectables == null) {
-      connectables = new HashSet<>();
-    }
-    return new HashSet<>(connectables);
-  }
-
   public void clearCache() {
     importCache = new HashMap<>();
   }
@@ -610,5 +579,41 @@ public class TileMain extends BlockEntity {
 
   public static <E extends BlockEntity> void serverTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {
     tile.tick();
+  }
+
+  public void setShouldRefresh() {
+    shouldRefresh = true;
+  }
+
+  public int getConnectableSize() {
+    return connectables == null ? 0 : connectables.size();
+  }
+
+  public List<Entry<String, Integer>> getDisplayStrings() {
+    Map<String, Integer> mapNamesToCount = new HashMap<>();
+    Iterator<DimPos> iter = new HashSet<>(this.connectables).iterator();
+    Block bl;
+    DimPos p;
+    String blockName;
+    while (iter.hasNext()) {
+      p = iter.next();
+      bl = p.getBlockState().getBlock();
+      //getTranslatedName client only thanks mojang lol
+      blockName = (new TranslatableComponent(bl.getDescriptionId())).getString();
+      int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
+      mapNamesToCount.put(blockName, count);
+    }
+    List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
+    for (Entry<String, Integer> e : mapNamesToCount.entrySet()) {
+      listDisplayStrings.add(e);
+    }
+    Collections.sort(listDisplayStrings, new Comparator<Entry<String, Integer>>() {
+
+      @Override
+      public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+        return Integer.compare(o2.getValue(), o1.getValue());
+      }
+    });
+    return listDisplayStrings;
   }
 }

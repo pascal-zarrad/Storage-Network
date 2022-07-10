@@ -1,14 +1,7 @@
 package com.lothrazar.storagenetwork.block.main;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import com.google.common.collect.Lists;
-import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
@@ -46,7 +39,7 @@ public class BlockMain extends BaseBlock {
     }
     BlockEntity tileAtPos = worldIn.getBlockEntity(pos);
     if (tileAtPos != null) {
-      ((TileMain) tileAtPos).refreshNetwork();
+      ((TileMain) tileAtPos).setShouldRefresh();
     }
   }
 
@@ -70,7 +63,7 @@ public class BlockMain extends BaseBlock {
 
   private void displayConnections(Player playerIn, BlockEntity tileHere) {
     TileMain tileMain = (TileMain) tileHere;
-    int total = tileMain.getConnectablePositions().size();
+    int total = tileMain.getConnectableSize();
     if (total == 0) {
       return;
     }
@@ -80,30 +73,7 @@ public class BlockMain extends BaseBlock {
         playerIn.getUUID());
     playerIn.sendMessage(new TranslatableComponent(ChatFormatting.DARK_AQUA +
         UtilTileEntity.lang("chat.main.connectables") + total), playerIn.getUUID());
-    Map<String, Integer> mapNamesToCount = new HashMap<>();
-    Iterator<DimPos> iter = tileMain.getConnectablePositions().iterator();
-    Block bl;
-    DimPos p;
-    String blockName;
-    while (iter.hasNext()) {
-      p = iter.next();
-      bl = p.getBlockState().getBlock();
-      //getTranslatedName client only thanks mojang lol
-      blockName = (new TranslatableComponent(bl.getDescriptionId())).getString();
-      int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
-      mapNamesToCount.put(blockName, count);
-    }
-    List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
-    for (Entry<String, Integer> e : mapNamesToCount.entrySet()) {
-      listDisplayStrings.add(e);
-    }
-    Collections.sort(listDisplayStrings, new Comparator<Entry<String, Integer>>() {
-
-      @Override
-      public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-        return Integer.compare(o2.getValue(), o1.getValue());
-      }
-    });
+    List<Entry<String, Integer>> listDisplayStrings = tileMain.getDisplayStrings();
     for (Entry<String, Integer> e : listDisplayStrings) {
       playerIn.sendMessage(new TranslatableComponent(ChatFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUUID());
     }

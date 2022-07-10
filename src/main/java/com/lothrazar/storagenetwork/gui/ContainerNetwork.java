@@ -40,7 +40,6 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
   protected ResultSlot result;
   protected boolean recipeLocked = false;
   protected Player player;
-  protected Level world;
   protected CraftingRecipe recipeCurrent;
   public NetworkCraftingInventory matrix;
 
@@ -55,7 +54,6 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
 
   protected void bindPlayerInvo(Inventory playerInv) {
     this.player = playerInv.player;
-    this.world = player.level;
     //player inventory
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {
@@ -103,7 +101,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
     }
     super.slotsChanged(inventoryIn);
     this.recipeCurrent = null;
-    findMatchingRecipe(this.containerId, world, this.player, this.matrix, this.resultInventory);
+    findMatchingRecipe(this.containerId, this.player.level, this.player, this.matrix, this.resultInventory);
   }
 
   //it runs on server tho

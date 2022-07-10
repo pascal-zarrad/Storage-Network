@@ -19,15 +19,14 @@ public class ContainerNetworkRemote extends ContainerNetwork {
   public ContainerNetworkRemote(int id, Inventory pInv) {
     super(SsnRegistry.Menus.INVENTORY_REMOTE.get(), id);
     this.player = pInv.player;
-    this.world = player.level;
     Triple<String, Integer, ItemStack> result = UtilInventory.getCurioRemote(pInv.player, SsnRegistry.Items.INVENTORY_REMOTE.get());
     this.remote = result.getRight();
     DimPos dp = DimPos.getPosStored(remote);
     if (dp == null) {
-      StorageNetwork.LOGGER.error(world.isClientSide + "=client||Remote opening with null pos Stored {} ", result);
+      StorageNetwork.LOGGER.error(player.level.isClientSide + "=client||Remote opening with null pos Stored {} ", result);
     }
     else {
-      this.root = dp.getTileEntity(TileMain.class, world);
+      this.root = dp.getTileEntity(TileMain.class, player.level);
     }
     if (root == null) {
       //maybe the table broke after doing this, rare case

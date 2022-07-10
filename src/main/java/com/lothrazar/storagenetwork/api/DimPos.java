@@ -129,6 +129,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
       return null;
     }
     if (!tileEntityClassOrInterface.isAssignableFrom(tileEntity.getClass())) {
+      //      StorageNetwork.log(tilePos + " network not found ");
       return null;
     }
     return (V) tileEntity;
