@@ -8,6 +8,7 @@ import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.gui.ItemSlotNetwork;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.SsnConsts;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -18,13 +19,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollectionFilter> implements IGuiPrivate {
+public class ScreenCollectionFilter extends AbstractContainerScreen<ContainerCollectionFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/plain_filter.png");
   ContainerCollectionFilter containerCableLink;
   private List<ItemSlotNetwork> itemSlotsGhost;
 
-  public GuiCollectionFilter(ContainerCollectionFilter containerCableFilter, Inventory inv, Component name) {
+  public ScreenCollectionFilter(ContainerCollectionFilter containerCableFilter, Inventory inv, Component name) {
     super(containerCableFilter, inv, name);
     this.containerCableLink = containerCableFilter;
   }
@@ -56,13 +57,6 @@ public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollec
   }
 
   @Override
-  public void renderLabels(PoseStack ms, int mouseX, int mouseY) {
-    //    super.drawGuiContainerForegroundLayer(ms, mouseX, mouseY);
-  }
-
-  public static final int SLOT_SIZE = 18;
-
-  @Override
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
     //    minecraft.getTextureManager().bind(texture);
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -79,12 +73,12 @@ public class GuiCollectionFilter extends AbstractContainerScreen<ContainerCollec
     for (int row = 0; row < rows; row++) {
       for (int col = 0; col < cols; col++) {
         ItemStack stack = containerCableLink.cap.getFilter().getStackInSlot(index);
-        int x = 8 + col * SLOT_SIZE;
+        int x = 8 + col * SsnConsts.SLOT_SIZE;
         itemSlotsGhost.add(new ItemSlotNetwork(this, stack, leftPos + x, topPos + y, stack.getCount(), leftPos, topPos, true));
         index++;
       }
       //move down to second row
-      y += SLOT_SIZE;
+      y += SsnConsts.SLOT_SIZE;
     }
     for (ItemSlotNetwork s : itemSlotsGhost) {
       s.drawSlot(ms, font, mouseX, mouseY);

@@ -45,15 +45,14 @@ public class NetworkModule {
   private Set<DimPos> connectables = new HashSet<>();
   private boolean shouldRefresh = true;
 
-  public void setShouldRefresh() {
-    shouldRefresh = true;
-  }
-
-  public int getConnectableSize() {
-    return connectables == null ? 0 : connectables.size();
-  }
-
-  Set<IConnectable> getConnectables() {
+  /**
+   * gets list of validated connected nodes, ignoring content or subtype
+   * 
+   * used by main block -> Import and Export cable
+   * 
+   * @return
+   */
+  public Set<IConnectable> getConnectables() {
     Set<DimPos> positions = new HashSet<>(connectables);
     Set<IConnectable> result = new HashSet<>();
     for (DimPos pos : positions) {
@@ -74,100 +73,21 @@ public class NetworkModule {
     return result;
   }
 
-  void addConnectables(DimPos sourcePos, Set<DimPos> set, DimPos masterPos) {
-    if (sourcePos == null || sourcePos.getWorld() == null || !sourcePos.isLoaded()) {
-      return;
-    }
-    // Look in all directions
-    for (Direction direction : Direction.values()) {
-      DimPos lookPos = sourcePos.offset(direction);
-      if (!lookPos.isLoaded()) {
-        continue;
-      }
-      ChunkAccess chunk = lookPos.getChunk();
-      if (chunk == null) {
-        continue;
-      }
-      // Prevent having multiple  on a network and break all others.
-      TileMain maybeMain = lookPos.getTileEntity(TileMain.class);
-      if (maybeMain != null && !lookPos.equals(masterPos.getWorld(), masterPos.getBlockPos())) {
-        UtilInventory.nukeAndDrop(lookPos);
-        continue;
-      }
-      BlockEntity tileHere = lookPos.getTileEntity(BlockEntity.class);
-      if (tileHere == null) {
-        continue;
-      }
-      IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
-      if (capabilityConnectable == null) {
-        continue;
-      }
-      if (capabilityConnectable.getPos() == null) {
-        capabilityConnectable.setPos(lookPos);
-        capabilityConnectable.setMainPos(masterPos);
-      }
-      if (capabilityConnectable != null) {
-        capabilityConnectable.setMainPos(masterPos);
-        DimPos realConnectablePos = capabilityConnectable.getPos();
-        boolean beenHereBefore = set.contains(realConnectablePos);
-        if (beenHereBefore) {
-          continue;
-        }
-        if (realConnectablePos.getWorld() == null) {
-          realConnectablePos.setWorld(sourcePos.getWorld());
-        }
-        set.add(realConnectablePos);
-        addConnectables(realConnectablePos, set, masterPos);
-        tileHere.setChanged();
-        chunk.setUnsaved(true);
-      }
-    }
-  }
-
   /**
-   * This is a recursively called method that traverses all connectable blocks and stores them in this tiles connectables list.
-   *
-   * @param sourcePos
+   * returns huge unsorted list of stacks
+   * 
+   * respects local node filter settings
+   * 
+   * @return
    */
-  Set<DimPos> getConnectables(DimPos masterPos) {
-    HashSet<DimPos> result = new HashSet<>();
-    addConnectables(masterPos, result, masterPos);
-    return result;
-  }
-
-  public List<ItemStack> getSortedStacks() {
-    List<ItemStack> stacks = Lists.newArrayList();
-    try {
-      if (connectables == null) {
-        setShouldRefresh();
-      }
-    }
-    catch (Exception e) {
-      //since this has external mod connections, if they break then catch it
-      //      for example, AE2 can break with  Ticking GridNode
-      StorageNetworkMod.LOGGER.info("3rd party storage mod has an error", e);
-    }
-    try {
-      for (IConnectableLink storage : getSortedConnectableStorage()) {
-        for (ItemStack stack : storage.getStoredStacks(true)) {
-          if (stack == null || stack.isEmpty()) {
-            continue;
-          }
-          UtilTileEntity.addOrMergeIntoList(stacks, stack);
-        }
-      }
-    }
-    catch (Exception e) {
-      StorageNetworkMod.LOGGER.info("3rd party storage mod has an error", e);
-    }
-    return stacks;
-  }
-
   public List<ItemStack> getStacks() {
+    selfValidate();
+    boolean isFiltered = true;
     List<ItemStack> stacks = Lists.newArrayList();
     try {
       for (IConnectableLink storage : getConnectableStorage()) {
-        for (ItemStack stack : storage.getStoredStacks(true)) {
+        //TODO: get Unsorted? 
+        for (ItemStack stack : storage.getStoredStacks(isFiltered)) {
           if (stack == null || stack.isEmpty()) {
             continue;
           }
@@ -181,13 +101,50 @@ public class NetworkModule {
     return stacks;
   }
 
-  public int getAmount(ItemStackMatcher fil) {
-    if (fil == null) {
+  /**
+   * get sorted list of network contents. used by screen containers.
+   * 
+   * Nodes are sorted by priority, as well as relying on the capability, see IConenctableLink::getStoredStacks
+   * 
+   * respects local node filter settings
+   * 
+   * use getStacks() instead if no sort is needed
+   * 
+   * @return
+   */
+  public List<ItemStack> getSortedStacks() {
+    selfValidate();
+    boolean isFiltered = true;
+    List<ItemStack> stacks = Lists.newArrayList();
+    try {
+      for (IConnectableLink storage : getSortedConnectableStorage()) {
+        for (ItemStack stack : storage.getStoredStacks(isFiltered)) {
+          if (stack == null || stack.isEmpty()) {
+            continue;
+          }
+          UtilTileEntity.addOrMergeIntoList(stacks, stack);
+        }
+      }
+    }
+    catch (Exception e) {
+      StorageNetworkMod.LOGGER.info("3rd party storage mod has an error", e);
+    }
+    return stacks;
+  }
+
+  /**
+   * 
+   * @param filter
+   *          for the itemstack request
+   * @return totalCount of how much the network contains that match this filter
+   */
+  public int getAmount(ItemStackMatcher filter) {
+    if (filter == null) {
       return 0;
     }
     int totalCount = 0;
     for (ItemStack stack : getStacks()) {
-      if (!fil.match(stack)) {
+      if (!filter.match(stack)) {
         continue;
       }
       totalCount += stack.getCount();
@@ -195,78 +152,11 @@ public class NetworkModule {
     return totalCount;
   }
 
-  public List<Entry<String, Integer>> getDisplayStrings() {
-    Map<String, Integer> mapNamesToCount = new HashMap<>();
-    Iterator<DimPos> iter = new HashSet<>(this.connectables).iterator();
-    Block bl;
-    DimPos p;
-    String blockName;
-    while (iter.hasNext()) {
-      p = iter.next();
-      bl = p.getBlockState().getBlock();
-      //getTranslatedName client only thanks mojang lol
-      blockName = (new TranslatableComponent(bl.getDescriptionId())).getString();
-      int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
-      mapNamesToCount.put(blockName, count);
-    }
-    List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
-    for (Entry<String, Integer> e : mapNamesToCount.entrySet()) {
-      listDisplayStrings.add(e);
-    }
-    Collections.sort(listDisplayStrings, new Comparator<Entry<String, Integer>>() {
-
-      @Override
-      public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
-        return Integer.compare(o2.getValue(), o1.getValue());
-      }
-    });
-    return listDisplayStrings;
-  }
-
-  public int emptySlots() {
-    int countEmpty = 0;
-    for (IConnectableLink storage : getSortedConnectableStorage()) {
-      countEmpty += storage.getEmptySlots();
-    }
-    return countEmpty;
-  }
-
-  List<IConnectableLink> getSortedConnectableStorage() {
-    try {
-      Set<IConnectableLink> storage = getConnectableStorage();
-      Stream<IConnectableLink> stream = storage.stream();
-      List<IConnectableLink> sorted = stream.sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
-      return sorted;
-    }
-    catch (Exception e) {
-      //trying to avoid 
-      //java.lang.StackOverflowError: Ticking block entity
-      //and similar issues
-      StorageNetworkMod.LOGGER.error("Error: network get sorted by priority error, some network components are disconnected ", e);
-      return new ArrayList<>();
-    }
-  }
-
-  private Set<IConnectableLink> getConnectableStorage() {
-    Set<DimPos> conSet = new HashSet<>(connectables);
-    Set<IConnectableLink> result = new HashSet<>();
-    for (DimPos dimpos : conSet) {
-      if (!dimpos.isLoaded()) {
-        continue;
-      }
-      BlockEntity tileEntity = dimpos.getTileEntity(BlockEntity.class);
-      if (tileEntity == null) {
-        continue;
-      }
-      IConnectableLink capConnect = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
-      if (capConnect == null) {
-        continue;
-      }
-      result.add(capConnect);
-    }
-    return result;
-  }
-
+  /**
+   * Perform refresh (regardless of shouldRefresh flag) and reset the flag back to off
+   * 
+   * @param masterPos
+   */
   public void doRefresh(DimPos masterPos) {
     try {
       this.connectables = this.getConnectables(masterPos);
@@ -278,10 +168,50 @@ public class NetworkModule {
     }
   }
 
+  /**
+   * @return true if a refresh was requested
+   */
   public boolean shouldRefresh() {
     return this.shouldRefresh;
   }
 
+  /**
+   * Set it to need an update at the next possible time. Use when nodes get added/removed/updated
+   * 
+   */
+  public void setShouldRefresh() {
+    shouldRefresh = true;
+  }
+
+  public int getConnectableSize() {
+    return connectables == null ? 0 : connectables.size();
+  }
+
+  /**
+   * 
+   * @return total empty count for entire network
+   */
+  public int emptySlots() {
+    int countEmpty = 0;
+    for (IConnectableLink storage : getSortedConnectableStorage()) {
+      countEmpty += storage.getEmptySlots();
+    }
+    return countEmpty;
+  }
+
+  /**
+   * Insert contents into the network. Used by players and import cables.
+   * 
+   * Only able to use nodes with EnumStorageDirection.IN
+   * 
+   * always attempts to use the NetworkCache first, and keeps it updated
+   * 
+   * @param stack
+   *          held by your mouse or whatever. object reference will be updated regardless of simulation
+   * @param simulate
+   *          true to test, false to execute
+   * @return count of how many were inserted successfuly
+   */
   public int insertStack(ItemStack stack, boolean simulate) {
     if (stack.isEmpty()) {
       return 0;
@@ -336,6 +266,17 @@ public class NetworkModule {
     return stack.getCount();
   }
 
+  /**
+   * Request an item out of the network
+   * 
+   * @param matcher
+   *          to filter for what you want exactly
+   * @param size
+   *          requested
+   * @param simulate
+   *          true for capability simulation, false to execute transaction
+   * @return stack copy if simulated, the real stack if executed
+   */
   public ItemStack request(ItemStackMatcher matcher, int size, boolean simulate) {
     if (size == 0 || matcher == null) {
       return ItemStack.EMPTY;
@@ -359,5 +300,148 @@ public class NetworkModule {
       return ItemStack.EMPTY;
     }
     return ItemHandlerHelper.copyStackWithSize(usedMatcher.getStack(), alreadyTransferred);
+  }
+
+  /**
+   * TODO: move or refactor?
+   */
+  public List<Entry<String, Integer>> getDisplayStrings() {
+    Map<String, Integer> mapNamesToCount = new HashMap<>();
+    Iterator<DimPos> iter = new HashSet<>(this.connectables).iterator();
+    Block bl;
+    DimPos p;
+    String blockName;
+    while (iter.hasNext()) {
+      p = iter.next();
+      bl = p.getBlockState().getBlock();
+      //getTranslatedName client only thanks mojang lol
+      blockName = (new TranslatableComponent(bl.getDescriptionId())).getString();
+      int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
+      mapNamesToCount.put(blockName, count);
+    }
+    List<Entry<String, Integer>> listDisplayStrings = Lists.newArrayList();
+    for (Entry<String, Integer> e : mapNamesToCount.entrySet()) {
+      listDisplayStrings.add(e);
+    }
+    Collections.sort(listDisplayStrings, new Comparator<Entry<String, Integer>>() {
+
+      @Override
+      public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
+        return Integer.compare(o2.getValue(), o1.getValue());
+      }
+    });
+    return listDisplayStrings;
+  }
+
+  /***
+   * scary recursive stuff. the big mess that keeps the network connected and updated in real time
+   */
+  private void addConnectables(DimPos sourcePos, Set<DimPos> set, DimPos masterPos) {
+    if (sourcePos == null || sourcePos.getWorld() == null || !sourcePos.isLoaded()) {
+      return;
+    }
+    // Look in all directions
+    for (Direction direction : Direction.values()) {
+      DimPos lookPos = sourcePos.offset(direction);
+      if (!lookPos.isLoaded()) {
+        continue;
+      }
+      ChunkAccess chunk = lookPos.getChunk();
+      if (chunk == null) {
+        continue;
+      }
+      // Prevent having multiple  on a network and break all others.
+      TileMain maybeMain = lookPos.getTileEntity(TileMain.class);
+      if (maybeMain != null && !lookPos.equals(masterPos.getWorld(), masterPos.getBlockPos())) {
+        UtilInventory.nukeAndDrop(lookPos);
+        continue;
+      }
+      BlockEntity tileHere = lookPos.getTileEntity(BlockEntity.class);
+      if (tileHere == null) {
+        continue;
+      }
+      IConnectable capabilityConnectable = tileHere.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, direction.getOpposite()).orElse(null);
+      if (capabilityConnectable == null) {
+        continue;
+      }
+      if (capabilityConnectable.getPos() == null) {
+        capabilityConnectable.setPos(lookPos);
+        capabilityConnectable.setMainPos(masterPos);
+      }
+      if (capabilityConnectable != null) {
+        capabilityConnectable.setMainPos(masterPos);
+        DimPos realConnectablePos = capabilityConnectable.getPos();
+        boolean beenHereBefore = set.contains(realConnectablePos);
+        if (beenHereBefore) {
+          continue;
+        }
+        if (realConnectablePos.getWorld() == null) {
+          realConnectablePos.setWorld(sourcePos.getWorld());
+        }
+        set.add(realConnectablePos);
+        addConnectables(realConnectablePos, set, masterPos);
+        tileHere.setChanged();
+        chunk.setUnsaved(true);
+      }
+    }
+  }
+
+  private List<IConnectableLink> getSortedConnectableStorage() {
+    try {
+      Set<IConnectableLink> storage = getConnectableStorage();
+      Stream<IConnectableLink> stream = storage.stream();
+      List<IConnectableLink> sorted = stream.sorted(Comparator.comparingInt(IConnectableLink::getPriority)).collect(Collectors.toList());
+      return sorted;
+    }
+    catch (Exception e) {
+      //trying to avoid 
+      //java.lang.StackOverflowError: Ticking block entity
+      //and similar issues
+      StorageNetworkMod.LOGGER.error("Error: network get sorted by priority error, some network components are disconnected ", e);
+      return new ArrayList<>();
+    }
+  }
+
+  private Set<IConnectableLink> getConnectableStorage() {
+    Set<DimPos> conSet = new HashSet<>(connectables);
+    Set<IConnectableLink> result = new HashSet<>();
+    for (DimPos dimpos : conSet) {
+      if (!dimpos.isLoaded()) {
+        continue;
+      }
+      BlockEntity tileEntity = dimpos.getTileEntity(BlockEntity.class);
+      if (tileEntity == null) {
+        continue;
+      }
+      IConnectableLink capConnect = tileEntity.getCapability(StorageNetworkCapabilities.CONNECTABLE_ITEM_STORAGE_CAPABILITY, null).orElse(null);
+      if (capConnect == null) {
+        continue;
+      }
+      result.add(capConnect);
+    }
+    return result;
+  }
+
+  /**
+   * This is a recursively called method that traverses all connectable blocks and stores them in this tiles connectables list.
+   *
+   * used by refresh
+   *
+   * @param sourcePos
+   *          of main tile
+   */
+  private Set<DimPos> getConnectables(DimPos masterPos) {
+    HashSet<DimPos> result = new HashSet<>();
+    addConnectables(masterPos, result, masterPos);
+    return result;
+  }
+
+  /**
+   * TODO: is this needed anymore? isnt it always non-null
+   */
+  private void selfValidate() {
+    if (connectables == null) {
+      setShouldRefresh();
+    }
   }
 }

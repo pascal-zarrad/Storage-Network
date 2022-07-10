@@ -26,7 +26,7 @@ import net.minecraftforge.fml.ModList;
 /**
  * Base class for Request table inventory and Remote inventory
  */
-public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCraftingTable> implements IGuiNetwork {
+public class ScreenNetworkTable extends AbstractContainerScreen<ContainerNetworkCraftingTable> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
   public static final int WIDTH = 176;
@@ -35,7 +35,7 @@ public class GuiNetworkTable extends AbstractContainerScreen<ContainerNetworkCra
   private TileRequest tile;
   private int topOffset;
 
-  public GuiNetworkTable(ContainerNetworkCraftingTable container, Inventory inv, Component name) {
+  public ScreenNetworkTable(ContainerNetworkCraftingTable container, Inventory inv, Component name) {
     super(container, inv, name);
     tile = container.getTileRequest();
     network = new NetworkWidget(this);

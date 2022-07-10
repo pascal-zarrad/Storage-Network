@@ -41,7 +41,7 @@ public class TileMain extends BlockEntity {
   @Override
   public ClientboundBlockEntityDataPacket getUpdatePacket() {
     saveWithFullMetadata();
-    return ClientboundBlockEntityDataPacket.create(this); // new ClientboundBlockEntityDataPacket(worldPosition, 1, syncData);
+    return ClientboundBlockEntityDataPacket.create(this);
   }
 
   @Override
@@ -51,17 +51,24 @@ public class TileMain extends BlockEntity {
   }
 
   /**
-   * returns countUnmoved , the number of items NOT inserted.
+   * insert into my network
    */
   public int insertStack(ItemStack stack, boolean simulate) {
-    return nw.insertStack(stack, simulate);
+    int totalInserted = nw.insertStack(stack, simulate);
+    //subnetwork ?
+    return totalInserted;
   }
 
+  /**
+   * request from my network
+   */
   public ItemStack request(ItemStackMatcher matcher, int size, boolean simulate) {
-    return nw.request(matcher, size, simulate);
+    ItemStack result = nw.request(matcher, size, simulate);
+    //if not found then ?
+    return result;
   }
 
-  public DimPos getDimPos() {
+  private DimPos getDimPos() {
     return new DimPos(level, worldPosition);
   }
 

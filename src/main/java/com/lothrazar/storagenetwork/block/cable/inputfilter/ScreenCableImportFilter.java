@@ -14,6 +14,7 @@ import com.lothrazar.storagenetwork.gui.TextboxInteger;
 import com.lothrazar.storagenetwork.network.CableIOMessage;
 import com.lothrazar.storagenetwork.registry.ClientEventRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import com.lothrazar.storagenetwork.util.SsnConsts;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -26,7 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
+public class ScreenCableImportFilter extends AbstractContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 
   private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/cable_filter.png");
   ContainerCableImportFilter containerCableLink;
@@ -41,7 +42,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
   private ItemSlotNetwork operationItemSlot;
   private TextboxInteger txtHeight;
 
-  public GuiCableImportFilter(ContainerCableImportFilter containerCableFilter, Inventory inv, Component name) {
+  public ScreenCableImportFilter(ContainerCableImportFilter containerCableFilter, Inventory inv, Component name) {
     super(containerCableFilter, inv, name);
     this.containerCableLink = containerCableFilter;
   }
@@ -97,6 +98,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
 
   @Override
   public void renderLabels(PoseStack ms, int mouseX, int mouseY) {
+    //    this.font.draw(ms, this.title, this.titleLabelX, this.titleLabelY, 4210752);// TODO: gui titles
     int priority = containerCableLink.cap.getPriority();
     font.draw(ms, String.valueOf(priority),
         50 - font.width(String.valueOf(priority)) / 2,
@@ -169,7 +171,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     }
   }
 
-  public static final int SLOT_SIZE = 18;
+  public static final int SLOT_SIZE = SsnConsts.SLOT_SIZE;;
 
   @Override
   protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
@@ -183,7 +185,6 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     //TODO: shared with GuiCableIO
     final int rows = 2;
     final int cols = 9;
-    int size = 18;
     int index = 0;
     int x;
     int y = 45;
@@ -202,6 +203,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
     for (ItemSlotNetwork s : itemSlotsGhost) {
       s.drawSlot(ms, font, mouseX, mouseY);
     }
+    int size = SLOT_SIZE;
     operationItemSlot = new ItemSlotNetwork(this, containerCableLink.cap.operationStack, x, y, size, leftPos, topPos, false);
     if (this.isOperationMode()) {
       operationItemSlot.drawSlot(ms, font, mouseX, mouseY);
@@ -225,7 +227,7 @@ public class GuiCableImportFilter extends AbstractContainerScreen<ContainerCable
       for (int i = 0; i < this.itemSlotsGhost.size(); i++) {
         ItemSlotNetwork slot = itemSlotsGhost.get(i);
         if (slot.isMouseOverSlot((int) mouseX, (int) mouseY)) {
-          ItemStack changeme = GuiCableImportFilter.scrollStack(delta, slot);
+          ItemStack changeme = ScreenCableImportFilter.scrollStack(delta, slot);
           if (changeme != null) {
             this.sendStackSlot(i, changeme);
             return true;

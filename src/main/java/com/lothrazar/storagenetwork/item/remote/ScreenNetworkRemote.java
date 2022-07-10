@@ -1,4 +1,4 @@
-package com.lothrazar.storagenetwork.block.inventory;
+package com.lothrazar.storagenetwork.item.remote;
 
 import java.util.List;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
@@ -6,8 +6,6 @@ import com.lothrazar.storagenetwork.api.EnumSortType;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
 import com.lothrazar.storagenetwork.gui.NetworkWidget;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
-import com.lothrazar.storagenetwork.network.ClearRecipeMessage;
-import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -16,32 +14,30 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.ModList;
 
-/**
- * Base class for Request table inventory and Remote inventory
- */
-public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetworkInventory> implements IGuiNetwork {
+public class ScreenNetworkRemote extends AbstractContainerScreen<ContainerNetworkRemote> implements IGuiNetwork {
 
   private static final int HEIGHT = 256;
-  public static final int WIDTH = 176;
-  private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/inventory.png");
-  final NetworkWidget network;
-  private TileInventory tile;
+  private static final int WIDTH = 176;
+  private static final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID,
+      "textures/gui/inventory.png");
+  private final NetworkWidget network;
+  private final ItemStack remote;
   private int topOffset;
 
-  public GuiNetworkInventory(ContainerNetworkInventory container, Inventory inv, Component name) {
-    super(container, inv, name);
-    tile = container.tile;
+  public ScreenNetworkRemote(ContainerNetworkRemote screenContainer, Inventory inv, Component titleIn) {
+    super(screenContainer, inv, titleIn);
+    //since the rightclick action forces only MAIN_HAND openings, is ok
+    this.remote = screenContainer.getRemote();//inv.player.getItemInHand(InteractionHand.MAIN_HAND);
     network = new NetworkWidget(this);
     network.setLines(8);
-    imageWidth = WIDTH;
-    imageHeight = HEIGHT;
+    this.imageWidth = WIDTH;
+    this.imageHeight = HEIGHT;
     network.fieldHeight = 180;
   }
 
@@ -51,13 +47,43 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
-  public void drawGradient(PoseStack ms, int x, int y, int x2, int y2, int u, int v) {
-    super.fillGradient(ms, x, y, x2, y2, u, v);
+  public void setStacks(List<ItemStack> stacks) {
+    network.stacks = stacks;
   }
 
   @Override
-  public void setStacks(List<ItemStack> stacks) {
-    network.stacks = stacks;
+  public boolean getDownwards() {
+    return ItemStorageCraftingRemote.getDownwards(remote);
+  }
+
+  @Override
+  public void setDownwards(boolean val) {
+    ItemStorageCraftingRemote.setDownwards(remote, val);
+  }
+
+  @Override
+  public EnumSortType getSort() {
+    return ItemStorageCraftingRemote.getSort(remote);
+  }
+
+  @Override
+  public void setSort(EnumSortType val) {
+    ItemStorageCraftingRemote.setSort(remote, val);
+  }
+
+  @Override
+  public void setAutoFocus(boolean b) {
+    ItemStorageCraftingRemote.setAutoFocus(remote, b);
+  }
+
+  @Override
+  public boolean isJeiSearchSynced() {
+    return ItemStorageCraftingRemote.isJeiSearchSynced(remote);
+  }
+
+  @Override
+  public void setJeiSearchSynced(boolean val) {
+    ItemStorageCraftingRemote.setJeiSearchSynced(remote, val);
   }
 
   @Override
@@ -88,7 +114,7 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
 
   @Override
   public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-    renderBackground(ms);
+    this.renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
     this.renderTooltip(ms, mouseX, mouseY);
     network.searchBar.render(ms, mouseX, mouseY, partialTicks);
@@ -96,43 +122,13 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
-  public void syncDataToServer() {
-    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(getPos(), getDownwards(), getSort(), isJeiSearchSynced(), tile.getAutoFocus()));
-  }
-
-  @Override
-  public boolean getDownwards() {
-    return tile.isDownwards();
-  }
-
-  @Override
-  public void setDownwards(boolean d) {
-    tile.setDownwards(d);
-  }
-
-  @Override
-  public EnumSortType getSort() {
-    return tile.getSort();
-  }
-
-  @Override
-  public void setSort(EnumSortType s) {
-    tile.setSort(s);
-  }
-
-  public BlockPos getPos() {
-    return tile.getBlockPos();
-  }
-
-  @Override
-  public void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
-    //    minecraft.getTextureManager().bind(texture);
+  protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+    //    this.minecraft.getTextureManager().bind(texture);
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, texture);
-    int xCenter = (width - imageWidth) / 2;
-    int yCenter = (height - imageHeight) / 2;
-    blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
-    //good stuff
+    int k = (this.width - this.imageWidth) / 2;
+    int l = (this.height - this.imageHeight) / 2;
+    this.blit(ms, k, l, 0, 0, this.imageWidth, this.imageHeight);
     network.applySearchTextToSlots();
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }
@@ -143,23 +139,17 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
   }
 
   boolean isScrollable(double x, double y) {
-    int scrollHeight = 135;
+    int scrollHeight = 152;
     return isHovering(0, 0,
         this.width - 8, scrollHeight,
         x, y);
   }
 
-  /**
-   * Negative is down; positive is up.
-   *
-   * @param x
-   * @param y
-   * @param mouseButton
-   * @return
-   */
   @Override
   public boolean mouseScrolled(double x, double y, double mouseButton) {
     super.mouseScrolled(x, y, mouseButton);
+    //<0 going down
+    // >0 going up
     if (isScrollable(x, y) && mouseButton != 0) {
       network.mouseScrolled(mouseButton);
     }
@@ -170,14 +160,6 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
   public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
     super.mouseClicked(mouseX, mouseY, mouseButton);
     network.mouseClicked(mouseX, mouseY, mouseButton);
-    //recipe clear thingy
-    int rectX = 63;
-    int rectY = 110;
-    if (isHovering(rectX, rectY, 7, 7, mouseX, mouseY)) {
-      PacketRegistry.INSTANCE.sendToServer(new ClearRecipeMessage());
-      PacketRegistry.INSTANCE.sendToServer(new RequestMessage(0, ItemStack.EMPTY, false, false));
-      return true;
-    }
     return true;
   }
 
@@ -189,10 +171,10 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
       return true; // Forge MC-146650: Needs to return true when the key is handled.
     }
     if (network.searchBar.isFocused()) {
-      network.searchBar.keyPressed(keyCode, scanCode, b);
       if (keyCode == 259) { // BACKSPACE
         network.syncTextToJei();
       }
+      network.searchBar.keyPressed(keyCode, scanCode, b);
       return true;
     }
     else if (network.stackUnderMouse.isEmpty()) {
@@ -201,7 +183,6 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
       }
       catch (Throwable e) {
         StorageNetworkMod.LOGGER.error("JEI compat issue ", e);
-        //its ok JEI not installed for maybe an addon mod is ok
       }
     }
     //regardles of above branch, also check this
@@ -221,27 +202,22 @@ public class GuiNetworkInventory extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
+  public void drawGradient(PoseStack ms, int x, int y, int x2, int y2, int u, int v) {
+    super.fillGradient(ms, x, y, x2, y2, u, v);
+  }
+
+  @Override
   public boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY) {
     return super.isHovering(x, y, width, height, mouseX, mouseY);
   }
 
   @Override
-  public boolean isJeiSearchSynced() {
-    return tile.isJeiSearchSynced();
-  }
-
-  @Override
-  public void setJeiSearchSynced(boolean val) {
-    tile.setJeiSearchSynced(val);
-  }
-
-  @Override
   public boolean getAutoFocus() {
-    return tile.getAutoFocus();
+    return ItemStorageCraftingRemote.getAutoFocus(remote);
   }
 
   @Override
-  public void setAutoFocus(boolean b) {
-    tile.setAutoFocus(b);
+  public void syncDataToServer() {
+    PacketRegistry.INSTANCE.sendToServer(new SettingsSyncMessage(null, getDownwards(), getSort(), this.isJeiSearchSynced(), this.getAutoFocus()));
   }
 }

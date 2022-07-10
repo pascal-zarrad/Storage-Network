@@ -2,14 +2,14 @@ package com.lothrazar.storagenetwork;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
-import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
-import com.lothrazar.storagenetwork.block.cable.linkfilter.GuiCableFilter;
-import com.lothrazar.storagenetwork.block.collection.GuiCollectionFilter;
-import com.lothrazar.storagenetwork.block.inventory.GuiNetworkInventory;
-import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
-import com.lothrazar.storagenetwork.item.remote.GuiNetworkCraftingRemote;
-import com.lothrazar.storagenetwork.item.remote.GuiNetworkRemote;
+import com.lothrazar.storagenetwork.block.cable.export.ScreenCableExportFilter;
+import com.lothrazar.storagenetwork.block.cable.inputfilter.ScreenCableImportFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.ScreenCableFilter;
+import com.lothrazar.storagenetwork.block.collection.ScreenCollectionFilter;
+import com.lothrazar.storagenetwork.block.inventory.ScreenNetworkInventory;
+import com.lothrazar.storagenetwork.block.request.ScreenNetworkTable;
+import com.lothrazar.storagenetwork.item.remote.ScreenNetworkCraftingRemote;
+import com.lothrazar.storagenetwork.item.remote.ScreenNetworkRemote;
 import com.lothrazar.storagenetwork.registry.ClientEventRegistry;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
@@ -53,14 +53,14 @@ public class StorageNetworkMod {
   }
 
   private void setupClient(final FMLClientSetupEvent event) {
-    MenuScreens.register(SsnRegistry.Menus.REQUEST.get(), GuiNetworkTable::new);
-    MenuScreens.register(SsnRegistry.Menus.FILTER_KABEL.get(), GuiCableFilter::new);
-    MenuScreens.register(SsnRegistry.Menus.IMPORT_FILTER_KABEL.get(), GuiCableImportFilter::new);
-    MenuScreens.register(SsnRegistry.Menus.EXPORT_KABEL.get(), GuiCableExportFilter::new);
-    MenuScreens.register(SsnRegistry.Menus.INVENTORY_REMOTE.get(), GuiNetworkRemote::new);
-    MenuScreens.register(SsnRegistry.Menus.CRAFTING_REMOTE.get(), GuiNetworkCraftingRemote::new);
-    MenuScreens.register(SsnRegistry.Menus.INVENTORY.get(), GuiNetworkInventory::new);
-    MenuScreens.register(SsnRegistry.Menus.COLLECTOR.get(), GuiCollectionFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.REQUEST.get(), ScreenNetworkTable::new);
+    MenuScreens.register(SsnRegistry.Menus.FILTER_KABEL.get(), ScreenCableFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.IMPORT_FILTER_KABEL.get(), ScreenCableImportFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.EXPORT_KABEL.get(), ScreenCableExportFilter::new);
+    MenuScreens.register(SsnRegistry.Menus.INVENTORY_REMOTE.get(), ScreenNetworkRemote::new);
+    MenuScreens.register(SsnRegistry.Menus.CRAFTING_REMOTE.get(), ScreenNetworkCraftingRemote::new);
+    MenuScreens.register(SsnRegistry.Menus.INVENTORY.get(), ScreenNetworkInventory::new);
+    MenuScreens.register(SsnRegistry.Menus.COLLECTOR.get(), ScreenCollectionFilter::new);
     ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
   }
 

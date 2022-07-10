@@ -3,9 +3,9 @@ package com.lothrazar.storagenetwork.network;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import com.lothrazar.storagenetwork.block.cable.export.GuiCableExportFilter;
-import com.lothrazar.storagenetwork.block.cable.inputfilter.GuiCableImportFilter;
-import com.lothrazar.storagenetwork.block.cable.linkfilter.GuiCableFilter;
+import com.lothrazar.storagenetwork.block.cable.export.ScreenCableExportFilter;
+import com.lothrazar.storagenetwork.block.cable.inputfilter.ScreenCableImportFilter;
+import com.lothrazar.storagenetwork.block.cable.linkfilter.ScreenCableFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -32,16 +32,16 @@ public class RefreshFilterClientMessage {
   public static void handle(RefreshFilterClientMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       //TODO: optimize with base class or interface
-      if (Minecraft.getInstance().screen instanceof GuiCableFilter) {
-        GuiCableFilter gui = (GuiCableFilter) Minecraft.getInstance().screen;
+      if (Minecraft.getInstance().screen instanceof ScreenCableFilter) {
+        ScreenCableFilter gui = (ScreenCableFilter) Minecraft.getInstance().screen;
         gui.setFilterItems(message.stacks);
       }
-      if (Minecraft.getInstance().screen instanceof GuiCableImportFilter) {
-        GuiCableImportFilter gui = (GuiCableImportFilter) Minecraft.getInstance().screen;
+      if (Minecraft.getInstance().screen instanceof ScreenCableImportFilter) {
+        ScreenCableImportFilter gui = (ScreenCableImportFilter) Minecraft.getInstance().screen;
         gui.setFilterItems(message.stacks);
       }
-      if (Minecraft.getInstance().screen instanceof GuiCableExportFilter) {
-        GuiCableExportFilter gui = (GuiCableExportFilter) Minecraft.getInstance().screen;
+      if (Minecraft.getInstance().screen instanceof ScreenCableExportFilter) {
+        ScreenCableExportFilter gui = (ScreenCableExportFilter) Minecraft.getInstance().screen;
         gui.setFilterItems(message.stacks);
       }
     });

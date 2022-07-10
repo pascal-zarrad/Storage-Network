@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumSearchPrefix;
 import com.lothrazar.storagenetwork.api.IGuiNetwork;
-import com.lothrazar.storagenetwork.block.request.GuiNetworkTable;
+import com.lothrazar.storagenetwork.block.request.ScreenNetworkTable;
 import com.lothrazar.storagenetwork.gui.ButtonRequest.TextureEnum;
 import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.network.InsertMessage;
@@ -305,7 +305,7 @@ public class NetworkWidget {
   }
 
   private boolean inField(int mouseX, int mouseY) {
-    return mouseX > (gui.getGuiLeft() + 7) && mouseX < (gui.getGuiLeft() + GuiNetworkTable.WIDTH - 7)
+    return mouseX > (gui.getGuiLeft() + 7) && mouseX < (gui.getGuiLeft() + ScreenNetworkTable.WIDTH - 7)
         && mouseY > (gui.getGuiTopFixJei() + 7) && mouseY < (gui.getGuiTopFixJei() + fieldHeight);
   }
 
