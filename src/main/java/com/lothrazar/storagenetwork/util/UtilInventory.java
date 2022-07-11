@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 
@@ -23,7 +24,7 @@ public class UtilInventory {
   }
 
   public static String getStackKey(ItemStack stackInCopy) {
-    return stackInCopy.getItem().getRegistryName().toString();
+    return ForgeRegistries.ITEMS.getKey(stackInCopy.getItem()).toString();
   }
 
   /**

@@ -1,14 +1,21 @@
 package com.lothrazar.storagenetwork.jei;
 
+import java.util.Optional;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.request.ContainerNetworkCraftingTable;
 import com.lothrazar.storagenetwork.item.remote.ContainerNetworkCraftingRemote;
+import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import mezz.jei.api.IModPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.MenuType;
 
 @mezz.jei.api.JeiPlugin
 public class JeiPlugin implements IModPlugin {
+
+  public static IJeiRuntime runtime = null;
 
   @Override
   public ResourceLocation getPluginUid() {
@@ -16,8 +23,39 @@ public class JeiPlugin implements IModPlugin {
   }
 
   @Override
+  public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+    runtime = jeiRuntime;
+  }
+
+  @Override
   public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-    registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkCraftingTable.class));
-    registration.addUniversalRecipeTransferHandler(new RequestRecipeTransferHandler<>(ContainerNetworkCraftingRemote.class));
+    //    registration.addUniversalRecipeTransferHandler(null);
+    // new non-universal
+    //table
+    registration.addRecipeTransferHandler(new RequestRecipeTransferHandler<ContainerNetworkCraftingTable>() {
+
+      @Override
+      public Class<? extends ContainerNetworkCraftingTable> getContainerClass() {
+        return ContainerNetworkCraftingTable.class;
+      }
+
+      @Override
+      public Optional<MenuType<ContainerNetworkCraftingTable>> getMenuType() {
+        return Optional.of(SsnRegistry.Menus.REQUEST.get());
+      }
+    }, RecipeTypes.CRAFTING);
+    //remote
+    registration.addRecipeTransferHandler(new RequestRecipeTransferHandler<ContainerNetworkCraftingRemote>() {
+
+      @Override
+      public Class<? extends ContainerNetworkCraftingRemote> getContainerClass() {
+        return ContainerNetworkCraftingRemote.class;
+      }
+
+      @Override
+      public Optional<MenuType<ContainerNetworkCraftingRemote>> getMenuType() {
+        return Optional.of(SsnRegistry.Menus.CRAFTING_REMOTE.get());
+      }
+    }, RecipeTypes.CRAFTING);
   }
 }

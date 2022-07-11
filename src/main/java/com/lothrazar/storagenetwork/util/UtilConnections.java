@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class UtilConnections {
 
@@ -16,7 +17,7 @@ public class UtilConnections {
     if (state.getBlock() == Blocks.AIR) {
       return false;
     }
-    String blockId = state.getBlock().getRegistryName().toString();
+    String blockId = ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString();
     for (String s : StorageNetworkMod.CONFIG.ignorelist()) {
       if (blockId.equals(s)) {
         return false;

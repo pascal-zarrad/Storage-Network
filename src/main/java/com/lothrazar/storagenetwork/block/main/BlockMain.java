@@ -7,7 +7,7 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -65,15 +65,14 @@ public class BlockMain extends BaseBlock {
     if (total == 0) {
       return;
     }
-    playerIn.sendMessage(
-        new TranslatableComponent(ChatFormatting.LIGHT_PURPLE +
-            UtilTileEntity.lang("chat.main.emptyslots") + tileMain.nw.emptySlots()),
-        playerIn.getUUID());
-    playerIn.sendMessage(new TranslatableComponent(ChatFormatting.DARK_AQUA +
-        UtilTileEntity.lang("chat.main.connectables") + total), playerIn.getUUID());
+    playerIn.sendSystemMessage(
+        Component.translatable(ChatFormatting.LIGHT_PURPLE +
+            UtilTileEntity.lang("chat.main.emptyslots") + tileMain.nw.emptySlots()));
+    playerIn.sendSystemMessage(Component.translatable(ChatFormatting.DARK_AQUA +
+        UtilTileEntity.lang("chat.main.connectables") + total));
     List<Entry<String, Integer>> listDisplayStrings = tileMain.nw.getDisplayStrings();
     for (Entry<String, Integer> e : listDisplayStrings) {
-      playerIn.sendMessage(new TranslatableComponent(ChatFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()), playerIn.getUUID());
+      playerIn.sendSystemMessage(Component.translatable(ChatFormatting.AQUA + "    " + e.getValue() + ": " + e.getKey()));
     }
   }
 

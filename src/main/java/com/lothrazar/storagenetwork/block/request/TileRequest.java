@@ -12,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -96,7 +95,7 @@ public class TileRequest extends TileConnectable implements MenuProvider, ITileN
 
   @Override
   public Component getDisplayName() {
-    return new TranslatableComponent(getType().getRegistryName().getPath());
+    return Component.translatable("block.storagenetwork.request");
   }
 
   @Override

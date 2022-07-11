@@ -24,7 +24,7 @@ import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -315,7 +315,7 @@ public class NetworkModule {
       p = iter.next();
       bl = p.getBlockState().getBlock();
       //getTranslatedName client only thanks mojang lol
-      blockName = (new TranslatableComponent(bl.getDescriptionId())).getString();
+      blockName = (Component.literal(bl.getDescriptionId())).getString();
       int count = mapNamesToCount.get(blockName) != null ? (mapNamesToCount.get(blockName) + 1) : 1;
       mapNamesToCount.put(blockName, count);
     }

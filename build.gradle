@@ -1,30 +1,21 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.minecraftforge.net/' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-    }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-// apply plugin: 'checkstyle'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 import net.minecraftforge.gradle.common.tasks.SignJar
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
+
 
 version = "${mc_version}-${mod_version}"
 group = 'com.lothrazar.storagenetwork' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'SimpleStorageNetwork'
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: '1.18.2'
+    mappings channel: 'official', version: '1.19'
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
@@ -73,13 +64,17 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
-    
-    implementation fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+		
+	compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
+	compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+	// at runtime, use the full JEI
+	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
+	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
+	  
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
 	
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
-
 
 }
 
@@ -92,7 +87,7 @@ repositories {
   }
   maven { url 'https://www.cursemaven.com'  }
   maven { url = "https://dvs1.progwml6.com/files/maven/"  }
-  maven { url = "https://modmaven.k-4u.nl"  }    
+  maven { url = "https://modmaven.dev"  }    
   maven { url = "https://maven.theillusivec4.top/"    }
   maven { url 'https://maven.blamejared.com' }    
 }

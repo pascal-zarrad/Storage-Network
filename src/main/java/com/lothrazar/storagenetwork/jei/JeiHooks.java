@@ -2,9 +2,7 @@ package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.mojang.blaze3d.platform.InputConstants;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.config.KeyBindings;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
@@ -22,7 +20,7 @@ public class JeiHooks {
       }
     }
     catch (Exception e) {
-      StorageNetworkMod.LOGGER.info(" mezz.jei.Internal not found " + e);
+      StorageNetworkMod.LOGGER.info(e);
     }
     return "";
   }
@@ -39,33 +37,57 @@ public class JeiHooks {
       }
     }
     catch (Exception e) {
-      StorageNetworkMod.LOGGER.info(" mezz.jei.Internal not found " + e);
+      StorageNetworkMod.LOGGER.info(e);
     }
   }
 
   private static void setJeiTextInternal(String s) {
-    mezz.jei.Internal.getRuntime().getIngredientFilter().setFilterText(s);
+    getRuntime().getIngredientFilter().setFilterText(s);
+  }
+
+  private static IJeiRuntime getRuntime() {
+    if (!isJeiLoaded()) {
+      return null;
+    }
+    try {
+      return JeiPlugin.runtime;
+    }
+    catch (Exception e) {
+      return null;
+    }
   }
 
   private static String getJeiTextInternal() {
-    return mezz.jei.Internal.getRuntime().getIngredientFilter().getFilterText();
+    return getRuntime().getIngredientFilter().getFilterText();
   }
 
   public static void testJeiKeybind(InputConstants.Key keyCode, ItemStack stackUnderMouse) {
-    if (!isJeiLoaded()) {
-      return;
+    try {
+      if (!isJeiLoaded() || getRuntime() == null) {
+        return;
+      }
+      if (stackUnderMouse.is(Items.AIR)) {
+        return;
+      }
+      // old 1.18 way
+      //  final boolean showRecipe =  KeyBindings.showRecipe.get(0).isActiveAndMatches(keyCode) || KeyBindings.showRecipe.get(1).isActiveAndMatches(keyCode);
+      //  final boolean showUses =  KeyBindings.showUses.get(0).isActiveAndMatches(keyCode) || KeyBindings.showUses.get(1).isActiveAndMatches(keyCode);
+      //      IRecipesGui gui = getRuntime().getRecipesGui();
+      //      IJeiHelpers helpers = getRuntime().getJeiHelpers();
+      //      //TODO: 
+      //      //problem: they are private final and non-static
+      //      //guess i have to build my own?? 
+      //      //      mezz.jei.common.config.KeyBindings b = null; // TODO find me new mezz.jei.common.config.KeyBindings();
+      //      final boolean showRecipe = false;//b.getShowRecipe().get(0).isActiveAndMatches(keyCode) || b.getShowRecipe().get(1).isActiveAndMatches(keyCode);
+      //      final boolean showUses = false;//b.getShowUses().get(0).isActiveAndMatches(keyCode) || b.getShowUses().get(1).isActiveAndMatches(keyCode);
+      //      if (showRecipe || showUses) {
+      //        RecipeIngredientRole mode = showRecipe ? RecipeIngredientRole.OUTPUT : RecipeIngredientRole.INPUT;
+      //        var focus = helpers.getFocusFactory().createFocus(mode, VanillaTypes.ITEM_STACK, stackUnderMouse);
+      //        gui.show(focus);
+      //      }
     }
-    if (stackUnderMouse.is(Items.AIR)) {
-      return;
-    }
-    final boolean showRecipe = KeyBindings.showRecipe.get(0).isActiveAndMatches(keyCode)
-        || KeyBindings.showRecipe.get(1).isActiveAndMatches(keyCode);
-    final boolean showUses = KeyBindings.showUses.get(0).isActiveAndMatches(keyCode)
-        || KeyBindings.showUses.get(1).isActiveAndMatches(keyCode);
-    if (showRecipe || showUses) {
-      RecipeIngredientRole mode = showRecipe ? RecipeIngredientRole.OUTPUT : RecipeIngredientRole.INPUT;
-      var focus = mezz.jei.Internal.getRuntime().getJeiHelpers().getFocusFactory().createFocus(mode, VanillaTypes.ITEM_STACK, stackUnderMouse);
-      mezz.jei.Internal.getRuntime().getRecipesGui().show(focus);
+    catch (Exception e) {
+      // JEI not installed i guess lol
     }
   }
 }

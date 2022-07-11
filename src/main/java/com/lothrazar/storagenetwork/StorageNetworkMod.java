@@ -16,7 +16,6 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnEvents;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.InterModComms;
@@ -61,7 +60,8 @@ public class StorageNetworkMod {
     MenuScreens.register(SsnRegistry.Menus.CRAFTING_REMOTE.get(), ScreenNetworkCraftingRemote::new);
     MenuScreens.register(SsnRegistry.Menus.INVENTORY.get(), ScreenNetworkInventory::new);
     MenuScreens.register(SsnRegistry.Menus.COLLECTOR.get(), ScreenCollectionFilter::new);
-    ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
+    //    ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
+    System.out.println("TODO KeyRegistry is dynamic now!@!" + ClientEventRegistry.INVENTORY_KEY);
   }
 
   public static void log(String s) {

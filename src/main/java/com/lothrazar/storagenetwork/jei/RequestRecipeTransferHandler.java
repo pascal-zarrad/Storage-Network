@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 import com.lothrazar.storagenetwork.network.RecipeMessage;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.ingredient.IRecipeSlotView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
 import net.minecraft.nbt.CompoundTag;
@@ -18,25 +20,13 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 
-public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> implements IRecipeTransferHandler<C, CraftingRecipe> {
+/**
+ * https://github.com/mezz/JustEnoughItems/blob/1.19/Common/src/main/java/mezz/jei/common/transfer/BasicRecipeTransferHandler.java
+ * 
+ * NEW in mc1.19: abstract class to override in the Plugin during registration
+ */
+public abstract class RequestRecipeTransferHandler<C extends AbstractContainerMenu> implements IRecipeTransferHandler<C, CraftingRecipe> {
 
-  private Class<C> clazz;
-
-  public RequestRecipeTransferHandler(Class<C> clazz) {
-    this.clazz = clazz;
-  }
-
-  @Override
-  public Class<C> getContainerClass() {
-    return clazz;
-  }
-
-  @Override
-  public Class<CraftingRecipe> getRecipeClass() {
-    return CraftingRecipe.class;
-  }
-
-  //  IRecipeTransferError transferRecipe(C container, CraftingRecipe recipe, IRecipeLayout recipeLayout, Player player, boolean maxTransfer, boolean doTransfer)
   @Override
   public IRecipeTransferError transferRecipe(C c, CraftingRecipe recipe, IRecipeSlotsView recipeSlots, Player playerEntity,
       boolean maxTransfer, boolean doTransfer) {
@@ -78,5 +68,10 @@ public class RequestRecipeTransferHandler<C extends AbstractContainerMenu> imple
       }
     }
     return nbt;
+  }
+
+  @Override
+  public RecipeType<CraftingRecipe> getRecipeType() {
+    return RecipeTypes.CRAFTING;
   }
 }
