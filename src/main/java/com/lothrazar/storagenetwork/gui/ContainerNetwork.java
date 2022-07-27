@@ -238,8 +238,8 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
           slot = new ItemStack(slot.getItem().getCraftingRemainingItem());
           matrix.setItem(i, slot);
         }
-        else if (!slot.getItem().getContainerItem(slot).isEmpty()) { //is the fix for milk and similar
-          slot = slot.getItem().getContainerItem(slot);
+        else if (!slot.getItem().getCraftingRemainingItem(slot).isEmpty()) { //is the fix for milk and similar
+          slot = slot.getItem().getCraftingRemainingItem(slot);
           matrix.setItem(i, slot);
         }
         else if (!remainderCurrent.isEmpty()) {

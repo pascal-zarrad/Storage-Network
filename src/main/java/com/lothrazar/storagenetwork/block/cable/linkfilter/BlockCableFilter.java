@@ -39,7 +39,7 @@ public class BlockCableFilter extends BlockCable {
       if (tile instanceof MenuProvider) {
         ServerPlayer player = (ServerPlayer) playerIn;
         player.connection.send(tile.getUpdatePacket());
-        NetworkHooks.openGui(player, (MenuProvider) tile, tile.getBlockPos());
+        NetworkHooks.openScreen(player, (MenuProvider) tile, tile.getBlockPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!" + tile);

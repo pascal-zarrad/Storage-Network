@@ -3,7 +3,7 @@
 	"promos": {
 		"1.18.1-latest": "1.6.0",
 		"1.18.2-latest": "1.6.2",
-		"1.19-latest": "1.6.9"
+		"1.19-latest": "1.6.3"
 	},
 	"1.18.2": {
 		"1.4.1": "First port to 1.17.1 ",
@@ -17,7 +17,8 @@
 		"1.6.1": "Port to MC 1.18.2 by MrBysco, forge 40.0.15 and jei 9.5.0.132.  Added safety checks and workarounds and a config to catch when the screen size and GUI Scale gets too small and crashes seem to come from JEI (illegal negative numbers exceptions guiTop >= 0 check)",
 		"1.6.2": "Fixed item-routing cache feature, meaning as items get inserted (by player or cable) it tries to group them together with previous items in the same container when possible (still same logic as 1.12.2 version).  Refactor and clean up how cables connect on placement. Fix the visuals and the selection bounding box for cables sometimes not matching.  Updated to latest dependencies: forge=40.1.54  jei=9.7.0.209  curios=5.0.7.1  Remove/fix slot overlap patch for remotes on very small resolutions. Fix  java.lang.StackOverflowError connecting a Link Cable to a Network Exchange Interface #445 (these blocks now connect as blockstate=cable not =inventory). Optimize/remove redundant connection retries when blocks are placed. "
 	},
-	"1.19":{
-		"1.6.2":"Ported but only works with forge versions 41.0.0 -> 41.0.63-ish, higher versions have errors (next build after this will run with 41.0.85+).  Compiled on forge_version=41.0.62; jei_version=11.0.0.206; curios_version=5.1.0.1; patchouli_version=72"		
+	"1.19": {
+		"1.6.2": "Ported but only works with forge versions 41.0.0 -> 41.0.63-ish, higher versions have errors (next build after this will run with 41.0.85+).  Compiled on forge_version=41.0.62; jei_version=11.0.0.206; curios_version=5.1.0.1; patchouli_version=72",
+		"1.6.3": "Built on forge=41.0.98+  jei=11.0.0.222+  curios=5.1.0.4+   patchouli=74+"
 	}
 }

@@ -150,7 +150,7 @@ public class ItemStorageCraftingRemote extends Item implements MenuProvider {
     }
     BlockEntity tile = serverTargetWorld.getBlockEntity(posTarget);
     if (tile instanceof TileMain) {
-      NetworkHooks.openGui((ServerPlayer) player, thiss);
+      NetworkHooks.openScreen((ServerPlayer) player, thiss);
       return true;
     }
     else {

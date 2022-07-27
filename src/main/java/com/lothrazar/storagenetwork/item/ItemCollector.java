@@ -43,11 +43,11 @@ public class ItemCollector extends Item {
 
   // not subscribe, called from SsnEvents.java 
   public void onEntityItemPickupEvent(EntityItemPickupEvent event) {
-    if (event.getEntityLiving() instanceof Player &&
+    if (event.getEntity() instanceof Player &&
         event.getItem() != null &&
         event.getItem().getItem().isEmpty() == false) {
       ItemStack item = event.getItem().getItem();
-      Player player = (Player) event.getEntityLiving();
+      Player player = event.getEntity();
       Level world = player.level;
       DimPos dp = DimPos.getPosStored(this.findAmmo(player, this));
       if (dp != null && !world.isClientSide) {

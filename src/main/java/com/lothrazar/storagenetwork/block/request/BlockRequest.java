@@ -73,7 +73,7 @@ public class BlockRequest extends BaseBlock {
       PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()), sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
       //end sync
       if (tile instanceof MenuProvider) {
-        NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tile, tile.getBlockPos());
+        NetworkHooks.openScreen((ServerPlayer) player, (MenuProvider) tile, tile.getBlockPos());
       }
       else {
         throw new IllegalStateException("Our named container provider is missing!");

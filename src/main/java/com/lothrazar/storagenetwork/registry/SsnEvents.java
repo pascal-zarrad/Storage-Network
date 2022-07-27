@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.registry;
 
 import com.lothrazar.storagenetwork.item.ItemBuilder;
 import com.lothrazar.storagenetwork.network.KeybindCurioMessage;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,7 +20,7 @@ public class SsnEvents {
   }
 
   @SubscribeEvent
-  public void onKeyInput(KeyInputEvent event) {
+  public void onKeyInput(InputEvent.Key event) {
     if (ClientEventRegistry.INVENTORY_KEY.consumeClick()) {
       //gogo client -> server event
       PacketRegistry.INSTANCE.sendToServer(new KeybindCurioMessage());
