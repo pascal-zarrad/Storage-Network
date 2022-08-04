@@ -2,7 +2,12 @@ package com.lothrazar.storagenetwork.jei;
 
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.mojang.blaze3d.platform.InputConstants;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.runtime.IJeiKeyMappings;
 import mezz.jei.api.runtime.IJeiRuntime;
+import mezz.jei.api.runtime.IRecipesGui;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
@@ -69,22 +74,16 @@ public class JeiHooks {
       if (stackUnderMouse.is(Items.AIR)) {
         return;
       }
-      // old 1.18 way
-      //  final boolean showRecipe =  KeyBindings.showRecipe.get(0).isActiveAndMatches(keyCode) || KeyBindings.showRecipe.get(1).isActiveAndMatches(keyCode);
-      //  final boolean showUses =  KeyBindings.showUses.get(0).isActiveAndMatches(keyCode) || KeyBindings.showUses.get(1).isActiveAndMatches(keyCode);
-      //      IRecipesGui gui = getRuntime().getRecipesGui();
-      //      IJeiHelpers helpers = getRuntime().getJeiHelpers();
-      //      //TODO: 
-      //      //problem: they are private final and non-static
-      //      //guess i have to build my own?? 
-      //      //      mezz.jei.common.config.KeyBindings b = null; // TODO find me new mezz.jei.common.config.KeyBindings();
-      //      final boolean showRecipe = false;//b.getShowRecipe().get(0).isActiveAndMatches(keyCode) || b.getShowRecipe().get(1).isActiveAndMatches(keyCode);
-      //      final boolean showUses = false;//b.getShowUses().get(0).isActiveAndMatches(keyCode) || b.getShowUses().get(1).isActiveAndMatches(keyCode);
-      //      if (showRecipe || showUses) {
-      //        RecipeIngredientRole mode = showRecipe ? RecipeIngredientRole.OUTPUT : RecipeIngredientRole.INPUT;
-      //        var focus = helpers.getFocusFactory().createFocus(mode, VanillaTypes.ITEM_STACK, stackUnderMouse);
-      //        gui.show(focus);
-      //      }
+      IJeiKeyMappings keys = getRuntime().getKeyMappings();
+      final boolean showRecipe = keys.getShowRecipe().isActiveAndMatches(keyCode); // || KeyBindings.showRecipe.get(1).isActiveAndMatches(keyCode);
+      final boolean showUses = keys.getShowUses().isActiveAndMatches(keyCode); // || KeyBindings.showUses.get(1).isActiveAndMatches(keyCode);
+      if (showRecipe || showUses) {
+        IRecipesGui gui = getRuntime().getRecipesGui();
+        IJeiHelpers helpers = getRuntime().getJeiHelpers();
+        RecipeIngredientRole mode = showRecipe ? RecipeIngredientRole.OUTPUT : RecipeIngredientRole.INPUT;
+        var focus = helpers.getFocusFactory().createFocus(mode, VanillaTypes.ITEM_STACK, stackUnderMouse);
+        gui.show(focus);
+      }
     }
     catch (Exception e) {
       // JEI not installed i guess lol
