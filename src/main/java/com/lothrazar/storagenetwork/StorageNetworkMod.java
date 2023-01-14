@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork;
 
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.export.ScreenCableExportFilter;
@@ -36,6 +37,7 @@ public class StorageNetworkMod {
   public StorageNetworkMod() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetworkMod::setup);
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerMapping);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.Tiles());
     MinecraftForge.EVENT_BUS.register(new SsnEvents());
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -60,8 +62,10 @@ public class StorageNetworkMod {
     MenuScreens.register(SsnRegistry.Menus.CRAFTING_REMOTE.get(), ScreenNetworkCraftingRemote::new);
     MenuScreens.register(SsnRegistry.Menus.INVENTORY.get(), ScreenNetworkInventory::new);
     MenuScreens.register(SsnRegistry.Menus.COLLECTOR.get(), ScreenCollectionFilter::new);
-    //    ClientRegistry.registerKeyBinding(ClientEventRegistry.INVENTORY_KEY);
-    System.out.println("TODO KeyRegistry is dynamic now!@!" + ClientEventRegistry.INVENTORY_KEY);
+  }
+
+  private void registerMapping(final RegisterKeyMappingsEvent event) {
+    event.register(ClientEventRegistry.INVENTORY_KEY);
   }
 
   public static void log(String s) {
