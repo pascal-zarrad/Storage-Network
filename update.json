@@ -3,7 +3,7 @@
 	"promos": {
 		"1.18.1-latest": "1.6.0",
 		"1.18.2-latest": "1.6.2",
-		"1.19-latest": "1.6.3"
+		"1.19-latest": "1.6.5"
 	},
 	"1.18.2": {
 		"1.4.1": "First port to 1.17.1 ",
@@ -20,5 +20,7 @@
 	"1.19": {
 		"1.6.2": "Ported but only works with forge versions 41.0.0 -> 41.0.63-ish, higher versions have errors (next build after this will run with 41.0.85+).  Compiled on forge_version=41.0.62; jei_version=11.0.0.206; curios_version=5.1.0.1; patchouli_version=72",
 		"1.6.3": "Built on forge=41.0.98+  jei=11.0.0.222+  curios=5.1.0.4+   patchouli=74+"
+		,"1.6.4":"Update to latest forge 41.1.0+ , Fixes for  JEI 11.1.1.239+"
+		,"1.6.5":"   Merge pull request #475 from Mrbysco/trunk/1.19    Fix the keybind not being registered"
 	}
 }
