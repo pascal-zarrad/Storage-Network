@@ -1,6 +1,8 @@
 package com.lothrazar.storagenetwork;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.fml.DistExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.export.ScreenCableExportFilter;
@@ -36,8 +38,6 @@ public class StorageNetworkMod {
 
   public StorageNetworkMod() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(StorageNetworkMod::setup);
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerMapping);
     MinecraftForge.EVENT_BUS.register(new SsnRegistry.Tiles());
     MinecraftForge.EVENT_BUS.register(new SsnEvents());
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -45,6 +45,12 @@ public class StorageNetworkMod {
     SsnRegistry.ITEMS.register(bus);
     SsnRegistry.TILES.register(bus);
     SsnRegistry.CONTAINERS.register(bus);
+
+
+    DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+      FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+      FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerMapping);
+    });
   }
 
   private static void setup(FMLCommonSetupEvent event) {
