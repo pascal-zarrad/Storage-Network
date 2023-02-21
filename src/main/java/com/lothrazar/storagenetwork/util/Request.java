@@ -22,6 +22,10 @@ public class Request {
         return count;
     }
 
+    public int getPriority() {
+        return storage.getPriority();
+    }
+
     public Boolean insertStack(IConnectableLink providerStorage, int slot) {
         ItemStack simulatedExtractedStack = providerStorage.extractFromSlot(slot, getCount(), true);
 

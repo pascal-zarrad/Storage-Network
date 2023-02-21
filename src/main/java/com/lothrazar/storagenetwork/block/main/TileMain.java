@@ -72,6 +72,7 @@ public class TileMain extends BlockEntity {
   }
 
   public void executeRequestBatch(RequestBatch batch) {
+    batch.sort();
     nw.executeRequestBatch(batch);
   }
 

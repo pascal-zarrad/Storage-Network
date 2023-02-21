@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.lothrazar.storagenetwork.api.IConnectableLink;
@@ -22,5 +23,41 @@ public class RequestBatch extends Batch<Request> {
             }
         }
         put(item, remainingRequests);
+    }
+
+    public void sort() {
+        Collection<List<Request>> requests = this.values();
+        for(List<Request> requestList : requests) {
+            quickSort(requestList, 0, requestList.size() - 1);
+        }
+    }
+
+    private void quickSort(List<Request> requestList, int start, int end) {
+        if (start < end) {
+            int partitionInd = partition(requestList, start, end);
+            quickSort(requestList, start, partitionInd - 1);
+            quickSort(requestList, partitionInd + 1, end);
+        }
+    }
+
+    private int partition(List<Request> requestList, int start, int end) {
+        int pivot = requestList.get(end).getPriority();
+        int i = (start - 1);
+        for (int j = start; j < end; j++) {
+            if (requestList.get(j).getPriority() <= pivot) {
+                i++;
+
+                Request highTemp = requestList.get(i);
+                Request lowTemp = requestList.get(j);
+                requestList.set(i, lowTemp);
+                requestList.set(j, highTemp);
+            }
+        }
+        Request swapTemp = requestList.get(i + 1);
+        Request temp = requestList.get(end);
+        requestList.set(i + 1, temp);
+        requestList.set(end, swapTemp);
+
+        return i + 1;
     }
 }
