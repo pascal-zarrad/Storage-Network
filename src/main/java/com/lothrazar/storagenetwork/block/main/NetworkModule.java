@@ -21,10 +21,14 @@ import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.util.StackProviderBatch;
+import com.lothrazar.storagenetwork.util.RequestBatch;
+import com.lothrazar.storagenetwork.util.StackProvider;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -300,6 +304,22 @@ public class NetworkModule {
       return ItemStack.EMPTY;
     }
     return ItemHandlerHelper.copyStackWithSize(usedMatcher.getStack(), alreadyTransferred);
+  }
+
+  public void executeRequestBatch(RequestBatch batch) {
+    StackProviderBatch availableItems = new StackProviderBatch();
+    for (IConnectableLink storage : getSortedConnectableStorage()) {
+      storage.addToStackProviderBatch(availableItems);
+    }
+
+    for (Item item : batch.keySet()) {
+      List<StackProvider> availableStacks = availableItems.get(item);
+      if (availableStacks != null) {
+        for (StackProvider provider : availableStacks) {
+          batch.extractStacks(provider.getStorage(), provider.getSlot(), item);
+        }
+      }
+    }
   }
 
   /**

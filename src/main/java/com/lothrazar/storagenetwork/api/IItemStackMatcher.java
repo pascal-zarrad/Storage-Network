@@ -23,4 +23,6 @@ public interface IItemStackMatcher {
    * @return
    */
   boolean match(ItemStack stack);
+
+  boolean match(IItemStackMatcher matcher);
 }

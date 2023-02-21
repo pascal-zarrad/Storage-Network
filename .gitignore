@@ -32,3 +32,4 @@ crash-reports/
 *.lnk
 *.jks
 secret.properties
+.vscode
