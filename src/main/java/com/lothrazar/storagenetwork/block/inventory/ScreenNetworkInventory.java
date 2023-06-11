@@ -195,7 +195,7 @@ public class ScreenNetworkInventory extends AbstractContainerScreen<ContainerNet
       }
       return true;
     }
-    else if (network.stackUnderMouse.isEmpty()) {
+    else if (!network.stackUnderMouse.isEmpty()) {
       try {
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }
