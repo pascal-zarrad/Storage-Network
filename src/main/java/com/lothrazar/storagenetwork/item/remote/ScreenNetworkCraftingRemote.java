@@ -201,7 +201,7 @@ public class ScreenNetworkCraftingRemote extends AbstractContainerScreen<Contain
       network.searchBar.keyPressed(keyCode, scanCode, b);
       return true;
     }
-    else if (network.stackUnderMouse.isEmpty()) {
+    else if (!network.stackUnderMouse.isEmpty()) {
       try {
         JeiHooks.testJeiKeybind(mouseKey, network.stackUnderMouse);
       }

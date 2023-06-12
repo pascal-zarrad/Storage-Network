@@ -364,4 +364,9 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
   public UpgradesItemStackHandler getUpgrades() {
     return upgrades;
   }
+
+  public void extractFromSlot(int slot){
+    
+  }
+
 }

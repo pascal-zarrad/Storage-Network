@@ -55,3 +55,9 @@ Storage Network to connect inventories to search and craft
     versionRange="[1.19.3,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.storagenetwork]]
+    modId="jei"
+    mandatory=false
+    versionRange="[12.1,)"
+    ordering="NONE"
+    side="BOTH"
