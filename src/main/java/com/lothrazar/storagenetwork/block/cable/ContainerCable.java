@@ -19,7 +19,7 @@ public abstract class ContainerCable extends AbstractContainerMenu {
 
   protected void bindPlayerInvo(Inventory playerInv) {
     this.player = playerInv.player;
-    this.world = player.level;
+    this.world = player.level();
     //player inventory
     for (int i = 0; i < 3; ++i) {
       for (int j = 0; j < 9; ++j) {

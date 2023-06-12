@@ -47,19 +47,19 @@ public class UtilTileEntity {
   }
 
   public static void chatMessage(Player player, String message) {
-    if (player.level.isClientSide) {
+    if (player.level().isClientSide) {
       player.sendSystemMessage(Component.translatable(message));
     }
   }
 
   public static void statusMessage(Player player, BlockState bs) {
-    if (player.level.isClientSide) {
+    if (player.level().isClientSide) {
       player.displayClientMessage(Component.translatable(bs.getBlock().getName().getString()), true);
     }
   }
 
   public static void statusMessage(Player player, String message) {
-    if (player.level.isClientSide) {
+    if (player.level().isClientSide) {
       player.displayClientMessage(Component.translatable(message), true);
     }
   }

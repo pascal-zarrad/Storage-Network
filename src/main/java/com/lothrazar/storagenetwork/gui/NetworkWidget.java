@@ -18,9 +18,9 @@ import com.lothrazar.storagenetwork.network.InsertMessage;
 import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -212,7 +212,7 @@ public class NetworkWidget {
     }
   }
 
-  public void drawGuiContainerForegroundLayer(PoseStack ms, int mouseX, int mouseY, Font font) {
+  public void drawGuiContainerForegroundLayer(GuiGraphics ms, int mouseX, int mouseY, Font font) {
     for (ItemSlotNetwork slot : slots) {
       if (slot != null && slot.isMouseOverSlot(mouseX, mouseY)) {
         slot.drawTooltip(ms, mouseX, mouseY);
@@ -244,19 +244,19 @@ public class NetworkWidget {
         lis.add(Component.translatable("gui.storagenetwork.fil.tooltip_tooltip")); //#
         lis.add(Component.translatable("gui.storagenetwork.fil.tooltip_tags")); //$
         lis.add(Component.translatable("gui.storagenetwork.fil.tooltip_clear")); //clear
-        Screen screen = ((Screen) gui);
-        screen.renderTooltip(ms, lis, Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTopFixJei());
+        //        Screen screen = ((Screen) gui);
+        ms.renderTooltip(font, lis, Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTopFixJei());
         return; // all done, we have our tts rendered
       }
     }
     //do we have a tooltip
     if (tooltip != null) {
-      Screen screen = ((Screen) gui);
-      screen.renderTooltip(ms, Lists.newArrayList(tooltip), Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTopFixJei());
+      //      Screen screen = ((Screen) gui);
+      ms.renderTooltip(font, Lists.newArrayList(tooltip), Optional.empty(), mouseX - gui.getGuiLeft(), mouseY - gui.getGuiTopFixJei());
     }
   }
 
-  public void renderItemSlots(PoseStack ms, int mouseX, int mouseY, Font font) {
+  public void renderItemSlots(GuiGraphics ms, int mouseX, int mouseY, Font font) {
     stackUnderMouse = ItemStack.EMPTY;
     for (ItemSlotNetwork slot : slots) {
       slot.drawSlot(ms, font, mouseX, mouseY);

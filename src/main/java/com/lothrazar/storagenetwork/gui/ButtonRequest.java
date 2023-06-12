@@ -3,8 +3,8 @@ package com.lothrazar.storagenetwork.gui;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -108,7 +108,7 @@ public class ButtonRequest extends Button {
   }
 
   @Override
-  public void render(PoseStack ms, int mx, int my, float pt) {
+  public void render(GuiGraphics ms, int mx, int my, float pt) {
     super.render(ms, mx, my, pt);
   }
 
@@ -124,7 +124,7 @@ public class ButtonRequest extends Button {
   }
 
   @Override
-  public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partial) {
+  public void renderWidget(GuiGraphics ms, int mouseX, int mouseY, float partial) {
     super.renderWidget(ms, mouseX, mouseY, partial);
     //    Minecraft minecraft = Minecraft.getInstance();
     //    minecraft.getTextureManager().bind(getTexture());
@@ -134,16 +134,16 @@ public class ButtonRequest extends Button {
     RenderSystem.enableBlend();
     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
     RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-    blit(ms, this.getX(), this.getY(),
+    ms.blit(getTexture(), this.getX(), this.getY(),
         160 + SIZE * k, 52,
         width, height);
     if (textureId != null) {
-      blit(ms, this.getX(), this.getY(),
+      ms.blit(getTexture(), this.getX(), this.getY(),
           textureId.getX(), textureId.getY(),
           width, height);
     }
     else {
-      drawCenteredString(ms, Minecraft.getInstance().font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 2210752);
+      ms.drawCenteredString(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 2210752);
     }
   }
 

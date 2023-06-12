@@ -66,7 +66,7 @@ public class ItemBuilder extends Item {
       UtilTileEntity.statusMessage(player, "item.remote.connected");
       return InteractionResult.SUCCESS;
     }
-    else if (world.isEmptyBlock(buildAt) || world.getBlockState(buildAt).getMaterial().isLiquid()) {
+    else if (world.isEmptyBlock(buildAt) || world.getBlockState(buildAt).liquid()) {
       player.swing(hand);
       ItemStack stack = player.getItemInHand(hand);
       //succeed or fail
@@ -107,7 +107,7 @@ public class ItemBuilder extends Item {
 
   private boolean placeStateSafe(Level world, Player player, BlockPos placePos, BlockState placeState) {
     BlockState stateHere = world.getBlockState(placePos);
-    if (stateHere.getBlock() == Blocks.AIR || stateHere.getMaterial().isLiquid()) {
+    if (stateHere.getBlock() == Blocks.AIR || stateHere.liquid()) {
       return world.setBlock(placePos, placeState, 3);
     }
     return false;

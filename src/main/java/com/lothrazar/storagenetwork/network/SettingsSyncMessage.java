@@ -37,7 +37,7 @@ public class SettingsSyncMessage {
       ServerPlayer player = ctx.get().getSender();
       //TODO: how to refactor this
       if (message.targetTileEntity) {
-        BlockEntity tileEntity = player.level.getBlockEntity(message.pos);
+        BlockEntity tileEntity = player.level().getBlockEntity(message.pos);
         if (tileEntity instanceof ITileNetworkSync) {
           ITileNetworkSync tile = (ITileNetworkSync) tileEntity;
           tile.setSort(message.sort);

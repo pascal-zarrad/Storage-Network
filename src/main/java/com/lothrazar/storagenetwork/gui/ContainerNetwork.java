@@ -102,7 +102,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
     }
     super.slotsChanged(inventoryIn);
     this.recipeCurrent = null;
-    findMatchingRecipe(this.containerId, this.player.level, this.player, this.matrix, this.resultInventory);
+    findMatchingRecipe(this.containerId, this.player.level(), this.player, this.matrix, this.resultInventory);
   }
 
   //it runs on server tho
@@ -135,7 +135,8 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
 
   @Override
   public ItemStack quickMoveStack(Player playerIn, int slotIndex) {
-    if (playerIn.level.isClientSide) {
+    Level level = playerIn.level();
+    if (level.isClientSide) {
       return ItemStack.EMPTY;
     }
     ItemStack itemstack = ItemStack.EMPTY;
@@ -192,7 +193,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
       return;
     }
     recipeCurrent = null;
-    Level level = player.level;
+    Level level = player.level();
     this.findMatchingRecipeClient(level, this.matrix, this.resultInventory);
     if (recipeCurrent == null) {
       return;
@@ -247,11 +248,11 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
           if (slot.isEmpty()) {
             this.matrix.setItem(i, remainderCurrent);
           }
-          else if (ItemStack.isSame(slot, remainderCurrent) && ItemStack.tagMatches(slot, remainderCurrent)) {
+          else if (ItemStack.matches(slot, remainderCurrent) && ItemStack.isSameItemSameTags(slot, remainderCurrent)) {
             remainderCurrent.grow(slot.getCount());
             this.matrix.setItem(i, remainderCurrent);
           }
-          else if (ItemStack.isSame(slot, remainderCurrent)) { //isSameIgnoreDurability
+          else if (ItemStack.isSameItem(slot, remainderCurrent)) { //isSameIgnoreDurability
             //crafting that consumes durability
             this.matrix.setItem(i, remainderCurrent);
           }

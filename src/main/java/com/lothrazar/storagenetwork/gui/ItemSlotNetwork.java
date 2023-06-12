@@ -4,8 +4,8 @@ import com.lothrazar.storagenetwork.api.IGuiPrivate;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,7 +40,7 @@ public class ItemSlotNetwork {
     return parent.isInRegion(x - guiLeft, y - guiTop, 16, 16, mouseX, mouseY);
   }
 
-  public void drawSlot(PoseStack poseStack, Font font, int mx, int my) {
+  public void drawSlot(GuiGraphics poseStack, Font font, int mx, int my) {
     if (!getStack().isEmpty()) {
       //      poseStack.pushPose();
       String amount;
@@ -60,7 +60,8 @@ public class ItemSlotNetwork {
       viewModelPose.translate(-1 * x, -1 * y, 0);
       RenderSystem.applyModelViewMatrix();
       if (isShowNumbers() && size > 1) {
-        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(poseStack, font, stack, x, y, amount);
+        poseStack.renderItem(stack, x, y);
+        //        Minecraft.getInstance().getItemRenderer().render(poseStack, ItemDisplayContext.gu,font, stack, x, y, amount);
       }
       viewModelPose.popPose();
       RenderSystem.applyModelViewMatrix();
@@ -68,14 +69,16 @@ public class ItemSlotNetwork {
         int j1 = x;
         int k1 = y;
         RenderSystem.colorMask(true, true, true, false);
-        parent.drawGradient(poseStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+        poseStack.fillGradient(j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
+        //        parent.drawGradient(poseStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
         RenderSystem.colorMask(true, true, true, true);
       }
-      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(poseStack, getStack(), x, y);
+      poseStack.renderItem(stack, x, y);
+      //      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(poseStack, getStack(), x, y);
     }
   }
 
-  public void drawTooltip(PoseStack ms, int mx, int my) {
+  public void drawTooltip(GuiGraphics ms, int mx, int my) {
     if (isMouseOverSlot(mx, my) && !getStack().isEmpty()) {
       parent.renderStackTooltip(ms, getStack(),
           mx - parent.getGuiLeft(),

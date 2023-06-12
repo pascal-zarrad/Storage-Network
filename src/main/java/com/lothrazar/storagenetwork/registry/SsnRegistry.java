@@ -117,22 +117,22 @@ public class SsnRegistry {
   public static class Menus {
 
     public static final RegistryObject<MenuType<ContainerNetworkCraftingTable>> REQUEST = CONTAINERS.register("request", () -> IForgeMenuType.create((windowId, inv, data) -> {
-      return new ContainerNetworkCraftingTable(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+      return new ContainerNetworkCraftingTable(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }));
     public static final RegistryObject<MenuType<ContainerCollectionFilter>> COLLECTOR = CONTAINERS.register("collector", () -> IForgeMenuType.create((windowId, inv, data) -> {
-      return new ContainerCollectionFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+      return new ContainerCollectionFilter(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }));
     public static final RegistryObject<MenuType<ContainerCableFilter>> FILTER_KABEL = CONTAINERS.register("filter_kabel", () -> IForgeMenuType.create((windowId, inv, data) -> {
-      return new ContainerCableFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+      return new ContainerCableFilter(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }));
     public static final RegistryObject<MenuType<ContainerCableImportFilter>> IMPORT_FILTER_KABEL = CONTAINERS.register("import_filter_kabel", () -> IForgeMenuType.create((windowId, inv, data) -> {
-      return new ContainerCableImportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+      return new ContainerCableImportFilter(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }));
     public static final RegistryObject<MenuType<ContainerCableExportFilter>> EXPORT_KABEL = CONTAINERS.register("export_kabel", () -> IForgeMenuType.create((windowId, inv, data) -> {
-      return new ContainerCableExportFilter(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+      return new ContainerCableExportFilter(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }));
     public static final RegistryObject<MenuType<ContainerNetworkInventory>> INVENTORY = CONTAINERS.register("inventory", () -> IForgeMenuType.create((windowId, inv, data) -> {
-      return new ContainerNetworkInventory(windowId, inv.player.level, data.readBlockPos(), inv, inv.player);
+      return new ContainerNetworkInventory(windowId, inv.player.level(), data.readBlockPos(), inv, inv.player);
     }));
     public static final RegistryObject<MenuType<ContainerNetworkRemote>> INVENTORY_REMOTE = CONTAINERS.register("inventory_remote", () -> IForgeMenuType.create((windowId, inv, data) -> {
       return new ContainerNetworkRemote(windowId, inv.player.getInventory());

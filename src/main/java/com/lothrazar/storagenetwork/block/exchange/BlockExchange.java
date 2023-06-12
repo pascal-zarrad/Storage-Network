@@ -17,12 +17,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 
 public class BlockExchange extends BaseBlock {
 
   public BlockExchange() {
-    super(Block.Properties.of(Material.METAL).strength(0.5F).sound(SoundType.STONE));
+    super(Block.Properties.of().strength(0.5F).sound(SoundType.STONE));
   }
 
   @Override

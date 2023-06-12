@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 
 public interface IGuiPrivate {
@@ -20,7 +20,7 @@ public interface IGuiPrivate {
 
   boolean isInRegion(int x, int y, int width, int height, double mouseX, double mouseY);
 
-  void drawGradient(PoseStack ms, int j1, int k1, int i, int j, int k, int l);
+  void drawGradient(GuiGraphics ms, int j1, int k1, int i, int j, int k, int l);
 
-  void renderStackTooltip(PoseStack ms, ItemStack stack, int i, int j);
+  void renderStackTooltip(GuiGraphics ms, ItemStack stack, int i, int j);
 }

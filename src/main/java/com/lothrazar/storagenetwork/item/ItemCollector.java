@@ -48,7 +48,7 @@ public class ItemCollector extends Item {
         event.getItem().getItem().isEmpty() == false) {
       ItemStack item = event.getItem().getItem();
       Player player = event.getEntity();
-      Level world = player.level;
+      Level world = player.level();
       DimPos dp = DimPos.getPosStored(this.findAmmo(player, this));
       if (dp != null && !world.isClientSide) {
         ServerLevel serverTargetWorld = DimPos.stringDimensionLookup(dp.getDimension(), world.getServer());

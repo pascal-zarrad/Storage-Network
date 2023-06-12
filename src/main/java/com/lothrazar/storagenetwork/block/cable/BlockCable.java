@@ -33,7 +33,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -45,7 +44,7 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
   public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
   public BlockCable() {
-    super(Block.Properties.of(Material.STONE).strength(0.2F));
+    super(Block.Properties.of().strength(0.2F));
     registerDefaultState(stateDefinition.any()
         .setValue(NORTH, EnumConnectType.NONE).setValue(EAST, EnumConnectType.NONE)
         .setValue(SOUTH, EnumConnectType.NONE).setValue(WEST, EnumConnectType.NONE)

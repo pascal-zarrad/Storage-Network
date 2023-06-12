@@ -1,7 +1,7 @@
 plugins {
     id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -9,12 +9,18 @@ import net.minecraftforge.gradle.common.tasks.SignJar
 
 version = "${mc_version}-${mod_version}"
 group = 'com.lothrazar.storagenetwork' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+
+
 archivesBaseName = 'SimpleStorageNetwork'
 
+base {
+    archivesName = 'SimpleStorageNetwork'
+}
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: 'official', version: "${mc_version}"
-
+    copyIdeResources = true
+	enableEclipsePrepareRuns = true
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     
@@ -30,6 +36,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 		        properties 'mixin.env.disableRefMap': 'true'
+            property 'forge.enabledGameTestNamespaces', mod_id
 
             mods {
                 storagenetwork {
@@ -48,6 +55,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 		        properties 'mixin.env.disableRefMap': 'true'
 
+            property 'forge.enabledGameTestNamespaces', mod_id
             mods {
                 storagenetwork {
                     source sourceSets.main
@@ -70,7 +78,9 @@ dependencies {
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-common:${jei_version}")
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
 	  
-    implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
+
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 	
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api") //TODO  actual version when it releases
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
@@ -99,6 +109,13 @@ repositories {
   maven { url = "https://maven.theillusivec4.top/"    }
   maven { url 'https://maven.blamejared.com' }    
 }
+
+def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+def replaceProperties = [
+        mod_id: mod_id,  mod_version: mod_version
+      
+]
+
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
@@ -106,8 +123,8 @@ jar {
             "Specification-Title": "storagenetwork",
             "Specification-Vendor": "storagenetworksareus",
             "Specification-Version": "1", // We are version 1 of ourselves
-            "Implementation-Title": project.name,
-            "Implementation-Version": "${version}",
+			"Implementation-Title"    : project.name,
+			"Implementation-Version"  : project.jar.archiveVersion,
             "Implementation-Vendor" :"storagenetworksareus",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])

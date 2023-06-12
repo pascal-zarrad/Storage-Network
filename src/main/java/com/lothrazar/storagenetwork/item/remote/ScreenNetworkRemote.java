@@ -9,11 +9,9 @@ import com.lothrazar.storagenetwork.jei.JeiHooks;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -42,8 +40,9 @@ public class ScreenNetworkRemote extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
-  public void renderStackTooltip(PoseStack ms, ItemStack stack, int mousex, int mousey) {
-    super.renderTooltip(ms, stack, mousex, mousey);
+  public void renderStackTooltip(GuiGraphics ms, ItemStack stack, int mousex, int mousey) {
+    //  stack,
+    super.renderTooltip(ms, mousex, mousey);
   }
 
   @Override
@@ -113,7 +112,7 @@ public class ScreenNetworkRemote extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
-  public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+  public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
     this.renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
     this.renderTooltip(ms, mouseX, mouseY);
@@ -122,19 +121,19 @@ public class ScreenNetworkRemote extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
-  protected void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+  protected void renderBg(GuiGraphics ms, float partialTicks, int mouseX, int mouseY) {
     //    this.minecraft.getTextureManager().bind(texture);
-    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    RenderSystem.setShaderTexture(0, texture);
+    //    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    //    RenderSystem.setShaderTexture(0, texture);
     int k = (this.width - this.imageWidth) / 2;
     int l = (this.height - this.imageHeight) / 2;
-    blit(ms, k, l, 0, 0, this.imageWidth, this.imageHeight);
+    ms.blit(texture, k, l, 0, 0, this.imageWidth, this.imageHeight);
     network.applySearchTextToSlots();
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
   @Override
-  public void renderLabels(PoseStack ms, int mouseX, int mouseY) {
+  public void renderLabels(GuiGraphics ms, int mouseX, int mouseY) {
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 
@@ -202,8 +201,8 @@ public class ScreenNetworkRemote extends AbstractContainerScreen<ContainerNetwor
   }
 
   @Override
-  public void drawGradient(PoseStack ms, int x, int y, int x2, int y2, int u, int v) {
-    super.fillGradient(ms, x, y, x2, y2, u, v);
+  public void drawGradient(GuiGraphics ms, int x, int y, int x2, int y2, int u, int v) {
+    ms.fillGradient(x, y, x2, y2, u, v);
   }
 
   @Override

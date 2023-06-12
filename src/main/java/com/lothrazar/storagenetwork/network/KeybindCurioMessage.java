@@ -18,7 +18,7 @@ public class KeybindCurioMessage {
   public static void handle(KeybindCurioMessage message, Supplier<NetworkEvent.Context> ctx) {
     ctx.get().enqueueWork(() -> {
       ServerPlayer player = ctx.get().getSender();
-      ServerLevel serverWorld = player.getLevel();
+      ServerLevel serverWorld = (ServerLevel) player.level();
       Triple<String, Integer, ItemStack> searchCrafting = UtilInventory.getCurioRemote(player, SsnRegistry.Items.CRAFTING_REMOTE.get());
       ItemStack craftingRemote = searchCrafting.getRight();
       if (!craftingRemote.isEmpty()) {

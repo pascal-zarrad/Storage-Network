@@ -20,8 +20,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     this.nbt = nbt;
   }
 
-  private ItemStackMatcher() {
-  }
+  private ItemStackMatcher() {}
 
   public void readFromNBT(CompoundTag compound) {
     CompoundTag c = (CompoundTag) compound.get("stack");
@@ -80,7 +79,7 @@ public class ItemStackMatcher implements IItemStackMatcher {
     if (stackIn.isEmpty()) {
       return false;
     }
-    if (nbt && !ItemStack.tagMatches(stack, stackIn)) {
+    if (nbt && !ItemStack.isSameItemSameTags(stack, stackIn)) {
       return false;
     }
     return stackIn.getItem() == stack.getItem();

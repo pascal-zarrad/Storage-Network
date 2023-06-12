@@ -1,4 +1,2 @@
 package com.lothrazar.storagenetwork.util;
-
-public class StackProviderBatch extends Batch<StackProvider> {
-}
+public class StackProviderBatch extends Batch<StackProvider> {}

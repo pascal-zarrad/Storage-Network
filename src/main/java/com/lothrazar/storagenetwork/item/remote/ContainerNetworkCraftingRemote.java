@@ -35,7 +35,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
       StorageNetworkMod.LOGGER.error("Remote opening with null pos Stored {} ", remote);
     }
     else {
-      this.root = dp.getTileEntity(TileMain.class, player.level);
+      this.root = dp.getTileEntity(TileMain.class, player.level());
     }
     matrix = new NetworkCraftingInventory(this, matrixStacks);
     this.playerInv = pInv;
@@ -58,7 +58,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
     if (root == null) {
       DimPos dp = DimPos.getPosStored(remote);
       if (dp != null) {
-        root = dp.getTileEntity(TileMain.class, player.level);
+        root = dp.getTileEntity(TileMain.class, player.level());
       }
     }
     return root;
@@ -78,7 +78,7 @@ public class ContainerNetworkCraftingRemote extends ContainerNetwork {
   public void removed(Player playerIn) {
     super.removed(playerIn);
     for (int i = 0; i < matrix.getContainerSize(); i++) {
-      UtilInventory.dropItem(player.level, playerIn.blockPosition(), matrix.getItem(i));
+      UtilInventory.dropItem(player.level(), playerIn.blockPosition(), matrix.getItem(i));
     }
   }
 

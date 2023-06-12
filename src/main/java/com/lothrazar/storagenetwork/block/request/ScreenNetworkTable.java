@@ -11,11 +11,9 @@ import com.lothrazar.storagenetwork.network.RequestMessage;
 import com.lothrazar.storagenetwork.network.SettingsSyncMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -44,8 +42,8 @@ public class ScreenNetworkTable extends AbstractContainerScreen<ContainerNetwork
   }
 
   @Override
-  public void drawGradient(PoseStack ms, int x, int y, int x2, int y2, int u, int v) {
-    super.fillGradient(ms, x, y, x2, y2, u, v);
+  public void drawGradient(GuiGraphics ms, int x, int y, int x2, int y2, int u, int v) {
+    ms.fillGradient(x, y, x2, y2, u, v);
   }
 
   @Override
@@ -54,8 +52,8 @@ public class ScreenNetworkTable extends AbstractContainerScreen<ContainerNetwork
   }
 
   @Override
-  public void renderStackTooltip(PoseStack ms, ItemStack stack, int mousex, int mousey) {
-    super.renderTooltip(ms, stack, mousex, mousey);
+  public void renderStackTooltip(GuiGraphics ms, ItemStack stack, int mousex, int mousey) {
+    ms.renderTooltip(font, stack, mousex, mousey);
   }
 
   @Override
@@ -85,7 +83,7 @@ public class ScreenNetworkTable extends AbstractContainerScreen<ContainerNetwork
   }
 
   @Override
-  public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+  public void render(GuiGraphics ms, int mouseX, int mouseY, float partialTicks) {
     renderBackground(ms);
     super.render(ms, mouseX, mouseY, partialTicks);
     this.renderTooltip(ms, mouseX, mouseY);
@@ -133,20 +131,20 @@ public class ScreenNetworkTable extends AbstractContainerScreen<ContainerNetwork
   }
 
   @Override
-  public void renderBg(PoseStack ms, float partialTicks, int mouseX, int mouseY) {
+  public void renderBg(GuiGraphics ms, float partialTicks, int mouseX, int mouseY) {
     //    minecraft.getTextureManager().bind(texture);
-    RenderSystem.setShader(GameRenderer::getPositionTexShader);
-    RenderSystem.setShaderTexture(0, texture);
+    //    RenderSystem.setShader(GameRenderer::getPositionTexShader);
+    //    RenderSystem.setShaderTexture(0, texture);
     int xCenter = (width - imageWidth) / 2;
     int yCenter = (height - imageHeight) / 2;
-    blit(ms, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
+    ms.blit(texture, xCenter, yCenter, 0, 0, imageWidth, imageHeight);
     //good stuff
     network.applySearchTextToSlots();
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }
 
   @Override
-  public void renderLabels(PoseStack ms, int mouseX, int mouseY) {
+  public void renderLabels(GuiGraphics ms, int mouseX, int mouseY) {
     network.drawGuiContainerForegroundLayer(ms, mouseX, mouseY, font);
   }
 

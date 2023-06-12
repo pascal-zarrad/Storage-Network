@@ -1,9 +1,7 @@
 package com.lothrazar.storagenetwork.api;
 
 import java.util.List;
-
 import com.lothrazar.storagenetwork.util.StackProviderBatch;
-
 import net.minecraft.world.item.ItemStack;
 
 /**

@@ -1,8 +1,5 @@
 package com.lothrazar.storagenetwork;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.fml.DistExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lothrazar.storagenetwork.block.cable.export.ScreenCableExportFilter;
@@ -19,8 +16,11 @@ import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import com.lothrazar.storagenetwork.registry.SsnEvents;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -45,8 +45,6 @@ public class StorageNetworkMod {
     SsnRegistry.ITEMS.register(bus);
     SsnRegistry.TILES.register(bus);
     SsnRegistry.CONTAINERS.register(bus);
-
-
     DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
       FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
       FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerMapping);
