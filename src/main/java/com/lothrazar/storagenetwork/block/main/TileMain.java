@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.block.main;
 
 import java.util.Set;
+
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
@@ -10,6 +11,8 @@ import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.util.Request;
+import com.lothrazar.storagenetwork.util.RequestBatch;
 import com.lothrazar.storagenetwork.util.UtilInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -66,6 +69,11 @@ public class TileMain extends BlockEntity {
     ItemStack result = nw.request(matcher, size, simulate);
     //if not found then ?
     return result;
+  }
+
+  public void executeRequestBatch(RequestBatch batch) {
+    batch.sort();
+    nw.executeRequestBatch(batch);
   }
 
   private DimPos getDimPos() {
@@ -178,12 +186,15 @@ public class TileMain extends BlockEntity {
    */
   private void updateExports() {
     Set<IConnectable> conSet = nw.getConnectables();
+    RequestBatch requestBatch = new RequestBatch();
+
     for (IConnectable connectable : conSet) {
       if (connectable == null || connectable.getPos() == null) {
-        //        StorageNetwork.log("null connectable or pos : updateExports() ");
+        // StorageNetwork.log("null connectable or pos : updateExports() ");
         continue;
       }
-      IConnectableItemAutoIO storage = connectable.getPos().getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
+      IConnectableItemAutoIO storage = connectable.getPos()
+          .getCapability(StorageNetworkCapabilities.CONNECTABLE_AUTO_IO, null);
       if (storage == null) {
         continue;
       }
@@ -199,7 +210,7 @@ public class TileMain extends BlockEntity {
       if (storage.needsRedstone()) {
         boolean power = level.hasNeighborSignal(connectable.getPos().getBlockPos());
         if (power == false) {
-          //  StorageNetwork.log(power + " Export pow here ; needs yes skip me");
+          // StorageNetwork.log(power + " Export pow here ; needs yes skip me");
           continue;
         }
       }
@@ -207,58 +218,41 @@ public class TileMain extends BlockEntity {
         if (matcher.getStack().isEmpty()) {
           continue;
         }
-        //default amt to request. can be overriden by other upgrades
-        int amtToRequest = storage.getTransferRate();
-        //check operations upgrade for export 
+
+        Request request = new Request(storage);
+        // default amt to request. can be overriden by other upgrades
+        // check operations upgrade for export
         boolean stockMode = storage.isStockMode();
         if (stockMode) {
           StorageNetworkMod.log("stockMode == TRUE ; updateExports: attempt " + matcher.getStack());
-          //STOCK upgrade means
+          // STOCK upgrade means
           try {
-            BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
-            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
-            //request with false to see how many even exist in there.
-            int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(), matcher.getStack().getCount());
+            BlockEntity tileEntity = level
+                .getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
+            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
+                .orElse(null);
+            // request with false to see how many even exist in there.
+            int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(),
+                matcher.getStack().getCount());
             if (stillNeeds == 0) {
-              //they dont need any more, they have the stock they need
+              // they dont need any more, they have the stock they need
               StorageNetworkMod.log("stockMode continnue; canc");
               continue;
             }
-            amtToRequest = Math.min(stillNeeds, amtToRequest);
-            StorageNetworkMod.log("updateExports stock mode edited value: amtToRequest = " + amtToRequest);
-          }
-          catch (Throwable e) {
+            request.setCount(Math.min(stillNeeds, request.getCount()));
+            StorageNetworkMod.log("updateExports stock mode edited value: amtToRequest = " + request.getCount());
+          } catch (Throwable e) {
             StorageNetworkMod.LOGGER.error("Error thrown from a connected block" + e);
           }
         }
-        if (matcher.getStack().isEmpty() || amtToRequest == 0) {
-          //either the thing is empty or we are requesting none
+        if (matcher.getStack().isEmpty() || request.getCount() == 0) {
+          // either the thing is empty or we are requesting none
           continue;
         }
-        ItemStack requestedStack = this.request((ItemStackMatcher) matcher, amtToRequest, true);
-        if (requestedStack.isEmpty()) {
-          continue;
-        }
-        //     StorageNetwork.log("updateExports: found requestedStack = " + requestedStack);
-        // The stack is available in the network, let's simulate inserting it into the storage
-        ItemStack insertedSim = storage.insertStack(requestedStack, true);
-        // Determine the amount of items moved in the stack
-        if (!insertedSim.isEmpty()) {
-          int movedItems = requestedStack.getCount() - insertedSim.getCount();
-          if (movedItems <= 0) {
-            continue;
-          }
-          requestedStack.setCount(movedItems);
-        }
-        // Alright, some items got moved in the simulation. Let's do it for real this time.
-        ItemStack realExtractedStack = request(new ItemStackMatcher(requestedStack, false, true), requestedStack.getCount(), false);
-        if (realExtractedStack.isEmpty()) {
-          continue;
-        }
-        storage.insertStack(realExtractedStack, false);
-        break;
+        requestBatch.put(matcher.getStack().getItem(), request);
       }
     }
+    executeRequestBatch(requestBatch);
   }
 
   public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, TileMain tile) {}

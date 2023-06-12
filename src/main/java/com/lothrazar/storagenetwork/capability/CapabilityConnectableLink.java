@@ -3,6 +3,7 @@ package com.lothrazar.storagenetwork.capability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
@@ -11,6 +12,9 @@ import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.util.StackProvider;
+import com.lothrazar.storagenetwork.util.StackProviderBatch;
+
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -262,6 +266,54 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
       if (operation.contains("stack")) {
         operationStack = ItemStack.of(operation.getCompound("stack"));
       }
+    }
+  }
+
+  public ItemStack extractFromSlot(int slot, int amount, boolean simulate) {
+    DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
+    // Test whether the connected block has the IItemHandler capability
+    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+        inventoryFace.getOpposite());
+    if (itemHandler == null) {
+      return ItemStack.EMPTY;
+    }
+    return itemHandler.extractItem(slot, amount, simulate);
+  }
+
+  public void addToStackProviderBatch(StackProviderBatch availableItems) {
+    // If this storage is configured to only export from the network, do not
+    // extract from the storage, but abort immediately.
+    if (filterDirection == EnumStorageDirection.IN) {
+      return;
+    }
+    if (inventoryFace == null) {
+      return;
+    }
+    DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
+    // Test whether the connected block has the IItemHandler capability
+    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+        inventoryFace.getOpposite());
+    if (itemHandler == null) {
+      return;
+    }
+    // if (itemHandler instanceof ExchangeItemStackHandler) {
+    // StorageNetwork.log("cannot loop back a network extract into
+    // ExchangeItemStackHandler");
+    // return ItemStack.EMPTY;
+    // }
+    for (int slot = 0; slot < itemHandler.getSlots(); slot++) {
+      // force simulate: allow them to not let me see the stack, also dont extract
+      // since it might steal/dupe
+      ItemStack stack = itemHandler.extractItem(slot, 1, true);
+      if (stack == null || stack.isEmpty()) {
+        continue;
+      }
+      // Ignore stacks that are filtered
+      if (filters.isStackFiltered(stack)) {
+        continue;
+      }
+      StackProvider provider = new StackProvider(this, slot);
+      availableItems.put(stack.getItem(), provider);
     }
   }
 }
