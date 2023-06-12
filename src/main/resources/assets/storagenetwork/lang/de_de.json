@@ -44,7 +44,7 @@
 
     "gui.storagenetwork.sort": "Sortierrichtung",
     "gui.storagenetwork.priority.up": "Priorität herabstufen (kleiner geht vor)",
-    "gui.storagenetwork.priority.down": "Priorität erhöhen (größer geht vor)",
+    "gui.storagenetwork.priority.down": "Priorität erhöhen (kleiner geht vor)",
 
     "gui.storagenetwork.req.tooltip_name": "Nach Name sortieren",
     "gui.storagenetwork.req.tooltip_mod": "Nach Mod sortieren",
