@@ -60,8 +60,7 @@ public class ItemSlotNetwork {
       viewModelPose.translate(-1 * x, -1 * y, 0);
       RenderSystem.applyModelViewMatrix();
       if (isShowNumbers() && size > 1) {
-        poseStack.renderItem(stack, x, y);
-        //        Minecraft.getInstance().getItemRenderer().render(poseStack, ItemDisplayContext.gu,font, stack, x, y, amount);
+        poseStack.renderItemDecorations(font, stack, x, y, amount);
       }
       viewModelPose.popPose();
       RenderSystem.applyModelViewMatrix();
