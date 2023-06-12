@@ -250,7 +250,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
             remainderCurrent.grow(slot.getCount());
             this.matrix.setItem(i, remainderCurrent);
           }
-          else if (ItemStack.isSameIgnoreDurability(slot, remainderCurrent)) {
+          else if (ItemStack.isSame(slot, remainderCurrent)) { //isSameIgnoreDurability
             //crafting that consumes durability
             this.matrix.setItem(i, remainderCurrent);
           }

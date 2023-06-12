@@ -21,6 +21,7 @@ import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -33,6 +34,9 @@ import net.minecraftforge.fml.ModList;
 
 public class NetworkWidget {
 
+  protected static final Button.CreateNarration DEFAULT_NARRATION = (supplier) -> {
+    return supplier.get();
+  };
   public ItemStack stackUnderMouse = ItemStack.EMPTY;
   public List<ItemStack> stacks;
   public EditBox searchBar;
@@ -176,7 +180,7 @@ public class NetworkWidget {
 
   public boolean inSearchBar(double mouseX, double mouseY) {
     return gui.isInRegion(
-        searchBar.x - gui.getGuiLeft(), searchBar.y - gui.getGuiTopFixJei(), // x, y
+        searchBar.getX() - gui.getGuiLeft(), searchBar.getY() - gui.getGuiTopFixJei(), // x, y
         searchBar.getWidth(), searchBar.getHeight(), // width, height
         mouseX, mouseY);
   }
@@ -310,30 +314,30 @@ public class NetworkWidget {
   }
 
   public void initButtons() {
-    int y = this.searchBar.y - 4;
+    int y = this.searchBar.getY() - 4;
     directionBtn = new ButtonRequest(
         gui.getGuiLeft() + 6, y, "", (p) -> {
           gui.setDownwards(!gui.getDownwards());
           gui.syncDataToServer();
-        });
+        }, DEFAULT_NARRATION);
     directionBtn.setHeight(16);
     sortBtn = new ButtonRequest(gui.getGuiLeft() + 22, y, "", (p) -> {
       gui.setSort(gui.getSort().next());
       gui.syncDataToServer();
-    });
+    }, DEFAULT_NARRATION);
     sortBtn.setHeight(16);
     if (ModList.get().isLoaded("jei")) {
       jeiBtn = new ButtonRequest(gui.getGuiLeft() + 38, y, "", (p) -> {
         gui.setJeiSearchSynced(!gui.isJeiSearchSynced());
         gui.syncDataToServer();
-      });
+      }, DEFAULT_NARRATION);
       jeiBtn.setHeight(16);
     }
     focusBtn = new ButtonRequest(
         gui.getGuiLeft() + 166, y + 2, "", (p) -> {
           gui.setAutoFocus(!gui.getAutoFocus());
           gui.syncDataToServer();
-        });
+        }, DEFAULT_NARRATION);
     focusBtn.setHeight(11);
     focusBtn.setWidth(6);
   }

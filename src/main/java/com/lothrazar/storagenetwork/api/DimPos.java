@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -96,7 +97,7 @@ public class DimPos implements INBTSerializable<CompoundTag> {
   }
 
   public static ServerLevel stringDimensionLookup(ResourceLocation s, MinecraftServer serv) {
-    ResourceKey<Level> worldKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, s);
+    ResourceKey<Level> worldKey = ResourceKey.create(Registries.DIMENSION, s);
     if (worldKey == null) {
       return null;
     }

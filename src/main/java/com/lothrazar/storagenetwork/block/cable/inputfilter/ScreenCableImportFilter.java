@@ -18,6 +18,7 @@ import com.lothrazar.storagenetwork.util.SsnConsts;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -27,6 +28,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class ScreenCableImportFilter extends AbstractContainerScreen<ContainerCableImportFilter> implements IGuiPrivate {
 
+  protected static final Button.CreateNarration DEFAULT_NARRATION = (supplier) -> {
+    return supplier.get();
+  };
   private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/cable_filter.png");
   ContainerCableImportFilter containerCableLink;
   private ButtonRequest btnRedstone;
@@ -62,22 +66,22 @@ public class ScreenCableImportFilter extends AbstractContainerScreen<ContainerCa
     btnRedstone = addRenderableWidget(new ButtonRequest(leftPos + 4, topPos + 4, "", (p) -> {
       this.syncData(0);
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.REDSTONE.ordinal()));
-    }));
+    }, DEFAULT_NARRATION));
     btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 22, topPos + 4, "", (p) -> {
       this.syncData(-1);
-    }));
+    }, DEFAULT_NARRATION));
     btnMinus.setTextureId(TextureEnum.MINUS);
     btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 4, "", (p) -> {
       this.syncData(+1);
-    }));
+    }, DEFAULT_NARRATION));
     btnPlus.setTextureId(TextureEnum.PLUS);
     btnAllowIgn = addRenderableWidget(new ButtonRequest(leftPos + 152, topPos + 24, "", (p) -> {
       this.isAllowlist = !this.isAllowlist;
       this.syncData(0);
-    }));
+    }, DEFAULT_NARRATION));
     btnImport = addRenderableWidget(new ButtonRequest(leftPos + 80, topPos + 4, "", (p) -> {
       PacketRegistry.INSTANCE.sendToServer(new CableIOMessage(CableIOMessage.CableMessageType.IMPORT_FILTER.ordinal()));
-    }));
+    }, DEFAULT_NARRATION));
     btnImport.setTextureId(TextureEnum.IMPORT);
     txtHeight = new TextboxInteger(this.font, leftPos + 48, topPos + 26, 36);
     txtHeight.setMaxLength(4);
@@ -90,7 +94,7 @@ public class ScreenCableImportFilter extends AbstractContainerScreen<ContainerCa
       PacketRegistry.INSTANCE.sendToServer(
           new CableIOMessage(CableIOMessage.CableMessageType.SYNC_OP.ordinal(),
               containerCableLink.cap.operationType, false));
-    }));
+    }, DEFAULT_NARRATION));
     txtHeight.visible = btnOperationToggle.visible = false;
   }
 

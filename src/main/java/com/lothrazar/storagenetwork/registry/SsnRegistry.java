@@ -38,9 +38,7 @@ import com.lothrazar.storagenetwork.item.remote.ContainerNetworkRemote;
 import com.lothrazar.storagenetwork.item.remote.ItemStorageCraftingRemote;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -55,13 +53,6 @@ public class SsnRegistry {
   public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StorageNetworkMod.MODID);
   public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, StorageNetworkMod.MODID);
   public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.MENU_TYPES, StorageNetworkMod.MODID);
-  public static final CreativeModeTab TAB = new CreativeModeTab(StorageNetworkMod.MODID) {
-
-    @Override
-    public ItemStack makeIcon() {
-      return new ItemStack(SsnRegistry.Items.REQUEST.get());
-    }
-  };
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class Blocks {
@@ -82,28 +73,28 @@ public class SsnRegistry {
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class Items {
 
-    public static final RegistryObject<Item> REQUEST = ITEMS.register("request", () -> new BlockItem(Blocks.REQUEST.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> KABEL = ITEMS.register("kabel", () -> new BlockItem(Blocks.KABEL.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> INV = ITEMS.register("inventory", () -> new BlockItem(Blocks.INVENTORY.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> MAS = ITEMS.register("master", () -> new BlockItem(Blocks.MASTER.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> SK = ITEMS.register("storage_kabel", () -> new BlockItem(Blocks.STORAGE_KABEL.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> IK = ITEMS.register("import_kabel", () -> new BlockItem(Blocks.IMPORT_KABEL.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> IFK = ITEMS.register("import_filter_kabel", () -> new BlockItem(Blocks.IMPORT_FILTER_KABEL.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> FK = ITEMS.register("filter_kabel", () -> new BlockItem(Blocks.FILTER_KABEL.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> EK = ITEMS.register("export_kabel", () -> new BlockItem(Blocks.EXPORT_KABEL.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> EXCHANGE = ITEMS.register("exchange", () -> new BlockItem(Blocks.EXCHANGE.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> COL = ITEMS.register("collector", () -> new BlockItem(Blocks.COLLECTOR.get(), new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemUpgrade> STACK_UPGRADE = ITEMS.register("stack_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemUpgrade> SPEED_UPGRADE = ITEMS.register("speed_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemUpgrade> SLOW_UPGRADE = ITEMS.register("slow_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemUpgrade> STOCK_UPGRADE = ITEMS.register("stock_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemUpgrade> OP_U = ITEMS.register("operation_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemUpgrade> SINGLE_UPGRADE = ITEMS.register("single_upgrade", () -> new ItemUpgrade(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemStorageCraftingRemote> INVENTORY_REMOTE = ITEMS.register("inventory_remote", () -> new ItemStorageCraftingRemote(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemStorageCraftingRemote> CRAFTING_REMOTE = ITEMS.register("crafting_remote", () -> new ItemStorageCraftingRemote(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> PICKER_REMOTE = ITEMS.register("picker_remote", () -> new ItemPicker(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<ItemCollector> COLLECTOR_REMOTE = ITEMS.register("collector_remote", () -> new ItemCollector(new Item.Properties().tab(TAB)));
-    public static final RegistryObject<Item> BUILDER_REMOTE = ITEMS.register("builder_remote", () -> new ItemBuilder(new Item.Properties().tab(TAB)));
+    public static final RegistryObject<Item> REQUEST = ITEMS.register("request", () -> new BlockItem(Blocks.REQUEST.get(), new Item.Properties()));
+    public static final RegistryObject<Item> KABEL = ITEMS.register("kabel", () -> new BlockItem(Blocks.KABEL.get(), new Item.Properties()));
+    public static final RegistryObject<Item> INV = ITEMS.register("inventory", () -> new BlockItem(Blocks.INVENTORY.get(), new Item.Properties()));
+    public static final RegistryObject<Item> MAS = ITEMS.register("master", () -> new BlockItem(Blocks.MASTER.get(), new Item.Properties()));
+    public static final RegistryObject<Item> SK = ITEMS.register("storage_kabel", () -> new BlockItem(Blocks.STORAGE_KABEL.get(), new Item.Properties()));
+    public static final RegistryObject<Item> IK = ITEMS.register("import_kabel", () -> new BlockItem(Blocks.IMPORT_KABEL.get(), new Item.Properties()));
+    public static final RegistryObject<Item> IFK = ITEMS.register("import_filter_kabel", () -> new BlockItem(Blocks.IMPORT_FILTER_KABEL.get(), new Item.Properties()));
+    public static final RegistryObject<Item> FK = ITEMS.register("filter_kabel", () -> new BlockItem(Blocks.FILTER_KABEL.get(), new Item.Properties()));
+    public static final RegistryObject<Item> EK = ITEMS.register("export_kabel", () -> new BlockItem(Blocks.EXPORT_KABEL.get(), new Item.Properties()));
+    public static final RegistryObject<Item> EXCHANGE = ITEMS.register("exchange", () -> new BlockItem(Blocks.EXCHANGE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> COL = ITEMS.register("collector", () -> new BlockItem(Blocks.COLLECTOR.get(), new Item.Properties()));
+    public static final RegistryObject<ItemUpgrade> STACK_UPGRADE = ITEMS.register("stack_upgrade", () -> new ItemUpgrade(new Item.Properties()));
+    public static final RegistryObject<ItemUpgrade> SPEED_UPGRADE = ITEMS.register("speed_upgrade", () -> new ItemUpgrade(new Item.Properties()));
+    public static final RegistryObject<ItemUpgrade> SLOW_UPGRADE = ITEMS.register("slow_upgrade", () -> new ItemUpgrade(new Item.Properties()));
+    public static final RegistryObject<ItemUpgrade> STOCK_UPGRADE = ITEMS.register("stock_upgrade", () -> new ItemUpgrade(new Item.Properties()));
+    public static final RegistryObject<ItemUpgrade> OP_U = ITEMS.register("operation_upgrade", () -> new ItemUpgrade(new Item.Properties()));
+    public static final RegistryObject<ItemUpgrade> SINGLE_UPGRADE = ITEMS.register("single_upgrade", () -> new ItemUpgrade(new Item.Properties()));
+    public static final RegistryObject<ItemStorageCraftingRemote> INVENTORY_REMOTE = ITEMS.register("inventory_remote", () -> new ItemStorageCraftingRemote(new Item.Properties()));
+    public static final RegistryObject<ItemStorageCraftingRemote> CRAFTING_REMOTE = ITEMS.register("crafting_remote", () -> new ItemStorageCraftingRemote(new Item.Properties()));
+    public static final RegistryObject<Item> PICKER_REMOTE = ITEMS.register("picker_remote", () -> new ItemPicker(new Item.Properties()));
+    public static final RegistryObject<ItemCollector> COLLECTOR_REMOTE = ITEMS.register("collector_remote", () -> new ItemCollector(new Item.Properties()));
+    public static final RegistryObject<Item> BUILDER_REMOTE = ITEMS.register("builder_remote", () -> new ItemBuilder(new Item.Properties()));
   }
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)

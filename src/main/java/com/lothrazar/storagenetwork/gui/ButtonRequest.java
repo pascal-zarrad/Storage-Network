@@ -102,8 +102,8 @@ public class ButtonRequest extends Button {
     return texture;
   }
 
-  public ButtonRequest(int xPos, int yPos, String displayString, OnPress handler) {
-    super(xPos, yPos, SIZE, SIZE, Component.translatable(displayString), handler);
+  public ButtonRequest(int xPos, int yPos, String displayString, OnPress handler, CreateNarration narration) {
+    super(xPos, yPos, SIZE, SIZE, Component.translatable(displayString), handler, narration);
     texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/cable.png");
   }
 
@@ -126,16 +126,16 @@ public class ButtonRequest extends Button {
     RenderSystem.enableBlend();
     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
     RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-    this.blit(ms, this.x, this.y,
+    this.blit(ms, this.getX(), this.getY(),
         160 + SIZE * k, 52,
         width, height);
     if (textureId != null) {
-      this.blit(ms, this.x, this.y,
+      this.blit(ms, this.getX(), this.getY(),
           textureId.getX(), textureId.getY(),
           width, height);
     }
     else {
-      drawCenteredString(ms, Minecraft.getInstance().font, this.getMessage(), this.x + this.width / 2, this.y + (this.height - 8) / 2, 2210752);
+      drawCenteredString(ms, Minecraft.getInstance().font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 2210752);
     }
     this.renderBg(ms, minecraft, mouseX, mouseY);
   }

@@ -16,6 +16,7 @@ import com.lothrazar.storagenetwork.util.SsnConsts;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class ScreenCableFilter extends AbstractContainerScreen<ContainerCableFilter> implements IGuiPrivate {
 
+  protected static final Button.CreateNarration DEFAULT_NARRATION = (supplier) -> {
+    return supplier.get();
+  };
   private final ResourceLocation texture = new ResourceLocation(StorageNetworkMod.MODID, "textures/gui/cable.png");
   ContainerCableFilter containerCableLink;
   private ButtonRequest btnRedstone;
@@ -56,19 +60,19 @@ public class ScreenCableFilter extends AbstractContainerScreen<ContainerCableFil
     this.isAllowlist = containerCableLink.cap.getFilter().isAllowList;
     btnMinus = addRenderableWidget(new ButtonRequest(leftPos + 28, topPos + 4, "", (p) -> {
       this.syncData(-1);
-    }));
+    }, DEFAULT_NARRATION));
     btnMinus.setTextureId(TextureEnum.MINUS);
     btnPlus = addRenderableWidget(new ButtonRequest(leftPos + 60, topPos + 4, "", (p) -> {
       this.syncData(+1);
-    }));
+    }, DEFAULT_NARRATION));
     btnPlus.setTextureId(TextureEnum.PLUS);
     btnAllowIgn = addRenderableWidget(new ButtonRequest(leftPos + 152, topPos + 4, "", (p) -> {
       this.isAllowlist = !this.isAllowlist;
       this.syncData(0);
-    }));
+    }, DEFAULT_NARRATION));
     btnImport = addRenderableWidget(new ButtonRequest(leftPos + 120, topPos + 4, "", (p) -> {
       importFilterSlots();
-    }));
+    }, DEFAULT_NARRATION));
     btnImport.setTextureId(TextureEnum.IMPORT);
   }
 

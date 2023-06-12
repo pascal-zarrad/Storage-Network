@@ -9,6 +9,7 @@ import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
@@ -43,11 +44,11 @@ public class ItemBuilder extends Item {
     wand.getOrCreateTag().put(NBTBLOCKSTATE, encoded);
   }
 
-  public static BlockState getBlockState(ItemStack wand) {
+  public static BlockState getBlockState(Level level, ItemStack wand) {
     if (!wand.getOrCreateTag().contains(NBTBLOCKSTATE)) {
       return null;
     }
-    return NbtUtils.readBlockState(wand.getOrCreateTag().getCompound(NBTBLOCKSTATE));
+    return NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), wand.getOrCreateTag().getCompound(NBTBLOCKSTATE));
   }
 
   @Override
@@ -77,7 +78,7 @@ public class ItemBuilder extends Item {
           return InteractionResult.PASS;
         }
         BlockEntity tile = serverTargetWorld.getBlockEntity(dp.getBlockPos());
-        BlockState targetState = ItemBuilder.getBlockState(stack);
+        BlockState targetState = ItemBuilder.getBlockState(world, stack);
         if (tile instanceof TileMain && targetState != null) {
           TileMain network = (TileMain) tile;
           ItemStackMatcher matcher = new ItemStackMatcher(new ItemStack(targetState.getBlock()), false, false);
@@ -123,7 +124,7 @@ public class ItemBuilder extends Item {
       if (dp != null) {
         tooltip.add(dp.makeTooltip());
       } // block state?
-      BlockState target = ItemBuilder.getBlockState(stack);
+      BlockState target = ItemBuilder.getBlockState(worldIn, stack);
       if (target != null) {
         String block = target.getBlock().getDescriptionId();
         t = Component.translatable(block);

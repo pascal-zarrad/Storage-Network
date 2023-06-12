@@ -13,7 +13,7 @@ archivesBaseName = 'SimpleStorageNetwork'
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
-    mappings channel: 'official', version: "${mc_version}"
+    mappings channel: 'official', version: '1.19.3'
 
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -72,8 +72,8 @@ dependencies {
 	  
     implementation fg.deobf("top.theillusivec4.curios:curios-forge:${mc_version}-${curios_version}")
 	
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}-SNAPSHOT:api") //Change to actual version when it releases
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}-SNAPSHOT")
 
 }
 
@@ -95,7 +95,7 @@ repositories {
   maven { url 'https://maven.blamejared.com' }    
   maven { url = "https://maven.theillusivec4.top/"    }
   maven { url = "https://dvs1.progwml6.com/files/maven/"  }
-  maven { url = "https://modmaven.dev"  }    
+//  maven { url = "https://modmaven.dev"  }
   maven { url = "https://maven.theillusivec4.top/"    }
   maven { url 'https://maven.blamejared.com' }    
 }
