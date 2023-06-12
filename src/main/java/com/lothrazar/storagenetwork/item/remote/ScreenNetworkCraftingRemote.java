@@ -119,7 +119,7 @@ public class ScreenNetworkCraftingRemote extends AbstractContainerScreen<Contain
     addRenderableWidget(network.sortBtn);
     addRenderableWidget(network.focusBtn);
     if (this.getAutoFocus()) {
-      network.searchBar.setFocus(true);
+      network.searchBar.setFocused(true);
     }
     if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);
@@ -142,7 +142,7 @@ public class ScreenNetworkCraftingRemote extends AbstractContainerScreen<Contain
     RenderSystem.setShaderTexture(0, textureCraft);
     int k = (this.width - this.imageWidth) / 2;
     int l = (this.height - this.imageHeight) / 2;
-    this.blit(ms, k, l, 0, 0, this.imageWidth, this.imageHeight);
+    blit(ms, k, l, 0, 0, this.imageWidth, this.imageHeight);
     network.applySearchTextToSlots();
     network.renderItemSlots(ms, mouseX, mouseY, font);
   }

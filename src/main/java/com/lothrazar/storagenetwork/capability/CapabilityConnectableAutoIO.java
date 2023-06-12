@@ -20,8 +20,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -80,7 +80,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return Collections.emptyList();
     }
@@ -191,7 +191,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return stack;
     }
@@ -204,7 +204,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return Collections.emptyList();
     }
@@ -238,7 +238,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
       return null;
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
-    return inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    return inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
   }
 
   @Deprecated
@@ -257,7 +257,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return ItemStack.EMPTY;
     }
@@ -365,8 +365,5 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
     return upgrades;
   }
 
-  public void extractFromSlot(int slot){
-    
-  }
-
+  public void extractFromSlot(int slot) {}
 }

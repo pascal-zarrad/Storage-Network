@@ -81,7 +81,7 @@ public class ScreenNetworkInventory extends AbstractContainerScreen<ContainerNet
     addRenderableWidget(network.sortBtn);
     addRenderableWidget(network.focusBtn);
     if (this.getAutoFocus()) {
-      network.searchBar.setFocus(true);
+      network.searchBar.setFocused(true);
     }
     if (ModList.get().isLoaded("jei")) {
       addRenderableWidget(network.jeiBtn);

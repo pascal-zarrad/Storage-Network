@@ -24,8 +24,8 @@ public class TextboxInteger extends EditBox {
   }
 
   @Override
-  protected void onFocusedChanged(boolean onFocusedChanged) {
-    super.onFocusedChanged(onFocusedChanged);
+  public void setFocused(boolean onFocusedChanged) {
+    super.setFocused(onFocusedChanged);
     saveValue();
   }
 

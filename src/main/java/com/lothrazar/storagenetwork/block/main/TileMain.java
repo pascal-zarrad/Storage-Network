@@ -1,7 +1,6 @@
 package com.lothrazar.storagenetwork.block.main;
 
 import java.util.Set;
-
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
@@ -22,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class TileMain extends BlockEntity {
@@ -126,7 +125,7 @@ public class TileMain extends BlockEntity {
           if (storage.isStockMode()) {
             int filterSize = storage.getFilters().getStackCount(stackCurrent);
             BlockEntity tileEntity = level.getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
-            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).orElse(null);
+            IItemHandler targetInventory = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
             //request with false to see how many even exist in there.
             int chestHowMany = UtilInventory.countHowMany(targetInventory, stackCurrent);
             //so if chest=37 items of that kind
@@ -187,7 +186,6 @@ public class TileMain extends BlockEntity {
   private void updateExports() {
     Set<IConnectable> conSet = nw.getConnectables();
     RequestBatch requestBatch = new RequestBatch();
-
     for (IConnectable connectable : conSet) {
       if (connectable == null || connectable.getPos() == null) {
         // StorageNetwork.log("null connectable or pos : updateExports() ");
@@ -218,7 +216,6 @@ public class TileMain extends BlockEntity {
         if (matcher.getStack().isEmpty()) {
           continue;
         }
-
         Request request = new Request(storage);
         // default amt to request. can be overriden by other upgrades
         // check operations upgrade for export
@@ -229,7 +226,7 @@ public class TileMain extends BlockEntity {
           try {
             BlockEntity tileEntity = level
                 .getBlockEntity(connectable.getPos().getBlockPos().relative(storage.facingInventory()));
-            IItemHandler targetInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
+            IItemHandler targetInventory = tileEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, null)
                 .orElse(null);
             // request with false to see how many even exist in there.
             int stillNeeds = UtilInventory.containsAtLeastHowManyNeeded(targetInventory, matcher.getStack(),
@@ -241,7 +238,8 @@ public class TileMain extends BlockEntity {
             }
             request.setCount(Math.min(stillNeeds, request.getCount()));
             StorageNetworkMod.log("updateExports stock mode edited value: amtToRequest = " + request.getCount());
-          } catch (Throwable e) {
+          }
+          catch (Throwable e) {
             StorageNetworkMod.LOGGER.error("Error thrown from a connected block" + e);
           }
         }

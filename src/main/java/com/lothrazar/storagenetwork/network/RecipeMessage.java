@@ -119,7 +119,7 @@ public class RecipeMessage {
         ctr.slotChanged();
         List<ItemStack> list = main.nw.getStacks();
         PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-            player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+            player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
       } //end run
     });
     ctx.get().setPacketHandled(true);

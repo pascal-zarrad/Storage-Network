@@ -3,7 +3,6 @@ package com.lothrazar.storagenetwork.capability;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumStorageDirection;
@@ -14,13 +13,12 @@ import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.StackProvider;
 import com.lothrazar.storagenetwork.util.StackProviderBatch;
-
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -72,7 +70,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return Collections.emptyList();
     }
@@ -107,7 +105,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     try {
       // Test whether the connected block has the IItemHandler capability
-      IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+      IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
       if (itemHandler == null) {
         return stack;
       }
@@ -139,7 +137,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return ItemStack.EMPTY;
     }
@@ -197,7 +195,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventoryFace.getOpposite());
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER, inventoryFace.getOpposite());
     if (itemHandler == null) {
       return 0;
     }
@@ -269,10 +267,11 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
   }
 
+  @Override
   public ItemStack extractFromSlot(int slot, int amount, boolean simulate) {
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER,
         inventoryFace.getOpposite());
     if (itemHandler == null) {
       return ItemStack.EMPTY;
@@ -280,6 +279,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     return itemHandler.extractItem(slot, amount, simulate);
   }
 
+  @Override
   public void addToStackProviderBatch(StackProviderBatch availableItems) {
     // If this storage is configured to only export from the network, do not
     // extract from the storage, but abort immediately.
@@ -291,7 +291,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
     }
     DimPos inventoryPos = connectable.getPos().offset(inventoryFace);
     // Test whether the connected block has the IItemHandler capability
-    IItemHandler itemHandler = inventoryPos.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+    IItemHandler itemHandler = inventoryPos.getCapability(ForgeCapabilities.ITEM_HANDLER,
         inventoryFace.getOpposite());
     if (itemHandler == null) {
       return;

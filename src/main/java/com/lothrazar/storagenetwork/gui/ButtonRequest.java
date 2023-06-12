@@ -112,32 +112,39 @@ public class ButtonRequest extends Button {
     super.render(ms, mx, my, pt);
   }
 
-  @Override
-  public void renderButton(PoseStack ms, int mouseX, int mouseY, float partial) {
-    if (texture == null) {
-      super.renderButton(ms, mouseX, mouseY, partial);
-      return;
+  private int getTextureY() {
+    int i = 1;
+    if (!this.active) {
+      i = 0;
     }
-    Minecraft minecraft = Minecraft.getInstance();
+    else if (this.isHoveredOrFocused()) {
+      i = 2;
+    }
+    return i;// 46 + i * 20;
+  }
+
+  @Override
+  public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partial) {
+    super.renderWidget(ms, mouseX, mouseY, partial);
+    //    Minecraft minecraft = Minecraft.getInstance();
     //    minecraft.getTextureManager().bind(getTexture());
     RenderSystem.setShader(GameRenderer::getPositionTexShader);
     RenderSystem.setShaderTexture(0, getTexture());
-    int k = this.getYImage(this.isHovered);
+    int k = getTextureY(); // getYImage ()
     RenderSystem.enableBlend();
     RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
     RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-    this.blit(ms, this.getX(), this.getY(),
+    blit(ms, this.getX(), this.getY(),
         160 + SIZE * k, 52,
         width, height);
     if (textureId != null) {
-      this.blit(ms, this.getX(), this.getY(),
+      blit(ms, this.getX(), this.getY(),
           textureId.getX(), textureId.getY(),
           width, height);
     }
     else {
       drawCenteredString(ms, Minecraft.getInstance().font, this.getMessage(), this.getX() + this.width / 2, this.getY() + (this.height - 8) / 2, 2210752);
     }
-    this.renderBg(ms, minecraft, mouseX, mouseY);
   }
 
   public TextureEnum getTextureId() {

@@ -53,10 +53,10 @@ public class InsertMessage {
       player.containerMenu.setCarried(send);
       //
       PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(send),
-          player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+          player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
       List<ItemStack> list = root.nw.getStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-          player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+          player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
       player.containerMenu.broadcastChanges();
     });
     ctx.get().setPacketHandled(true);

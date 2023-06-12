@@ -70,7 +70,7 @@ public class BlockRequest extends BaseBlock {
       }
       //sync
       ServerPlayer sp = (ServerPlayer) player;
-      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()), sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+      PacketRegistry.INSTANCE.sendTo(new SortClientMessage(pos, tile.isDownwards(), tile.getSort()), sp.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
       //end sync
       if (tile instanceof MenuProvider) {
         NetworkHooks.openScreen((ServerPlayer) player, (MenuProvider) tile, tile.getBlockPos());

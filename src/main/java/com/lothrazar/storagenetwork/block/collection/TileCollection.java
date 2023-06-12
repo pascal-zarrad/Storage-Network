@@ -16,9 +16,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullSupplier;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class TileCollection extends TileConnectable implements MenuProvider {
 
@@ -53,7 +53,7 @@ public class TileCollection extends TileConnectable implements MenuProvider {
   @SuppressWarnings("unchecked")
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-    if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+    if (cap == ForgeCapabilities.ITEM_HANDLER) {
       IConnectable capabilityConnectable = super.getCapability(StorageNetworkCapabilities.CONNECTABLE_CAPABILITY, side).orElse(null);
       DimPos m = getMain();
       if (capabilityConnectable != null && m != null) {

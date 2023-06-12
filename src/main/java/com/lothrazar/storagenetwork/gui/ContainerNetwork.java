@@ -124,7 +124,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
       if (optional.isPresent()) {
         CraftingRecipe icraftingrecipe = optional.get();
         if (result.setRecipeUsed(world, serverplayerentity, icraftingrecipe)) {
-          itemstack = icraftingrecipe.assemble(inventory);
+          itemstack = icraftingrecipe.assemble(inventory, world.registryAccess());
           this.recipeCurrent = icraftingrecipe;
         }
       }
@@ -157,7 +157,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
         if (playerIn instanceof ServerPlayer) {
           ServerPlayer sp = (ServerPlayer) playerIn;
           PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-              sp.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+              sp.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         }
         if (stack.isEmpty()) {
           return ItemStack.EMPTY;
@@ -192,7 +192,8 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
       return;
     }
     recipeCurrent = null;
-    this.findMatchingRecipeClient(player.level, this.matrix, this.resultInventory);
+    Level level = player.level;
+    this.findMatchingRecipeClient(level, this.matrix, this.resultInventory);
     if (recipeCurrent == null) {
       return;
     }
@@ -202,7 +203,7 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
     for (int i = 0; i < matrix.getContainerSize(); i++) {
       recipeCopy.add(matrix.getItem(i).copy());
     }
-    ItemStack res = recipeCurrent.assemble(matrix);
+    ItemStack res = recipeCurrent.assemble(matrix, level.registryAccess());
     if (res.isEmpty()) {
       StorageNetworkMod.LOGGER.error("err Recipe output is an empty stack " + recipeCurrent);
       return;
@@ -210,14 +211,14 @@ public abstract class ContainerNetwork extends AbstractContainerMenu {
     int sizePerCraft = res.getCount();
     //StorageNetwork.log("[craftShift] sizePerCraft = " + sizePerCraft + " for stack " + res);
     while (crafted + sizePerCraft <= res.getMaxStackSize()) {
-      res = recipeCurrent.assemble(matrix);
+      res = recipeCurrent.assemble(matrix, level.registryAccess());
       //  StorageNetwork.log("[craftShift]  crafted = " + crafted + " ; res.count() = " + res.getCount() + " MAX=" + res.getMaxStackSize());
       if (!ItemHandlerHelper.insertItemStacked(new PlayerMainInvWrapper(playerInv), res, true).isEmpty()) {
         //  StorageNetwork.log("[craftShift] cannot insert more, end");
         break;
       }
       //stop if empty
-      if (recipeCurrent.matches(matrix, player.level) == false) {
+      if (recipeCurrent.matches(matrix, level) == false) {
         // StorageNetwork.log("[craftShift] recipe doesnt match i quit");
         break;
       }

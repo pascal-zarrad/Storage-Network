@@ -37,7 +37,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
 public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
@@ -77,7 +77,7 @@ public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
     if (state.getBlock() != newState.getBlock()) {
       BlockEntity tileentity = worldIn.getBlockEntity(pos);
       if (tileentity != null) {
-        IItemHandler items = tileentity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler items = tileentity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(null);
         if (items != null) {
           for (int i = 0; i < items.getSlots(); ++i) {
             Containers.dropItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));

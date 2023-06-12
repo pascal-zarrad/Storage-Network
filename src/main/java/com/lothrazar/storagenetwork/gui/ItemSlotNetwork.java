@@ -60,7 +60,7 @@ public class ItemSlotNetwork {
       viewModelPose.translate(-1 * x, -1 * y, 0);
       RenderSystem.applyModelViewMatrix();
       if (isShowNumbers() && size > 1) {
-        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(font, stack, x, y, amount);
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(poseStack, font, stack, x, y, amount);
       }
       viewModelPose.popPose();
       RenderSystem.applyModelViewMatrix();
@@ -71,7 +71,7 @@ public class ItemSlotNetwork {
         parent.drawGradient(poseStack, j1, k1, j1 + 16, k1 + 16, -2130706433, -2130706433);
         RenderSystem.colorMask(true, true, true, true);
       }
-      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(getStack(), x, y);
+      Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(poseStack, getStack(), x, y);
     }
   }
 

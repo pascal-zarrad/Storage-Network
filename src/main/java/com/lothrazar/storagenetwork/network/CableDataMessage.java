@@ -84,7 +84,7 @@ public class CableDataMessage {
             }
           }
           PacketRegistry.INSTANCE.sendTo(new RefreshFilterClientMessage(link.getFilter().getStacks()),
-              player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+              player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         break;
         case SYNC_DATA:
           link.setPriority(link.getPriority() + message.value);

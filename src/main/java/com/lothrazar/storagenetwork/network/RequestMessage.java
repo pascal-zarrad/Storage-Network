@@ -93,12 +93,12 @@ public class RequestMessage {
           //when player TAKES an item, go here
           player.containerMenu.setCarried(stack);
           PacketRegistry.INSTANCE.sendTo(new StackResponseClientMessage(stack),
-              player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+              player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
         }
       }
       List<ItemStack> list = root.nw.getSortedStacks();
       PacketRegistry.INSTANCE.sendTo(new StackRefreshClientMessage(list, new ArrayList<>()),
-          player.connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+          player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
       player.containerMenu.broadcastChanges();
     });
     ctx.get().setPacketHandled(true);

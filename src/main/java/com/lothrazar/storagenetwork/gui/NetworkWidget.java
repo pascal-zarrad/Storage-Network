@@ -279,9 +279,9 @@ public class NetworkWidget {
   }
 
   public void mouseClicked(double mouseX, double mouseY, int mouseButton) {
-    searchBar.setFocus(false);
+    searchBar.setFocused(false);
     if (inSearchBar(mouseX, mouseY)) {
-      searchBar.setFocus(true);
+      searchBar.setFocused(true);
       if (mouseButton == UtilTileEntity.MOUSE_BTN_RIGHT) {
         clearSearch();
         return;
