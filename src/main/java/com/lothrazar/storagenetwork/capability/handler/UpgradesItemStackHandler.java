@@ -1,5 +1,6 @@
 package com.lothrazar.storagenetwork.capability.handler;
 
+import com.lothrazar.library.cap.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.item.ItemUpgrade;
 import net.minecraft.world.item.ItemStack;
 
