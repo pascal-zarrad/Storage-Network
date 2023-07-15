@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.item;
 
 import java.util.List;
+import com.lothrazar.library.item.ItemFlib;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -14,7 +15,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ItemPicker extends Item {
+public class ItemPicker extends ItemFlib {
 
   public static final String NBT_BOUND = "bound";
 
