@@ -9,6 +9,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class RequestBatch extends Batch<Request> {
 
+  private static final long serialVersionUID = 9136459257621033386L;
+
   public void extractStacks(IConnectableLink providerStorage, Integer slot, Item item) {
     List<Request> requests = get(item);
     List<Request> remainingRequests = new ArrayList<Request>();
