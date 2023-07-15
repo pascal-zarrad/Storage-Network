@@ -1,6 +1,7 @@
 package com.lothrazar.storagenetwork.item.remote;
 
 import java.util.List;
+import com.lothrazar.library.item.ItemFlib;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.api.EnumSortType;
@@ -22,7 +23,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -32,7 +32,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
 
-public class ItemStorageCraftingRemote extends Item implements MenuProvider {
+public class ItemStorageCraftingRemote extends ItemFlib implements MenuProvider {
 
   public static final String NBT_JEI = TileRequest.NBT_JEI;
   public static final String NBT_BOUND = "bound";

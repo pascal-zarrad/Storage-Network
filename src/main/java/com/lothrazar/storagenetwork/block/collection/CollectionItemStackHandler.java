@@ -1,11 +1,11 @@
 package com.lothrazar.storagenetwork.block.collection;
 
+import com.lothrazar.library.cap.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.block.TileConnectable;
 import com.lothrazar.storagenetwork.block.main.TileMain;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
-import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;

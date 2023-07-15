@@ -1,7 +1,7 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
 import java.util.List;
-import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.library.block.EntityBlockFlib;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class BlockExchange extends BaseBlock {
+public class BlockExchange extends EntityBlockFlib {
 
   public BlockExchange() {
     super(Block.Properties.of().strength(0.5F).sound(SoundType.STONE));

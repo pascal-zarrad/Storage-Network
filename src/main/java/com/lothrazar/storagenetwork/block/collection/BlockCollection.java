@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.collection;
 
-import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.library.block.EntityBlockFlib;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-public class BlockCollection extends BaseBlock {
+public class BlockCollection extends EntityBlockFlib {
 
   public BlockCollection() {
     super(Block.Properties.of().strength(0.5F).sound(SoundType.STONE));

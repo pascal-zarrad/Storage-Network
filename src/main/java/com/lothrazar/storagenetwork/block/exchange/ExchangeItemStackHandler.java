@@ -1,8 +1,8 @@
 package com.lothrazar.storagenetwork.block.exchange;
 
+import com.lothrazar.library.cap.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.block.main.TileMain;
-import com.lothrazar.storagenetwork.capability.handler.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.capability.handler.ItemStackMatcher;
 import com.lothrazar.storagenetwork.registry.ConfigRegistry;
 import net.minecraft.world.item.ItemStack;

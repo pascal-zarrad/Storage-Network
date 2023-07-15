@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.item;
 
 import java.util.List;
 import org.apache.commons.lang3.tuple.Triple;
+import com.lothrazar.library.item.ItemFlib;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.DimPos;
 import com.lothrazar.storagenetwork.block.main.TileMain;
@@ -27,7 +28,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 
-public class ItemCollector extends Item {
+public class ItemCollector extends ItemFlib {
 
   public static final String NBT_BOUND = "bound";
 

@@ -11,8 +11,8 @@ import com.lothrazar.storagenetwork.api.IConnectableLink;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import com.lothrazar.storagenetwork.capability.handler.FilterItemStackHandler;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
+import com.lothrazar.storagenetwork.util.Batch;
 import com.lothrazar.storagenetwork.util.StackProvider;
-import com.lothrazar.storagenetwork.util.StackProviderBatch;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -280,7 +280,7 @@ public class CapabilityConnectableLink implements IConnectableLink, INBTSerializ
   }
 
   @Override
-  public void addToStackProviderBatch(StackProviderBatch availableItems) {
+  public void addToStackProviderBatch(Batch<StackProvider> availableItems) {
     // If this storage is configured to only export from the network, do not
     // extract from the storage, but abort immediately.
     if (filterDirection == EnumStorageDirection.IN) {

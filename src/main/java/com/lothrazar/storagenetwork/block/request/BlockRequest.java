@@ -1,6 +1,6 @@
 package com.lothrazar.storagenetwork.block.request;
 
-import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.library.block.EntityBlockFlib;
 import com.lothrazar.storagenetwork.network.SortClientMessage;
 import com.lothrazar.storagenetwork.registry.PacketRegistry;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkHooks;
 
-public class BlockRequest extends BaseBlock {
+public class BlockRequest extends EntityBlockFlib {
 
   public BlockRequest() {
     super(Block.Properties.of().strength(0.5F).sound(SoundType.STONE));

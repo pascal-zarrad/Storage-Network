@@ -2,7 +2,7 @@ package com.lothrazar.storagenetwork.block.main;
 
 import java.util.List;
 import java.util.Map.Entry;
-import com.lothrazar.storagenetwork.block.BaseBlock;
+import com.lothrazar.library.block.EntityBlockFlib;
 import com.lothrazar.storagenetwork.registry.SsnRegistry;
 import com.lothrazar.storagenetwork.util.UtilTileEntity;
 import net.minecraft.ChatFormatting;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class BlockMain extends BaseBlock {
+public class BlockMain extends EntityBlockFlib {
 
   public BlockMain() {
     super(Block.Properties.of().strength(0.5F).sound(SoundType.STONE));

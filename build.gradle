@@ -82,11 +82,15 @@ minecraft {
         }
 
         client {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         server {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
         }
@@ -113,6 +117,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
 
+  flatDir { dir 'libs' } 
   maven {
     // location of the maven that hosts JEI files
     name = "Progwml6 maven"
@@ -128,7 +133,9 @@ repositories {
 }
 
 dependencies {
- implementation fg.deobf("curse.maven:flib-661261:4583429")
+
+ implementation fg.deobf("blank:flib-1.20.1:0.0.7-SNAPSHOT")
+// implementation fg.deobf("curse.maven:flib-661261:4583429")
     // Specify the version of Minecraft to use.
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
     // The "userdev" classifier will be requested and setup by ForgeGradle.
@@ -147,8 +154,11 @@ dependencies {
      runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
      compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
      
-   //  compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
-   //  runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
+
+
+     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}-FORGE:api")
+     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}-FORGE")
+     
     // Example mod dependency using a mod jar from ./libs with a flat dir repository
     // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
     // The group id is ignored when searching -- in this case, it is "blank"

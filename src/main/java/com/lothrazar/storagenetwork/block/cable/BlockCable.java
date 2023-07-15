@@ -2,15 +2,15 @@ package com.lothrazar.storagenetwork.block.cable;
 
 import java.util.Map;
 import com.google.common.collect.Maps;
+import com.lothrazar.library.block.EntityBlockFlib;
+import com.lothrazar.library.data.ShapeCache;
 import com.lothrazar.storagenetwork.StorageNetworkMod;
 import com.lothrazar.storagenetwork.api.EnumConnectType;
 import com.lothrazar.storagenetwork.api.IConnectable;
 import com.lothrazar.storagenetwork.api.IConnectableItemAutoIO;
-import com.lothrazar.storagenetwork.block.BaseBlock;
 import com.lothrazar.storagenetwork.capability.CapabilityConnectableAutoIO;
 import com.lothrazar.storagenetwork.registry.StorageNetworkCapabilities;
 import com.lothrazar.storagenetwork.util.ShapeBuilder;
-import com.lothrazar.storagenetwork.util.ShapeCache;
 import com.lothrazar.storagenetwork.util.UtilConnections;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -39,7 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
-public class BlockCable extends BaseBlock implements SimpleWaterloggedBlock {
+public class BlockCable extends EntityBlockFlib implements SimpleWaterloggedBlock {
 
   public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 

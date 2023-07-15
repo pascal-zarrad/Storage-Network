@@ -2,6 +2,7 @@ package com.lothrazar.storagenetwork.capability.handler;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import com.lothrazar.library.cap.ItemStackHandlerEx;
 import com.lothrazar.storagenetwork.api.IItemStackMatcher;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
