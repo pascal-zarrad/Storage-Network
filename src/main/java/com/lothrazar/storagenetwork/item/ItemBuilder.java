@@ -51,6 +51,7 @@ public class ItemBuilder extends ItemFlib {
     return NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), wand.getOrCreateTag().getCompound(NBTBLOCKSTATE));
   }
 
+  @SuppressWarnings("deprecation")
   @Override
   public InteractionResult useOn(UseOnContext context) {
     InteractionHand hand = context.getHand();
@@ -105,6 +106,7 @@ public class ItemBuilder extends ItemFlib {
     return InteractionResult.PASS;
   }
 
+  @SuppressWarnings("deprecation")
   private boolean placeStateSafe(Level world, Player player, BlockPos placePos, BlockState placeState) {
     BlockState stateHere = world.getBlockState(placePos);
     if (stateHere.getBlock() == Blocks.AIR || stateHere.liquid()) {
