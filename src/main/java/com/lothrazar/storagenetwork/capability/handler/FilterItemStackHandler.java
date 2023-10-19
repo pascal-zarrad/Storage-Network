@@ -57,8 +57,6 @@ public class FilterItemStackHandler extends ItemStackHandlerEx {
     }
 
     public void resetStackMatchers() {
-        System.out.println("RESET STACK MATCHERS");
-
         this.stackMatchers = null;
     }
 
