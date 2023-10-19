@@ -353,6 +353,7 @@ public class CapabilityConnectableAutoIO implements INBTSerializable<CompoundTag
 
   @Override
   public List<IItemStackMatcher> getAutoExportList() {
+
     return filters.getStackMatchers();
   }
 
